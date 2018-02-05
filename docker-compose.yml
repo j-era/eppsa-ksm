@@ -1,0 +1,41 @@
+version: "3.2"
+
+services:
+  nginx:
+    build: ./nginx
+    depends_on:
+      - asset-server
+      - git-json-api
+      - frontend
+      - content-repo
+
+  asset-server:
+    build: ./git-json-cms-asset-server
+    volumes:
+      - type: volume
+        source: assets
+        target: /var/www/webdav
+
+  git-json-api:
+    image: "artcom/git-json-api:latest"
+    environment:
+      - REPO_URI=http://content-repo/git/content/
+    depends_on:
+      - content-repo
+
+  content-repo:
+    build: ./git-json-cms-content-repo
+    volumes:
+      - type: volume
+        source: content
+        target: /srv/content
+    ports:
+      - "81:80"
+
+  frontend:
+    build:
+      context: ./git-json-cms-frontend
+
+volumes:
+  content:
+  assets:

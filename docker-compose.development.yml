@@ -1,0 +1,14 @@
+version: "3.2"
+
+services:
+  nginx:
+    ports:
+      - "80:80"
+      - "443:443"
+
+  frontend:
+    build:
+      dockerfile: Dockerfile.development
+    volumes:
+      - ./git-json-cms-frontend:/app
+      - /app/node_modules
