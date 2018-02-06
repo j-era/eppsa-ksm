@@ -7,7 +7,11 @@ RUN rm /etc/nginx/nginx.conf
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY conf.d/http-https-redirect.conf /etc/nginx/conf.d/http-https-redirect.conf
-COPY conf.d/https-reverse-proxy.conf /etc/nginx/conf.d/https-reverse-proxy.conf
+
+COPY sites-available /etc/nginx/sites-available
+RUN mkdir /etc/nginx/sites-enabled
+RUN ln -s /etc/nginx/sites-available/cms.dev.eppsa.de.conf /etc/nginx/sites-enabled/
+RUN ln -s /etc/nginx/sites-available/game.dev.eppsa.de.conf /etc/nginx/sites-enabled/
 
 RUN mkdir /etc/letsencrypt
 COPY letsencrypt /etc/letsencrypt
