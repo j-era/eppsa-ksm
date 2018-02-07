@@ -12,3 +12,5 @@ services:
     volumes:
       - ./git-json-cms-frontend:/app
       - /app/node_modules
+    environment:
+      - PORT=443
