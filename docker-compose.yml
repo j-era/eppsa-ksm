@@ -36,6 +36,18 @@ services:
     build:
       context: ./git-json-cms-frontend
 
+  game-client:
+    build:
+      context: ./eppsa-mobile-game-client
+    environment:
+      - SERVER_URI=http://game-server:5000/
+    depends_on:
+      - game-server
+
+  game-server:
+    build:
+      context: ./eppsa-mobile-game-server
+
 volumes:
   content:
   assets:

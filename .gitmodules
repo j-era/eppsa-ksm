@@ -7,3 +7,9 @@
 [submodule "git-json-cms-frontend"]
 	path = git-json-cms-frontend
 	url = https://github.com/artcom/git-json-cms-frontend
+[submodule "eppsa-mobile-game-client"]
+	path = eppsa-mobile-game-client
+	url = git@github.com:j-era/eppsa-mobile-game-client.git
+[submodule "eppsa-mobile-game-server"]
+	path = eppsa-mobile-game-server
+	url = git@github.com:j-era/eppsa-mobile-game-server.git

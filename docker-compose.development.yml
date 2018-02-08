@@ -14,3 +14,17 @@ services:
       - /app/node_modules
     environment:
       - PORT=443
+
+  game-client:
+    build:
+      dockerfile: Dockerfile.development
+    volumes:
+      - ./eppsa-mobile-game-client:/app
+      - /app/node_modules
+
+  game-server:
+    build:
+      dockerfile: Dockerfile.development
+    volumes:
+      - ./eppsa-mobile-game-server:/app
+      - /app/node_modules
