@@ -13,7 +13,7 @@ services:
       - ./git-json-cms-frontend:/app
       - /app/node_modules
     environment:
-      - PORT=443
+      PORT: 443
 
   game-client:
     build:
