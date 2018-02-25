@@ -5,9 +5,10 @@ services:
     build: ./nginx
     depends_on:
       - asset-server
-      - git-json-api
-      - frontend
       - content-repo
+      - frontend
+      - game-client
+      - git-json-api
 
   asset-server:
     build: ./git-json-cms-asset-server
@@ -39,8 +40,6 @@ services:
   game-client:
     build:
       context: ./eppsa-mobile-game-client
-    environment:
-      - SERVER_URI=http://game-server:5000/
     depends_on:
       - game-server
 

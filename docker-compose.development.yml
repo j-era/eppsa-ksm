@@ -21,6 +21,9 @@ services:
     volumes:
       - ./eppsa-mobile-game-client:/app
       - /app/node_modules
+    environment:
+      PORT: 80
+      WS_SERVER_PATH: /server
 
   game-server:
     build:
@@ -28,3 +31,5 @@ services:
     volumes:
       - ./eppsa-mobile-game-server:/app
       - /app/node_modules
+    environment:
+      PORT: 80
