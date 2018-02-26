@@ -43,10 +43,14 @@ services:
       context: ./eppsa-mobile-game-client
     depends_on:
       - game-server
+    environment:
+      PORT: 80
 
   game-server:
     build:
       context: ./eppsa-mobile-game-server
+    environment:
+      PORT: 80
 
 volumes:
   content:

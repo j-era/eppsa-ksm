@@ -10,11 +10,13 @@ services:
     build:
       dockerfile: Dockerfile.production
     environment:
-      - PORT=80
+      PORT: 80
 
   game-client:
     build:
       dockerfile: Dockerfile.production
+      args:
+        WS_SERVER_PATH: /server
 
   game-server:
     build:
