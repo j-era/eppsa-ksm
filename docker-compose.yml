@@ -21,7 +21,8 @@ services:
   git-json-api:
     image: "artcom/git-json-api:latest"
     environment:
-      - REPO_URI=http://content-repo/git/content/
+      REPO_URI: http://content-repo/git/content/
+      PORT: 80
     depends_on:
       - content-repo
 
@@ -41,10 +42,10 @@ services:
   game-client:
     build:
       context: ./eppsa-mobile-game-client
-    depends_on:
-      - game-server
     environment:
       PORT: 80
+    depends_on:
+      - game-server
 
   game-server:
     build:
