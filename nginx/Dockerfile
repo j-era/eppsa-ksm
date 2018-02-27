@@ -7,9 +7,11 @@ RUN rm /etc/nginx/nginx.conf
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY conf.d/http-https-redirect.conf /etc/nginx/conf.d/http-https-redirect.conf
-
 COPY sites-available /etc/nginx/sites-available
+COPY config /etc/nginx/config
+
 RUN mkdir /etc/nginx/sites-enabled
+RUN ln -s /etc/nginx/sites-available/eppsa.de.conf /etc/nginx/sites-enabled/
 RUN ln -s /etc/nginx/sites-available/cms.eppsa.de.conf /etc/nginx/sites-enabled/
 RUN ln -s /etc/nginx/sites-available/game.eppsa.de.conf /etc/nginx/sites-enabled/
 RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/
