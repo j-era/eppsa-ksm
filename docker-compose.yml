@@ -10,6 +10,9 @@ services:
       - game-client
       - game-server
       - git-json-api
+    ports:
+      - "80:80"
+      - "443:443"
 
   asset-server:
     build: ./git-json-cms-asset-server
