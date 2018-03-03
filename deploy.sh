@@ -1,6 +1,9 @@
 #!/bin/bash
 
+printenv
+
 ssh -p $SSH_PORT $SSH_USERNAME@$SSH_HOST <<-EOF
+printenv
 rm -rf eppsa-ksm
 git clone --recursive -b feature/jenkins-deployment https://github.com/artcom/eppsa-ksm.git
 cd eppsa-ksm
