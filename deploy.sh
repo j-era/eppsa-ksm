@@ -1,11 +1,8 @@
 #!/bin/bash
 
-printenv
-
-ssh -p $SSH_PORT $SSH_USERNAME@$SSH_HOST <<-EOF
-printenv
+ssh -p $SSH_PORT $SSH_USERNAME@$SSH_HOST << EOF
 rm -rf eppsa-ksm
-git clone --recursive -b feature/jenkins-deployment https://github.com/artcom/eppsa-ksm.git
+git clone --recursive -b "${GIT_BRANCH}" https://github.com/artcom/eppsa-ksm.git
 cd eppsa-ksm
 docker-compose stop
 docker-compose rm -f
