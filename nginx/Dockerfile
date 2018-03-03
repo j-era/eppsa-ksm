@@ -16,7 +16,4 @@ COPY config /etc/nginx/config
 RUN mkdir /etc/nginx/sites-enabled
 RUN ln -s /etc/nginx/sites-available/* /etc/nginx/sites-enabled/
 
-RUN mkdir /etc/letsencrypt
-COPY letsencrypt /etc/letsencrypt
-
 CMD /etc/init.d/fcgiwrap start && nginx -g daemon\ off\;
