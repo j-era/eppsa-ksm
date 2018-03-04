@@ -1,6 +1,5 @@
 #!/bin/bash
 ssh -p $SSH_PORT $SSH_USERNAME@$SSH_HOST << EOF
-echo branchname
 echo "$BRANCH_NAME"
 rm -rf eppsa-ksm
 git clone --recursive -b "$BRANCH_NAME" https://github.com/artcom/eppsa-ksm.git
