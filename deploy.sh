@@ -1,8 +1,7 @@
 #!/bin/bash
 ssh -p $SSH_PORT $SSH_USERNAME@$SSH_HOST << EOF
-echo "$BRANCH_NAME"
 rm -rf eppsa-ksm
-git clone --recursive -b "$BRANCH_NAME" https://github.com/artcom/eppsa-ksm.git
+git clone --recursive https://github.com/artcom/eppsa-ksm.git
 cd eppsa-ksm
 docker-compose stop
 docker-compose rm -f
