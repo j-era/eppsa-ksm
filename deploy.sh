@@ -1,13 +1,13 @@
 #!/bin/bash
 
 printenv
-echo $BRANCH_NAME
+echo $GIT_BRANCH
 echo "!!!"
 
 cmd=$(cat <<EOF
-echo "BRANCH_NAME: $BRANCH_NAME"
+echo "GIT_BRANCH: $GIT_BRANCH"
 rm -rf eppsa-ksm
-git clone --recursive -b $BRANCH_NAME https://github.com/artcom/eppsa-ksm.git
+git clone --recursive -b $GIT_BRANCH https://github.com/artcom/eppsa-ksm.git
 cd eppsa-ksm
 docker-compose stop
 docker-compose rm -f
