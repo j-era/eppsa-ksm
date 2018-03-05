@@ -1,5 +1,9 @@
 #!/bin/bash
 
+printenv
+echo $BRANCH_NAME
+echo "!!!"
+
 cmd=$(cat <<EOF
 echo "BRANCH_NAME: $BRANCH_NAME"
 rm -rf eppsa-ksm
