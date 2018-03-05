@@ -8,7 +8,9 @@ pipeline {
   stages {
     stage('Deploy') {
       steps {
-        sh '''./deploy.sh'''
+          node('OSX') {
+             sh '''./deploy.sh'''
+          }
       }
     }
   }
