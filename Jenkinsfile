@@ -4,7 +4,7 @@ pipeline {
     stage('Deploy') {
       steps {
           node('OSX') {
-             sh '''echo $SSH_HOST && echo SSH_HOST && echo $SSH_PORT && ./deploy.sh'''
+             sh '''echo $SSH_HOST && echo $SSH_PORT && ./deploy.sh'''
           }
       }
     }
