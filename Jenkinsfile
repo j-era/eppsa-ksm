@@ -4,7 +4,7 @@ pipeline {
     stage('Deploy') {
       steps {
           node('OSX') {
-             sh '''./deploy.sh'''
+             sh '''echo $SSH_USERNAME && ./deploy.sh'''
           }
       }
     }
