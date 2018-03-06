@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo $SSH_USERNAME
 ssh -p $SSH_PORT $SSH_USERNAME@$SSH_HOST << EOF
 rm -rf eppsa-ksm
 git clone --recursive https://github.com/artcom/eppsa-ksm.git
