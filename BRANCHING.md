@@ -12,9 +12,10 @@
 	* Caution 2: Resolving conflicts in a rebase can be more work than in a merge
 		* The best way to minimize conflicts is to keep track of what’s happening in master, and avoid letting a topic branch run for too long without rebasing.
 
-
 * Leverage a linear history, but do not rebase master branch onto another one. (This would rewrite the history of the master remote branch)
 	* No merge commits
 	* Backtracking
 	* Bisect
 	* Revert Commits
+
+* Branch name synax: feature/<git_issue_id>-<branch-name>
