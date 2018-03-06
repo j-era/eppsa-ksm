@@ -24,7 +24,7 @@ The development certificate points to `*.eppsa.de`. Set the correct path in CERT
     ```
   * Certifcate for `*.eppsa.de` or for each subdomain `*.<environment>.eppsa.de`
 
-Dependencies:
+### Docker & Docker Compose
   * [Docker](https://docs.docker.com/install/)
 
 ## Run
