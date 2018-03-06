@@ -1,4 +1,4 @@
-# The Git Workflow
+# Git Workflow
 
 * We use the Github Flow https://guides.github.com/introduction/flow/index.html
 	* Master branch stays for main develop branch by convinience (Stable Mainline)
