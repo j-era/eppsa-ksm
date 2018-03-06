@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 echo "Running deploy.sh"
 printenv
 ssh -p $SSH_PORT $SSH_USERNAME@$SSH_HOST << EOF
