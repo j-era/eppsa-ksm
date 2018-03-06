@@ -6,7 +6,16 @@ Game and CMS setup behind a nginx as reverse proxy.
 `git clone --recursive https://github.com/artcom/eppsa-ksm.git`
 
 
-Requirements:
+## Requirements
+
+### Certificate
+Use the production certificate or create a self-signed development certificate as follows:
+```
+cd certificate/development && openssl req -new -newkey rsa:2048 -sha1 -days 3650 -nodes -x509 -keyout privkey.pem -out fullchain.pem -config openssl.cnf
+```
+The development certificate points to `*.eppsa.de`. Set the correct path in CERTIFICATE_PATH below.
+
+### Local Service Lookup
   * For local development:
     * /etc/hosts:
     ```
