@@ -6,7 +6,7 @@ services:
       args:
         environment: production
 
-  frontend:
+  cms:
     build:
       dockerfile: Dockerfile.production
     environment:
@@ -16,7 +16,7 @@ services:
     build:
       dockerfile: Dockerfile.production
       args:
-        WS_SERVER_PATH: /server
+        WS_SERVER_PATH: /game-server
 
   game-server:
     build:

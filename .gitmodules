@@ -1,15 +1,15 @@
-[submodule "git-json-cms-content-repo"]
-	path = git-json-cms-content-repo
+[submodule "content-server"]
+	path = content-server
 	url = https://github.com/artcom/git-json-cms-content-repo.git
-[submodule "git-json-cms-asset-server"]
-	path = git-json-cms-asset-server
+[submodule "asset-server"]
+	path = asset-server
 	url = https://github.com/artcom/git-json-cms-asset-server.git
-[submodule "git-json-cms-frontend"]
-	path = git-json-cms-frontend
+[submodule "cms"]
+	path = cms
 	url = https://github.com/artcom/git-json-cms-frontend
-[submodule "server"]
-	path = server
-	url = https://github.com/artcom/eppsa-ksm-server.git
-[submodule "game"]
-	path = game
-	url = https://github.com/artcom/eppsa-ksm-game.git
+[submodule "game-server"]
+	path = game-server
+	url = https://github.com/artcom/eppsa-ksm-game-server.git
+[submodule "game-client"]
+	path = game-client
+	url = https://github.com/artcom/eppsa-ksm-game-client.git

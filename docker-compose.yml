@@ -5,8 +5,8 @@ services:
     build: ./nginx
     depends_on:
       - asset-server
-      - content-repo
-      - frontend
+      - content-server
+      - cms
       - game-client
       - game-server
       - git-json-api
@@ -17,7 +17,7 @@ services:
       - ${CERTIFICATE_PATH}:/certificate
 
   asset-server:
-    build: ./git-json-cms-asset-server
+    build: ./asset-server
     volumes:
       - type: volume
         source: assets
@@ -26,33 +26,33 @@ services:
   git-json-api:
     image: "artcom/git-json-api:latest"
     environment:
-      REPO_URI: http://content-repo/git/content/
+      REPO_URI: http://content-server/git/content/
       PORT: 80
     depends_on:
-      - content-repo
+      - content-server
 
-  content-repo:
-    build: ./git-json-cms-content-repo
+  content-server:
+    build: ./content-server
     volumes:
       - type: volume
         source: content
         target: /srv/content
 
-  frontend:
+  cms:
     build:
-      context: ./git-json-cms-frontend
+      context: ./cms
 
   game-client:
     build:
-      context: ./eppsa-mobile-game-client
+      context: ./game-client
     environment:
       PORT: 80
     depends_on:
-      - game-server
+      - server
 
   game-server:
     build:
-      context: ./eppsa-mobile-game-server
+      context: ./game-server
     environment:
       PORT: 80
 

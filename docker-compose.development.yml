@@ -6,11 +6,11 @@ services:
       args:
         environment: development
 
-  frontend:
+  cms:
     build:
       dockerfile: Dockerfile.development
     volumes:
-      - ./git-json-cms-frontend:/app
+      - ./cms:/app
       - /app/node_modules
     environment:
       PORT: 443
@@ -19,7 +19,7 @@ services:
     build:
       dockerfile: Dockerfile.development
     volumes:
-      - ./eppsa-mobile-game-client:/app
+      - ./game-client:/app
       - /app/node_modules
     environment:
       WS_SERVER_PATH: /server
@@ -28,5 +28,5 @@ services:
     build:
       dockerfile: Dockerfile.development
     volumes:
-      - ./eppsa-mobile-game-server:/app
+      - ./game-server:/app
       - /app/node_modules
