@@ -1,4 +1,5 @@
 #!/bin/bash
+printenv
 ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST << EOF
 echo $GIT_BRANCH
 EOF
