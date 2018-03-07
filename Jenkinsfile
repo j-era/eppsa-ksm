@@ -1,13 +1,13 @@
 pipeline {
   agent any
-  environment {
-    SSH_USERNAME = credentials('ssh-username-test')
-  }
   stages {
     stage('Deploy') {
       steps {
           node('OSX') {
-             sh '''./deploy.sh'''
+             sshagent(['ssh-eppsa-demo']) {
+                sh 'ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST uname -a'
+                sh './deploy.sh'
+            }
           }
       }
     }
