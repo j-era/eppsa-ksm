@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Deploy') {
       steps {
-          node('OSX') {
+          node('Linux') {
              sshagent(['ssh-eppsa-demo']) {
                 sh 'ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST uname -a'
                 sh '''ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST << EOF
