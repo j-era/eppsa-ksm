@@ -4,43 +4,43 @@ services:
   nginx:
     build: ./nginx
     depends_on:
-      - asset-server
-      - content-server
-      - cms
+      - cms-asset-server
+      - cms-content-server
+      - cms-content-repo
+      - cms-frontend
       - game-client
       - game-server
-      - git-json-api
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ${CERTIFICATE_PATH}:/certificate
 
-  asset-server:
-    build: ./asset-server
+  cms-asset-server:
+    build: ./cms-asset-server
     volumes:
       - type: volume
         source: assets
         target: /var/www/webdav
 
-  git-json-api:
+  cms-content-server:
     image: "artcom/git-json-api:latest"
     environment:
-      REPO_URI: http://content-server/git/content/
+      REPO_URI: http://cms-content-repo/git/content/
       PORT: 80
     depends_on:
-      - content-server
+      - cms-content-repo
 
-  content-server:
-    build: ./content-server
+  cms-content-repo:
+    build: ./cms-content-repo
     volumes:
       - type: volume
         source: content
         target: /srv/content
 
-  cms:
+  cms-frontend:
     build:
-      context: ./cms
+      context: ./cms-frontend
 
   game-client:
     build:
@@ -48,7 +48,7 @@ services:
     environment:
       PORT: 80
     depends_on:
-      - server
+      - game-server
 
   game-server:
     build:

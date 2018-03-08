@@ -6,11 +6,11 @@ services:
       args:
         environment: development
 
-  cms:
+  cms-frontend:
     build:
       dockerfile: Dockerfile.development
     volumes:
-      - ./cms:/app
+      - ./cms-frontend:/app
       - /app/node_modules
     environment:
       PORT: 443
