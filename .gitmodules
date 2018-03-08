@@ -7,9 +7,9 @@
 [submodule "cms"]
 	path = cms
 	url = https://github.com/artcom/git-json-cms-frontend
-[submodule "game-server"]
-	path = game-server
-	url = https://github.com/artcom/eppsa-ksm-game-server.git
 [submodule "game-client"]
 	path = game-client
 	url = https://github.com/artcom/eppsa-ksm-game-client.git
+[submodule "game-server"]
+	path = game-server
+	url = https://github.com/artcom/eppsa-ksm-game-server.git
