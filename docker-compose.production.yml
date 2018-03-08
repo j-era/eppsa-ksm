@@ -6,7 +6,7 @@ services:
       args:
         environment: production
 
-  cms:
+  cms-frontend:
     build:
       dockerfile: Dockerfile.production
     environment:
