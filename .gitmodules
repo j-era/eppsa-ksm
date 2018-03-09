@@ -7,9 +7,9 @@
 [submodule "cms-frontend"]
 	path = cms-frontend
 	url = https://github.com/artcom/git-json-cms-frontend
-[submodule "cms-content-repo"]
-	path = cms-content-repo
-	url = https://github.com/artcom/git-json-cms-content-repo.git
 [submodule "asset-server"]
 	path = asset-server
 	url = git@github.com:artcom/git-json-cms-asset-server.git
+[submodule "content-repo"]
+	path = content-repo
+	url = https://github.com/artcom/git-json-cms-content-repo.git

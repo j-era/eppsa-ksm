@@ -5,8 +5,8 @@ services:
     build: ./nginx
     depends_on:
       - asset-server
-      - cms-content-server
-      - cms-content-repo
+      - content-server
+      - content-repo
       - cms-frontend
       - game-client
       - game-server
@@ -23,16 +23,16 @@ services:
         source: assets
         target: /var/www/webdav
 
-  cms-content-server:
+  content-server:
     image: "artcom/git-json-api:latest"
     environment:
       CONTENT_REPO_URI: http://cms-content-repo/git/content/
       PORT: 80
     depends_on:
-      - cms-content-repo
+      - content-repo
 
-  cms-content-repo:
-    build: ./cms-content-repo
+  content-repo:
+    build: ./content-repo
     volumes:
       - type: volume
         source: content
