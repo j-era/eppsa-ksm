@@ -4,12 +4,12 @@
 [submodule "game-server"]
 	path = game-server
 	url = https://github.com/artcom/eppsa-ksm-game-server.git
-[submodule "cms-asset-server"]
-	path = cms-asset-server
-	url = https://github.com/artcom/git-json-cms-asset-server.git
 [submodule "cms-frontend"]
 	path = cms-frontend
 	url = https://github.com/artcom/git-json-cms-frontend
 [submodule "cms-content-repo"]
 	path = cms-content-repo
 	url = https://github.com/artcom/git-json-cms-content-repo.git
+[submodule "asset-server"]
+	path = asset-server
+	url = git@github.com:artcom/git-json-cms-asset-server.git

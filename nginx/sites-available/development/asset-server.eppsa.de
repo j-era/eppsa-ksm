@@ -4,6 +4,6 @@ server {
   server_name ~^asset-server\..+\.eppsa.de$;
 
   location / {
-    proxy_pass http://docker-cms-asset-server;
+    proxy_pass http://docker-asset-server;
   }
 }

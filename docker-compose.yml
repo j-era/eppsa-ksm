@@ -4,7 +4,7 @@ services:
   nginx:
     build: ./nginx
     depends_on:
-      - cms-asset-server
+      - asset-server
       - cms-content-server
       - cms-content-repo
       - cms-frontend
@@ -16,8 +16,8 @@ services:
     volumes:
       - ${CERTIFICATE_PATH}:/certificate
 
-  cms-asset-server:
-    build: ./cms-asset-server
+  asset-server:
+    build: ./asset-server
     volumes:
       - type: volume
         source: assets
@@ -26,7 +26,7 @@ services:
   cms-content-server:
     image: "artcom/git-json-api:latest"
     environment:
-      REPO_URI: http://cms-content-repo/git/content/
+      CONTENT_REPO_URI: http://cms-content-repo/git/content/
       PORT: 80
     depends_on:
       - cms-content-repo
@@ -41,14 +41,22 @@ services:
   cms-frontend:
     build:
       context: ./cms-frontend
+    environment:
+      CONTENT_SERVER_URI: https://cms-content-server.${HOST}
+      ASSET_SERVER_URI: https://asset-server.${HOST}
 
   game-client:
     build:
       context: ./game-client
     environment:
       PORT: 80
+      CONTENT_SERVER_URI: https://content-server.${HOST}
+      ASSET_SERVER_URI: https://asset-server.${HOST}
+      GAME_SERVER_URI: https://game-server.${HOST}
     depends_on:
       - game-server
+      - cms-content-server
+      - asset-server
 
   game-server:
     build:
