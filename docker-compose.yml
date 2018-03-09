@@ -65,6 +65,7 @@ services:
     build:
       context: ./game-server
     environment:
+      MONGODB_URI: mongodb://mongo
       PORT: 80
     depends_on:
       - mongo

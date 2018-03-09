@@ -2,9 +2,9 @@ const uuid = require("uuid/v4")
 const io = require("socket.io")(3000)
 
 const MongoClient = require("mongodb").MongoClient
-const test = require("assert")
 
-const mongoURL = "mongodb://mongo:27017"
+const mongoURL = `${process.env.MONGODB_URI}:27017`
+
 const dbName = "test"
 
 let db
