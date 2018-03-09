@@ -42,7 +42,7 @@ services:
     build:
       context: ./cms-frontend
     environment:
-      GIT_JSON_API_URI: https://content-server.${HOST}/content
+      GIT_JSON_API_URI: https://content-server.${HOST}
       ASSET_SERVER_URI: https://asset-server.${HOST}
     depends_on:
       - content-server
