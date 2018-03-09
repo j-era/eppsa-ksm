@@ -42,4 +42,4 @@ Set environement variable for the path to the ssl certificate:
 ## Content
 Access content repository:
 
-* `git clone https://cms.<environment>.eppsa.de/git/content`
+* `git clone https://cms.<environment>.eppsa.de content`

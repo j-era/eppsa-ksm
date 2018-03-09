@@ -26,7 +26,7 @@ services:
   content-server:
     image: "artcom/git-json-api:latest"
     environment:
-      REPO_URI: http://content-repo/git/content/
+      REPO_URI: http://content-repo/
       PORT: 80
     depends_on:
       - content-repo
