@@ -26,7 +26,7 @@ services:
   content-server:
     image: "artcom/git-json-api:latest"
     environment:
-      CONTENT_REPO_URI: http://cms-content-repo/git/content/
+      REPO_URI: http://content-repo/git/content/
       PORT: 80
     depends_on:
       - content-repo
@@ -42,21 +42,24 @@ services:
     build:
       context: ./cms-frontend
     environment:
-      CONTENT_SERVER_URI: https://cms-content-server.${HOST}
+      CONTENT_SERVER_URI: https://content-server.${HOST}
       ASSET_SERVER_URI: https://asset-server.${HOST}
+    depends_on:
+      - content-server
+      - asset-server
 
   game-client:
     build:
       context: ./game-client
     environment:
-      PORT: 80
       CONTENT_SERVER_URI: https://content-server.${HOST}
       ASSET_SERVER_URI: https://asset-server.${HOST}
       GAME_SERVER_URI: https://game-server.${HOST}
+      PORT: 80
     depends_on:
-      - game-server
-      - cms-content-server
+      - content-server
       - asset-server
+      - game-server
 
   game-server:
     build:
