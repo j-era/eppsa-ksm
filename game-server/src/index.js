@@ -35,12 +35,12 @@ function setupSocketIo() {
     console.log(`client ${socket.id} connected.`)
 
     socket.on("newGame", (name, avatar, toSocket) => {
-      const id = uuid()
+      const gameId = uuid()
 
       console.log(`client ${socket.id} started a new Game with name: ${name} and avatar: ${avatar}`)
 
-      storeGameInfo({ id, name, avatar }).then(() => {
-        toSocket(id)
+      storeGameInfo({ gameId, name, avatar }).then(() => {
+        toSocket(gameId)
       })
     })
 
@@ -56,11 +56,11 @@ async function storeGameInfo(gameInfo) {
   await db.collection("games").insertOne(gameInfo)
 }
 
-async function requestGameInfo(id) {
-  return await db.collection("games").find({ id }).limit(1).next()
+async function requestGameInfo(gameId) {
+  return await db.collection("games").find({ gameId }).limit(1).next()
 }
 
-async function testDB(id) {
-  await storeGameInfo({ id, name: id, avatar: id })
-  return await requestGameInfo(id)
+async function testDB(gameId) {
+  await storeGameInfo({ gameId, name: "foo", avatar: 1 })
+  return await requestGameInfo(gameId)
 }
