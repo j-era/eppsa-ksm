@@ -34,5 +34,9 @@ module.exports = {
       "ASSET_SERVER_URI",
       "GAME_SERVER_URI"
     ])
-  ]
+  ],
+  devServer: {
+    disableHostCheck: true,
+    host: "0.0.0.0"
+  }
 };
