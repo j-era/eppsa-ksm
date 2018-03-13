@@ -1,8 +1,16 @@
 #!/bin/bash
 set -e
 ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST << EOF
-  export HOST=$HOST
-  export CERTIFICATE_PATH=$CERTIFICATE_PATH
+  if ! grep -q "HOST=$HOST" /etc/environment; then
+    echo "Setting HOST in environment"
+    echo "HOST=$HOST" | sudo tee --append /etc/environment > /dev/null
+  fi;
+  if ! grep -q "CERTIFICATE_PATH=$CERTIFICATE_PATH" /etc/environment; then
+    echo "Setting CERTIFICATE_PATH in environment"
+    echo "CERTIFICATE_PATH=$CERTIFICATE_PATH" | sudo tee --append /etc/environment > /dev/null
+  fi;
+  echo "HOST=$HOST"
+  echo "CERTIFICATE_PATH=$CERTIFICATE_PATH"
   rm -rf eppsa-ksm
   git clone --recursive https://github.com/artcom/eppsa-ksm.git
   cd eppsa-ksm
