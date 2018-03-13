@@ -15,8 +15,8 @@ contentServer.getData().then(async (content) => {
     console.log(await gameServer.resumeGame(gameId))
   } else {
     console.log("Starting new game")
-    const gameId = await gameServer.newGame("Foo", 1)
-    setCookie("gameId", gameId)
+    const gameInfo = await gameServer.newGame("Foo", 1)
+    setCookie("gameId", gameInfo.gameId)
   }
 
   ReactDOM.render(
