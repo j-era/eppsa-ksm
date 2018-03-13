@@ -3,7 +3,7 @@
 	url = https://github.com/artcom/git-json-cms-frontend
 [submodule "asset-server"]
 	path = asset-server
-	url = git@github.com:artcom/git-json-cms-asset-server.git
+	url = https://github.com/artcom/git-json-cms-asset-server.git
 [submodule "content-repo"]
 	path = content-repo
 	url = https://github.com/artcom/git-json-cms-content-repo.git
