@@ -4,6 +4,8 @@
   "description": "server component for eppsa ksm game",
   "main": "src/index.js",
   "scripts": {
+    "lint": "eslint src",
+    "debug": "node --inspect-brk ./src/index.js",
     "start": "node ./src/index.js",
     "watch": "nodemon ./src/index.js"
   },
