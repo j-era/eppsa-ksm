@@ -13,6 +13,14 @@ export default class ContentServer {
     return this.send("resumeGame", gameId)
   }
 
+  startChallenge() {
+    this.send("startChallenge")
+  }
+
+  completeChallenge(result) {
+    this.send("completeChallenge", result)
+  }
+
   send(eventName, ...param) {
     return new Promise((resolve) => {
       this.socket.emit(eventName, ...param, result => {
