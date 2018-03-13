@@ -12,9 +12,12 @@ ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST << EOF
   echo "HOST=$HOST"
   echo "CERTIFICATE_PATH=$CERTIFICATE_PATH"
   rm -rf eppsa-ksm
-  git clone --recursive https://github.com/artcom/eppsa-ksm.git
+  git clone https://github.com/artcom/eppsa-ksm.git
   cd eppsa-ksm
+  grep path .gitmodules | sed 's/.*= //' | xargs rm -rf
   git checkout -b $GIT_BRANCH
+  git submodule init
+  git submodule update --recursive
   sudo systemctl stop eppsa-ksm
   docker-compose rm -f
   docker-compose -f docker-compose.yml -f docker-compose.production.yml build
