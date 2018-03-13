@@ -54,11 +54,15 @@ MongoClient.connect(MONGODB_URI).then((client) => {
       }
     })
 
-    socket.on("completeChallenge", (result) => {
+    socket.on("completeChallenge", async (result) => {
       if (gameInfo) {
         const collection = `challenge-${gameInfo.currentChallenge}`
-        const filter = { gameId: gameInfo.gameId, $sort: { startTime: -1 } }
-        const challenge = Object.assign({ endTime: new Date() }, result)
+        const filter = await database.collection(collection)
+          .find({ gameId: gameInfo.gameId })
+          .sort({ startTime: -1 })
+          .limit(1).next()
+
+        const challenge = { endTime: new Date(), ...result }
         database.collection(collection).updateOne(filter, { $set: challenge })
 
         gameInfo.score += result.score
@@ -71,8 +75,5 @@ MongoClient.connect(MONGODB_URI).then((client) => {
 
   function updateGameInfo(gameInfo) {
     return database.collection("games").updateOne({ gameId: gameInfo.gameId }, { $set: gameInfo })
-  }
-
-  function insertChallenge(number, result) {
   }
 }).catch((error) => console.error(error))
