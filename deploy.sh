@@ -16,6 +16,7 @@ ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST << EOF
   cd eppsa-ksm
   grep path .gitmodules | sed 's/.*= //' | xargs rm -rf
   git checkout -b $GIT_BRANCH
+  git pull origin $GIT_BRANCH
   git submodule init
   git submodule update --recursive
   sudo systemctl stop eppsa-ksm
