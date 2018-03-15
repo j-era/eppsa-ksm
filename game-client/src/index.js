@@ -37,6 +37,7 @@ contentServer.getData().then(transform).then(async (content) => {
         onStartNewGame={ onStartNewGame }
         onUpdateName={ (name) => store.dispatch(updateName(name)) }
         onStartChallenge={ () => store.dispatch(startChallenge()) }
+        onChallengeReady={ onChallengeReady }
       />
     </Provider>,
     document.getElementById("app")
@@ -56,4 +57,14 @@ async function onStartNewGame(name, avatar) {
   const gameInfo = await gameServer.newGame(name, avatar)
   store.dispatch(updateGameInfo(gameInfo))
   setCookie("gameId", gameInfo.gameId)
+}
+
+async function onChallengeReady(challengeWindow, uri) {
+  setTimeout(() => challengeWindow.postMessage("Configuration for you", uri), 100)
+}
+
+window.addEventListener("message", receiveMessage, false);
+function receiveMessage(event)
+{
+  gameServer.completeChallenge()
 }

@@ -15,9 +15,10 @@ function Application(props) {
           <Game
             challenge={ props.challenge }
             challengeUri={ challengeUri }
-            onStartChallenge={ props.onStartChallenge }
-            challengeStarted={ props.challengeStarted }
             score={ props.score }
+            challengeStarted={ props.challengeStarted }
+            onStartChallenge={ props.onStartChallenge }
+            onChallengeReady={ props.onChallengeReady }
           /> :
           <StartDialog
             previousGameInfo={ props.previousGameInfo }

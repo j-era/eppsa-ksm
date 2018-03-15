@@ -17,8 +17,12 @@ function renderNavigation({ challenge, navigation, score, onStartChallenge }) {
   )
 }
 
-function renderChallenge({ challengeUri }) {
+function renderChallenge({ challengeUri, onChallengeReady }) {
   return (
-    <iframe src={ challengeUri } />
+    <iframe
+      src={ challengeUri }
+      ref={ (iframe) => onChallengeReady(iframe.contentWindow, challengeUri) }
+    />
   )
 }
+
