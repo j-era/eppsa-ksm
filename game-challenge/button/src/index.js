@@ -3,20 +3,19 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 
-let gameSource = null
-let gameOrigin = null
+let gameClient
+let config
 
 window.addEventListener("message", receiveMessage, false);
 function receiveMessage(event)
 {
   console.log(event)
-  gameSource = event.source
-  gameOrigin = event.origin
+  gameClient = { source: event.source, origin: event.origin }
+  config = event.data
 }
 
 const completeChallenge = () => {
-  console.log("Sending Complete")
-  gameSource.postMessage("Complete!", gameOrigin)
+  gameClient.source.postMessage({ score: config.reward }, gameClient.origin)
 }
 
 ReactDOM.render(<App

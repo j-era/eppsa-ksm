@@ -36,7 +36,7 @@ contentServer.getData().then(transform).then(async (content) => {
         onResumeGame={ onResumeGame }
         onStartNewGame={ onStartNewGame }
         onUpdateName={ (name) => store.dispatch(updateName(name)) }
-        onStartChallenge={ () => store.dispatch(startChallenge()) }
+        onStartChallenge={ onStartChallenge }
         onChallengeReady={ onChallengeReady }
       />
     </Provider>,
@@ -59,12 +59,17 @@ async function onStartNewGame(name, avatar) {
   setCookie("gameId", gameInfo.gameId)
 }
 
-async function onChallengeReady(challengeWindow, uri) {
-  setTimeout(() => challengeWindow.postMessage("Configuration for you", uri), 100)
+async function onStartChallenge() {
+  await gameServer.startChallenge()
+  store.dispatch(startChallenge())
 }
 
+async function onChallengeReady(challengeWindow, config, uri) {
+  setTimeout(() => challengeWindow.postMessage(config, uri), 100)
+}
 window.addEventListener("message", receiveMessage, false);
+
 async function receiveMessage(event)
 {
-  store.dispatch(updateGameInfo(await gameServer.completeChallenge()))
+  store.dispatch(updateGameInfo(await gameServer.completeChallenge(event.data)))
 }

@@ -8,7 +8,7 @@ export default function Game(props) {
 
 function renderNavigation({ challenge, navigation, score, onStartChallenge }) {
   return (
-    <div>  
+    <div> 
       <div>Current Challenge: { challenge }</div>
       <div>Score: { score }</div>
       <div>Navigation: { navigation }</div>
@@ -17,11 +17,11 @@ function renderNavigation({ challenge, navigation, score, onStartChallenge }) {
   )
 }
 
-function renderChallenge({ challengeUri, onChallengeReady }) {
+function renderChallenge({ challengeConfig, challengeUri, onChallengeReady }) {
   return (
     <iframe
       src={ challengeUri }
-      ref={ (iframe) => onChallengeReady(iframe.contentWindow, challengeUri) }
+      ref={ (iframe) => iframe ? onChallengeReady(iframe.contentWindow, challengeConfig, challengeUri) : null }
     />
   )
 }
