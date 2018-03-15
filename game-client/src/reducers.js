@@ -29,10 +29,21 @@ export function avatar(state = "flower", action) {
   }
 }
 
-export function currentChallenge(state = 1, action) {
+export function challenge(state = 1, action) {
   switch (action.type) {
     case types.UPDATE_GAME_INFO:
-      return action.gameInfo.currentChallenge
+      return action.gameInfo.challenge
+    default:
+      return state
+  }
+}
+
+export function challengeStarted(state = false, action) {
+  switch (action.type) {
+    case types.UPDATE_GAME_INFO:
+      return false
+    case types.START_CHALLENGE:
+      return true
     default:
       return state
   }

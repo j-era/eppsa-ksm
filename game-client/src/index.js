@@ -8,7 +8,7 @@ import { applyMiddleware, createStore, combineReducers } from "redux"
 import { createLogger } from "redux-logger"
 
 import Application from "./components/application"
-import { updateGameInfo, updateName, updatePreviousGameInfo } from "./actionCreators"
+import { startChallenge, updateGameInfo, updateName, updatePreviousGameInfo } from "./actionCreators"
 import * as reducers from "./reducers"
 import ContentServer from "./api/contentServer"
 import { getCookie, setCookie } from "./cookie"
@@ -36,6 +36,7 @@ contentServer.getData().then(transform).then(async (content) => {
         onResumeGame={ onResumeGame }
         onStartNewGame={ onStartNewGame }
         onUpdateName={ (name) => store.dispatch(updateName(name)) }
+        onStartChallenge={ () => store.dispatch(startChallenge()) }
       />
     </Provider>,
     document.getElementById("app")

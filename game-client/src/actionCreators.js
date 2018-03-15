@@ -13,3 +13,9 @@ export function updateName(name) {
     name
   }
 }
+
+export function startChallenge() {
+  return {
+    type: types.START_CHALLENGE
+  }
+}

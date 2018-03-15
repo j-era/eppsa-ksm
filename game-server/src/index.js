@@ -24,7 +24,7 @@ MongoClient.connect(MONGODB_URI).then((client) => {
           gameId: uuid(),
           name,
           avatar,
-          currentChallenge: 1,
+          challenge: 1,
           score: 0,
           startTime: new Date(),
           challenges: []
@@ -53,14 +53,14 @@ MongoClient.connect(MONGODB_URI).then((client) => {
     socket.on("startChallenge", () => {
       if (gameInfo) {
         const startTime = new Date()
-        const collection = `challenge-${gameInfo.currentChallenge}`
+        const collection = `challenge-${gameInfo.challenge}`
         database.collection(collection).insertOne({ gameId: gameInfo.gameId, startTime })
       }
     })
 
     socket.on("completeChallenge", async (result) => {
       if (gameInfo) {
-        const collection = `challenge-${gameInfo.currentChallenge}`
+        const collection = `challenge-${gameInfo.challenge}`
         const filter = await database.collection(collection)
           .find({ gameId: gameInfo.gameId })
           .sort({ startTime: -1 })
@@ -70,7 +70,7 @@ MongoClient.connect(MONGODB_URI).then((client) => {
         database.collection(collection).updateOne(filter, { $set: challenge })
 
         gameInfo.score += result.score
-        gameInfo.currentChallenge++
+        gameInfo.challenge++
 
         updateGameInfo(gameInfo)
       }
