@@ -1,6 +1,15 @@
 import * as types from "./actionTypes"
 
-export function name(state = "", action) {
+export function gameStarted(state = false, action) {
+  switch (action.type) {
+    case types.UPDATE_GAME_INFO:
+      return true
+    default:
+      return state
+  }
+}
+
+export function name(state = "Bob", action) {
   switch (action.type) {
     case types.UPDATE_GAME_INFO:
       return action.gameInfo.name
@@ -11,7 +20,7 @@ export function name(state = "", action) {
   }
 }
 
-export function avatar(state = 0, action) {
+export function avatar(state = "flower", action) {
   switch (action.type) {
     case types.UPDATE_GAME_INFO:
       return action.gameInfo.avatar

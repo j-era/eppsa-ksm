@@ -46,6 +46,10 @@ MongoClient.connect(MONGODB_URI).then((client) => {
       toSocket(gameInfo)
     })
 
+    socket.on("getGameInfo", async (gameId, toSocket) => {
+      toSocket(await database.collection("games").find({ gameId }).limit(1).next())
+    })
+
     socket.on("startChallenge", () => {
       if (gameInfo) {
         const startTime = new Date()
