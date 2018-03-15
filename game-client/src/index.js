@@ -64,7 +64,7 @@ async function onChallengeReady(challengeWindow, uri) {
 }
 
 window.addEventListener("message", receiveMessage, false);
-function receiveMessage(event)
+async function receiveMessage(event)
 {
-  gameServer.completeChallenge()
+  store.dispatch(updateGameInfo(await gameServer.completeChallenge()))
 }

@@ -58,7 +58,7 @@ MongoClient.connect(MONGODB_URI).then((client) => {
       }
     })
 
-    socket.on("completeChallenge", async (result) => {
+    socket.on("completeChallenge", async (result, toSocket) => {
       if (gameInfo) {
         const collection = `challenge-${gameInfo.challenge}`
         const filter = await database.collection(collection)
@@ -73,6 +73,7 @@ MongoClient.connect(MONGODB_URI).then((client) => {
         gameInfo.challenge++
 
         updateGameInfo(gameInfo)
+        toSocket(gameInfo)
       }
     })
   })

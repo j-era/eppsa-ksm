@@ -22,7 +22,7 @@ export default class ContentServer {
   }
 
   completeChallenge(result) {
-    this.send("completeChallenge", result)
+    return this.send("completeChallenge", result)
   }
 
   send(eventName, ...param) {
