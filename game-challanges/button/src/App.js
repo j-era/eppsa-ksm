@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.css';
 import styled from "styled-components"
 
@@ -17,15 +17,7 @@ const Button = styled.div `
   background-color: green;
 `
 
-
-class App extends Component {
-  render() {
-    return (
-      <Container>
-        <Button/>
-      </Container>
-    );
-  }
-}
-
-export default App;
+export default props =>
+  <Container>
+    <Button onClick={ props.onClick }/>
+  </Container>
