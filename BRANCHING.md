@@ -18,4 +18,4 @@
 	* Bisect
 	* Revert Commits
 
-* Branch name synax: feature/<git_issue_id>-<branch-name>
+* Branch name synax: feature/<git_issue_id>_<branch-name>
