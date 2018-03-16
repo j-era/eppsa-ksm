@@ -33,7 +33,7 @@ Set environement variable for the path to the ssl certificate:
   * `CERTIFICATE_PATH=/path/to/certificate`
 
 Set the HOST variable of your target enironment:
-  * `HOST=env.eppsa.de``
+  * `HOST=<environment>.eppsa.de``
 
 ### Build Images
 `docker-compose -f docker-compose.yml -f docker-compose.development.yml build`
