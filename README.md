@@ -54,4 +54,4 @@ E.g. this will be necessary if you want to install new node dependencies during 
 ## Content
 Access content repository:
 
-* `git clone https://cms.<environment>.eppsa.de content`
+* `git clone https://content.<environment>.eppsa.de content`
