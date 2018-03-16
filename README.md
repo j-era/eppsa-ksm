@@ -37,6 +37,13 @@ Set environement variable for the path to the ssl certificate:
 ### Production
 `docker-compose -f docker-compose.yml -f docker-compose.production.yml up`
 
+### Troubleshooting
+If you need to recreate any volume (but not "named volumes"), first use the following commands before using 'up':
+```
+docker-compose stop
+docker-compose rm
+```
+E.g. this will be necessary if you want to install new node dependencies during theÂ build.
 
 
 ## Content
