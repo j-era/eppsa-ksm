@@ -60,6 +60,7 @@ services:
       - content-server
       - asset-server
       - game-server
+      - game-challenge-button
 
   game-server:
     build:
