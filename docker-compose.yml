@@ -55,20 +55,24 @@ services:
       CONTENT_SERVER_URI: https://content-server.${HOST}
       ASSET_SERVER_URI: https://asset-server.${HOST}
       GAME_SERVER_URI: https://game-server.${HOST}
-      PORT: 80
+      PORT: 443
     depends_on:
       - content-server
       - asset-server
       - game-server
+      - game-challenge-button
 
   game-server:
     build:
       context: ./game-server
     environment:
       MONGODB_URI: mongodb://mongo
-      PORT: 80
     depends_on:
       - mongo
+
+  game-challenge-button:
+    build:
+      context: ./game-challenge/button
 
   mongo:
     image: "mongo:3.6.3-jessie"
@@ -78,7 +82,6 @@ services:
       - type: volume
         source: mongoDB
         target: /data/db
-
 
 volumes:
   content:

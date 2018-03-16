@@ -1,66 +1,85 @@
 const uuid = require("uuid/v4")
 const io = require("socket.io")(3000)
-
 const MongoClient = require("mongodb").MongoClient
 
-const mongoURL = `${process.env.MONGODB_URI}:27017`
+const MONGODB_URI = `${process.env.MONGODB_URI}:27017`
+const DATABASE_NAME = "EPPSA_KSM"
 
-console.log(mongoURL)
+let database
 
-const dbName = "test"
+MongoClient.connect(MONGODB_URI).then((client) => {
+  console.log("Connected to mongodb")
+  database = client.db(DATABASE_NAME)
 
-let db
-
-init().then(() => {
-  for (let i = 0; i <= 20; i++) {
-    testDB(uuid()).then(result => {
-      console.log(result)
-    })
-  }
-})
-
-async function init() {
-  try {
-    const client = await MongoClient.connect(mongoURL)
-    console.log("connected to MongoDB")
-    db = client.db(dbName)
-  } catch (error) {
-    console.error(error)
-  }
-  setupSocketIo()
-}
-
-function setupSocketIo() {
   io.on("connect", socket => {
     console.log(`client ${socket.id} connected.`)
 
-    socket.on("newGame", (name, avatar, toSocket) => {
-      const gameId = uuid()
+    let gameInfo = null
 
+    socket.on("newGame", async (name, avatar, toSocket) => {
       console.log(`client ${socket.id} started a new Game with name: ${name} and avatar: ${avatar}`)
 
-      storeGameInfo({ gameId, name, avatar }).then(() => {
-        toSocket(gameId)
-      })
+      if (!gameInfo) {
+        gameInfo = {
+          gameId: uuid(),
+          name,
+          avatar,
+          challenge: 1,
+          score: 0,
+          startTime: new Date()
+        }
+
+        await database.collection("games").insertOne(gameInfo)
+        toSocket(gameInfo)
+      } else {
+        toSocket(new Error("gameInfo already exists!"))
+      }
     })
 
-    socket.on("resumeGame", (gameId, toSocket) => {
-      requestGameInfo(gameId).then(
-        gameInfo => toSocket(gameInfo)
-      )
+    socket.on("resumeGame", async (gameId, toSocket) => {
+      gameInfo = await database.collection("games").find({ gameId }).limit(1).next()
+      if (!gameInfo) {
+        console.log(`Error: Could not find gameInfo for gameId: ${gameId}`)
+      }
+
+      toSocket(gameInfo)
+    })
+
+    socket.on("getGameInfo", async (gameId, toSocket) => {
+      toSocket(await database.collection("games").find({ gameId }).limit(1).next())
+    })
+
+    socket.on("startChallenge", () => {
+      if (gameInfo) {
+        const startTime = new Date()
+        const collection = `challenge-${gameInfo.challenge}`
+        database.collection(collection).insertOne({ gameId: gameInfo.gameId, startTime })
+        console.log("startChallenge " + collection)
+      }
+    })
+
+    socket.on("completeChallenge", async (result, toSocket) => {
+      if (gameInfo) {
+        const collection = `challenge-${gameInfo.challenge}`
+        const filter = await database.collection(collection)
+          .find({ gameId: gameInfo.gameId })
+          .sort({ startTime: -1 })
+          .limit(1).next()
+          console.log("completeChallenge with " + JSON.stringify(result) + "  " + JSON.stringify(filter))
+
+        const challenge = { endTime: new Date(), ...result }
+        database.collection(collection).updateOne(filter, { $set: challenge })
+
+        gameInfo.score += result.score
+        gameInfo.challenge++
+
+        updateGameInfo(gameInfo)
+        toSocket(gameInfo)
+      }
     })
   })
-}
 
-async function storeGameInfo(gameInfo) {
-  await db.collection("games").insertOne(gameInfo)
-}
-
-async function requestGameInfo(gameId) {
-  return await db.collection("games").find({ gameId }).limit(1).next()
-}
-
-async function testDB(gameId) {
-  await storeGameInfo({ gameId, name: "foo", avatar: 1 })
-  return await requestGameInfo(gameId)
-}
+  function updateGameInfo(gameInfo) {
+    return database.collection("games").updateOne({ gameId: gameInfo.gameId }, { $set: gameInfo })
+  }
+}).catch((error) => console.error(error))

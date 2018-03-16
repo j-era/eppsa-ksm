@@ -5,12 +5,24 @@ export default class ContentServer {
     this.socket = client(uri, { secure: true })
   }
 
+  getGameInfo(gameId) {
+    return this.send("getGameInfo", gameId)
+  }
+
   newGame(name, avatar) {
     return this.send("newGame", name, avatar)
   }
 
   resumeGame(gameId) {
     return this.send("resumeGame", gameId)
+  }
+
+  startChallenge() {
+    this.send("startChallenge")
+  }
+
+  completeChallenge(result) {
+    return this.send("completeChallenge", result)
   }
 
   send(eventName, ...param) {
