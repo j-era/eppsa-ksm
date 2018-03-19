@@ -74,6 +74,18 @@ services:
     build:
       context: ./game-challenge/button
 
+  game-challenge-hunt-client:
+    build:
+      context: ./game-challenge/hunt/eppsa-mobile-game-client
+    environment:
+      PORT: 80
+
+  game-challenge-hunt-server:
+    build:
+      context: ./game-challenge/hunt/eppsa-mobile-game-server
+    environment:
+      PORT: 80
+
   mongo:
     image: "mongo:3.6.3-jessie"
     ports:

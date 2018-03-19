@@ -20,6 +20,7 @@ function renderNavigation({ challenge, navigation, score, onStartChallenge }) {
 function renderChallenge({ challengeConfig, challengeUri, onChallengeReady }) {
   return (
     <iframe
+      allow="camera"
       src={ challengeUri }
       ref={ (iframe) => iframe ? onChallengeReady(iframe.contentWindow, challengeConfig, challengeUri) : null }
     />

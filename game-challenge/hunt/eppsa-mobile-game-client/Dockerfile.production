@@ -1,0 +1,23 @@
+FROM node:latest
+
+# set working directory
+RUN mkdir /app
+WORKDIR /app
+
+# install and cache app dependencies
+COPY package.json /app/package.json
+COPY package-lock.json /app/package-lock.json
+RUN npm install
+
+COPY scripts /app/scripts
+COPY config /app/config
+COPY src /app/src
+COPY public /app/public
+
+ARG WS_SERVER_PATH
+RUN npm run build
+
+ADD public/index.html /app/public/index.html
+
+# start app
+CMD ["npm", "start"]
