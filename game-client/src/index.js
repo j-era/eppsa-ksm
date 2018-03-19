@@ -69,7 +69,7 @@ async function onStartChallenge() {
 }
 
 async function onChallengeReady(challengeWindow, config, uri) {
-  setTimeout(() => challengeWindow.postMessage(config, uri), 200)
+  challengeWindow.postMessage(config, uri)
 }
 
 async function receiveMessage(event)
