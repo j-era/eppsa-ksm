@@ -35,7 +35,7 @@ services:
     build:
       dockerfile: Dockerfile.development
     volumes:
-      - ./game-challenge/hunt:/app
+      - ./game-challenge/button:/app
       - /app/node_modules
 
   game-challenge-hunt-client:
