@@ -71,5 +71,8 @@ window.addEventListener("message", receiveMessage, false);
 
 async function receiveMessage(event)
 {
-  store.dispatch(updateGameInfo(await gameServer.completeChallenge(event.data)))
+  // filter for challange messages (react dev tools)
+  if(event.data.source == "challenge"){
+    store.dispatch(updateGameInfo(await gameServer.completeChallenge(event.data)))
+  }
 }

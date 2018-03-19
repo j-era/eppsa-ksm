@@ -15,7 +15,11 @@ function receiveMessage(event)
 }
 
 const completeChallenge = () => {
-  gameClient.source.postMessage({ score: config.reward }, gameClient.origin)
+  gameClient.source.postMessage(
+    {
+      source: "challenge",
+      score: config.reward
+    }, gameClient.origin)
 }
 
 ReactDOM.render(<App
