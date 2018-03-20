@@ -25,3 +25,13 @@ services:
   game-challenge-button:
     build:
       dockerfile: Dockerfile.production
+
+  game-challenge-hunt-client:
+    build:
+      dockerfile: Dockerfile.production
+    environment:
+      WS_SERVER_PATH: /server
+
+  game-challenge-hunt-server:
+    build:
+      dockerfile: Dockerfile.production

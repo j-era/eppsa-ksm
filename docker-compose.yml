@@ -61,6 +61,8 @@ services:
       - asset-server
       - game-server
       - game-challenge-button
+      - game-challenge-hunt-client
+      - game-challenge-hunt-server
 
   game-server:
     build:
