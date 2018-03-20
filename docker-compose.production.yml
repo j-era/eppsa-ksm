@@ -22,6 +22,6 @@ services:
     build:
       dockerfile: Dockerfile.production
 
-  game-challange-button:
+  game-challenge-button:
     build:
       dockerfile: Dockerfile.production
