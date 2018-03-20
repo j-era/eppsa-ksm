@@ -33,23 +33,21 @@ Set environement variable for the path to the ssl certificate:
   * `CERTIFICATE_PATH=/path/to/certificate`
 
 Set the HOST variable of your target enironment:
-  * `HOST=<environment>.eppsa.de``
+  * `HOST=<environment>.eppsa.de`
 
 ### Build Images
 `docker-compose -f docker-compose.yml -f docker-compose.development.yml build`
 
 ### Start Containers
-`docker-compose -f docker-compose.yml -f docker-compose.development.yml up -V`
-### Troubleshooting
-If you need to recreate any volume (but not "named volumes"), first use the following commands before using 'up':
+`docker-compose -f docker-compose.yml -f docker-compose.development.yml up`
+
+#### Troubleshooting
+If you need to recreate a volume (but not "named volumes"), first use the following commands before using 'up':
 ```
 docker-compose stop
 docker-compose rm
 ```
-E.g. this will be necessary if you want to install new node dependencies during theÂ build.
-
-### Both
-`docker-compose -f docker-compose.yml -f docker-compose.development.yml up --build -V`
+E.g. this will be necessary if you want to install new node dependencies using `npm install` during the build.
 
 ## Content
 Access content repository:
