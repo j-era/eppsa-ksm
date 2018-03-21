@@ -1,5 +1,11 @@
 const uuid = require("uuid/v4")
-const io = require("socket.io")(3000)
+
+const ioOptions = {
+  pingTimeout: 3000,
+  pingInterval: 1000
+}
+
+const io = require("socket.io")(3000, ioOptions)
 const MongoClient = require("mongodb").MongoClient
 
 const MONGODB_URI = `${process.env.MONGODB_URI}:27017`
@@ -12,7 +18,16 @@ MongoClient.connect(MONGODB_URI).then((client) => {
   database = client.db(DATABASE_NAME)
 
   io.on("connect", socket => {
-    console.log(`client ${socket.id} connected.`)
+    console.log(`${new Date()} client ${socket.id} connected.`)
+
+    socket.on("disconnecting", reason => {
+      console.log(`${new Date()} client ${socket.id} disconnected because ${reason}.`)
+    })
+
+    socket.on("pingo", toSocket => {
+      console.log(`${new Date()} got ping. sending pong.`)
+      toSocket("pong")
+    })
 
     let gameInfo = null
 
