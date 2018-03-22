@@ -14,24 +14,27 @@ export default class ContentServer {
     this.socket = client(uri, ioOptions)
 
     this.socket.on("disconnect", reason => {
-      console.log(`disconnected because of ${reason}`)
+      console.log(`${new Date()} disconnected because of ${reason}`)
     })
 
     this.socket.on("connect", () => {
-      console.log(`connected as ${this.socket.id}`)
+      console.log(`${new Date()} connected as ${this.socket.id}`)
     })
 
     this.socket.on("reconnect", attempt => {
-      console.log(`reconnected after ${attempt} attempts`)
+      console.log(`${new Date()} reconnected after ${attempt} attempts`)
     })
 
     this.socket.on('reconnecting', attemptNumber => {
-      console.log(`reconnecting for the ${attemptNumber}. time`)
+      console.log(`${new Date()} reconnecting for the ${attemptNumber}. time`)
     })
 
+    this.pingCount = 0
+
     setInterval(async () => {
-      console.log("send ping")
-      console.log("got " + await this.send("pingo"))
+      this.pingCount++
+      console.log(`${new Date()} send ping ${this.pingCount}`)
+      console.log(`${new Date()} got ${await this.send("pingo", this.pingCount)}`)
     }, 1000)
 
   }

@@ -24,9 +24,9 @@ MongoClient.connect(MONGODB_URI).then((client) => {
       console.log(`${new Date()} client ${socket.id} disconnected because ${reason}.`)
     })
 
-    socket.on("pingo", toSocket => {
-      console.log(`${new Date()} got ping. sending pong.`)
-      toSocket("pong")
+    socket.on("pingo", (pingCount, toSocket) => {
+      console.log(`${new Date()} got ping ${pingCount}. sending pong.`)
+      toSocket(`pong ${pingCount}`)
     })
 
     let gameInfo = null
