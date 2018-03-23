@@ -1,36 +1,37 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import { keys, pickBy } from "lodash"
 import "./index.css"
 import App from "./App"
 
-const config = {
-  question: "What is your favorite color?",
-  reward: 1000,
-  answers: [
-    {
-      answer: "Green",
-      isCorrect: true
-    },
-    {
-      answer: "Blue. No, red!",
-      isCorrect: false
-    },
-    {
-      answer: "42",
-      isCorrect: false
-    },
-    {
-      answer: "Dunno",
-      isCorrect: false
-    }
-  ]
+
+let gameClient
+let config
+
+function getChildren(parent, template) {
+  return keys(pickBy(parent, child => child.template === template)).map(key => parent[key])
+}
+
+window.addEventListener("message", receiveMessage, false)
+
+function receiveMessage(event) {
+  console.log(event)
+  gameClient = { source: event.source, origin: event.origin }
+  config = {
+    question: event.data.question,
+    reward: event.data.reward,
+    answers: getChildren(event.data, "quizAnswer")
+  }
+  ReactDOM.render(
+    <App config={ config } completeChallenge={ completeChallenge } />,
+    document.getElementById("root")
+  )
 }
 
 function completeChallenge(score) {
-  console.log(`player got score: ${score}`)
+  gameClient.source.postMessage(
+    {
+      source: "challenge",
+      score
+    }, gameClient.origin)
 }
-
-ReactDOM.render(
-  <App config={ config } completeChallenge={ completeChallenge } />,
-  document.getElementById("root")
-)
