@@ -48,19 +48,19 @@ function transform(content) {
   return Object.assign(mapValues(omit(content, "index"), transform), content.index)
 }
 
-async function onResumeGame(gameId) {
-  store.dispatch(updateGameInfo(await gameServer.resumeGame(gameId)))
+async function onResumeGame(gameId, maxChallenges) {
+  store.dispatch(updateGame(await gameServer.resumeGame(gameId, maxChallenges)))
 }
 
-async function onStartNewGame(name, avatar) {
+async function onStartNewGame(name, avatar, maxChallenges) {
   console.log("Starting new game")
-  const gameInfo = await gameServer.newGame(name, avatar)
-  setCookie("gameId", gameInfo.gameId)
+  const game = await gameServer.newGame(name, avatar, maxChallenges)
   store.dispatch(updateGame(game))
+  setCookie("gameId", game.gameId)
 }
 
 async function onStartChallenge() {
-  await gameServer.startChallenge()
+  await gameServer.startChallenge(getCookie("gameId"))
   store.dispatch(startChallenge())
 }
 

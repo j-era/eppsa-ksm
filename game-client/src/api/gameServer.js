@@ -9,20 +9,20 @@ export default class ContentServer {
     return this.send("findGame", gameId)
   }
 
-  newGame(name, avatar) {
-    return this.send("newGame", name, avatar)
+  newGame(name, avatar, maxChallenges) {
+    return this.send("newGame", name, avatar, maxChallenges)
   }
 
-  resumeGame(gameId) {
-    return this.send("resumeGame", gameId)
+  resumeGame(gameId, maxChallenges) {
+    return this.send("resumeGame", gameId, maxChallenges)
   }
 
-  startChallenge() {
-    this.send("startChallenge")
+  startChallenge(gameId) {
+    this.send("startChallenge", gameId)
   }
 
-  completeChallenge(result) {
-    return this.send("completeChallenge", result)
+  finishChallenge(gameId, result) {
+    return this.send("finishChallenge", gameId, result)
   }
 
   send(eventName, ...param) {
