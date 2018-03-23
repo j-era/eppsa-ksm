@@ -22,10 +22,13 @@ function renderChallenge({ challengeConfig, challengeUri, onChallengeReady }) {
     <iframe
       allow="camera"
       src={ challengeUri }
-      ref={ iframe => iframe ? (
-        iframe.onload = () => onChallengeReady(iframe.contentWindow, challengeConfig, challengeUri)
-      ) : null }
-/>
+      ref={ iframe => {
+        if (iframe) {
+          iframe.onload = () =>
+            onChallengeReady(iframe.contentWindow, challengeConfig, challengeUri)
+        }
+      }}
+    />
   )
 }
 
