@@ -26,7 +26,11 @@ const config = {
   ]
 }
 
+function completeChallenge(score) {
+  console.log(`player got score: ${score}`)
+}
+
 ReactDOM.render(
-  <App config={ config } />,
+  <App config={ config } completeChallenge={ completeChallenge } />,
   document.getElementById("root")
 )
