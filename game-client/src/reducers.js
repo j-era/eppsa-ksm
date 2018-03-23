@@ -1,9 +1,10 @@
+import * as gameStates from "./gameStates"
 import * as types from "./actionTypes"
 
-export function gameStarted(state = false, action) {
+export function gameState(state = gameStates.WELCOME, action) {
   switch (action.type) {
-      return true
     case types.UPDATE_GAME:
+      return action.game.finished ? gameStates.FINISHED : gameStates.RUNNING
     default:
       return state
   }

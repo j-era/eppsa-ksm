@@ -2,55 +2,58 @@ import omit from "lodash.omit"
 import React from "react"
 import { connect } from "react-redux"
 
+import * as gameStates from "../gameStates"
 import Game from "./game"
-import StartDialog from "./startDialog"
+import WelcomeDialog from "./welcomeDialog"
+import FinalScore from "./finalScore"
 
 function Application(props) {
-
-    const maxChallenge = Object.keys(props.content.challenges).length - 1
-    const gameDone = props.challenge > maxChallenge
-
-  let challengeTypes = null
-  let challengeType = null
-  let challengeConfig = null
-  let challengeUri = null
-
-  if(!gameDone){
-    challengeTypes = props.content.challenges[props.challenge].challengeTypes
-    challengeType = Object.keys(omit(challengeTypes, "template"))[0]
-    challengeConfig = challengeTypes[challengeType]
-    challengeUri = resolveChallengeWebAppUri(challengeType)
+  switch (props.gameState) {
+    case gameStates.WELCOME: return renderWelcomeDialog(props)
+    case gameStates.RUNNING: return renderGame(props)
+    case gameStates.FINISHED: return renderFinalScore(props)
+    default: console.log("Invalid game state")
   }
+}
 
+function renderWelcomeDialog(props) {
+  const maxChallenges = Object.keys(props.content.challenges).length - 1
+  
+  return <WelcomeDialog
+      previousGame={ props.previousGame }
+      name={ props.name }
+      avatars={ props.content.avatars }
+      avatar={ props.avatar }
+      assetServerUri={ props.assetServerUri }
+      maxChallenges={ maxChallenges }
+      onResumeGame={ props.onResumeGame }
+      onStartNewGame={ props.onStartNewGame }
+      onUpdateName={ props.onUpdateName }
+    />
+}
 
-    return (
-      <div>
-        <div>{ props.content.description }</div>
-        { gameDone ? <div>Game is Done</div> :
-          ( props.gameStarted ?
-            <Game
-              challenge={ props.challenge }
-              challengeUri={ challengeUri }
-              challengeConfig={ challengeConfig }
-              score={ props.score }
-              challengeStarted={ props.challengeStarted }
-              onStartChallenge={ props.onStartChallenge }
-              onChallengeReady={ props.onChallengeReady }
-            /> :
-            <StartDialog
-              previousGameInfo={ props.previousGameInfo }
-              name={ props.name }
-              avatars={ props.content.avatars }
-              avatar={ props.avatar }
-              assetServerUri={ props.assetServerUri }
-              onResumeGame={ props.onResumeGame }
-              onStartNewGame={ props.onStartNewGame }
-              onUpdateName={ props.onUpdateName }
-            />
-          )
-        }
-      </div>
-    )
+function renderGame(props) {
+  const challengeTypes = props.content.challenges[props.challenge].challengeTypes
+  const challengeType = Object.keys(omit(challengeTypes, "template"))[0]
+  const challengeConfig = challengeTypes[challengeType]
+  const challengeUri = resolveChallengeWebAppUri(challengeType)
+
+  return <Game
+      challenge={ props.challenge }
+      challengeUri={ challengeUri }
+      challengeConfig={ challengeConfig }
+      score={ props.score }
+      challengeStarted={ props.challengeStarted }
+      onStartChallenge={ props.onStartChallenge }
+      onChallengeReady={ props.onChallengeReady }
+    />
+}
+
+function renderFinalScore(props) {
+  return <FinalScore
+      score={ props.score }
+      text={ props.content.finalScoreText }
+    />
 }
 
 function resolveChallengeWebAppUri(webApp) {
