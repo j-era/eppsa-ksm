@@ -107,7 +107,7 @@ MongoClient.connect(MONGODB_URI).then((client) => {
   function handleGameFinished(game) {
     if (!game.finished && game.challenge > game.maxChallenges) {
       game.finished = true
-      game.finishedTime = new Date()
+      game.finishTime = new Date()
       LOG.info("Game finished")
     }
   }
