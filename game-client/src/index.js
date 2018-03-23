@@ -71,8 +71,8 @@ window.addEventListener("message", receiveMessage, false);
 
 async function receiveMessage(event)
 {
-  // filter for challange messages (react dev tools)
-  if(event.data.source == "challenge"){
+  if(event.data.source == "challenge") { // ignore react dev tool messages
+    const challengeData = omit(event.data, "source")
     store.dispatch(updateGame(await gameServer.finishChallenge(getCookie("gameId"), challengeData)))
   }
 }
