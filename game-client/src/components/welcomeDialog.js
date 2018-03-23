@@ -11,12 +11,12 @@ export default class WelcomeDialog extends React.Component {
   }
 
   renderResumeGame() {
-    const { assetServerUri, avatars, maxChallenges, previousGame, onResumeGame } = this.props
+    const { assetServerUri, avatars, previousGame, onResumeGame } = this.props
     return (
       <div>
         <img src={ `${assetServerUri}/${avatars[previousGame.avatar].icon.src}` } />
         <div>{ previousGame.name }</div>
-        <button onClick={ () => onResumeGame(previousGame.gameId, maxChallenges) }>Resume</button>
+        <button onClick={ () => onResumeGame() }>Resume</button>
         <button onClick={ () => this.setState({decidedToStartNew: true}) }>Start New Game</button>
       </div>
     )
@@ -30,14 +30,13 @@ export default class WelcomeDialog extends React.Component {
       name,
       onStartNewGame,
       onUpdateName,
-      maxChallenges
     } = this.props
     
     return (
       <div>
         <img src={ `${assetServerUri}/${avatars[avatar].icon.src}` } />
         <input type="text" value={ name } onChange={ event => onUpdateName(event.target.value) } />
-        <button onClick={ () => onStartNewGame(name, avatar, maxChallenges) }>Start</button>
+        <button onClick={ () => onStartNewGame(name, avatar) }>Start</button>
       </div>
     )
   }

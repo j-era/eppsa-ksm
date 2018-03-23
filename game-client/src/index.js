@@ -27,14 +27,18 @@ contentServer.getData().then(transform).then(async (content) => {
     previousGame = await gameServer.findGame(gameId)
   }
   
+  window.addEventListener("message", receiveMessage, false);
+
+  const maxChallenges = Object.keys(content.challenges).length - 1
+
   render(
     <Provider store={ store }>
       <Application
         content={ content }
         previousGame={ previousGame }
         assetServerUri={ process.env.ASSET_SERVER_URI }
-        onResumeGame={ onResumeGame }
-        onStartNewGame={ onStartNewGame }
+        onResumeGame={ onResumeGame.bind(this, gameId, maxChallenges) }
+        onStartNewGame={ onStartNewGame.bind(this, maxChallenges) }
         onUpdateName={ (name) => store.dispatch(updateName(name)) }
         onStartChallenge={ onStartChallenge }
         onChallengeReady={ onChallengeReady }
@@ -52,7 +56,7 @@ async function onResumeGame(gameId, maxChallenges) {
   store.dispatch(updateGame(await gameServer.resumeGame(gameId, maxChallenges)))
 }
 
-async function onStartNewGame(name, avatar, maxChallenges) {
+async function onStartNewGame(maxChallenges, name, avatar) {
   console.log("Starting new game")
   const game = await gameServer.newGame(name, avatar, maxChallenges)
   store.dispatch(updateGame(game))
@@ -67,7 +71,6 @@ async function onStartChallenge() {
 async function onChallengeReady(challengeWindow, config, uri) {
   setTimeout(() => challengeWindow.postMessage(config, uri), 200)
 }
-window.addEventListener("message", receiveMessage, false);
 
 async function receiveMessage(event)
 {

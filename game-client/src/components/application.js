@@ -17,15 +17,12 @@ function Application(props) {
 }
 
 function renderWelcomeDialog(props) {
-  const maxChallenges = Object.keys(props.content.challenges).length - 1
-  
   return <WelcomeDialog
       previousGame={ props.previousGame }
       name={ props.name }
       avatars={ props.content.avatars }
       avatar={ props.avatar }
       assetServerUri={ props.assetServerUri }
-      maxChallenges={ maxChallenges }
       onResumeGame={ props.onResumeGame }
       onStartNewGame={ props.onStartNewGame }
       onUpdateName={ props.onUpdateName }
