@@ -1,9 +1,9 @@
 import * as types from "./actionTypes"
 
-export function updateGameInfo(gameInfo) {
+export function updateGame(game) {
   return {
-    type: types.UPDATE_GAME_INFO,
-    gameInfo
+    type: types.UPDATE_GAME,
+    game
   }
 }
 

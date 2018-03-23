@@ -8,7 +8,7 @@ import { applyMiddleware, createStore, combineReducers } from "redux"
 import { createLogger } from "redux-logger"
 
 import Application from "./components/application"
-import { startChallenge, updateGameInfo, updateName, updatePreviousGameInfo } from "./actionCreators"
+import { startChallenge, updateGame, updateName, updatepreviousGame } from "./actionCreators"
 import * as reducers from "./reducers"
 import ContentServer from "./api/contentServer"
 import { getCookie, setCookie } from "./cookie"
@@ -21,17 +21,17 @@ const contentServer = new ContentServer(process.env.CONTENT_SERVER_URI)
 const gameServer = new GameServer(process.env.GAME_SERVER_URI)
 
 contentServer.getData().then(transform).then(async (content) => {
-  let previousGameInfo = null
+  let previousGame = null
   const gameId = getCookie("gameId")
   if (gameId) {
-    previousGameInfo = await gameServer.getGameInfo(gameId)
+    previousGame = await gameServer.findGame(gameId)
   }
   
   render(
     <Provider store={ store }>
       <Application
         content={ content }
-        previousGameInfo={ previousGameInfo }
+        previousGame={ previousGame }
         assetServerUri={ process.env.ASSET_SERVER_URI }
         onResumeGame={ onResumeGame }
         onStartNewGame={ onStartNewGame }
@@ -55,8 +55,8 @@ async function onResumeGame(gameId) {
 async function onStartNewGame(name, avatar) {
   console.log("Starting new game")
   const gameInfo = await gameServer.newGame(name, avatar)
-  store.dispatch(updateGameInfo(gameInfo))
   setCookie("gameId", gameInfo.gameId)
+  store.dispatch(updateGame(game))
 }
 
 async function onStartChallenge() {
@@ -73,6 +73,6 @@ async function receiveMessage(event)
 {
   // filter for challange messages (react dev tools)
   if(event.data.source == "challenge"){
-    store.dispatch(updateGameInfo(await gameServer.completeChallenge(event.data)))
+    store.dispatch(updateGame(await gameServer.finishChallenge(getCookie("gameId"), challengeData)))
   }
 }

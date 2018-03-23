@@ -2,8 +2,8 @@ import * as types from "./actionTypes"
 
 export function gameStarted(state = false, action) {
   switch (action.type) {
-    case types.UPDATE_GAME_INFO:
       return true
+    case types.UPDATE_GAME:
     default:
       return state
   }
@@ -11,8 +11,8 @@ export function gameStarted(state = false, action) {
 
 export function name(state = "Bob", action) {
   switch (action.type) {
-    case types.UPDATE_GAME_INFO:
-      return action.gameInfo.name
+    case types.UPDATE_GAME:
+      return action.game.name
     case types.UPDATE_NAME:
       return action.name
     default:
@@ -22,8 +22,8 @@ export function name(state = "Bob", action) {
 
 export function avatar(state = "flower", action) {
   switch (action.type) {
-    case types.UPDATE_GAME_INFO:
-      return action.gameInfo.avatar
+    case types.UPDATE_GAME:
+      return action.game.avatar
     default:
       return state
   }
@@ -31,8 +31,8 @@ export function avatar(state = "flower", action) {
 
 export function challenge(state = 1, action) {
   switch (action.type) {
-    case types.UPDATE_GAME_INFO:
-      return action.gameInfo.challenge
+    case types.UPDATE_GAME:
+      return action.game.challenge
     default:
       return state
   }
@@ -40,7 +40,7 @@ export function challenge(state = 1, action) {
 
 export function challengeStarted(state = false, action) {
   switch (action.type) {
-    case types.UPDATE_GAME_INFO:
+    case types.UPDATE_GAME:
       return false
     case types.START_CHALLENGE:
       return true
@@ -51,8 +51,8 @@ export function challengeStarted(state = false, action) {
 
 export function score(state = 0, action) {
   switch (action.type) {
-    case types.UPDATE_GAME_INFO:
-      return action.gameInfo.score
+    case types.UPDATE_GAME:
+      return action.game.score
     default:
       return state
   }

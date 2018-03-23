@@ -5,8 +5,8 @@ export default class ContentServer {
     this.socket = client(uri, { secure: true })
   }
 
-  getGameInfo(gameId) {
-    return this.send("getGameInfo", gameId)
+  findGame(gameId) {
+    return this.send("findGame", gameId)
   }
 
   newGame(name, avatar) {
