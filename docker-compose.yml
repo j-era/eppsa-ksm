@@ -95,6 +95,10 @@ services:
     environment:
       PORT: 80
 
+  game-challenge-quiz:
+    build:
+      context: ./game-challenge/quiz
+
   mongo:
     image: "mongo:3.6.3-jessie"
     volumes:
