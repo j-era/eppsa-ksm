@@ -74,7 +74,7 @@ async function onChallengeReady(challengeWindow, config, uri) {
 
 async function receiveMessage(event)
 {
-  if(event.data.source == "challenge") { // ignore react dev tool messages
+  if(event.data.source === "challenge") { // ignore react dev tool messages
     const challengeData = omit(event.data, "source")
     store.dispatch(updateGame(await gameServer.finishChallenge(getCookie("gameId"), challengeData)))
   }
