@@ -47,12 +47,9 @@ MongoClient.connect(MONGODB_URI).then((client) => {
 
       const game = await findGame(gameId)
       if (game) {
-        if (!game.finished) {
-          game.maxChallenges = maxChallenges
-          handleGameFinished(game)
-          updateGame(game)
-        }
-
+        game.maxChallenges = maxChallenges
+        handleGameFinished(game)
+        updateGame(game)
       } else {
         LOG.error({ gameId }, "Could not find game in database")
       }
