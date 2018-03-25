@@ -16,7 +16,7 @@ mongoDB.connect().then(() => {
     client.subscribe()
   })
 
-  // foward database update event to all clients
+  // forward database update event to all clients
   mongoDB.on("update", () => {
     io.emit("update")
   })
