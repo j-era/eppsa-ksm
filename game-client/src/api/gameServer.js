@@ -17,12 +17,12 @@ export default class ContentServer {
     return this.send("resumeGame", gameId, maxChallenges)
   }
 
-  startChallenge(gameId) {
-    this.send("startChallenge", gameId)
+  startChallenge() {
+    this.send("startChallenge")
   }
 
-  finishChallenge(gameId, result) {
-    return this.send("finishChallenge", gameId, result)
+  finishChallenge(result) {
+    return this.send("finishChallenge", result)
   }
 
   send(eventName, ...param) {

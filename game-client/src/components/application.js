@@ -30,15 +30,15 @@ function renderWelcomeDialog(props) {
 }
 
 function renderGame(props) {
-  const challengeTypes = props.content.challenges[props.challenge].challengeTypes
+  const challengeTypes = props.content.challenges[props.challengeNumber].challengeTypes
   const challengeType = Object.keys(omit(challengeTypes, "template"))[0]
-  const challengeConfig = challengeTypes[challengeType]
+  const challenge = challengeTypes[challengeType]
   const challengeUri = resolveChallengeWebAppUri(challengeType)
 
   return <Game
-      challenge={ props.challenge }
+      challengeNumber={ props.challengeNumber }
       challengeUri={ challengeUri }
-      challengeConfig={ challengeConfig }
+      challenge={ challenge }
       score={ props.score }
       challengeStarted={ props.challengeStarted }
       onStartChallenge={ props.onStartChallenge }

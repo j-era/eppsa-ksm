@@ -64,7 +64,7 @@ async function onStartNewGame(maxChallenges, name, avatar) {
 }
 
 async function onStartChallenge() {
-  await gameServer.startChallenge(getCookie("gameId"))
+  await gameServer.startChallenge()
   store.dispatch(startChallenge())
 }
 
@@ -76,6 +76,6 @@ async function receiveMessage(event)
 {
   if(event.data.source === "challenge") { // ignore react dev tool messages
     const challengeData = omit(event.data, "source")
-    store.dispatch(updateGame(await gameServer.finishChallenge(getCookie("gameId"), challengeData)))
+    store.dispatch(updateGame(await gameServer.finishChallenge(challengeData)))
   }
 }

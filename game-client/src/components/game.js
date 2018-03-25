@@ -6,10 +6,10 @@ export default function Game(props) {
       renderNavigation(props)
 }
 
-function renderNavigation({ challenge, navigation, score, onStartChallenge }) {
+function renderNavigation({ challengeNumber, navigation, score, onStartChallenge }) {
   return (
     <div> 
-      <div>Current Challenge: { challenge }</div>
+      <div>Current Challenge: { challengeNumber }</div>
       <div>Score: { score }</div>
       <div>Navigation: { navigation }</div>
       <button onClick={ () => onStartChallenge() }>Start</button>
@@ -17,7 +17,7 @@ function renderNavigation({ challenge, navigation, score, onStartChallenge }) {
   )
 }
 
-function renderChallenge({ challengeConfig, challengeUri, onChallengeReady }) {
+function renderChallenge({ challenge, challengeUri, onChallengeReady }) {
   return (
     <iframe
       allow="camera"
@@ -25,7 +25,7 @@ function renderChallenge({ challengeConfig, challengeUri, onChallengeReady }) {
       ref={ iframe => {
         if (iframe) {
           iframe.onload = () =>
-            onChallengeReady(iframe.contentWindow, challengeConfig, challengeUri)
+            onChallengeReady(iframe.contentWindow, challenge, challengeUri)
         }
       }}
     />
