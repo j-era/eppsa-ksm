@@ -37,6 +37,7 @@ contentServer.getData().then(transform).then(async (content) => {
         content={ content }
         previousGame={ previousGame }
         assetServerUri={ process.env.ASSET_SERVER_URI }
+        maxChallenges={ maxChallenges }
         onResumeGame={ onResumeGame.bind(this, gameId, maxChallenges) }
         onStartNewGame={ onStartNewGame.bind(this, maxChallenges) }
         onUpdateName={ (name) => store.dispatch(actions.updateName(name)) }

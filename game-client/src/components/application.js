@@ -40,6 +40,7 @@ function renderGame(props) {
       challengeUri={ challengeUri }
       challenge={ challenge }
       score={ props.score }
+      maxChallenges={ props.maxChallenges }
       challengeStarted={ props.challengeStarted }
       onStartChallenge={ props.onStartChallenge }
       onChallengeReady={ props.onChallengeReady }

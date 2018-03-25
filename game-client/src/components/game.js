@@ -1,14 +1,21 @@
 import React from "react"
 
+import GameBoard from "./gameBoard"
+
 export default function Game(props) {
     return props.challengeStarted ?
       renderChallenge(props) :
       renderNavigation(props)
 }
 
-function renderNavigation({ challengeNumber, navigation, score, onStartChallenge }) {
+function renderNavigation({ activeGames, challengeNumber, maxChallenges, navigation, score, onStartChallenge }) {
   return (
-    <div> 
+    <div>
+      <GameBoard
+        activeGames={ activeGames }
+        challengeNumber={ challengeNumber }
+        maxChallenges={ maxChallenges }
+      />
       <div>Current Challenge: { challengeNumber }</div>
       <div>Score: { score }</div>
       <div>Navigation: { navigation }</div>
