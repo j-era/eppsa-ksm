@@ -17,7 +17,5 @@ mongoDB.connect().then(() => {
   })
 
   // forward database update event to all clients
-  mongoDB.on("update", () => {
-    io.emit("update")
-  })
+  mongoDB.on("activeGamesUpdated", (activeGames) => io.emit("activeGamesUpdated", activeGames))
 }).catch((error) => LOG.error(error))

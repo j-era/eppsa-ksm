@@ -5,7 +5,7 @@ export default class GameServer extends EventEmitter {
   constructor(uri) {
     super()
     this.socket = client(uri, { secure: true })
-    this.socket.on("update", () => this.emit("update"))
+    this.socket.on("activeGamesUpdated", () => this.emit("activeGamesUpdated"))
   }
 
   findGame(gameId) {
