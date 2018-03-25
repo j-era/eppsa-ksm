@@ -58,3 +58,12 @@ export function score(state = 0, action) {
       return state
   }
 }
+
+export function activeGames(state = [], action) {
+  switch (action.type) {
+    case types.UPDATE_ACTIVE_GAMES:
+      return action.games
+    default:
+      return state
+  }
+}

@@ -9,24 +9,23 @@ module.exports = class Client {
   }
 
   subscribe() {
-    this.socket.conn.on("packet", this.onPacket.bind(this))
     this.socket.on("findGame", this.findGame.bind(this))
+    this.socket.on("findActiveGames", this.findActiveGames.bind(this))
     this.socket.on("newGame", this.newGame.bind(this))
     this.socket.on("resumeGame", this.resumeGame.bind(this))
     this.socket.on("startChallenge", this.startChallenge.bind(this))
     this.socket.on("finishChallenge", this.finishChallenge.bind(this))
-  }
-
-  onPacket(packet) {
-    if (this.currentGame) {
-      this.currentGame.lastUpdate = new Date()
-      this.mongoDB.updateGame(this.currentGame)
-    }
+    this.socket.conn.on("packet", this.onPacket.bind(this))
   }
 
   async findGame(gameId, toSocket) {
     toSocket(await this.mongoDB.findGame(gameId))
   }
+
+  async findActiveGames(toSocket) {
+    toSocket(await this.mongoDB.findActiveGames())
+  }
+
   async newGame(name, avatar, maxChallenges, toSocket) {
     this.log.info({ playerName: name, avatar, maxChallenges }, "Starting a new game")
 
@@ -91,6 +90,13 @@ module.exports = class Client {
     }
 
     toSocket(this.currentGame)
+  }
+
+  onPacket(packet) {
+    if (this.currentGame) {
+      this.currentGame.lastUpdate = new Date()
+      this.mongoDB.updateGame(this.currentGame, false)
+    }
   }
 }
 

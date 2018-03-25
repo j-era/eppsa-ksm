@@ -15,4 +15,9 @@ mongoDB.connect().then(() => {
     const client = new Client(socket, mongoDB, LOG)
     client.subscribe()
   })
+
+  // foward database update event to all clients
+  mongoDB.on("update", () => {
+    io.emit("update")
+  })
 }).catch((error) => LOG.error(error))

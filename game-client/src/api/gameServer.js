@@ -1,12 +1,19 @@
 import client from "socket.io-client"
+import EventEmitter from "events"
 
-export default class ContentServer {
+export default class GameServer extends EventEmitter {
   constructor(uri) {
+    super()
     this.socket = client(uri, { secure: true })
+    this.socket.on("update", () => this.emit("update"))
   }
 
   findGame(gameId) {
     return this.send("findGame", gameId)
+  }
+
+  findActiveGames() {
+    return this.send("findActiveGames")
   }
 
   newGame(name, avatar, maxChallenges) {
