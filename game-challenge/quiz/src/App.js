@@ -47,7 +47,6 @@ export default class App extends React.Component {
   constructor(props) {
     super(props)
     autoBind(this)
-    this.maxTime = 5
     this.state = { selected: null, confirmed: false }
   }
 
@@ -114,13 +113,13 @@ export default class App extends React.Component {
 
   confirm() {
     if (this.state.selected != null) {
+      const { answers, reward, maxAnsweringTime } = this.props.config
       this.timeToAnswer = (new Date() - this.startTime) / 1000
-      const timeWeight = this.timeToAnswer > this.maxTime
-        ? 1 / (this.timeToAnswer - this.maxTime)
+      const timeWeight = this.timeToAnswer > maxAnsweringTime
+        ? 1 / (this.timeToAnswer - maxAnsweringTime)
         : 1
-      const { answers, reward } = this.props.config
       const finalAnswer = answers[this.state.selected]
-      this.score = finalAnswer.isCorrect ? reward * timeWeight : 0
+      this.score = Math.round(finalAnswer.isCorrect ? reward * timeWeight : 0)
       this.confirmedSelection = this.state.selected
       this.setState({ selected: null, confirmed: true })
     }

@@ -1,6 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { keys, pickBy } from "lodash"
+import { keys, pick, pickBy } from "lodash"
 import "./index.css"
 import App from "./App"
 
@@ -18,8 +18,7 @@ function receiveMessage(event) {
   console.log(event)
   gameClient = { source: event.source, origin: event.origin }
   config = {
-    question: event.data.question,
-    reward: event.data.reward,
+    ...pick(event.data, ["question", "reward", "maxAnsweringTime"]),
     answers: getChildren(event.data, "quizAnswer")
   }
   ReactDOM.render(
