@@ -1,7 +1,10 @@
 import React from "react"
 import autoBind from "react-autobind"
-import "./App.css"
 import styled from "styled-components"
+import "./App.css"
+import Button from "./components/button"
+import Question from "./components/question"
+
 
 const Container = styled.div `
   display: flex;
@@ -11,18 +14,6 @@ const Container = styled.div `
   
   width: 100%;
   height: 100%;
-`
-
-const Question = styled.div`
-  margin-top: 5px;
-  width: 200px;
-  height: 100px;
-`
-
-const Button = styled.div `
-  margin-top: 5px;
-  width: 200px;
-  height: 100px;
 `
 
 const AnswerButton = styled(Button)`
