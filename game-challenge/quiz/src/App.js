@@ -26,55 +26,107 @@ const Button = styled.div `
 `
 
 const AnswerButton = styled(Button)`
-  background-color: ${props => props.selected ? "red" : "grey"};
+  background-color: ${props => props.color};
 `
 
 const ConfirmButton = styled(Button)`
-  background-color: ${props => props.active ? "green" : "grey"};
+  background-color: ${props => props.active ? "blue" : "grey"};
+`
+
+const NextChallengeButton = styled(Button)`
+  background-color: blue;
+`
+
+const Score = styled.div`
+  margin-top: 5px;
+  width: 200px;
+  height: 100px;
 `
 
 export default class App extends React.Component {
   constructor(props) {
     super(props)
     autoBind(this)
-    this.state = { selected: null }
+    this.maxTime = 5
+    this.state = { selected: null, confirmed: false }
+  }
+
+  componentDidMount() {
+    this.startTime = new Date()
   }
 
   render() {
     const { question, answers } = this.props.config
     return (
       <Container>
+        {
+          this.state.confirmed && <Score>Score: { this.score }, Time:{ this.timeToAnswer }</Score>
+        }
         <Question>{ question }</Question>
         {
           answers.map((answer, i) =>
             <AnswerButton
               key={ i }
               onClick={ () => this.select(i) }
-              selected={ this.state.selected === i }>
+              color={ this.buttonColor(i) }>
               {
                 answer.answer
               }
             </AnswerButton>
           )
         }
-        <ConfirmButton
-          onClick={ this.confirm }
-          active={ this.state.selected != null }>
-          Confirm
-        </ConfirmButton>
+        {
+          !this.state.confirmed &&
+          <ConfirmButton
+            onClick={ this.confirm }
+            active={ this.state.selected != null }>
+            Confirm
+          </ConfirmButton>
+        }
+        {
+          this.state.confirmed &&
+            <NextChallengeButton onClick={ this.nextChallenge }>
+              Go to next challenge
+            </NextChallengeButton>
+        }
       </Container>
     )
   }
 
+  buttonColor(i) {
+    const { answers } = this.props.config
+    if (this.state.confirmed) {
+      if (answers[i].isCorrect) {
+        return "green"
+      } else if (this.confirmedSelection === i) {
+        return "red"
+      } else {
+        return "grey"
+      }
+    } else {
+      return this.state.selected === i ? "blue" : "grey"
+    }
+  }
+
   select(n) {
-    this.setState({ selected: this.state.selected === n ? null : n })
+    this.setState({ selected: this.state.confirmed || this.state.selected === n ? null : n })
   }
 
   confirm() {
     if (this.state.selected != null) {
+      this.timeToAnswer = (new Date() - this.startTime) / 1000
+      const timeWeight = this.timeToAnswer > this.maxTime
+        ? 1 / (this.timeToAnswer - this.maxTime)
+        : 1
       const { answers, reward } = this.props.config
       const finalAnswer = answers[this.state.selected]
-      this.props.completeChallenge(finalAnswer.isCorrect ? reward : 0)
+      this.score = finalAnswer.isCorrect ? reward * timeWeight : 0
+      this.confirmedSelection = this.state.selected
+      this.setState({ selected: null, confirmed: true })
     }
+  }
+
+  nextChallenge() {
+    this.props.completeChallenge(this.score)
   }
 }
