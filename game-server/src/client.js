@@ -15,6 +15,7 @@ module.exports = class Client {
     this.socket.on("resumeGame", this.resumeGame.bind(this))
     this.socket.on("startChallenge", this.startChallenge.bind(this))
     this.socket.on("finishChallenge", this.finishChallenge.bind(this))
+    this.socket.on("disconnect", this.disconnect.bind(this))
     this.socket.conn.on("packet", this.onPacket.bind(this))
   }
 
@@ -37,6 +38,7 @@ module.exports = class Client {
       score: 0,
       challengeNumber: 1,
       maxChallenges,
+      disconnects: 0,
       lastUpdate: new Date(),
       startTime: new Date()
     }
@@ -91,6 +93,15 @@ module.exports = class Client {
     }
 
     toSocket(this.currentGame)
+  }
+
+  disconnect() {
+    if (this.currentGame) {
+      this.log.info({ gameId: this.currentGame.gameId }, "Client disconnected")
+
+      this.currentGame.disconnects++
+      this.mongoDB.updateGame(this.currentGame)
+    }
   }
 
   onPacket() {
