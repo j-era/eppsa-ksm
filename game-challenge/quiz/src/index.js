@@ -1,26 +1,19 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { keys, pick, pickBy } from "lodash"
-import "./index.css"
 import App from "./App"
+import "./index.css"
+import selectContent from "./selectContent"
 
 
 let gameClient
 let config
-
-function getChildren(parent, template) {
-  return keys(pickBy(parent, child => child.template === template)).map(key => parent[key])
-}
 
 window.addEventListener("message", receiveMessage, false)
 
 function receiveMessage(event) {
   console.log(event)
   gameClient = { source: event.source, origin: event.origin }
-  config = {
-    ...pick(event.data, ["question", "reward", "maxAnsweringTime"]),
-    answers: getChildren(event.data, "quizAnswer")
-  }
+  config = selectContent(event.data)
   ReactDOM.render(
     <App config={ config } completeChallenge={ completeChallenge } />,
     document.getElementById("root")
