@@ -1,9 +1,7 @@
 import client from "socket.io-client"
-import EventEmitter from "events"
 
-export default class GameServer extends EventEmitter {
+export default class GameServer {
   constructor(uri) {
-    super()
     this.socket = client(uri, { secure: true })
     this.socket.on("activeGamesUpdated", () => this.emit("activeGamesUpdated"))
   }
