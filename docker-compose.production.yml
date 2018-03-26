@@ -32,6 +32,10 @@ services:
     build:
       dockerfile: Dockerfile.production
 
+  game-challenge-sorting:
+    build:
+      dockerfile: Dockerfile.production
+
   game-challenge-quiz:
     build:
       dockerfile: Dockerfile.production

@@ -83,6 +83,7 @@ services:
       - game-challenge-hidden
       - game-challenge-skill
       - game-challenge-graph
+      - game-challenge-sorting
 
   game-server:
     build:
@@ -97,6 +98,12 @@ services:
       context: ./game-challenge/button
     environment:
       PORT: 443
+
+  game-challenge-sorting:
+    build:
+      context: ./game-challenge/sorting
+    environment:
+      PORT: 80
 
   game-challenge-quiz:
     build:
