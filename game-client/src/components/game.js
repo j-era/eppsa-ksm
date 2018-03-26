@@ -3,19 +3,20 @@ import React from "react"
 import GameBoard from "./gameBoard"
 
 export default function Game(props) {
-    return props.challengeStarted ?
-      renderChallenge(props) :
-      renderNavigation(props)
+  return props.challengeStarted ?
+    renderChallenge(props) :
+    renderNavigation(props)
 }
 
-function renderNavigation({ activeGames, challengeNumber, maxChallenges, navigation, score, onStartChallenge }) {
+function renderNavigation(props) {
+  const { activeGames, challengeNumber, maxChallenges, navigation, score, onStartChallenge } = props
+
   return (
     <div>
       <GameBoard
         activeGames={ activeGames }
         challengeNumber={ challengeNumber }
-        maxChallenges={ maxChallenges }
-      />
+        maxChallenges={ maxChallenges } />
       <div>Current Challenge: { challengeNumber }</div>
       <div>Score: { score }</div>
       <div>Navigation: { navigation }</div>
@@ -34,8 +35,6 @@ function renderChallenge({ challenge, challengeUri, onChallengeReady }) {
           iframe.onload = () =>
             onChallengeReady(iframe.contentWindow, challenge, challengeUri)
         }
-      }}
-    />
+      } } />
   )
 }
-

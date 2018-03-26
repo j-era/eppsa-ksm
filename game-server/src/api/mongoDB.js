@@ -6,10 +6,6 @@ const DATABASE_NAME = "EPPSA_KSM"
 const GAMES_COLLECTION = "games"
 
 module.exports = class MongoDB extends EventEmitter {
-  contructor() {
-    this.logger = logger
-  }
-
   async connect() {
     const client = await MongoClient.connect(MONGODB_URI)
     this.database = client.db(DATABASE_NAME)
@@ -20,8 +16,8 @@ module.exports = class MongoDB extends EventEmitter {
   }
 
   findActiveGames() {
-    const filter = { lastUpdate: { $gt: new Date( Date.now() - 60000 ) } }
-    const projection = { "name": 1, "avatar": 1, "score": 1, "challengeNumber": 1, "_id": 0}
+    const filter = { lastUpdate: { $gt: new Date(Date.now() - 60000) } }
+    const projection = { name: 1, avatar: 1, score: 1, challengeNumber: 1, _id: 0 }
     return this.database.collection(GAMES_COLLECTION).find(filter).project(projection).toArray()
   }
 
@@ -33,7 +29,7 @@ module.exports = class MongoDB extends EventEmitter {
   async updateGame(game, emitUpdate = true) {
     await this.database.collection(GAMES_COLLECTION)
       .updateOne({ gameId: game.gameId }, { $set: game })
-    
+
     if (emitUpdate) {
       await this.emitUpdate()
     }

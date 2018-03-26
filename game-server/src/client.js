@@ -30,15 +30,15 @@ module.exports = class Client {
     this.log.info({ playerName: name, avatar, maxChallenges }, "Starting a new game")
 
     const game = {
-        gameId: uuid(),
-        finished: false,
-        name,
-        avatar,
-        score: 0,
-        challengeNumber: 1,
-        maxChallenges,
-        startTime: new Date()
-      }
+      gameId: uuid(),
+      finished: false,
+      name,
+      avatar,
+      score: 0,
+      challengeNumber: 1,
+      maxChallenges,
+      startTime: new Date()
+    }
 
     this.currentGame = game
     this.mongoDB.newGame(game)
@@ -52,7 +52,7 @@ module.exports = class Client {
     if (game) {
       game.maxChallenges = maxChallenges
       handleGameFinished(game)
-      
+
       this.mongoDB.updateGame(game)
       this.currentGame = game
     } else {
@@ -65,7 +65,7 @@ module.exports = class Client {
   async startChallenge() {
     if (this.currentGame) {
       this.log.info({ gameId: this.currentGame.gameId }, "Starting challenge")
-      
+
       const challenge = { gameId: this.currentGame.gameId, startTime: new Date() }
       this.mongoDB.startChallenge(this.currentGame.challengeNumber, challenge)
     } else {
@@ -92,7 +92,7 @@ module.exports = class Client {
     toSocket(this.currentGame)
   }
 
-  onPacket(packet) {
+  onPacket() {
     if (this.currentGame) {
       this.currentGame.lastUpdate = new Date()
       this.mongoDB.updateGame(this.currentGame, false)

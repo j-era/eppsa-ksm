@@ -18,15 +18,14 @@ function Application(props) {
 
 function renderWelcomeDialog(props) {
   return <WelcomeDialog
-      previousGame={ props.previousGame }
-      name={ props.name }
-      avatars={ props.content.avatars }
-      avatar={ props.avatar }
-      assetServerUri={ props.assetServerUri }
-      onResumeGame={ props.onResumeGame }
-      onStartNewGame={ props.onStartNewGame }
-      onUpdateName={ props.onUpdateName }
-    />
+    previousGame={ props.previousGame }
+    name={ props.name }
+    avatars={ props.content.avatars }
+    avatar={ props.avatar }
+    assetServerUri={ props.assetServerUri }
+    onResumeGame={ props.onResumeGame }
+    onStartNewGame={ props.onStartNewGame }
+    onUpdateName={ props.onUpdateName } />
 }
 
 function renderGame(props) {
@@ -36,22 +35,20 @@ function renderGame(props) {
   const challengeUri = resolveChallengeWebAppUri(challengeType)
 
   return <Game
-      challengeNumber={ props.challengeNumber }
-      challengeUri={ challengeUri }
-      challenge={ challenge }
-      score={ props.score }
-      maxChallenges={ props.maxChallenges }
-      challengeStarted={ props.challengeStarted }
-      onStartChallenge={ props.onStartChallenge }
-      onChallengeReady={ props.onChallengeReady }
-    />
+    challengeNumber={ props.challengeNumber }
+    challengeUri={ challengeUri }
+    challenge={ challenge }
+    score={ props.score }
+    maxChallenges={ props.maxChallenges }
+    challengeStarted={ props.challengeStarted }
+    onStartChallenge={ props.onStartChallenge }
+    onChallengeReady={ props.onChallengeReady } />
 }
 
 function renderFinalScore(props) {
   return <FinalScore
-      score={ props.score }
-      text={ props.content.finalScoreText }
-    />
+    score={ props.score }
+    text={ props.content.finalScoreText } />
 }
 
 function resolveChallengeWebAppUri(webApp) {

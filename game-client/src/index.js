@@ -26,8 +26,8 @@ contentServer.getData().then(transform).then(async (content) => {
   if (gameId) {
     previousGame = await gameServer.findGame(gameId)
   }
-  
-  window.addEventListener("message", receiveMessage, false);
+
+  window.addEventListener("message", receiveMessage, false)
 
   const maxChallenges = Object.keys(content.challenges).length - 1
 
@@ -38,30 +38,29 @@ contentServer.getData().then(transform).then(async (content) => {
         previousGame={ previousGame }
         assetServerUri={ process.env.ASSET_SERVER_URI }
         maxChallenges={ maxChallenges }
-        onResumeGame={ onResumeGame.bind(this, gameId, maxChallenges) }
-        onStartNewGame={ onStartNewGame.bind(this, maxChallenges) }
+        onResumeGame={ onResumeGame }
+        onStartNewGame={ onStartNewGame }
         onUpdateName={ (name) => store.dispatch(actions.updateName(name)) }
         onStartChallenge={ onStartChallenge }
-        onChallengeReady={ onChallengeReady }
-      />
+        onChallengeReady={ onChallengeReady } />
     </Provider>,
     document.getElementById("app")
   )
+
+  async function onResumeGame() {
+    store.dispatch(actions.updateGame(await gameServer.resumeGame(gameId, maxChallenges)))
+  }
+
+  async function onStartNewGame(name, avatar) {
+    console.log("Starting new game")
+    const game = await gameServer.newGame(name, avatar, maxChallenges)
+    store.dispatch(actions.updateGame(game))
+    setCookie("gameId", game.gameId)
+  }
 })
 
 function transform(content) {
   return Object.assign(mapValues(omit(content, "index"), transform), content.index)
-}
-
-async function onResumeGame(gameId, maxChallenges) {
-  store.dispatch(actions.updateGame(await gameServer.resumeGame(gameId, maxChallenges)))
-}
-
-async function onStartNewGame(maxChallenges, name, avatar) {
-  console.log("Starting new game")
-  const game = await gameServer.newGame(name, avatar, maxChallenges)
-  store.dispatch(actions.updateGame(game))
-  setCookie("gameId", game.gameId)
 }
 
 async function onStartChallenge() {
@@ -73,14 +72,13 @@ async function onChallengeReady(challengeWindow, config, uri) {
   challengeWindow.postMessage(config, uri)
 }
 
-async function receiveMessage(event)
-{
-  if(event.data.source === "challenge") { // ignore react dev tool messages
+async function receiveMessage(event) {
+  if (event.data.source === "challenge") { // ignore react dev tool messages
     const challengeData = omit(event.data, "source")
     store.dispatch(actions.updateGame(await gameServer.finishChallenge(challengeData)))
   }
 }
 
-gameServer.socket.on("activeGamesUpdated", async(activeGames) => {
+gameServer.socket.on("activeGamesUpdated", async (activeGames) => {
   store.dispatch(actions.updateActiveGames(activeGames))
 })
