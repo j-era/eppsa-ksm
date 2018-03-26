@@ -3,7 +3,6 @@ import client from "socket.io-client"
 export default class GameServer {
   constructor(uri) {
     this.socket = client(uri, { secure: true })
-    this.socket.on("activeGamesUpdated", () => this.emit("activeGamesUpdated"))
   }
 
   findGame(gameId) {
@@ -36,5 +35,9 @@ export default class GameServer {
         resolve(result)
       })
     })
+  }
+
+  on(event, callback) {
+    this.socket.on(event, callback)
   }
 }
