@@ -17,7 +17,7 @@ export default class WelcomeDialog extends React.Component {
         <img src={ `${assetServerUri}/${avatars[previousGame.avatar].icon.src}` } />
         <div>{ previousGame.name }</div>
         <button onClick={ () => onResumeGame() }>Resume</button>
-        <button onClick={ () => this.setState({decidedToStartNew: true}) }>Start New Game</button>
+        <button onClick={ () => this.setState({ decidedToStartNew: true }) }>Start New Game</button>
       </div>
     )
   }
@@ -31,7 +31,7 @@ export default class WelcomeDialog extends React.Component {
       onStartNewGame,
       onUpdateName,
     } = this.props
-    
+
     return (
       <div>
         <img src={ `${assetServerUri}/${avatars[avatar].icon.src}` } />

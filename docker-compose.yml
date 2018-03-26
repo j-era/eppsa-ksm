@@ -96,8 +96,6 @@ services:
 
   mongo:
     image: "mongo:3.6.3-jessie"
-    ports:
-      - "27017:27017"
     volumes:
       - type: volume
         source: mongoDB

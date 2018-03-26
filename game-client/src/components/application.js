@@ -18,39 +18,38 @@ function Application(props) {
 
 function renderWelcomeDialog(props) {
   return <WelcomeDialog
-      previousGame={ props.previousGame }
-      name={ props.name }
-      avatars={ props.content.avatars }
-      avatar={ props.avatar }
-      assetServerUri={ props.assetServerUri }
-      onResumeGame={ props.onResumeGame }
-      onStartNewGame={ props.onStartNewGame }
-      onUpdateName={ props.onUpdateName }
-    />
+    previousGame={ props.previousGame }
+    name={ props.name }
+    avatars={ props.content.avatars }
+    avatar={ props.avatar }
+    assetServerUri={ props.assetServerUri }
+    onResumeGame={ props.onResumeGame }
+    onStartNewGame={ props.onStartNewGame }
+    onUpdateName={ props.onUpdateName } />
 }
 
 function renderGame(props) {
-  const challengeTypes = props.content.challenges[props.challenge].challengeTypes
+  const challengeTypes = props.content.challenges[props.challengeNumber].challengeTypes
   const challengeType = Object.keys(omit(challengeTypes, "template"))[0]
-  const challengeConfig = challengeTypes[challengeType]
+  const challenge = challengeTypes[challengeType]
   const challengeUri = resolveChallengeWebAppUri(challengeType)
 
   return <Game
-      challenge={ props.challenge }
-      challengeUri={ challengeUri }
-      challengeConfig={ challengeConfig }
-      score={ props.score }
-      challengeStarted={ props.challengeStarted }
-      onStartChallenge={ props.onStartChallenge }
-      onChallengeReady={ props.onChallengeReady }
-    />
+    activeGames={ props.activeGames }
+    challengeNumber={ props.challengeNumber }
+    challengeUri={ challengeUri }
+    challenge={ challenge }
+    score={ props.score }
+    maxChallenges={ props.maxChallenges }
+    challengeStarted={ props.challengeStarted }
+    onStartChallenge={ props.onStartChallenge }
+    onChallengeReady={ props.onChallengeReady } />
 }
 
 function renderFinalScore(props) {
   return <FinalScore
-      score={ props.score }
-      text={ props.content.finalScoreText }
-    />
+    score={ props.score }
+    text={ props.content.finalScoreText } />
 }
 
 function resolveChallengeWebAppUri(webApp) {

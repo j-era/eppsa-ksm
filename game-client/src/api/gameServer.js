@@ -1,12 +1,16 @@
 import client from "socket.io-client"
 
-export default class ContentServer {
+export default class GameServer {
   constructor(uri) {
     this.socket = client(uri, { secure: true })
   }
 
   findGame(gameId) {
     return this.send("findGame", gameId)
+  }
+
+  findActiveGames() {
+    return this.send("findActiveGames")
   }
 
   newGame(name, avatar, maxChallenges) {
@@ -17,12 +21,12 @@ export default class ContentServer {
     return this.send("resumeGame", gameId, maxChallenges)
   }
 
-  startChallenge(gameId) {
-    this.send("startChallenge", gameId)
+  startChallenge() {
+    this.send("startChallenge")
   }
 
-  finishChallenge(gameId, result) {
-    return this.send("finishChallenge", gameId, result)
+  finishChallenge(result) {
+    return this.send("finishChallenge", result)
   }
 
   send(eventName, ...param) {
@@ -31,5 +35,9 @@ export default class ContentServer {
         resolve(result)
       })
     })
+  }
+
+  on(event, callback) {
+    this.socket.on(event, callback)
   }
 }

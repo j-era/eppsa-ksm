@@ -1,15 +1,23 @@
 import React from "react"
 
+import GameBoard from "./gameBoard"
+
 export default function Game(props) {
-    return props.challengeStarted ?
-      renderChallenge(props) :
-      renderNavigation(props)
+  return props.challengeStarted ?
+    renderChallenge(props) :
+    renderNavigation(props)
 }
 
-function renderNavigation({ challenge, navigation, score, onStartChallenge }) {
+function renderNavigation(props) {
+  const { activeGames, challengeNumber, maxChallenges, navigation, score, onStartChallenge } = props
+
   return (
-    <div> 
-      <div>Current Challenge: { challenge }</div>
+    <div>
+      <GameBoard
+        activeGames={ activeGames }
+        challengeNumber={ challengeNumber }
+        maxChallenges={ maxChallenges } />
+      <div>Current Challenge: { challengeNumber }</div>
       <div>Score: { score }</div>
       <div>Navigation: { navigation }</div>
       <button onClick={ () => onStartChallenge() }>Start</button>
@@ -17,7 +25,7 @@ function renderNavigation({ challenge, navigation, score, onStartChallenge }) {
   )
 }
 
-function renderChallenge({ challengeConfig, challengeUri, onChallengeReady }) {
+function renderChallenge({ challenge, challengeUri, onChallengeReady }) {
   return (
     <iframe
       allow="camera"
@@ -25,10 +33,8 @@ function renderChallenge({ challengeConfig, challengeUri, onChallengeReady }) {
       ref={ iframe => {
         if (iframe) {
           iframe.onload = () =>
-            onChallengeReady(iframe.contentWindow, challengeConfig, challengeUri)
+            onChallengeReady(iframe.contentWindow, challenge, challengeUri)
         }
-      }}
-    />
+      } } />
   )
 }
-

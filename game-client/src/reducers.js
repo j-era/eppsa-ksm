@@ -30,10 +30,10 @@ export function avatar(state = "flower", action) {
   }
 }
 
-export function challenge(state = 1, action) {
+export function challengeNumber(state = 1, action) {
   switch (action.type) {
     case types.UPDATE_GAME:
-      return action.game.challenge
+      return action.game.challengeNumber
     default:
       return state
   }
@@ -54,6 +54,15 @@ export function score(state = 0, action) {
   switch (action.type) {
     case types.UPDATE_GAME:
       return action.game.score
+    default:
+      return state
+  }
+}
+
+export function activeGames(state = [], action) {
+  switch (action.type) {
+    case types.UPDATE_ACTIVE_GAMES:
+      return action.games
     default:
       return state
   }
