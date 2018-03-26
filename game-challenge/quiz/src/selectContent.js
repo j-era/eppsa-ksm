@@ -1,9 +1,9 @@
-import { keys, pick, pickBy } from "lodash"
+import { keys, pickBy } from "lodash"
 
 
 export default function selectContent(data) {
   return {
-    ...pick(data, ["question", "reward", "maxAnsweringTime"]),
+    ...data,
     answers: getChildren(data, "quizAnswer")
   }
 }

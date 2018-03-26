@@ -1,6 +1,7 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled from "styled-components"
+import { sum } from "lodash"
 import "./App.css"
 import Button from "./components/button"
 import Question from "./components/question"
@@ -31,13 +32,14 @@ const NextChallengeButton = styled(Button)`
 const Score = styled.div`
   margin-top: 5px;
   width: 200px;
-  height: 100px;
+  height: 50px;
 `
 
 export default class App extends React.Component {
   constructor(props) {
     super(props)
     autoBind(this)
+    this.fibo = [3, 5, 8]
     this.state = { selected: null, confirmed: false }
   }
 
@@ -50,7 +52,9 @@ export default class App extends React.Component {
     return (
       <Container>
         {
-          this.state.confirmed && <Score>Score: { this.score }, Time:{ this.timeToAnswer }</Score>
+          this.state.confirmed
+            ? <Score>Score: { this.score }, Time:{ this.timeToAnswer }</Score>
+            : <Score />
         }
         <Question>{ question }</Question>
         {
@@ -104,16 +108,38 @@ export default class App extends React.Component {
 
   confirm() {
     if (this.state.selected != null) {
-      const { answers, reward, maxAnsweringTime } = this.props.config
+      const { answers } = this.props.config
       this.timeToAnswer = (new Date() - this.startTime) / 1000
-      const timeWeight = this.timeToAnswer > maxAnsweringTime
-        ? 1 / (this.timeToAnswer - maxAnsweringTime)
-        : 1
       const finalAnswer = answers[this.state.selected]
-      this.score = Math.round(finalAnswer.isCorrect ? reward * timeWeight : 0)
+      this.score = this.getScore(finalAnswer.isCorrect, this.timeToAnswer)
       this.confirmedSelection = this.state.selected
       this.setState({ selected: null, confirmed: true })
     }
+  }
+
+  getScore(correctAnswer, timeToAnswer) {
+    const { reward, gameFactor } = this.props.config
+    const conditionFactor = correctAnswer ? 1 : 0
+    return Math.round(conditionFactor * reward * gameFactor + this.timeBonus(timeToAnswer))
+  }
+
+  timeBonus(timeToAnswer) {
+    const { tier1TimeBonus, tier2TimeBonus, tier3TimeBonus } = this.props.config
+    const tiers = this.fibo.map(this.tier)
+    if (timeToAnswer < tiers[0]) {
+      return tier1TimeBonus
+    } else if (timeToAnswer < tiers[1]) {
+      return tier2TimeBonus
+    } else if (timeToAnswer < tiers[2]) {
+      return tier3TimeBonus
+    } else {
+      return 0
+    }
+  }
+
+  tier(n) {
+    const { sessionLength } = this.props.config
+    return sum(this.fibo) / sessionLength * n * 10
   }
 
   nextChallenge() {
