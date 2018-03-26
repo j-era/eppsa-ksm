@@ -33,3 +33,7 @@ services:
   game-challenge-hunt-server:
     build:
       dockerfile: Dockerfile.production
+
+  game-challenge-phaser-demo:
+    build:
+      dockerfile: Dockerfile.production

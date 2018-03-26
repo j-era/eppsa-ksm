@@ -88,6 +88,12 @@ services:
     environment:
       PORT: 80
 
+  game-challenge-phaser-demo:
+    build:
+      context: ./game-challenge/phaser-demo
+    environment:
+      PORT: 80
+
   mongo:
     image: "mongo:3.6.3-jessie"
     ports:
