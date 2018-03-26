@@ -35,6 +35,7 @@ function renderGame(props) {
   const challengeUri = resolveChallengeWebAppUri(challengeType)
 
   return <Game
+    activeGames={ props.activeGames }
     challengeNumber={ props.challengeNumber }
     challengeUri={ challengeUri }
     challenge={ challenge }

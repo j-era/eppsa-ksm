@@ -37,6 +37,7 @@ module.exports = class Client {
       score: 0,
       challengeNumber: 1,
       maxChallenges,
+      lastUpdate: new Date(),
       startTime: new Date()
     }
 

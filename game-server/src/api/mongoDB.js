@@ -23,7 +23,7 @@ module.exports = class MongoDB extends EventEmitter {
 
   async newGame(game) {
     await this.database.collection(GAMES_COLLECTION).insertOne(game)
-    await this.emitUpdate()
+    await this.emit("activeGamesUpdated", await this.findActiveGames())
   }
 
   async updateGame(game, emitUpdate = true) {
@@ -31,7 +31,7 @@ module.exports = class MongoDB extends EventEmitter {
       .updateOne({ gameId: game.gameId }, { $set: game })
 
     if (emitUpdate) {
-      await this.emitUpdate()
+      await this.emit("activeGamesUpdated", await this.findActiveGames())
     }
   }
 
@@ -46,9 +46,5 @@ module.exports = class MongoDB extends EventEmitter {
       .limit(1).next()
 
     await this.database.collection(`challenge-${number}`).updateOne(filter, { $set: challenge })
-  }
-
-  async emitUpdate() {
-    this.emit("activeGamesUpdated", await this.findActiveGames())
   }
 }
