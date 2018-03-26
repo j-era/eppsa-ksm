@@ -21,7 +21,9 @@ function renderGames(activeGames, maxChallenges) {
 
 function renderGame(game, stepPercent) {
   return (
-    <div style={ { position: "absolute", left: `${(game.challengeNumber - 1) * stepPercent}%` } }>
+    <div
+      key={ game.gameId }
+      style={ { position: "absolute", left: `${(game.challengeNumber - 1) * stepPercent}%` } }>
       { game.name }
     </div>
   )
@@ -44,7 +46,9 @@ function renderStations(maxChallenges) {
 
 function renderStation(station, stepPercent) {
   return (
-    <div style={ { position: "absolute", left: `${(station - 1) * stepPercent}%` } }>
+    <div
+      key={ station }
+      style={ { position: "absolute", left: `${(station - 1) * stepPercent}%` } }>
       { station }
     </div>
   )

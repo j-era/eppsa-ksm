@@ -17,7 +17,7 @@ module.exports = class MongoDB extends EventEmitter {
 
   findActiveGames() {
     const filter = { lastUpdate: { $gt: new Date(Date.now() - 60000) } }
-    const projection = { name: 1, avatar: 1, score: 1, challengeNumber: 1, _id: 0 }
+    const projection = { gameId: 1, name: 1, avatar: 1, score: 1, challengeNumber: 1, _id: 0 }
     return this.database.collection(GAMES_COLLECTION).find(filter).project(projection).toArray()
   }
 
