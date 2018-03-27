@@ -29,12 +29,6 @@ const NextChallengeButton = styled(Button)`
   background-color: blue;
 `
 
-const Score = styled.div`
-  margin-top: 5px;
-  width: 200px;
-  height: 50px;
-`
-
 export default class App extends React.Component {
   constructor(props) {
     super(props)
@@ -51,17 +45,6 @@ export default class App extends React.Component {
     const { question, answers } = this.props.config
     return (
       <Container>
-        {
-          this.state.confirmed ?
-            <Score>
-              {
-                answers[this.confirmedSelection].isCorrect
-                  ? "Correct answer"
-                  : "Wrong answer"
-              }, Score: { this.score }
-            </Score> :
-            <Score />
-        }
         <Question>{ question }</Question>
         {
           answers.map((answer, i) =>
