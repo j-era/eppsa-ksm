@@ -21,7 +21,7 @@ function renderWelcomeDialog(props) {
     previousGame={ props.previousGame }
     name={ props.name }
     avatars={ props.content.avatars }
-    avatar={ props.avatar }
+    selectedAvatar={ props.selectedAvatar }
     assetServerUri={ props.assetServerUri }
     onResumeGame={ props.onResumeGame }
     onStartNewGame={ props.onStartNewGame }

@@ -14,11 +14,12 @@ import { getCookie, setCookie } from "./cookie"
 import GameServer from "./api/gameServer"
 import * as actions from "./actionCreators"
 
-const config = querystring.parse(window.location.search.substring(1))
-
 const store = applyMiddleware(createLogger())(createStore)(combineReducers(reducers))
 const contentServer = new ContentServer(process.env.CONTENT_SERVER_URI)
 const gameServer = new GameServer(process.env.GAME_SERVER_URI)
+
+const config = querystring.parse(window.location.search.substring(1))
+const selectedAvatar = config.avatar ? config.avatar : "flower"
 
 contentServer.getData().then(transform).then(async (content) => {
   let previousGame = null
@@ -38,6 +39,7 @@ contentServer.getData().then(transform).then(async (content) => {
         previousGame={ previousGame }
         assetServerUri={ process.env.ASSET_SERVER_URI }
         maxChallenges={ maxChallenges }
+        selectedAvatar={ selectedAvatar }
         onResumeGame={ onResumeGame }
         onStartNewGame={ onStartNewGame }
         onUpdateName={ (name) => store.dispatch(actions.updateName(name)) }
