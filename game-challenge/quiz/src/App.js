@@ -52,9 +52,15 @@ export default class App extends React.Component {
     return (
       <Container>
         {
-          this.state.confirmed
-            ? <Score>Score: { this.score }, Time:{ this.timeToAnswer }</Score>
-            : <Score />
+          this.state.confirmed ?
+            <Score>
+              {
+                answers[this.confirmedSelection].isCorrect
+                  ? "Correct answer"
+                  : "Wrong answer"
+              }, Score: { this.score }
+            </Score> :
+            <Score />
         }
         <Question>{ question }</Question>
         {
@@ -120,7 +126,7 @@ export default class App extends React.Component {
   getScore(correctAnswer, timeToAnswer) {
     const { reward, gameFactor } = this.props.config
     const conditionFactor = correctAnswer ? 1 : 0
-    return Math.round(conditionFactor * reward * gameFactor + this.timeBonus(timeToAnswer))
+    return Math.round(conditionFactor * (reward * gameFactor + this.timeBonus(timeToAnswer)))
   }
 
   timeBonus(timeToAnswer) {
