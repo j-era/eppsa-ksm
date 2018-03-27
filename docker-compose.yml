@@ -63,6 +63,7 @@ services:
       - game-challenge-button
       - game-challenge-hunt-client
       - game-challenge-hunt-server
+      - game-challenge-phaser-demo
 
   game-server:
     build:
