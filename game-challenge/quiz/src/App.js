@@ -1,10 +1,10 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled from "styled-components"
-import { sum } from "lodash"
 import "./App.css"
 import Button from "./components/button"
 import Question from "./components/question"
+import ScoreCalculation from "./score"
 
 
 const Container = styled.div `
@@ -21,12 +21,8 @@ const AnswerButton = styled(Button)`
   background-color: ${props => props.color};
 `
 
-const ConfirmButton = styled(Button)`
-  background-color: ${props => props.active ? "blue" : "grey"};
-`
-
 const NextChallengeButton = styled(Button)`
-  background-color: blue;
+  background-color: grey;
 `
 
 const Score = styled.div`
@@ -39,9 +35,8 @@ export default class App extends React.Component {
   constructor(props) {
     super(props)
     autoBind(this)
-    this.fibo = [3, 5, 8]
-    this.bonus = 0
-    this.state = { selected: null, confirmed: false }
+    this.points = { bonus: 0, score: 0 }
+    this.state = { confirmed: false }
   }
 
   componentDidMount() {
@@ -49,109 +44,75 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { question, answers } = this.props.config
+    const { question } = this.props.content
     return (
       <Container>
-        {
-          this.state.confirmed ?
-            <Score>
-              {
-                answers[this.confirmedSelection].isCorrect
-                  ? "Correct answer"
-                  : "Wrong answer"
-              }, Score: { this.score } + Time Bonus: { this.bonus }
-            </Score> :
-            <Score />
-        }
+        { this.renderScore() }
         <Question>{ question }</Question>
-        {
-          answers.map((answer, i) =>
-            <AnswerButton
-              key={ i }
-              onClick={ () => this.select(i) }
-              color={ this.buttonColor(i) }>
-              {
-                answer.answer
-              }
-            </AnswerButton>
-          )
-        }
-        {
-          !this.state.confirmed &&
-          <ConfirmButton
-            onClick={ this.confirm }
-            active={ this.state.selected != null }>
-            Confirm
-          </ConfirmButton>
-        }
-        {
-          this.state.confirmed &&
-            <NextChallengeButton onClick={ this.nextChallenge }>
-              Go to next challenge
-            </NextChallengeButton>
-        }
+        { this.renderAnswers() }
+        { this.renderNextButton() }
       </Container>
     )
   }
 
+  renderAnswers() {
+    const answers = [1, 2, 3, 4].map(i => this.props.content[`answer${i}`])
+
+    return answers.map((answer, i) =>
+      <AnswerButton
+        key={ i }
+        onClick={ () => this.confirm(i) }
+        color={ this.buttonColor(i) }>
+        {
+          answer
+        }
+      </AnswerButton>
+    )
+  }
+
+  renderScore() {
+    return this.state.confirmed &&
+      <Score>
+        { this.points.score } +{ this.points.bonus }
+      </Score>
+  }
+
+  renderNextButton() {
+    return this.state.confirmed &&
+      <NextChallengeButton onClick={ this.nextChallenge }>
+        { this.props.content.shared.texts.next }
+      </NextChallengeButton>
+  }
+
   buttonColor(i) {
-    const { answers } = this.props.config
+    const { correctAnswer } = this.props.content
     if (this.state.confirmed) {
-      if (answers[i].isCorrect) {
+      if (i === correctAnswer - 1) {
         return "green"
-      } else if (this.confirmedSelection === i) {
+      } else if (this.state.confirmed === i) {
         return "red"
       } else {
         return "grey"
       }
     } else {
-      return this.state.selected === i ? "blue" : "grey"
+      return "grey"
     }
   }
 
-  select(n) {
-    this.setState({ selected: this.state.confirmed || this.state.selected === n ? null : n })
-  }
-
-  confirm() {
-    if (this.state.selected != null) {
-      const { answers } = this.props.config
-      this.timeToAnswer = (new Date() - this.startTime) / 1000
-      const finalAnswer = answers[this.state.selected]
-      this.totalScore = this.getScore(finalAnswer.isCorrect, this.timeToAnswer)
-      this.confirmedSelection = this.state.selected
-      this.setState({ selected: null, confirmed: true })
+  confirm(answerIndex) {
+    const { correctAnswer, scoreCalculation, shared } = this.props.content
+    this.timeToAnswer = (new Date() - this.startTime) / 1000
+    if (answerIndex === correctAnswer - 1) {
+      const scoreCalc = new ScoreCalculation(
+        this.timeToAnswer,
+        { ...scoreCalculation, gameFactor: shared.config.quizFactor }
+      )
+      this.points = scoreCalc.getScore()
     }
-  }
-
-  getScore(correctAnswer, timeToAnswer) {
-    const { reward, gameFactor } = this.props.config
-    const conditionFactor = correctAnswer ? 1 : 0
-    this.bonus = Math.round(conditionFactor * this.timeBonus(timeToAnswer))
-    this.score = Math.round(conditionFactor * (reward * gameFactor))
-    return this.bonus + this.score
-  }
-
-  timeBonus(timeToAnswer) {
-    const { tier1TimeBonus, tier2TimeBonus, tier3TimeBonus } = this.props.config
-    const tiers = this.fibo.map(this.tier)
-    if (timeToAnswer < tiers[0]) {
-      return tier1TimeBonus
-    } else if (timeToAnswer < tiers[1]) {
-      return tier2TimeBonus
-    } else if (timeToAnswer < tiers[2]) {
-      return tier3TimeBonus
-    } else {
-      return 0
-    }
-  }
-
-  tier(n) {
-    const { sessionLength } = this.props.config
-    return sum(this.fibo) / sessionLength * n * 10
+    this.setState({ confirmed: answerIndex })
   }
 
   nextChallenge() {
-    this.props.completeChallenge(this.totalScore)
+    this.props.completeChallenge(this.points.score + this.points.bonus)
   }
 }

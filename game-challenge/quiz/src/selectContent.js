@@ -3,8 +3,9 @@ import { keys, pickBy } from "lodash"
 
 export default function selectContent(data) {
   return {
-    ...data,
-    answers: getChildren(data, "quizAnswer")
+    ...data.challenge,
+    shared: data.shared,
+    scoreCalculation: getChildren(data.challenge, "scoreCalculation")[0]
   }
 }
 

@@ -5,25 +5,15 @@ import "./index.css"
 import selectContent from "./selectContent"
 
 
-let gameClient
-let config
-
 window.addEventListener("message", receiveMessage, false)
 
 function receiveMessage(event) {
   console.log(event)
-  gameClient = { source: event.source, origin: event.origin }
-  config = selectContent(event.data)
+  const content = selectContent(event.data)
+  console.log(content.scoreCalculation)
   ReactDOM.render(
-    <App config={ config } completeChallenge={ completeChallenge } />,
+    <App content={ content } completeChallenge={ score =>
+      event.source.postMessage({ source: "challenge", score }, event.origin) } />,
     document.getElementById("root")
   )
-}
-
-function completeChallenge(score) {
-  gameClient.source.postMessage(
-    {
-      source: "challenge",
-      score
-    }, gameClient.origin)
 }

@@ -31,7 +31,7 @@ function renderWelcomeDialog(props) {
 function renderGame(props) {
   const challengeTypes = props.content.challenges[props.challengeNumber].challengeTypes
   const challengeType = Object.keys(omit(challengeTypes, "template"))[0]
-  const challenge = challengeTypes[challengeType]
+  const challenge = { challenge: challengeTypes[challengeType], shared: props.content.shared }
   const challengeUri = resolveChallengeWebAppUri(challengeType)
 
   return <Game
