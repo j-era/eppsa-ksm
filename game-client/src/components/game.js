@@ -1,4 +1,5 @@
 import React from "react"
+import QrReader from "react-qr-reader"
 
 import GameBoard from "./gameBoard"
 
@@ -9,7 +10,15 @@ export default function Game(props) {
 }
 
 function renderNavigation(props) {
-  const { activeGames, challengeNumber, maxChallenges, navigation, score, onStartChallenge } = props
+  const {
+    activeGames,
+    challengeNumber,
+    maxChallenges,
+    navigation,
+    score,
+    onScan,
+    toggleQrReader,
+    showQrReader } = props
 
   return (
     <div>
@@ -20,7 +29,15 @@ function renderNavigation(props) {
       <div>Current Challenge: { challengeNumber }</div>
       <div>Score: { score }</div>
       <div>Navigation: { navigation }</div>
-      <button onClick={ () => onStartChallenge() }>Start</button>
+      {
+        showQrReader ?
+        <QrReader
+          onScan={ data => onScan(data, challengeNumber) }
+          onError={ handleError }
+          showViewFinder={ false }
+        /> : null
+      }
+      <button onClick={ toggleQrReader }>scan QrCode</button>
     </div>
   )
 }
@@ -37,4 +54,8 @@ function renderChallenge({ challenge, challengeUri, onChallengeReady }) {
         }
       } } />
   )
+}
+
+function handleError(err){
+  console.error(err)
 }

@@ -42,7 +42,9 @@ function renderGame(props) {
     score={ props.score }
     maxChallenges={ props.maxChallenges }
     challengeStarted={ props.challengeStarted }
-    onStartChallenge={ props.onStartChallenge }
+    showQrReader={ props.showQrReader }
+    onScan={ props.onScan }
+    toggleQrReader={ props.toggleQrReader }
     onChallengeReady={ props.onChallengeReady } />
 }
 
