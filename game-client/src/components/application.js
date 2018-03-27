@@ -43,7 +43,9 @@ function renderGame(props) {
     maxChallenges={ props.maxChallenges }
     connected={ props.connected }
     challengeStarted={ props.challengeStarted }
-    onStartChallenge={ props.onStartChallenge }
+    showQrReader={ props.showQrReader }
+    onScan={ props.onScan }
+    toggleQrReader={ props.toggleQrReader }
     onChallengeReady={ props.onChallengeReady } />
 }
 
