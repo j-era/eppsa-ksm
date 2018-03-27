@@ -3,7 +3,7 @@ import React from "react"
 export default class WelcomeDialog extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { decidedToStartNew: props.previousGame === null }
+    this.state = { startNewGame: props.previousGame === null || props.previousGame.finished }
   }
 
   render() {
