@@ -7,7 +7,7 @@ export default class WelcomeDialog extends React.Component {
   }
 
   render() {
-    return this.state.decidedToStartNew ? this.renderStartNewGame() : this.renderResumeGame()
+    return this.state.startNewGame ? this.renderStartNewGame() : this.renderResumeGame()
   }
 
   renderResumeGame() {
@@ -17,7 +17,7 @@ export default class WelcomeDialog extends React.Component {
         <img src={ `${assetServerUri}/${avatars[previousGame.avatar].icon.src}` } />
         <div>{ previousGame.name }</div>
         <button onClick={ () => onResumeGame() }>Resume</button>
-        <button onClick={ () => this.setState({ decidedToStartNew: true }) }>Start New Game</button>
+        <button onClick={ () => this.setState({ startNewGame: true }) }>Start New Game</button>
       </div>
     )
   }
@@ -26,7 +26,7 @@ export default class WelcomeDialog extends React.Component {
     const {
       assetServerUri,
       avatars,
-      selectedAvatar,
+      avatar,
       name,
       onStartNewGame,
       onUpdateName,
@@ -34,9 +34,9 @@ export default class WelcomeDialog extends React.Component {
 
     return (
       <div>
-        <img src={ `${assetServerUri}/${avatars[selectedAvatar].icon.src}` } />
+        <img src={ `${assetServerUri}/${avatars[avatar].icon.src}` } />
         <input type="text" value={ name } onChange={ event => onUpdateName(event.target.value) } />
-        <button onClick={ () => onStartNewGame(name, selectedAvatar) }>Start</button>
+        <button onClick={ () => onStartNewGame(name, avatar) }>Start</button>
       </div>
     )
   }

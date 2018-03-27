@@ -1,5 +1,12 @@
 import * as types from "./actionTypes"
 
+export function updateAvatar(avatar) {
+  return {
+    type: types.UPDATE_AVATAR,
+    avatar
+  }
+}
+
 export function updateGame(game) {
   return {
     type: types.UPDATE_GAME,

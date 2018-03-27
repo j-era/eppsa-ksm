@@ -21,10 +21,12 @@ export function name(state = "Bob", action) {
   }
 }
 
-export function avatar(state = "flower", action) {
+export function avatar(state = null, action) {
   switch (action.type) {
     case types.UPDATE_GAME:
       return action.game.avatar
+    case types.UPDATE_AVATAR:
+      return action.avatar
     default:
       return state
   }

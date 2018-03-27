@@ -1,3 +1,4 @@
+export const UPDATE_AVATAR = "UPDATE_AVATAR"
 export const UPDATE_GAME = "UPDATE_GAME"
 export const UPDATE_NAME = "UPDATE_NAME"
 export const START_CHALLENGE = "START_CHALLENGE"
