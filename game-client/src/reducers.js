@@ -69,3 +69,12 @@ export function activeGames(state = [], action) {
       return state
   }
 }
+
+export function showQrReader(state = false, action) {
+  switch (action.type) {
+    case types.TOGGLE_QR_READER:
+      return !state
+    default:
+      return state
+  }
+}

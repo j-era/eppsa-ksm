@@ -33,3 +33,9 @@ export function startChallenge() {
     type: types.START_CHALLENGE
   }
 }
+
+export function toggleQrReader() {
+  return {
+    type: types.TOGGLE_QR_READER
+  }
+}
