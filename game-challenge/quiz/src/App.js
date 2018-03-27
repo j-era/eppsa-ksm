@@ -29,11 +29,18 @@ const NextChallengeButton = styled(Button)`
   background-color: blue;
 `
 
+const Score = styled.div`
+  margin-top: 5px;
+  width: 200px;
+  height: 50px;
+`
+
 export default class App extends React.Component {
   constructor(props) {
     super(props)
     autoBind(this)
     this.fibo = [3, 5, 8]
+    this.bonus = 0
     this.state = { selected: null, confirmed: false }
   }
 
@@ -45,6 +52,17 @@ export default class App extends React.Component {
     const { question, answers } = this.props.config
     return (
       <Container>
+        {
+          this.state.confirmed ?
+            <Score>
+              {
+                answers[this.confirmedSelection].isCorrect
+                  ? "Correct answer"
+                  : "Wrong answer"
+              }, Score: { this.score } + Time Bonus: { this.bonus }
+            </Score> :
+            <Score />
+        }
         <Question>{ question }</Question>
         {
           answers.map((answer, i) =>
@@ -100,7 +118,7 @@ export default class App extends React.Component {
       const { answers } = this.props.config
       this.timeToAnswer = (new Date() - this.startTime) / 1000
       const finalAnswer = answers[this.state.selected]
-      this.score = this.getScore(finalAnswer.isCorrect, this.timeToAnswer)
+      this.totalScore = this.getScore(finalAnswer.isCorrect, this.timeToAnswer)
       this.confirmedSelection = this.state.selected
       this.setState({ selected: null, confirmed: true })
     }
@@ -109,7 +127,9 @@ export default class App extends React.Component {
   getScore(correctAnswer, timeToAnswer) {
     const { reward, gameFactor } = this.props.config
     const conditionFactor = correctAnswer ? 1 : 0
-    return Math.round(conditionFactor * (reward * gameFactor + this.timeBonus(timeToAnswer)))
+    this.bonus = Math.round(conditionFactor * this.timeBonus(timeToAnswer))
+    this.score = Math.round(conditionFactor * (reward * gameFactor))
+    return this.bonus + this.score
   }
 
   timeBonus(timeToAnswer) {
@@ -132,6 +152,6 @@ export default class App extends React.Component {
   }
 
   nextChallenge() {
-    this.props.completeChallenge(this.score)
+    this.props.completeChallenge(this.totalScore)
   }
 }
