@@ -3,14 +3,14 @@ import Button from "./button"
 
 
 const AnswerButton = styled(Button)`
-  background-color: ${props => selectionColor(props.selection)};
+  border-color: ${props => selectionColor(props.selection)};
 `
 
 function selectionColor(selection) {
   switch (selection) {
-    case "right": return "green"
-    case "wrong": return "red"
-    default: return "grey"
+    case "right": return "#00d700"
+    case "wrong": return "#f3352f"
+    default: return "#000000"
   }
 }
 

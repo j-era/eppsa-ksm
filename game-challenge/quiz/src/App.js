@@ -18,10 +18,6 @@ const Container = styled.div `
   height: 100%;
 `
 
-const NextChallengeButton = styled(Button)`
-  background-color: grey;
-`
-
 const Score = styled.div`
   margin-top: 5px;
   width: 200px;
@@ -76,9 +72,9 @@ export default class App extends React.Component {
 
   renderNextButton() {
     return this.state.confirmed &&
-      <NextChallengeButton onClick={ this.nextChallenge }>
+      <Button onClick={ this.nextChallenge }>
         { this.props.content.shared.texts.next }
-      </NextChallengeButton>
+      </Button>
   }
 
   getSelection(i) {
