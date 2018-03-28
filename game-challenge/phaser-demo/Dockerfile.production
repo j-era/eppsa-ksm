@@ -9,9 +9,14 @@ COPY package.json /app/package.json
 COPY package-lock.json /app/package-lock.json
 RUN npm install
 
+COPY scripts /app/scripts
+COPY config /app/config
 COPY src /app/src
 COPY public /app/public
+
 RUN npm run build
+
+ADD public/index.html /app/public/index.html
 
 # start app
 CMD ["npm", "run", "serve"]
