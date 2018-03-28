@@ -4,7 +4,7 @@ const CONNECTION_CONFIG = { pingInterval: 5000, pingTimeout: 2000 }
 const io = require("socket.io")(3000, CONNECTION_CONFIG)
 
 const Client = require("./client")
-const MongoDB = require("./api/mongodb")
+const MongoDB = require("./api/mongoDB")
 
 const LOG = bunyan.createLogger({ name: "game-server" })
 
