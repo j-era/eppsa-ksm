@@ -64,3 +64,10 @@ services:
     volumes:
       - ./game-challenge/phaser-demo:/app
       - /app/node_modules
+
+  game-challenge-quiz:
+    build:
+      dockerfile: Dockerfile.development
+    volumes:
+      - ./game-challenge/quiz:/app
+      - /app/node_modules

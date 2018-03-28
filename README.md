@@ -23,16 +23,16 @@ The development certificate points to `*.eppsa.de`. Set the correct path in CERT
     127.0.0.1 cms.local.eppsa.de
     127.0.0.1 game.local.eppsa.de
     ```
-  * Certifcate for `*.eppsa.de` or for each subdomain `*.<environment>.eppsa.de`
+  * Certificate for `*.eppsa.de` or for each subdomain `*.<environment>.eppsa.de`
 
 ### Docker & Docker Compose
   * [Docker](https://docs.docker.com/install/)
 
 ## Run
-Set environement variable for the path to the ssl certificate:
+Set environment variable for the path to the ssl certificate:
   * `CERTIFICATE_PATH=/path/to/certificate`
 
-Set the HOST variable of your target enironment:
+Set the HOST variable of your target environment:
   * `HOST=<environment>.eppsa.de`
 
 ### Build Images
