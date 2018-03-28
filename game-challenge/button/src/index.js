@@ -1,12 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import './index.css'
+import App from './App'
 
 let gameClient
 let config
 
-window.addEventListener("message", receiveMessage, false);
+window.addEventListener("message", receiveMessage, false)
 function receiveMessage(event)
 {
   console.log(event)
@@ -24,4 +24,4 @@ const completeChallenge = () => {
 
 ReactDOM.render(<App
   onClick={ completeChallenge }
-/>, document.getElementById('root'));
+/>, document.getElementById('root'))

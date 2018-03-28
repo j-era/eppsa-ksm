@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "serve":  "serve -C -s build -p $PORT",
+    "serve": "serve -C -s build -p 3000",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
