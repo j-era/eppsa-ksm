@@ -44,8 +44,7 @@ contentServer.getData().then(transform).then(async (content) => {
         onResumeGame={ onResumeGame }
         onStartNewGame={ onStartNewGame }
         onUpdateName={ (name) => store.dispatch(actions.updateName(name)) }
-        onScan={ onScan }
-        toggleQrReader={ toggleQrReader }
+        onStartChallenge={ onStartChallenge }
         onChallengeReady={ onChallengeReady } />
     </Provider>,
     document.getElementById("app")
@@ -61,26 +60,13 @@ contentServer.getData().then(transform).then(async (content) => {
     store.dispatch(actions.updateGame(game))
     setCookie("gameId", game.gameId)
   }
-
-  function onScan(data, challengeNumber) {
-    if(data != null && data == content.challenges[challengeNumber].token) {
-      startChallenge()
-      store.dispatch(actions.toggleQrReader())
-    }
-  }
-
-
-  function toggleQrReader(){
-    store.dispatch(actions.toggleQrReader())
-  }
-
 })
 
 function transform(content) {
   return Object.assign(mapValues(omit(content, "index"), transform), content.index)
 }
 
-async function startChallenge() {
+async function onStartChallenge() {
   await gameServer.startChallenge()
   store.dispatch(actions.startChallenge())
 }
