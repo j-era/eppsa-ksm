@@ -53,9 +53,9 @@ export default class App extends React.Component {
 
     return answers.map((answer, i) =>
       <AnswerButton
-        key={ i }
-        onClick={ () => this.confirm(i) }
-        selection={ this.getSelection(i) }>
+        key={ i + 1 }
+        onClick={ () => this.confirm(i + 1) }
+        selection={ this.getSelection(i + 1) }>
         {
           answer
         }
@@ -80,7 +80,7 @@ export default class App extends React.Component {
   getSelection(i) {
     const { correctAnswer } = this.props.content
     if (this.state.confirmed) {
-      if (i === correctAnswer - 1) {
+      if (i === correctAnswer) {
         return "right"
       } else if (this.state.confirmed === i) {
         return "wrong"
@@ -91,7 +91,7 @@ export default class App extends React.Component {
   confirm(answerIndex) {
     const { correctAnswer, scoreCalculation, shared } = this.props.content
     this.timeToAnswer = (new Date() - this.startTime) / 1000
-    if (answerIndex === correctAnswer - 1) {
+    if (answerIndex === correctAnswer) {
       const scoreCalc = new ScoreCalculation(
         this.timeToAnswer,
         { ...scoreCalculation, gameFactor: shared.config.quizFactor }
