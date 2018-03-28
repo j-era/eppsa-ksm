@@ -2,6 +2,7 @@ import React from "react"
 import autoBind from "react-autobind"
 import styled from "styled-components"
 import "./App.css"
+import AnswerButton from "./components/answerButton"
 import Button from "./components/button"
 import Question from "./components/question"
 import ScoreCalculation from "./score"
@@ -15,10 +16,6 @@ const Container = styled.div `
   
   width: 100%;
   height: 100%;
-`
-
-const AnswerButton = styled(Button)`
-  background-color: ${props => props.color};
 `
 
 const NextChallengeButton = styled(Button)`
@@ -62,7 +59,7 @@ export default class App extends React.Component {
       <AnswerButton
         key={ i }
         onClick={ () => this.confirm(i) }
-        color={ this.buttonColor(i) }>
+        selection={ this.getSelection(i) }>
         {
           answer
         }
@@ -84,18 +81,14 @@ export default class App extends React.Component {
       </NextChallengeButton>
   }
 
-  buttonColor(i) {
+  getSelection(i) {
     const { correctAnswer } = this.props.content
     if (this.state.confirmed) {
       if (i === correctAnswer - 1) {
-        return "green"
+        return "right"
       } else if (this.state.confirmed === i) {
-        return "red"
-      } else {
-        return "grey"
+        return "wrong"
       }
-    } else {
-      return "grey"
     }
   }
 
