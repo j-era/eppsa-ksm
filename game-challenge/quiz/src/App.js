@@ -54,7 +54,7 @@ export default class App extends React.Component {
     return answers.map((answer, i) =>
       <AnswerButton
         key={ i + 1 }
-        onClick={ () => this.confirm(i + 1) }
+        onClick={ !this.state.confirmed ? () => this.confirm(i + 1) : () => {} }
         selection={ this.getSelection(i + 1) }>
         {
           answer
