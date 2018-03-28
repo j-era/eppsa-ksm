@@ -18,7 +18,7 @@ const completeChallenge = () => {
   gameClient.source.postMessage(
     {
       source: "challenge",
-      score: config.reward
+      score: config.challenge.reward
     }, gameClient.origin)
 }
 
