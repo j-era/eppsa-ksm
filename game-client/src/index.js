@@ -82,6 +82,8 @@ async function receiveMessage(event) {
   }
 }
 
-gameServer.on("activeGamesUpdated", async (activeGames) => {
-  store.dispatch(actions.updateActiveGames(activeGames))
+gameServer.on("connectedGames", (connectedGames) => {
+  store.dispatch(actions.updateActiveGames(connectedGames))
+})
+
 })

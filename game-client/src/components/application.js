@@ -35,12 +35,13 @@ function renderGame(props) {
   const challengeUri = resolveChallengeWebAppUri(challengeType)
 
   return <Game
-    activeGames={ props.activeGames }
+    connectedGames={ props.connectedGames }
     challengeNumber={ props.challengeNumber }
     challengeUri={ challengeUri }
     challenge={ challenge }
     score={ props.score }
     maxChallenges={ props.maxChallenges }
+    connected={ props.connected }
     challengeStarted={ props.challengeStarted }
     onStartChallenge={ props.onStartChallenge }
     onChallengeReady={ props.onChallengeReady } />

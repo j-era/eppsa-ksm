@@ -61,7 +61,7 @@ export function score(state = 0, action) {
   }
 }
 
-export function activeGames(state = [], action) {
+export function connectedGames(state = [], action) {
   switch (action.type) {
     case types.UPDATE_ACTIVE_GAMES:
       return action.games

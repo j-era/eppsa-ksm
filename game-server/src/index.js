@@ -8,10 +8,12 @@ const MongoDB = require("./api/mongoDB")
 
 const LOG = bunyan.createLogger({ name: "game-server" })
 
-const mongoDB = new MongoDB(CONNECTION_CONFIG.pingInterval)
+const mongoDB = new MongoDB(LOG)
 
-mongoDB.connect().then(() => {
+mongoDB.connect().then(async () => {
   LOG.info("Connected to MongoDB")
+
+  await mongoDB.disconnectGames()
 
   io.on("connect", socket => {
     const client = new Client(socket, mongoDB, LOG)
@@ -19,5 +21,5 @@ mongoDB.connect().then(() => {
   })
 
   // forward database update event to all clients
-  mongoDB.on("activeGamesUpdated", (activeGames) => io.emit("activeGamesUpdated", activeGames))
+  mongoDB.on("connectedGames", (connectedGames) => io.emit("connectedGames", connectedGames))
 }).catch((error) => LOG.error(error))

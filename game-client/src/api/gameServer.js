@@ -25,8 +25,8 @@ export default class GameServer {
     return this.send("findGame", gameId)
   }
 
-  findActiveGames() {
-    return this.send("findActiveGames")
+  findConnectedGames() {
+    return this.send("findConnectedGames")
   }
 
   newGame(name, avatar, maxChallenges) {

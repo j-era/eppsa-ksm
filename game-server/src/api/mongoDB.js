@@ -6,9 +6,9 @@ const DATABASE_NAME = "EPPSA_KSM"
 const GAMES_COLLECTION = "games"
 
 module.exports = class MongoDB extends EventEmitter {
-  constructor(activeGameTimeout) {
+  constructor(log) {
     super()
-    this.activeGameTimeout = activeGameTimeout
+    this.log = log
   }
 
   async connect() {
@@ -16,19 +16,25 @@ module.exports = class MongoDB extends EventEmitter {
     this.database = client.db(DATABASE_NAME)
   }
 
+  disconnectGames() {
+    return this.database.collection(GAMES_COLLECTION).update(
+      { connected: true }, { connected: false }
+    )
+  }
+
   findGame(gameId) {
     return this.database.collection(GAMES_COLLECTION).find({ gameId }).limit(1).next()
   }
 
-  findActiveGames() {
-    const filter = { lastUpdate: { $gt: new Date(Date.now() - this.activeGameTimeout) } }
+  findConnectedGames() {
+    const filter = { connected: true }
     const projection = { gameId: 1, name: 1, avatar: 1, score: 1, challengeNumber: 1, _id: 0 }
     return this.database.collection(GAMES_COLLECTION).find(filter).project(projection).toArray()
   }
 
   async newGame(game) {
     await this.database.collection(GAMES_COLLECTION).insertOne(game)
-    await this.emit("activeGamesUpdated", await this.findActiveGames())
+    await this.emit("connectedGames", await this.findConnectedGames())
   }
 
   async updateGame(game, emitUpdate = true) {
@@ -36,7 +42,7 @@ module.exports = class MongoDB extends EventEmitter {
       .updateOne({ gameId: game.gameId }, { $set: game })
 
     if (emitUpdate) {
-      await this.emit("activeGamesUpdated", await this.findActiveGames())
+      await this.emit("connectedGames", await this.findConnectedGames())
     }
   }
 

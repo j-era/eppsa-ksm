@@ -9,12 +9,20 @@ export default function Game(props) {
 }
 
 function renderNavigation(props) {
-  const { activeGames, challengeNumber, maxChallenges, navigation, score, onStartChallenge } = props
+  const {
+    connectedGames,
+    connected,
+    challengeNumber,
+    maxChallenges,
+    navigation,
+    score,
+    onStartChallenge
+  } = props
 
   return (
     <div>
       <GameBoard
-        activeGames={ activeGames }
+        connectedGames={ connectedGames }
         challengeNumber={ challengeNumber }
         maxChallenges={ maxChallenges } />
       <div>Current Challenge: { challengeNumber }</div>
