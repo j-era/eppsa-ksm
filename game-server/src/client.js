@@ -114,13 +114,13 @@ module.exports = class Client {
         "Finishing challenge")
 
       const challenge = { gameId: this.currentGame.gameId, finishTime: new Date(), ...result }
-      this.mongoDB.finishChallenge(this.currentGame.challengeNumber, challenge)
+      if (await this.mongoDB.finishChallenge(this.currentGame.challengeNumber, challenge)) {
+        this.currentGame.score += result.score
+        this.currentGame.challengeNumber++
+        this.handleGameFinished(this.currentGame)
 
-      this.currentGame.score += result.score
-      this.currentGame.challengeNumber++
-      handleGameFinished(this.currentGame)
-
-      this.mongoDB.updateGame(this.currentGame)
+        this.mongoDB.updateGame(this.currentGame)
+      }
     } else {
       this.log.error({ socketId: this.socket.id },
         "Could not finish challenge without current game")

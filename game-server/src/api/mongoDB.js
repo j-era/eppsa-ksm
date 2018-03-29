@@ -56,6 +56,12 @@ module.exports = class MongoDB extends EventEmitter {
       .sort({ startTime: -1 })
       .limit(1).next()
 
+    if (!filter) {
+      this.log.error({ number, challenge }, "Could not find challenge in database to be finished")
+      return false
+    }
+
     await this.database.collection(`challenge-${number}`).updateOne(filter, { $set: challenge })
+    return true
   }
 }
