@@ -34,6 +34,13 @@ export function startChallenge() {
   }
 }
 
+export function updateConnected(connected) {
+  return {
+    type: types.UPDATE_CONNECTED,
+    connected
+  }
+}
+
 export function toggleQrReader() {
   return {
     type: types.TOGGLE_QR_READER

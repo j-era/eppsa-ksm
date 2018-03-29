@@ -70,6 +70,15 @@ export function connectedGames(state = [], action) {
   }
 }
 
+export function connected(state = false, action) {
+  switch (action.type) {
+    case types.UPDATE_CONNECTED:
+      return action.connected
+    default:
+      return state
+  }
+}
+
 export function showQrReader(state = false, action) {
   switch (action.type) {
     case types.TOGGLE_QR_READER:

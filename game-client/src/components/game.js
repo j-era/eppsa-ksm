@@ -28,7 +28,11 @@ function renderNavigation(props) {
       <div>Current Challenge: { challengeNumber }</div>
       <div>Score: { score }</div>
       <div>Navigation: { navigation }</div>
-      <button onClick={ () => onStartChallenge() }>Start</button>
+      {
+        connected ?
+          <button onClick={ () => onStartChallenge() }>Start</button> :
+          <button onClick={ () => onStartChallenge() } disabled>Reconnecting...</button>
+      }
     </div>
   )
 }

@@ -86,4 +86,10 @@ gameServer.on("connectedGames", (connectedGames) => {
   store.dispatch(actions.updateActiveGames(connectedGames))
 })
 
+gameServer.on("connect", () => {
+  store.dispatch(actions.updateConnected(true))
+})
+
+gameServer.on("disconnect", () => {
+  store.dispatch(actions.updateConnected(false))
 })
