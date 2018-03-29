@@ -151,8 +151,10 @@ module.exports = class Client {
 
   handleGameFinished(game) {
     if (!game.finished && game.challengeNumber > game.maxChallenges) {
+      /* eslint-disable no-param-reassign*/
       game.finished = true
       game.finishTime = new Date()
+      /* eslint-enable*/
       this.log.info({ socketId: this.socket.id, gameId: game.gameId }, "Game finished")
     }
   }

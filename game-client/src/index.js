@@ -30,7 +30,7 @@ contentServer.getData().then(transform).then(async (content) => {
   window.addEventListener("message", receiveMessage, false)
 
   const maxChallenges = Object.keys(content.challenges).length - 1
-  
+
   const selectedAvatar = config.avatar ? config.avatar : Object.keys(content.avatars)[0]
   store.dispatch(actions.updateAvatar(selectedAvatar))
 

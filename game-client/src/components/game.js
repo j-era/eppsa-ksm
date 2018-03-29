@@ -44,6 +44,7 @@ function renderChallenge({ challenge, challengeUri, onChallengeReady }) {
       src={ challengeUri }
       ref={ iframe => {
         if (iframe) {
+          // eslint-disable-next-line no-param-reassign
           iframe.onload = () =>
             onChallengeReady(iframe.contentWindow, challenge, challengeUri)
         }
