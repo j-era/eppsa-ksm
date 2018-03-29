@@ -13,12 +13,12 @@ mongoDB.connect().then(async () => {
 
   await mongoDB.disconnectGames()
   
-  // forward database update event to all clients
-  mongoDB.on("connectedGames", (connectedGames) => io.emit("connectedGames", connectedGames))
-  
   const server = io(3000, CONNECTION_CONFIG)
   server.on("connect", socket => {
     const client = new Client(socket, mongoDB, LOG)
     client.subscribe()
   })
+
+  // forward database update event to all clients
+  mongoDB.on("connectedGames", (connectedGames) => server.emit("connectedGames", connectedGames))
 }).catch((error) => LOG.error(error))
