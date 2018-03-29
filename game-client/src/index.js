@@ -52,6 +52,7 @@ contentServer.getData().then(transform).then(async (content) => {
 
   async function onResumeGame() {
     store.dispatch(actions.updateGame(await gameServer.resumeGame(gameId, maxChallenges)))
+    gameServer.setReconnectOptions({ gameId })
   }
 
   async function onStartNewGame(name, avatar) {
@@ -59,6 +60,7 @@ contentServer.getData().then(transform).then(async (content) => {
     const game = await gameServer.newGame(name, avatar, maxChallenges)
     store.dispatch(actions.updateGame(game))
     setCookie("gameId", game.gameId)
+    gameServer.setReconnectOptions({ gameId: game.gameId })
   }
 })
 

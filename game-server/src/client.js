@@ -10,7 +10,9 @@ module.exports = class Client {
     this.log.info({ socketId: this.socket.id }, "Client connected")
   }
 
-  subscribe() {
+  async subscribe() {
+    await this.tryContinueGame()
+
     this.socket.on("findGame", this.findGame.bind(this))
     this.socket.on("findConnectedGames", this.findConnectedGames.bind(this))
     this.socket.on("newGame", this.newGame.bind(this))
@@ -19,6 +21,22 @@ module.exports = class Client {
     this.socket.on("finishChallenge", this.finishChallenge.bind(this))
     this.socket.on("disconnect", this.disconnect.bind(this))
     this.socket.conn.on("packet", this.onPacket.bind(this))
+  }
+
+  async tryContinueGame() {
+    const gameId = this.socket.handshake.query.gameId
+    if (gameId) {
+      this.currentGame = await this.mongoDB.findGame(gameId)
+
+      if (this.currentGame) {
+        this.log.info({ socketId: this.socket.id, gameId }, "Continuing game")
+
+        this.currentGame.connected = true
+        this.mongoDB.updateGame(this.currentGame)
+      } else {
+        this.log.error({ socketId: this.socket.id, gameId }, "Could not continue game")
+      }
+    }
   }
 
   async findGame(gameId, toSocket) {

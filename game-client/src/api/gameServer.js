@@ -56,4 +56,9 @@ export default class GameServer {
   on(event, callback) {
     this.socket.on(event, callback)
   }
+
+  setReconnectOptions(opts) {
+    console.log(`Set reconnect options: ${opts}`)
+    this.socket.io.opts.query = opts
+  }
 }
