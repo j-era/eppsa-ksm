@@ -80,10 +80,15 @@ module.exports = class Client {
   }
 
   async resumeGame(gameId, maxChallenges, toSocket) {
-    this.log.info({ socketId: this.socket.id, gameId, maxChallenges }, "Resuming game")
+    if (this.currentGame) {
+      this.currentGame.connected = false
+      this.mongoDB.updateGame(this.currentGame)
+    }
 
     this.currentGame = await this.mongoDB.findGame(gameId)
     if (this.currentGame) {
+      this.log.info({ socketId: this.socket.id, gameId, maxChallenges }, "Resuming game")
+      
       this.currentGame.maxChallenges = maxChallenges
       this.handleGameFinished(this.currentGame)
 
