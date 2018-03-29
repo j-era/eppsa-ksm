@@ -106,8 +106,9 @@ module.exports = class Client {
       this.log.info({ socketId: this.socket.id, gameId: this.currentGame.gameId },
         "Starting challenge")
 
-      const challenge = { gameId: this.currentGame.gameId, startTime: new Date() }
-      this.mongoDB.startChallenge(this.currentGame.challengeNumber, challenge)
+      const data = { startTime: new Date() }
+      this.mongoDB.startChallenge(
+        this.currentGame.gameId, this.currentGame.challengeNumber, data)
     } else {
       this.log.error({ socketId: this.socket.id }, "Could not start challenge without current game")
     }
@@ -118,8 +119,9 @@ module.exports = class Client {
       this.log.info({ socketId: this.socket.id, gameId: this.currentGame.gameId },
         "Finishing challenge")
 
-      const challenge = { gameId: this.currentGame.gameId, finishTime: new Date(), ...result }
-      if (await this.mongoDB.finishChallenge(this.currentGame.challengeNumber, challenge)) {
+      const data = { finishTime: new Date(), ...result }
+      if (await this.mongoDB.finishChallenge(
+        this.currentGame.gameId, this.currentGame.challengeNumber, data)) {
         this.currentGame.score += result.score
         this.currentGame.challengeNumber++
         this.handleGameFinished(this.currentGame)

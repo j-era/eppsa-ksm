@@ -46,13 +46,14 @@ module.exports = class MongoDB extends EventEmitter {
     }
   }
 
-  async startChallenge(number, challenge) {
+  async startChallenge(gameId, number, data) {
+    const challenge = { gameId, finished: false, ...data }
     await this.database.collection(`challenge-${number}`).insertOne(challenge)
   }
 
-  async finishChallenge(number, challenge) {
+  async finishChallenge(gameId, number, data) {
     const filter = await this.database.collection(`challenge-${number}`)
-      .find({ gameId: challenge.gameId })
+      .find({ gameId, finished: false })
       .sort({ startTime: -1 })
       .limit(1).next()
 
@@ -61,6 +62,7 @@ module.exports = class MongoDB extends EventEmitter {
       return false
     }
 
+    const challenge = { finished: true, ...data }
     await this.database.collection(`challenge-${number}`).updateOne(filter, { $set: challenge })
     return true
   }
