@@ -31,7 +31,7 @@ function renderNavigation(props) {
       {
         connected ?
           <button onClick={ () => onStartChallenge() }>Start</button> :
-          <button onClick={ () => onStartChallenge() } disabled>Reconnecting...</button>
+          <button disabled>Reconnecting...</button>
       }
     </div>
   )
