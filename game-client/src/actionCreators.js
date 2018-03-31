@@ -14,9 +14,9 @@ export function updateGame(game) {
   }
 }
 
-export function updateActiveGames(games) {
+export function updateConnectedGames(games) {
   return {
-    type: types.UPDATE_ACTIVE_GAMES,
+    type: types.UPDATE_CONNECTED_GAMES,
     games
   }
 }
