@@ -47,6 +47,15 @@ services:
     depends_on:
       - content-server
       - asset-server
+  
+  dashboard:
+    build:
+      context: ./dashboard
+    environment:
+      CONTENT_SERVER_URI: https://content-server.${HOST}
+      ASSET_SERVER_URI: https://asset-server.${HOST}
+      GAME_SERVER_URI: https://game-server.${HOST}
+      PORT: 443
 
   game-client:
     build:

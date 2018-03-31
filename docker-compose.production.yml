@@ -12,6 +12,14 @@ services:
     environment:
       PORT: 80
 
+  mongo:
+    ports:
+      - "27017:27017"
+
+  dashboard:
+    build:
+      dockerfile: Dockerfile.production
+
   game-client:
     build:
       dockerfile: Dockerfile.production

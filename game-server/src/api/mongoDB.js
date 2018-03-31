@@ -4,6 +4,7 @@ const EventEmitter = require("events")
 const MONGODB_URI = `${process.env.MONGODB_URI}:27017`
 const DATABASE_NAME = "EPPSA_KSM"
 const GAMES_COLLECTION = "games"
+const GAME_PROJECTION = { gameId: 1, name: 1, avatar: 1, score: 1, challengeNumber: 1, _id: 0 }
 
 module.exports = class MongoDB extends EventEmitter {
   constructor(log) {
@@ -23,13 +24,28 @@ module.exports = class MongoDB extends EventEmitter {
   }
 
   findGame(gameId) {
-    return this.database.collection(GAMES_COLLECTION).find({ gameId }).limit(1).next()
+    return this.database.collection(GAMES_COLLECTION)
+      .find({ gameId }).project(GAME_PROJECTION).limit(1).next()
+  }
+
+  findRecentFinishedGames() {
+    const filter = { finished: true }
+    const sort = { finishTime: -1 }
+    return this.database.collection(GAMES_COLLECTION)
+      .find(filter).project(GAME_PROJECTION).sort(sort).limit(10).toArray()
+  }
+
+  findHighscoreGames() {
+    const filter = { finished: true }
+    const sort = { score: -1 }
+    return this.database.collection(GAMES_COLLECTION)
+      .find(filter).project(GAME_PROJECTION).sort(sort).limit(10).toArray()
   }
 
   findConnectedGames() {
     const filter = { connected: true }
-    const projection = { gameId: 1, name: 1, avatar: 1, score: 1, challengeNumber: 1, _id: 0 }
-    return this.database.collection(GAMES_COLLECTION).find(filter).project(projection).toArray()
+    return this.database.collection(GAMES_COLLECTION)
+      .find(filter).project(GAME_PROJECTION).toArray()
   }
 
   async newGame(game) {

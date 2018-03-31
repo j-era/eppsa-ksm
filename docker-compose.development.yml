@@ -15,6 +15,13 @@ services:
     environment:
       PORT: 443
 
+  dashboard:
+    build:
+      dockerfile: Dockerfile.development
+    volumes:
+      - ./dashboard:/app
+      - /app/node_modules
+
   game-client:
     build:
       dockerfile: Dockerfile.development

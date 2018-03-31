@@ -14,6 +14,8 @@ module.exports = class Client {
     await this.tryContinueGame()
 
     this.socket.on("findGame", this.findGame.bind(this))
+    this.socket.on("findRecentFinishedGames", this.findRecentFinishedGames.bind(this))
+    this.socket.on("findHighscoreGames", this.findHighscoreGames.bind(this))
     this.socket.on("findConnectedGames", this.findConnectedGames.bind(this))
     this.socket.on("newGame", this.newGame.bind(this))
     this.socket.on("resumeGame", this.resumeGame.bind(this))
@@ -41,6 +43,14 @@ module.exports = class Client {
 
   async findGame(gameId, toSocket) {
     toSocket(await this.mongoDB.findGame(gameId))
+  }
+
+  async findRecentFinishedGames(toSocket) {
+    toSocket(await this.mongoDB.findRecentFinishedGames())
+  }
+
+  async findHighscoreGames(toSocket) {
+    toSocket(await this.mongoDB.findHighscoreGames())
   }
 
   async findConnectedGames(toSocket) {
