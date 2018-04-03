@@ -56,7 +56,11 @@ services:
       ASSET_SERVER_URI: https://asset-server.${HOST}
       GAME_SERVER_URI: https://game-server.${HOST}
       PORT: 443
-
+    depends_on:
+      - content-server
+      - asset-server
+      - game-server
+      
   game-client:
     build:
       context: ./game-client
