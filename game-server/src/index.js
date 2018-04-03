@@ -20,5 +20,13 @@ mongoDB.connect().then(async () => {
   })
 
   // forward database update event to all clients
-  mongoDB.on("connectedGames", (connectedGames) => server.emit("connectedGames", connectedGames))
+  mongoDB.on("connectedGames", (connectedGames) =>
+    server.emit("connectedGames", connectedGames)
+  )
+  mongoDB.on("recentFinishedGames", (recentFinishedGames) =>
+    server.emit("recentFinishedGames", recentFinishedGames)
+  )
+  mongoDB.on("highscoreGames", (highscoreGames) =>
+    server.emit("highscoreGames", highscoreGames)
+  )
 }).catch((error) => LOG.error(error))

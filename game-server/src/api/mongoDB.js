@@ -59,6 +59,11 @@ module.exports = class MongoDB extends EventEmitter {
 
     if (emitUpdate) {
       await this.emit("connectedGames", await this.findConnectedGames())
+
+      if (game.finished) {
+        await this.emit("recentFinishedGames", await this.findRecentFinishedGames())
+        await this.emit("highscoreGames", await this.findHighscoreGames())
+      }
     }
   }
 

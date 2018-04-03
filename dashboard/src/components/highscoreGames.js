@@ -3,15 +3,16 @@ import React from "react"
 export default function HighscoreGames({ highscoreGames }) {
   return (
     <div>
-      { highscoreGames.forEach(renderGame) }
+      <div>Highscore</div>
+      { highscoreGames.map(renderGame) }
     </div>
   )
 }
 
-function renderGame({ avatar, gameId, name, score }) {
+function renderGame({ avatar, gameId, name, score }, index) {
   return (
     <div key={ gameId }>
-      { `${score} ${name} ${avatar}` }
+      { `${index + 1}. ${score} ${name} ${avatar}` }
     </div>
   )
 }

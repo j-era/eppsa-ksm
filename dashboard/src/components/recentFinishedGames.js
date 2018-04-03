@@ -3,7 +3,8 @@ import React from "react"
 export default function RecentFinishedGames({ recentFinishedGames }) {
   return (
     <div>
-      { recentFinishedGames.forEach(renderGame) }
+      <div>Recent Games</div>
+      { recentFinishedGames.map(renderGame) }
     </div>
   )
 }
@@ -11,7 +12,7 @@ export default function RecentFinishedGames({ recentFinishedGames }) {
 function renderGame({ avatar, gameId, name, score }) {
   return (
     <div key={ gameId }>
-      { `${score} ${name} ${avatar}` }
+      { `${name} ${avatar} ${score}` }
     </div>
   )
 }
