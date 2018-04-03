@@ -1,4 +1,5 @@
-import querystring from "querystring"
+import omit from "lodash.omit"
+import mapValues from "lodash.mapvalues"
 import React from "react"
 import { render } from "react-dom"
 import { Provider } from "react-redux"
@@ -16,7 +17,7 @@ const contentServer = new ContentServer(process.env.CONTENT_SERVER_URI)
 const gameServer = new GameServer(process.env.GAME_SERVER_URI)
 
 Promise.all([
-  contentServer.getData(),
+  contentServer.getData().then(transform),
   gameServer.findRecentFinishedGames(),
   gameServer.findHighscoreGames(),
   gameServer.findConnectedGames()
@@ -34,6 +35,10 @@ Promise.all([
     document.getElementById("app")
   )
 })
+
+function transform(content) {
+  return Object.assign(mapValues(omit(content, "index"), transform), omit(content.index, "template"))
+}
 
 gameServer.on("recentFinishedGames", (games) => {
   store.dispatch(actions.updateRecentFinishedGames(games))

@@ -1,16 +1,16 @@
 import React from "react"
 
-export default function GameBoard({ connectedGames, challenges }) {
+export default function GameBoard({ connectedGames, content }) {
   return (
     <div style={ { height: "50px" } }>
-      { renderGames(connectedGames, challenges) }
-      { renderStations(challenges) }
+      { renderGames(connectedGames, content.challenges) }
+      { renderStations(Object.keys(content.challenges).length) }
     </div>
   )
 }
 
 function renderGames(connectedGames, challenges) {
-  const stepPercent = 100 / challenges.size()
+  const stepPercent = 100 / Object.keys(challenges).length
 
   return (
     <div style={ { height: "25px" } }>
@@ -29,11 +29,11 @@ function renderGame(game, stepPercent) {
   )
 }
 
-function renderStations(challenges) {
-  const stepPercent = 100 / maxChallenges
+function renderStations(numChallenges) {
+  const stepPercent = 100 / numChallenges
 
   const stations = []
-  for (let i = 1; i <= maxChallenges; i++) {
+  for (let i = 1; i <= numChallenges; i++) {
     stations.push(i)
   }
 
