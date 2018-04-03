@@ -87,3 +87,12 @@ export function showQrReader(state = false, action) {
       return state
   }
 }
+
+export function cameraPermissonDenied(state = false, action) {
+  switch (action.type) {
+    case types.HANDLE_QR_READER_ERROR:
+      return action.name ===  "NotAllowedError"
+    default:
+      return state
+  }
+}
