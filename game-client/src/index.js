@@ -46,6 +46,7 @@ contentServer.getData().then(transform).then(async (content) => {
         onUpdateName={ (name) => store.dispatch(actions.updateName(name)) }
         onScan={ onScan }
         toggleQrReader={ toggleQrReader }
+        handleQrReaderError={ handleQrReaderError }
         startChallenge ={ startChallenge }
         onChallengeReady={ onChallengeReady } />
     </Provider>,
@@ -72,9 +73,13 @@ contentServer.getData().then(transform).then(async (content) => {
     }
   }
 
-
   function toggleQrReader(){
     store.dispatch(actions.toggleQrReader())
+  }
+
+  function handleQrReaderError(error){
+    store.dispatch(actions.handleQrReaderError(error.name))
+    console.error(error)
   }
 
 })

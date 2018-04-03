@@ -10,15 +10,17 @@ export default function Game(props) {
 }
 
 function renderNavigation(props) {
-    connectedGames,
-    connected,
-    challengeNumber,
-    maxChallenges,
-    navigation,
-    score,
-    onScan,
-    toggleQrReader,
-    showQrReader } = props
+    const {
+      connectedGames,
+      connected,
+      challengeNumber,
+      maxChallenges,
+      navigation,
+      score,
+      toggleQrReader,
+      startChallenge,
+      showQrReader
+    } = props
 
   return (
     <div>
@@ -30,12 +32,7 @@ function renderNavigation(props) {
       <div>Score: { score }</div>
       <div>Navigation: { navigation }</div>
       {
-        showQrReader ?
-        <QrReader
-          onScan={ data => onScan(data, challengeNumber) }
-          onError={ handleError }
-          showViewFinder={ false }
-        /> : null
+        renderQrReader(props)
       }
       <button onClick={ toggleQrReader }>{showQrReader ? "hide Scanner" : "show Scanner"}</button>
       <button onClick={ startChallenge }>start Challenge</button>
@@ -58,6 +55,24 @@ function renderChallenge({ challenge, challengeUri, onChallengeReady }) {
   )
 }
 
-function handleError(err){
-  console.error(err)
+function renderQrReader(props){
+  const {
+    onScan,
+    showQrReader,
+    handleQrReaderError,
+    challengeNumber,
+    cameraPermissonDenied
+  } = props
+
+  if (showQrReader && !cameraPermissonDenied){
+    return(
+      <QrReader
+        onScan={data => onScan(data, challengeNumber)}
+        onError={handleQrReaderError}
+        showViewFinder={false}/>
+    )
+  } else if (cameraPermissonDenied){
+    return (<div>please give camera permissions</div>)
+  }
+
 }
