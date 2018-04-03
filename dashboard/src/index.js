@@ -37,7 +37,10 @@ Promise.all([
 })
 
 function transform(content) {
-  return Object.assign(mapValues(omit(content, "index"), transform), omit(content.index, "template"))
+  return Object.assign(
+    mapValues(omit(content, "index"), transform),
+    omit(content.index, "template")
+  )
 }
 
 gameServer.on("recentFinishedGames", (games) => {

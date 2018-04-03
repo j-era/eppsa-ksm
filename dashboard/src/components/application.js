@@ -13,7 +13,7 @@ function Application(props) {
         connectedGames={ props.connectedGames } />
       <RecentFinishedGames
         content={ props.content }
-        recentFinishedGames={ props.recentFinishedGames }/>
+        recentFinishedGames={ props.recentFinishedGames } />
       <HighscoreGames
         content={ props.content }
         highscoreGames={ props.highscoreGames } />
