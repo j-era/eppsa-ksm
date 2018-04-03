@@ -64,15 +64,17 @@ function renderQrReader(props){
     cameraPermissonDenied
   } = props
 
-  if (showQrReader && !cameraPermissonDenied){
-    return(
-      <QrReader
-        onScan={data => onScan(data, challengeNumber)}
-        onError={handleQrReaderError}
-        showViewFinder={false}/>
-    )
-  } else if (cameraPermissonDenied){
-    return (<div>please give camera permissions</div>)
+  if (showQrReader){
+    if(!cameraPermissonDenied){
+      return(
+        <QrReader
+          onScan={data => onScan(data, challengeNumber)}
+          onError={handleQrReaderError}
+          showViewFinder={false}/>
+      )
+    } else {
+      return (<div>please give camera permissions</div>)
+    }
   }
 
 }
