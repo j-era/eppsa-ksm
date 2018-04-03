@@ -46,6 +46,7 @@ function renderGame(props) {
     showQrReader={ props.showQrReader }
     onScan={ props.onScan }
     toggleQrReader={ props.toggleQrReader }
+    startChallenge={ props.startChallenge }
     onChallengeReady={ props.onChallengeReady } />
 }
 
