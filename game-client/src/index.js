@@ -65,7 +65,7 @@ contentServer.getData().then(transform).then(async (content) => {
   }
 
   function onScan(data, challengeNumber) {
-    if(data == content.challenges[challengeNumber].uri) {
+    if(data == content.challenges[challengeNumber].token) {
       startChallenge()
       store.dispatch(actions.toggleQrReader())
     }
