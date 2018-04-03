@@ -28,8 +28,6 @@ services:
     volumes:
       - ./game-client:/app
       - /app/node_modules
-    environment:
-      WS_SERVER_PATH: /server
 
   game-server:
     build:
