@@ -25,7 +25,7 @@ module.exports = class MongoDB extends EventEmitter {
 
   findGame(gameId) {
     return this.database.collection(GAMES_COLLECTION)
-      .find({ gameId }).project(GAME_PROJECTION).limit(1).next()
+      .find({ gameId }).limit(1).next()
   }
 
   findRecentFinishedGames() {
