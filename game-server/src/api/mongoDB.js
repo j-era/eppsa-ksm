@@ -79,7 +79,7 @@ module.exports = class MongoDB extends EventEmitter {
       .limit(1).next()
 
     if (!filter) {
-      this.log.error({ number, challenge }, "Could not find challenge in database to be finished")
+      this.log.error({ gameId, number }, "Could not find challenge in database to be finished")
       return false
     }
 
