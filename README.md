@@ -56,6 +56,22 @@ docker-compose rm
 E.g. this will be necessary if you want to install new node dependencies using `npm install` during the build.
 
 ## Content
-Access content repository:
 
-* `git clone https://content.<environment>.eppsa.de content`
+### Transfer current content into the docker environment:
+
+```
+git clone https://github.com/artcom/eppsa-ksm-content
+cd eppsa-ksm-content
+git remote add docker https://content.<environment>.eppsa.de
+git push -f docker master
+```
+
+### Troubleshooting
+
+When using a self-signed certificate you have to allow an insecure connection:
+
+`git config http.sslVerify "false"`
+
+Be aware to reset this after your operation
+
+`git config http.sslVerify "true"`
