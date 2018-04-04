@@ -47,6 +47,11 @@ Set the HOST variable of your target environment:
 ### Start Containers
 `docker-compose -f docker-compose.yml -f docker-compose.development.yml up`
 
+### Open (local)
+* Game: https://game.local.eppsa.de/
+* CMS: https://cms.local.staging.eppsa.de/
+* Dashboard: https://dashboard.local.eppsa.de/
+
 #### Troubleshooting (Development)
 
 ##### Missing npm packages
