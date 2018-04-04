@@ -22,6 +22,12 @@ The development certificate points to `*.eppsa.de`. Set the correct path in CERT
     ```
     127.0.0.1 cms.local.eppsa.de
     127.0.0.1 game.local.eppsa.de
+    127.0.0.1 asset-server.local.eppsa.de
+    127.0.0.1 content-server.local.eppsa.de
+    127.0.0.1 content.local.eppsa.de
+    127.0.0.1 game-server.local.eppsa.de
+    127.0.0.1 dashboard.local.eppsa.de
+    127.0.0.1 <challenge>.local.eppsa.de
     ```
   * Certificate for `*.eppsa.de` or for each subdomain `*.<environment>.eppsa.de`
 
