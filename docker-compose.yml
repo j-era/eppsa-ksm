@@ -47,7 +47,7 @@ services:
     depends_on:
       - content-server
       - asset-server
-  
+
   dashboard:
     build:
       context: ./dashboard
@@ -60,7 +60,7 @@ services:
       - content-server
       - asset-server
       - game-server
-      
+
   game-client:
     build:
       context: ./game-client
@@ -113,6 +113,12 @@ services:
   game-challenge-quiz:
     build:
       context: ./game-challenge/quiz
+    environment:
+      PORT: 80
+
+  game-challenge-boat:
+    build:
+      context: ./game-challenge/boat
     environment:
       PORT: 80
 

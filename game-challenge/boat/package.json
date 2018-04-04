@@ -1,0 +1,9 @@
+{
+  "name": "boat",
+  "scripts": {
+    "watch": "http-server src/"
+  },
+  "dependencies": {
+    "http-server": "^0.11.1"
+  }
+}
