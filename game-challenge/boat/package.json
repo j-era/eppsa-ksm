@@ -1,7 +1,8 @@
 {
   "name": "boat",
   "scripts": {
-    "watch": "http-server src/"
+    "watch": "http-server src/ -p $PORT",
+    "start": "http-server src/ -p $PORT -c 0"
   },
   "dependencies": {
     "http-server": "^0.11.1"

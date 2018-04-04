@@ -77,6 +77,7 @@ services:
       - game-challenge-hunt-client
       - game-challenge-hunt-server
       - game-challenge-phaser-demo
+      - game-challenge-boat
 
   game-server:
     build:
