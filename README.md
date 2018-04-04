@@ -57,7 +57,7 @@ E.g. this will be necessary if you want to install new node dependencies using `
 
 ## Content
 
-### Transfer current content into the docker environment:
+### Transfer content into the docker environment:
 
 ```
 git clone https://github.com/artcom/eppsa-ksm-content
@@ -66,7 +66,7 @@ git remote add docker https://content.<environment>.eppsa.de
 git push -f docker master
 ```
 
-### Troubleshooting
+#### Troubleshooting
 
 When using a self-signed certificate you have to allow an insecure connection:
 
