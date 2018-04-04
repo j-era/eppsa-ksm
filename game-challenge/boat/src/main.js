@@ -12,14 +12,6 @@ function receiveMessage(event)
   gameClient = { source: event.source, origin: event.origin }
 }
 
-const completeChallenge = () => {
-  gameClient.source.postMessage(
-    {
-      source: "challenge",
-      score: 400
-    }, gameClient.origin)
-}
-
 var config = {
 	type: Phaser.AUTO,
 	parent: 'content',
@@ -36,12 +28,12 @@ var config = {
 
 var game = new Phaser.Game(config);
 
-game.completeChallenge = () => {
+game.completeChallenge = (score) => {
 	setTimeout(() => {
 	  gameClient.source.postMessage(
 	    {
 	      source: "challenge",
-	      score: 400
+	      score
 	    }, gameClient.origin)
 	}, 1000)
 }

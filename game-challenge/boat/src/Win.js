@@ -25,7 +25,7 @@ class Win extends Phaser.Scene {
 
 		var text2 = this.add.text(x2, y2, 'It took you ' + data.t + ' seconds', {font: fontSize2 + 'px Arial', fill: 'green'});
 
-		this.sys.game.completeChallenge()
+		this.sys.game.completeChallenge(400)
 	}
 }
 

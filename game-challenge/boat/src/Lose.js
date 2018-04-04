@@ -17,7 +17,7 @@ class Lose extends Phaser.Scene {
 		console.log(Math.floor(window.innerHeight*window.innerWidth/x/y)*5);
 		var text2 = this.add.text(x, y, 'You Lose:/', { font: fontSize + 'px Arial', fill: 'red'});
 
-		this.sys.game.completeChallenge()
+		this.sys.game.completeChallenge(0)
 
 	}
 }
