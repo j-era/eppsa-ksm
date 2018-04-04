@@ -7,9 +7,9 @@ class GameScene extends Phaser.Scene {
 	}
 
 	preload() {
-		this.load.image('water', 'img/water.jpg');
-		this.load.image('boat', 'img/boat.jpg');
-		this.load.image('boat2', 'img/boat2.jpg');
+		this.load.image('water', 'img/Water.jpg');
+		this.load.image('boat', 'img/Boat.jpg');
+		this.load.image('boat2', 'img/Boat2.jpg');
 		this.load.image('Ziel', 'img/Ziellinie.jpg');
 	}
 
