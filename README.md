@@ -47,13 +47,18 @@ Set the HOST variable of your target environment:
 ### Start Containers
 `docker-compose -f docker-compose.yml -f docker-compose.development.yml up`
 
-#### Troubleshooting
-If you need to recreate a volume (but not "named volumes"), first use the following commands before using 'up':
+#### Troubleshooting (Development)
+
+##### Missing npm packages
+When you need to recreate a volume (but not "named volumes"), first use the following commands before using 'up':
 ```
 docker-compose stop
 docker-compose rm
 ```
-E.g. this will be necessary if you want to install new node dependencies using `npm install` during the build.
+This will be necessary if you want to install new node dependencies using `npm install` during the build.
+
+##### Browser does not allow access to subdomains
+You have to trust the self-signed certificate for each subdomain in your browser.
 
 ## Content
 
