@@ -18,6 +18,7 @@ function Application(props) {
 
 function renderWelcomeDialog(props) {
   return <WelcomeDialog
+    content={ props.content }
     previousGame={ props.previousGame }
     urlHasToken={ props.urlHasToken }
     name={ props.name }

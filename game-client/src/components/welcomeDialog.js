@@ -10,17 +10,20 @@ export default class WelcomeDialog extends React.Component {
   }
 
   render() {
-    return this.state.startNewGame ? this.renderStartNewGame() : this.renderResumeGame()
+    if (this.state.startNewGame && this.state.urlHasToken) {
+      return this.renderLobbyNavigation()
+    } else if (this.state.startNewGame) {
+      return this.renderStartNewGame()
+    } else {
+      return this.renderResumeGame()
+    }
   }
 
-  renderResumeGame() {
-    const { assetServerUri, avatars, previousGame, onResumeGame } = this.props
+  renderLobbyNavigation() {
+    const { lobbyNavigation } = this.props.content
     return (
       <div>
-        <img src={ `${assetServerUri}/${avatars[previousGame.avatar].icon.src}` } />
-        <div>{ previousGame.name }</div>
-        <button onClick={ () => onResumeGame() }>Resume</button>
-        <button onClick={ () => this.setState({ startNewGame: true }) }>Start New Game</button>
+        { lobbyNavigation }
       </div>
     )
   }
@@ -40,6 +43,18 @@ export default class WelcomeDialog extends React.Component {
         <img src={ `${assetServerUri}/${avatars[avatar].icon.src}` } />
         <input type="text" value={ name } onChange={ event => onUpdateName(event.target.value) } />
         <button onClick={ () => onStartNewGame(name, avatar) }>Start</button>
+      </div>
+    )
+  }
+
+  renderResumeGame() {
+    const { assetServerUri, avatars, previousGame, onResumeGame } = this.props
+    return (
+      <div>
+        <img src={ `${assetServerUri}/${avatars[previousGame.avatar].icon.src}` } />
+        <div>{ previousGame.name }</div>
+        <button onClick={ () => onResumeGame() }>Resume</button>
+        { !this.state.urlHasToken && <button onClick={ () => this.setState({ startNewGame: true }) }>Start New Game</button> }
       </div>
     )
   }
