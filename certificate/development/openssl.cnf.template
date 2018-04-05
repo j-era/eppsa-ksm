@@ -10,4 +10,4 @@
   subjectAltName = @alt_names
   [alt_names]
   DNS.1 = *.local.eppsa.de
-  DNS.2 = *.marco.eppsa.de
+  DNS.2 = *.<environment>.eppsa.de
