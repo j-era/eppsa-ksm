@@ -2,3 +2,5 @@
 content
 certificate/letsencrypt
 *.pem
+
+certificate/development/openssl\.cnf
