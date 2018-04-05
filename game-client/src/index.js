@@ -21,30 +21,17 @@ const gameServer = new GameServer(process.env.GAME_SERVER_URI)
 const config = querystring.parse(window.location.search.substring(1))
 
 contentServer.getData().then(transform).then(async (content) => {
-  let resumableGame = null
-  const gameId = getCookie("gameId")
-  if (gameId) {
-    const game = await gameServer.findGame(gameId)
-
-    if (game && !game.finished) {
-      resumableGame = game
-    }
-  }
-
-  window.addEventListener("message", receiveMessage, false)
-
+  const resumableGame = await findResumableGame()
+  const showLobbyNavigation = config.token && !resumableGame
   const maxChallenges = Object.keys(content.challenges).length - 1
 
   const selectedAvatar = config.avatar ? config.avatar : Object.keys(content.avatars)[0]
   store.dispatch(actions.updateAvatar(selectedAvatar))
 
-  let showLobbyNavigation = false
-  if (config.token) {
-    if (resumableGame) {
-      onResumeGame()
-    } else {
-      showLobbyNavigation = true
-    }
+  window.addEventListener("message", receiveMessage, false)
+
+  if (config.token && resumableGame) {
+    resumeGame()
   }
 
   render(
@@ -94,8 +81,17 @@ contentServer.getData().then(transform).then(async (content) => {
   function handleQrReaderError(error) {
     store.dispatch(actions.handleQrReaderError(error.name))
     console.error(error)
+async function findResumableGame() {
+  const gameId = getCookie("gameId")
+  if (gameId) {
+    const game = await gameServer.findGame(gameId)
+
+    if (game && !game.finished) {
+      return game
+    }
   }
-})
+  return null
+}
 
 function transform(content) {
   return Object.assign(mapValues(omit(content, "index"), transform), content.index)
