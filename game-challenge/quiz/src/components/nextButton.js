@@ -8,11 +8,12 @@ const Container = styled.div`
   width 100%;
   display: flex;
   justify-content: center;
-  flex: ${props => props.visible ? "0.25 0" : "0 0"};
-  transition: flex 250ms ease;
+  flex: ${props => props.visible ? "0 1 4em" : "0 0 0em"};
+  transition: flex 1000ms ease;
 `
 
 const NextButton = styled(Button)`
+  margin-top: 1em;
   width: 67%;
   align-self: center;
   ${props => props.visible ? css`
