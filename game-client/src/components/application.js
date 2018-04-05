@@ -8,6 +8,10 @@ import WelcomeDialog from "./welcomeDialog"
 import FinalScore from "./finalScore"
 
 function Application(props) {
+  if (props.showLobbyNavigation) {
+    return renderLobbyNavigation(props)
+  }
+
   switch (props.gameState) {
     case gameStates.WELCOME: return renderWelcomeDialog(props)
     case gameStates.RUNNING: return renderGame(props)
@@ -16,10 +20,19 @@ function Application(props) {
   }
 }
 
+function renderLobbyNavigation(props) {
+  const { lobbyNavigation } = props.content
+  return (
+    <div>
+      { lobbyNavigation }
+    </div>
+  )
+}
+
 function renderWelcomeDialog(props) {
   return <WelcomeDialog
     content={ props.content }
-    previousGame={ props.previousGame }
+    resumableGame={ props.resumableGame }
     urlHasToken={ props.urlHasToken }
     name={ props.name }
     avatars={ props.content.avatars }

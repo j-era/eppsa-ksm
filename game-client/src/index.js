@@ -21,10 +21,14 @@ const gameServer = new GameServer(process.env.GAME_SERVER_URI)
 const config = querystring.parse(window.location.search.substring(1))
 
 contentServer.getData().then(transform).then(async (content) => {
-  let previousGame = null
+  let resumableGame = null
   const gameId = getCookie("gameId")
   if (gameId) {
-    previousGame = await gameServer.findGame(gameId)
+    const game = await gameServer.findGame(gameId)
+
+    if (game && !game.finished) {
+      resumableGame = game
+    }
   }
 
   window.addEventListener("message", receiveMessage, false)
@@ -34,14 +38,21 @@ contentServer.getData().then(transform).then(async (content) => {
   const selectedAvatar = config.avatar ? config.avatar : Object.keys(content.avatars)[0]
   store.dispatch(actions.updateAvatar(selectedAvatar))
 
-  const urlHasToken = (new URL(window.location)).searchParams.has("token")
+  let showLobbyNavigation = false
+  if (config.token) {
+    if (resumableGame) {
+      onResumeGame()
+    } else {
+      showLobbyNavigation = true
+    }
+  }
 
   render(
     <Provider store={ store }>
       <Application
         content={ content }
-        previousGame={ previousGame }
-        urlHasToken={ urlHasToken }
+        showLobbyNavigation={ showLobbyNavigation }
+        resumableGame={ resumableGame }
         assetServerUri={ process.env.ASSET_SERVER_URI }
         maxChallenges={ maxChallenges }
         onResumeGame={ onResumeGame }

@@ -4,28 +4,12 @@ export default class WelcomeDialog extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      startNewGame: props.previousGame === null || props.previousGame.finished,
-      urlHasToken: props.urlHasToken
+      startNewGame: props.resumableGame === null
     }
   }
 
   render() {
-    if (this.state.startNewGame && this.state.urlHasToken) {
-      return this.renderLobbyNavigation()
-    } else if (this.state.startNewGame) {
-      return this.renderStartNewGame()
-    } else {
-      return this.renderResumeGame()
-    }
-  }
-
-  renderLobbyNavigation() {
-    const { lobbyNavigation } = this.props.content
-    return (
-      <div>
-        { lobbyNavigation }
-      </div>
-    )
+    return this.state.startNewGame ? this.renderStartNewGame() : this.renderResumeGame()
   }
 
   renderStartNewGame() {
@@ -48,11 +32,11 @@ export default class WelcomeDialog extends React.Component {
   }
 
   renderResumeGame() {
-    const { assetServerUri, avatars, previousGame, onResumeGame } = this.props
+    const { assetServerUri, avatars, resumableGame, onResumeGame } = this.props
     return (
       <div>
-        <img src={ `${assetServerUri}/${avatars[previousGame.avatar].icon.src}` } />
-        <div>{ previousGame.name }</div>
+        <img src={ `${assetServerUri}/${avatars[resumableGame.avatar].icon.src}` } />
+        <div>{ resumableGame.name }</div>
         <button onClick={ () => onResumeGame() }>Resume</button>
         {
           !this.state.urlHasToken &&
