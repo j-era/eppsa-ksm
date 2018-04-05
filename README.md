@@ -9,11 +9,11 @@ Game and CMS setup behind an nginx server as reverse proxy.
 ### Certificate
 Use the production certificate or create a self-signed development certificate as follows.
 
-Rename `./certificate/development/openssl.cnf.template to `openssl.cnf` and set environment name:
+Copy `certificate/development/openssl.cnf.template` to `certificate/development/openssl.cnf` and set your environment name:
 
 ```
 [alt_names]
-...`
+...
 DNS.2 = *.<environment>.eppsa.de
 ```
 
