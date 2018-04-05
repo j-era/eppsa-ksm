@@ -47,7 +47,7 @@ contentServer.getData().then(transform).then(async (content) => {
         onScan={ onScan }
         toggleQrReader={ toggleQrReader }
         handleQrReaderError={ handleQrReaderError }
-        startChallenge ={ startChallenge }
+        startChallenge={ startChallenge }
         onChallengeReady={ onChallengeReady } />
     </Provider>,
     document.getElementById("app")
@@ -67,21 +67,20 @@ contentServer.getData().then(transform).then(async (content) => {
   }
 
   function onScan(data, challengeNumber) {
-    if(data != null && data == content.challenges[challengeNumber].token) {
+    if (data != null && data === content.challenges[challengeNumber].token) {
       startChallenge()
       store.dispatch(actions.toggleQrReader())
     }
   }
 
-  function toggleQrReader(){
+  function toggleQrReader() {
     store.dispatch(actions.toggleQrReader())
   }
 
-  function handleQrReaderError(error){
+  function handleQrReaderError(error) {
     store.dispatch(actions.handleQrReaderError(error.name))
     console.error(error)
   }
-
 })
 
 function transform(content) {

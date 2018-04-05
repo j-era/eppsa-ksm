@@ -47,7 +47,7 @@ export function toggleQrReader() {
   }
 }
 
-export function handleQrReaderError(name){
+export function handleQrReaderError(name) {
   return {
     type: types.HANDLE_QR_READER_ERROR,
     name

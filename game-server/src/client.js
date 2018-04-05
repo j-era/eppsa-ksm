@@ -98,7 +98,7 @@ module.exports = class Client {
     this.currentGame = await this.mongoDB.findGame(gameId)
     if (this.currentGame) {
       this.log.info({ socketId: this.socket.id, gameId, maxChallenges }, "Resuming game")
-      
+
       this.currentGame.maxChallenges = maxChallenges
       this.handleGameFinished(this.currentGame)
 

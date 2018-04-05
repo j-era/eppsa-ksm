@@ -12,7 +12,7 @@ mongoDB.connect().then(async () => {
   LOG.info("Connected to MongoDB")
 
   await mongoDB.disconnectGames()
-  
+
   const server = io(3000, CONNECTION_CONFIG)
   server.on("connect", socket => {
     const client = new Client(socket, mongoDB, LOG)
