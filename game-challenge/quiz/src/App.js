@@ -16,7 +16,7 @@ const Container = styled.div `
   justify-content: center;
   padding-left: ${props => props.theme.layout.offsetX};
   padding-right: ${props => props.theme.layout.offsetX};
-  
+
   height: 100%;
 `
 
@@ -48,7 +48,7 @@ export default class App extends React.Component {
 
   componentDidMount() {
     this.startTime = new Date()
-    setImmediate(() => this.setState({ visible: true}))
+    setTimeout(() => this.setState({ visible: true}), 0)
   }
 
   render() {
@@ -84,8 +84,8 @@ export default class App extends React.Component {
   }
 
   renderNextButton() {
-    return this.state.confirmed &&
-      <NextButton
+    return <NextButton
+        visible={ this.state.confirmed }
         onClick={ this.nextChallenge }
         text={ this.props.content.shared.texts.next } />
   }
