@@ -12,7 +12,6 @@ const Container = styled.div `
   font-family: ${props => props.theme.font.fontFamily};
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
   padding-left: ${props => props.theme.layout.offsetX};
   padding-right: ${props => props.theme.layout.offsetX};
