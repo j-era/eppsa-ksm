@@ -59,11 +59,11 @@ function renderGame(props) {
     connected={ props.connected }
     challengeStarted={ props.challengeStarted }
     showQrReader={ props.showQrReader }
-    onScan={ props.onScan }
-    toggleQrReader={ props.toggleQrReader }
-    handleQrReaderError={ props.handleQrReaderError }
+    onToggleQrReader={ props.onToggleQrReader }
+    onHandleQrReaderData={ props.onHandleQrReaderData }
+    onHandleQrReaderError={ props.onHandleQrReaderError }
     cameraPermissonDenied={ props.cameraPermissonDenied }
-    startChallenge={ props.startChallenge }
+    onStartChallenge={ props.onStartChallenge }
     onChallengeReady={ props.onChallengeReady } />
 }
 

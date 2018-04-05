@@ -17,8 +17,8 @@ function renderNavigation(props) {
     maxChallenges,
     navigation,
     score,
-    toggleQrReader,
-    startChallenge,
+    onToggleQrReader,
+    onStartChallenge,
     showQrReader
   } = props
 
@@ -37,10 +37,10 @@ function renderNavigation(props) {
       {
         connected ?
           <div>
-            <button onClick={ toggleQrReader }>{
+            <button onClick={ onToggleQrReader }>{
               showQrReader ? "hide Scanner" : "show Scanner" }
             </button>
-            <button onClick={ startChallenge }>start Challenge</button>
+            <button onClick={ onStartChallenge }>start Challenge</button>
           </div> :
           "not connected"
       }
@@ -66,9 +66,9 @@ function renderChallenge({ challenge, challengeUri, onChallengeReady }) {
 
 function renderQrReader(props) {
   const {
-    onScan,
     showQrReader,
-    handleQrReaderError,
+    onHandleQrReaderData,
+    onHandleQrReaderError,
     challengeNumber,
     cameraPermissonDenied
   } = props
@@ -77,8 +77,8 @@ function renderQrReader(props) {
     if (!cameraPermissonDenied) {
       return (
         <QrReader
-          onScan={ data => onScan(data, challengeNumber) }
-          onError={ handleQrReaderError }
+          onScan={ data => onHandleQrReaderData(data, challengeNumber) }
+          onError={ onHandleQrReaderError }
           showViewFinder={ false } />
       )
     } else {

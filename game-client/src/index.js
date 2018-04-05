@@ -42,24 +42,26 @@ contentServer.getData().then(transform).then(async (content) => {
         resumableGame={ resumableGame }
         assetServerUri={ process.env.ASSET_SERVER_URI }
         maxChallenges={ maxChallenges }
-        onResumeGame={ onResumeGame }
-        onStartNewGame={ onStartNewGame }
+        onResumeGame={ resumeGame }
+        onStartNewGame={ startNewGame }
         onUpdateName={ (name) => store.dispatch(actions.updateName(name)) }
-        onScan={ onScan }
-        toggleQrReader={ toggleQrReader }
-        handleQrReaderError={ handleQrReaderError }
-        startChallenge={ startChallenge }
+        onToggleQrReader={ toggleQrReader }
+        onHandleQrReaderData={ handleQrReaderData }
+        onHandleQrReaderError={ handleQrReaderError }
+        onStartChallenge={ startChallenge }
         onChallengeReady={ onChallengeReady } />
     </Provider>,
     document.getElementById("app")
   )
 
-  async function onResumeGame() {
-    store.dispatch(actions.updateGame(await gameServer.resumeGame(gameId, maxChallenges)))
-    gameServer.setHandshakeQuery({ gameId })
+  async function resumeGame() {
+    store.dispatch(actions.updateGame(
+      await gameServer.resumeGame(resumableGame.gameId, maxChallenges)
+    ))
+    gameServer.setHandshakeQuery({ gameId: resumableGame.gameId })
   }
 
-  async function onStartNewGame(name, avatar) {
+  async function startNewGame(name, avatar) {
     console.log("Starting new game")
     const game = await gameServer.newGame(name, avatar, maxChallenges)
     store.dispatch(actions.updateGame(game))
@@ -67,20 +69,23 @@ contentServer.getData().then(transform).then(async (content) => {
     gameServer.setHandshakeQuery({ gameId: game.gameId })
   }
 
-  function onScan(data, challengeNumber) {
+  function handleQrReaderData(data, challengeNumber) {
     if (data != null && data === content.challenges[challengeNumber].token) {
       startChallenge()
       store.dispatch(actions.toggleQrReader())
     }
   }
+})
 
-  function toggleQrReader() {
-    store.dispatch(actions.toggleQrReader())
-  }
+function toggleQrReader() {
+  store.dispatch(actions.toggleQrReader())
+}
 
-  function handleQrReaderError(error) {
-    store.dispatch(actions.handleQrReaderError(error.name))
-    console.error(error)
+function handleQrReaderError(error) {
+  store.dispatch(actions.handleQrReaderError(error.name))
+  console.error(error)
+}
+
 async function findResumableGame() {
   const gameId = getCookie("gameId")
   if (gameId) {
