@@ -34,11 +34,14 @@ contentServer.getData().then(transform).then(async (content) => {
   const selectedAvatar = config.avatar ? config.avatar : Object.keys(content.avatars)[0]
   store.dispatch(actions.updateAvatar(selectedAvatar))
 
+  const urlHasToken = (new URL(window.location)).searchParams.has("token")
+
   render(
     <Provider store={ store }>
       <Application
         content={ content }
         previousGame={ previousGame }
+        urlHasToken={ urlHasToken }
         assetServerUri={ process.env.ASSET_SERVER_URI }
         maxChallenges={ maxChallenges }
         onResumeGame={ onResumeGame }
