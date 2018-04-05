@@ -54,7 +54,12 @@ export default class WelcomeDialog extends React.Component {
         <img src={ `${assetServerUri}/${avatars[previousGame.avatar].icon.src}` } />
         <div>{ previousGame.name }</div>
         <button onClick={ () => onResumeGame() }>Resume</button>
-        { !this.state.urlHasToken && <button onClick={ () => this.setState({ startNewGame: true }) }>Start New Game</button> }
+        {
+          !this.state.urlHasToken &&
+          <button onClick={
+            () => this.setState({ startNewGame: true }) }>
+          Start New Game
+          </button> }
       </div>
     )
   }
