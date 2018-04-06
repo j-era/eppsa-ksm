@@ -38,7 +38,7 @@ class Button extends Component {
           style={{ width: '50%' }}
         />
         <div>{ this.state.scanned }</div>
-        <ButtonDiv onClick={ this.state.onClick }/>
+        <ButtonDiv className={ "button" } onClick={ this.state.onClick }/>
       </Container>
     )
   }
