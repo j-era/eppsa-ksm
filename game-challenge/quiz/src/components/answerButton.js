@@ -3,12 +3,12 @@ import styled, { css, keyframes, withTheme } from "styled-components"
 import Button from "./button"
 
 
-function pulse(areaColor, blinkColor, blinking, colorType) {
+function pulse(initialColor, blinkColor, blinking, colorType) {
   const { duration, repeats } = blinking
   const blink = keyframes`
-    0% { ${colorType}: ${areaColor}; }
-    50%   { ${colorType}: ${blinkColor}; }
-    100% { ${colorType}: ${areaColor}; }
+    0% { ${colorType}: ${blinkColor}; }
+    50%   { ${colorType}: ${initialColor}; }
+    100% { ${colorType}: ${blinkColor}; }
   `
   return css`animation: ${blink} ${duration}ms ease 0ms ${repeats};`
 }
@@ -48,15 +48,31 @@ const Title = styled.div`
   flex-basis: 10%;
   align-self: center;
   color: ${props => selectionColor(props.selection, props.theme)};
+  ${props =>
+    selectionAnimation(
+      props.selection,
+      props.blinking,
+      props.theme.colors.primaryFont,
+      "color",
+      props.theme
+    )
+  };
   opacity: 0.5;
 `
 
 const Answer = styled.div`
   flex-basis: 90%;
   padding-right: 10%;
-  color: ${props => props.selection === "greyed"
-    ? props.theme.colors.secondaryFont
-    : props.theme.colors.primaryFont};
+  color: ${props => selectionColor(props.selection, props.theme, "text")};
+  ${props =>
+    selectionAnimation(
+      props.selection,
+      props.blinking,
+      props.theme.colors.primaryFont,
+      "color",
+      props.theme
+    )
+  };
   }
 `
 
@@ -69,19 +85,19 @@ function selectionAnimation(selection, blinking, initialColor, colorType, theme)
   }
 }
 
-function selectionColor(selection, theme) {
+function selectionColor(selection, theme, colorType="area") {
   switch (selection) {
     case "right": return theme.colors.rightAnswer
     case "wrong": return theme.colors.wrongAnswer
     case "greyed": return theme.colors.secondary
-    default: return theme.colors.areaColor
+    default: return colorType === "area" ? theme.colors.areaColor : theme.colors.primaryFont
   }
 }
 
 function AnswerButton(props) {
   return (
     <StyledButton { ...props }>
-      <Title selection={ props.selection }>{ props.title }:</Title>
+      <Title { ...props }>{ props.title }:</Title>
       <Answer { ...props }>{ props.answer }</Answer>
     </StyledButton>
   )
