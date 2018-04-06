@@ -1,46 +1,61 @@
-import puppeteer from "puppeteer"
+const puppeteer = require("puppeteer")
 
 const GAME_URL = "https://game.marco.eppsa.de"
-const clientCount = 10
+const clientCount = 30
 
-for (let i = 0; i < clientCount; i++) {
-  ghostClient(i).catch(error => console.error(error))
+const jitterTime = 1000 * 5
+
+const config = {
+  headless: true,
+  slowMo: 1000
 }
 
-async function ghostClient(i) {
-  const config = {
-    headless: true,
-    slowMo: 100 + Math.random() * 900
+puppeteer.launch(config).then(browser => {
+  for (let i = 0; i < clientCount; i++) {
+    ghostClient(browser, i).catch(error => console.error(error))
   }
+}).catch(error => console.error(error))
 
-  puppeteer.launch(config).then(async browser => {
-    try {
-      const page = await browser.newPage()
 
-      await page.deleteCookie({ name: "gameId", url: GAME_URL })
+async function ghostClient(browser, i) {
+  const page = await browser.newPage()
 
-      await page.goto(GAME_URL)
+  try {
+    await page.deleteCookie({ name: "gameId", url: GAME_URL })
 
-      await page.type("input", `Bobo ${i}`)
+    await page.goto(GAME_URL)
 
-      const startNewGame = await page.$(".startNewGame")
-      if (startNewGame) {await startNewGame.click()}
+    await page.waitFor("input")
 
-      for (let i = 0; i < 11; i++) {
-        const startChallenge = await page.$(".startChallenge")
-        if (startChallenge) {await startChallenge.click()}
+    await page.type("input", `Bobo ${i}`, { deplay: 0 })
 
-        const challengeFrame = page.frames()[1]
+    await page.click(".startNewGame")
 
-        const button = await challengeFrame.$(".button")
-        if (button) {await button.click()}
-      }
+    for (let j = 0; j < 11; j++) {
+      console.log(`Client ${i} started Challenge ${j}`)
 
-      await browser.close()
-    } catch (error) {
-      console.error(error)
+      await page.waitFor(".startChallenge")
+
+      await page.click(".startChallenge")
+
+      const challengeFrame = page.frames()[1]
+
+      await challengeFrame.waitFor(".button")
+
+      await challengeFrame.click(".button")
+
+      await timeout(jitterTime * Math.random())
     }
-  }).then(() => {
-    ghostClient(i).catch(error => console.error(error))
-  }).catch(error => console.error(error))
+
+    await page.close()
+
+    ghostClient(browser, i).catch(error => console.error(error))
+  } catch (error) {
+    console.error(error)
+    await page.close()
+    ghostClient(browser, i).catch(error => console.error(error))
+  }
 }
+
+
+function timeout(ms) { return new Promise(res => setTimeout(res, ms))}
