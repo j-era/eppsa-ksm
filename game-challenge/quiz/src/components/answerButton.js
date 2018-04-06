@@ -1,6 +1,7 @@
 import React from "react"
 import styled, { css, keyframes, withTheme } from "styled-components"
 import Button from "./button"
+import clickEffect from "../animations/clickEffect"
 
 
 const StyledButton = styled(Button)`
@@ -26,6 +27,7 @@ const StyledButton = styled(Button)`
       opacity: 0;
     `
   }
+  ${props => props.clicked ? css`${clickEffect()}` : ""}
   ${props => props.selection === "greyed" ? css`
     opacity: 0.8;
     transition: opacity ${props.greyOutDuration}ms ease;
