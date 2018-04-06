@@ -1,5 +1,6 @@
 import React from "react"
 import autoBind from "react-autobind"
+import delay from "delay"
 import styled, { ThemeProvider } from "styled-components"
 import "./App.css"
 import AnswerButton from "./components/answerButton"
@@ -42,7 +43,15 @@ export default class App extends React.Component {
     super(props)
     autoBind(this)
     this.points = { bonus: 0, score: 0 }
-    this.state = { confirmed: false, visible: false }
+    this.blinking = { duration: 150, repeats: 4 }
+    this.greyOutDuration = 150
+    this.state = {
+      visible: false,
+      confirmed: false,
+      showRight: false,
+      greyOut: false,
+      showNext: false
+    }
   }
 
   componentDidMount() {
@@ -75,6 +84,8 @@ export default class App extends React.Component {
         visible={ this.state.visible }
         onClick={ !this.state.confirmed ? () => this.confirm(i + 1) : () => {} }
         selection={ this.getSelection(i + 1) }
+        blinking={ this.blinking }
+        greyOutDuration={ this.greyOutDuration }
         answer={ answer }
         title={ titles[i] }
         index={ i }>
@@ -84,7 +95,7 @@ export default class App extends React.Component {
 
   renderNextButton() {
     return <NextButton
-        visible={ this.state.confirmed }
+        visible={ this.state.showNext }
         onClick={ this.nextChallenge }
         text={ this.props.content.shared.texts.next } />
   }
@@ -92,17 +103,17 @@ export default class App extends React.Component {
   getSelection(i) {
     const { correctAnswer } = this.props.content
     if (this.state.confirmed) {
-      if (i === correctAnswer) {
+      if (i === correctAnswer && this.state.showRight) {
         return "right"
       } else if (this.state.confirmed === i) {
         return "wrong"
-      } else {
+      } else if (this.state.greyOut) {
         return "greyed"
       }
     }
   }
 
-  confirm(answerIndex) {
+  async confirm(answerIndex) {
     const { correctAnswer, scoreCalculation, shared } = this.props.content
     this.timeToAnswer = (new Date() - this.startTime) / 1000
     if (answerIndex === correctAnswer) {
@@ -111,8 +122,19 @@ export default class App extends React.Component {
         { ...scoreCalculation, gameFactor: shared.config.quizFactor }
       )
       this.points = scoreCalc.getScore()
+      this.setState({ confirmed: answerIndex })
+      this.setState({ showRight: true })
+      await delay(this.blinking.duration * this.blinking.repeats)
+      this.setState({ greyOut: true })
+    } else {
+      this.setState({ confirmed: answerIndex })
+      await delay(this.blinking.duration * this.blinking.repeats)
+      this.setState({ showRight: true })
+      await delay(this.blinking.duration * this.blinking.repeats)
+      this.setState({ greyOut: true })
+      await delay(this.greyOutDuration)
+      this.setState({ showNext: true })
     }
-    this.setState({ confirmed: answerIndex })
   }
 
   nextChallenge() {
