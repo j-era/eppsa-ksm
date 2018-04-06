@@ -13,10 +13,9 @@ const pulse = keyframes`
 
 const StyledButton = styled(Button)`
   border-color: ${props => selectionColor(props.selection, props.theme)};
-  ${props => selectionAnimation(props.selection)}
+  ${props => selectionAnimation(props.selection, props.blinking)}
   ${props => props.visible ? css`
       transform: scale(1, 1);
-      opacity: 1;
       transition:
         transform 150ms cubic-bezier(0.2, 0.7, 0.55, 1.2) ${props => 250 + props.index * 150}ms,
         opacity  150ms ease ${props => 250 + props.index * 150}ms;
@@ -25,6 +24,12 @@ const StyledButton = styled(Button)`
       opacity: 0;
     `
   }
+  ${props => props.selection === "greyed" ? css`
+    opacity: 0.8;
+    transition: opacity ${props.greyOutDuration}ms ease;
+  ` : css`
+    opacity: 1;
+  `}
 `
 
 const Title = styled.div`
@@ -37,10 +42,14 @@ const Title = styled.div`
 const Answer = styled.div`
   flex-basis: 90%;
   padding-right: 10%;
+  color: ${props => props.selection === "greyed"
+  ? props.theme.colors.secondaryFont
+  : props.theme.colors.primaryFont};
 `
 
-function selectionAnimation(selection) {
-  const pulseAnimation = css`animation: ${pulse} 500ms ease 0ms 5;`
+function selectionAnimation(selection, blinking) {
+  const { duration, repeats } = blinking
+  const pulseAnimation = css`animation: ${pulse} ${duration}ms ease 0ms ${repeats};`
   switch (selection) {
     case "right": return pulseAnimation
     case "wrong": return pulseAnimation
@@ -61,7 +70,7 @@ function AnswerButton(props) {
   return (
     <StyledButton { ...props }>
       <Title selection={ props.selection }>{ props.title }:</Title>
-      <Answer>{ props.answer }</Answer>
+      <Answer selection={ props.selection }>{ props.answer }</Answer>
     </StyledButton>
   )
 }
