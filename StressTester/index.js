@@ -40,7 +40,14 @@ async function ghostClient(browser, i) {
 
       await challengeFrame.waitFor(".button")
 
-      await challengeFrame.click(".button")
+      const mainFrameContext = await page.frames()[0].executionContext()
+
+      const mainFrameWindow = await mainFrameContext.evaluateHandle(() => window)
+
+      mainFrameContext.evaluate(
+        window => window.postMessage({ source: "challenge", score: 1 }, "*"),
+        mainFrameWindow
+      )
     }
 
     await page.close()
