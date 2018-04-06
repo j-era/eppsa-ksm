@@ -113,7 +113,7 @@ export default class App extends React.Component {
     }
   }
 
-  async confirm(answerIndex) {
+  confirm(answerIndex) {
     const { correctAnswer, scoreCalculation, shared } = this.props.content
     this.timeToAnswer = (new Date() - this.startTime) / 1000
     if (answerIndex === correctAnswer) {
@@ -123,20 +123,20 @@ export default class App extends React.Component {
       )
       this.points = scoreCalc.getScore()
       this.setState({ confirmed: answerIndex })
-      this.setState({ showRight: true })
-      await delay(this.blinking.duration * this.blinking.repeats)
-      this.setState({ greyOut: true })
-      await delay(this.greyOutDuration)
-      this.setState({ showNext: true })
+      this.animateAnswers(true)
     } else {
       this.setState({ confirmed: answerIndex })
-      await delay(this.blinking.duration * this.blinking.repeats)
-      this.setState({ showRight: true })
-      await delay(this.blinking.duration * this.blinking.repeats)
-      this.setState({ greyOut: true })
-      await delay(this.greyOutDuration)
-      this.setState({ showNext: true })
+      this.animateAnswers(false)
     }
+  }
+
+  async animateAnswers(correct) {
+    !correct && await delay(this.blinking.duration * this.blinking.repeats)
+    this.setState({ showRight: true })
+    await delay(this.blinking.duration * this.blinking.repeats)
+    this.setState({ greyOut: true })
+    await delay(this.greyOutDuration)
+    this.setState({ showNext: true })
   }
 
   nextChallenge() {
