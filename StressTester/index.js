@@ -1,11 +1,11 @@
 const puppeteer = require("puppeteer")
 
-const GAME_URL = "https://game.marco.eppsa.de"
-const clientCount = 20
+const GAME_URL = `https://${process.env.GAME_URL}`
+const clientCount = Number(process.env.MAX_CLIENTS)
 
 const config = {
   headless: true,
-  slowMo: 0
+  slowMo: 400
 }
 
 puppeteer.launch(config).then(browser => {
