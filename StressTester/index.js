@@ -1,18 +1,16 @@
 const puppeteer = require("puppeteer")
 
 const GAME_URL = "https://game.marco.eppsa.de"
-const clientCount = 30
-
-const jitterTime = 1000 * 5
+const clientCount = 20
 
 const config = {
   headless: true,
-  slowMo: 1000
+  slowMo: 0
 }
 
 puppeteer.launch(config).then(browser => {
   for (let i = 0; i < clientCount; i++) {
-    ghostClient(browser, i).catch(error => console.error(error))
+    ghostClient(browser, i)
   }
 }).catch(error => console.error(error))
 
@@ -43,19 +41,14 @@ async function ghostClient(browser, i) {
       await challengeFrame.waitFor(".button")
 
       await challengeFrame.click(".button")
-
-      await timeout(jitterTime * Math.random())
     }
 
     await page.close()
 
     ghostClient(browser, i).catch(error => console.error(error))
   } catch (error) {
-    console.error(error)
+    console.error(`Client ${i} had an ${error}`)
     await page.close()
     ghostClient(browser, i).catch(error => console.error(error))
   }
 }
-
-
-function timeout(ms) { return new Promise(res => setTimeout(res, ms))}
