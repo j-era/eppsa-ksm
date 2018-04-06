@@ -3,16 +3,6 @@ import styled, { css, keyframes, withTheme } from "styled-components"
 import Button from "./button"
 
 
-function pulse(initialColor, blinkColor, blinking, colorType) {
-  const { duration, repeats } = blinking
-  const blink = keyframes`
-    0% { ${colorType}: ${blinkColor}; }
-    50%   { ${colorType}: ${initialColor}; }
-    100% { ${colorType}: ${blinkColor}; }
-  `
-  return css`animation: ${blink} ${duration}ms ease 0ms ${repeats};`
-}
-
 const StyledButton = styled(Button)`
   border-color: ${props => selectionColor(props.selection, props.theme)};
   ${props =>
@@ -75,6 +65,16 @@ const Answer = styled.div`
   };
   }
 `
+
+function pulse(initialColor, blinkColor, blinking, colorType) {
+  const { duration, repeats } = blinking
+  const blink = keyframes`
+    0% { ${colorType}: ${blinkColor}; }
+    50%   { ${colorType}: ${initialColor}; }
+    100% { ${colorType}: ${blinkColor}; }
+  `
+  return css`animation: ${blink} ${duration}ms ease 0ms ${repeats};`
+}
 
 function selectionAnimation(selection, blinking, initialColor, colorType, theme) {
   const { rightAnswer, wrongAnswer } = theme.colors
