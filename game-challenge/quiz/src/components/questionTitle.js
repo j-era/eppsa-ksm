@@ -7,5 +7,5 @@ export default styled.div`
   color: ${props => props.theme.font.text.color};
   text-align: center;
   opacity: ${props => props.visible ? 1 : 0};
-  transition: opacity 250ms linear;
+  transition: opacity ${props => props.fadeIn}ms linear;
 `

@@ -27,6 +27,7 @@ export default class App extends React.Component {
     autoBind(this)
     this.points = { bonus: 0, score: 0 }
     this.blinking = { duration: 250, repeats: 3 }
+    this.questionFadeIn = 250
     this.greyOutDuration = 150
     this.state = {
       visible: false,
@@ -48,8 +49,20 @@ export default class App extends React.Component {
     return (
       <ThemeProvider theme={ theme }>
         <Container>
-          <QuestionTitle visible={ this.state.visible }>Frage:</QuestionTitle>
-          <QuestionText visible={ this.state.visible }>{ question }</QuestionText>
+          <QuestionTitle
+            fadeIn={ this.questionFadeIn }
+            visible={ this.state.visible }>
+            {
+              this.props.content.shared.texts.questionTitle
+            }
+          </QuestionTitle>
+          <QuestionText
+            fadeIn={ this.questionFadeIn }
+            visible={ this.state.visible }>
+            {
+              question
+            }
+          </QuestionText>
           { this.renderAnswers() }
           { this.renderNextButton() }
         </Container>
@@ -67,6 +80,7 @@ export default class App extends React.Component {
         visible={ this.state.visible }
         onClick={ !this.state.confirmed ? () => this.confirm(i + 1) : () => {} }
         selection={ this.getSelection(i + 1) }
+        initialDelay={ this.questionFadeIn }
         blinking={ this.blinking }
         greyOutDuration={ this.greyOutDuration }
         answer={ answer }

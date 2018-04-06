@@ -18,9 +18,9 @@ const StyledButton = styled(Button)`
       transform: scale(1, 1);
       transition:
         transform 150ms cubic-bezier(0.2, 0.7, 0.55, 1.2) ${props =>
-          250 + props.index * 150
+          props.initialDelay + props.index * 150
         }ms,
-        opacity  150ms ease ${props => 250 + props.index * 150}ms;
+        opacity  150ms ease ${props => props.initialDelay + props.index * 150}ms;
     ` : css`
       transform: scale(0, 0);
       opacity: 0;
