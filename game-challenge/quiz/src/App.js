@@ -43,7 +43,7 @@ export default class App extends React.Component {
     super(props)
     autoBind(this)
     this.points = { bonus: 0, score: 0 }
-    this.blinking = { duration: 150, repeats: 4 }
+    this.blinking = { duration: 250, repeats: 3 }
     this.greyOutDuration = 150
     this.state = {
       visible: false,
@@ -126,6 +126,8 @@ export default class App extends React.Component {
       this.setState({ showRight: true })
       await delay(this.blinking.duration * this.blinking.repeats)
       this.setState({ greyOut: true })
+      await delay(this.greyOutDuration)
+      this.setState({ showNext: true })
     } else {
       this.setState({ confirmed: answerIndex })
       await delay(this.blinking.duration * this.blinking.repeats)
