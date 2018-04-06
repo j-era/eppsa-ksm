@@ -1,7 +1,8 @@
 import React from "react"
-import styled, { css, keyframes, withTheme } from "styled-components"
+import styled, { css, withTheme } from "styled-components"
 import Button from "./button"
 import clickEffect from "../animations/clickEffect"
+import pulse from "../animations/pulse"
 
 
 const StyledButton = styled(Button)`
@@ -67,16 +68,6 @@ const Answer = styled.div`
   };
   }
 `
-
-function pulse(initialColor, blinkColor, blinking, colorType) {
-  const { duration, repeats } = blinking
-  const blink = keyframes`
-    0% { ${colorType}: ${blinkColor}; }
-    50%   { ${colorType}: ${initialColor}; }
-    100% { ${colorType}: ${blinkColor}; }
-  `
-  return css`animation: ${blink} ${duration}ms ease 0ms ${repeats};`
-}
 
 function selectionAnimation(selection, blinking, initialColor, colorType, theme) {
   const { rightAnswer, wrongAnswer } = theme.colors
