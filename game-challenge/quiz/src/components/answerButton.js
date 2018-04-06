@@ -36,6 +36,7 @@ const Title = styled.div`
 
 const Answer = styled.div`
   flex-basis: 90%;
+  padding-right: 10%;
 `
 
 function selectionAnimation(selection) {
