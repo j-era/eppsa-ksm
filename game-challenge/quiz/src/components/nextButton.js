@@ -2,6 +2,7 @@ import styled, { css } from "styled-components"
 import React from "react"
 import Button from "./button"
 import ButtonIcon from "../assets/svg/EPPSA_Assets_Button_Icon.svg"
+import clickEffect from "../animations/clickEffect"
 
 
 const Container = styled.div`
@@ -25,6 +26,7 @@ const NextButton = styled(Button)`
       transition: transform 250ms ease;
     `
   }
+  ${props => props.clicked ? css`${clickEffect()}` : ""}
 `
 
 const NextIcon = styled(ButtonIcon)`

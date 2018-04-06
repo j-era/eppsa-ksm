@@ -34,7 +34,8 @@ export default class App extends React.Component {
       confirmed: false,
       showRight: false,
       greyOut: false,
-      showNext: false
+      showNext: false,
+      nextClicked: false
     }
   }
 
@@ -79,6 +80,7 @@ export default class App extends React.Component {
         key={ i + 1 }
         visible={ this.state.visible }
         onClick={ !this.state.confirmed ? () => this.confirm(i + 1) : () => {} }
+        clicked={ this.state.confirmed === i + 1 }
         selection={ this.getSelection(i + 1) }
         initialDelay={ this.questionFadeIn }
         blinking={ this.blinking }
@@ -93,7 +95,8 @@ export default class App extends React.Component {
   renderNextButton() {
     return <NextButton
         visible={ this.state.showNext }
-        onClick={ this.nextChallenge }
+        onClick={ async () => await this.nextChallenge() }
+        clicked={ this.state.nextClicked }
         text={ this.props.content.shared.texts.next } />
   }
 
@@ -136,7 +139,9 @@ export default class App extends React.Component {
     this.setState({ showNext: true })
   }
 
-  nextChallenge() {
+  async nextChallenge() {
+    this.setState({ nextClicked: true })
+    await delay(100)
     this.props.completeChallenge(this.points.score + this.points.bonus)
   }
 }
