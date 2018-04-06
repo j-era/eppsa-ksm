@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { DragSource, DropTarget } from "react-dnd"
 import { ItemTypes } from "./constants"
 
-const ItemComponent = styled.div`
+const ItemContainer = styled.div`
   height: 80px;
   background: ${props => props.isOver ? "green" : `url(${props.image})`};
   background-position: center;
@@ -18,6 +18,7 @@ const dragSource = {
     return {
       id: props.id,
       name: props.name,
+      item: props.item,
       onReorder: props.onReorder
     }
   }
@@ -40,11 +41,11 @@ const dropTarget = {
   }
 };
 
-class Item extends React.Component {
+class SortingItem extends React.Component {
   render() {
     let content = (
       <div>
-        <ItemComponent image={ this.props.item.image } {...this.props}>{ this.props.item.info }</ItemComponent>
+        <ItemContainer image={ this.props.item.image } {...this.props}>{ this.props.item.info }</ItemContainer>
       </div>
     )
 
@@ -72,5 +73,5 @@ function collectDrop(connect, monitor) {
 }
 
 export default DragSource(ItemTypes.SORTING_ITEM, dragSource, collectDrag)(
-  DropTarget(ItemTypes.SORTING_ITEM, dropTarget, collectDrop)(Item)
+  DropTarget(ItemTypes.SORTING_ITEM, dropTarget, collectDrop)(SortingItem)
 )

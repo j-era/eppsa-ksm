@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 
-import ItemContainer from "./itemContainer"
+import ItemListComponent from "./itemListComponent"
 
 const Container = styled.div`
   height: 100vh;
@@ -12,7 +12,7 @@ const Label = styled.div`
   padding: 5%;
 `
 
-const SortingItems = styled(ItemContainer)`
+const Items = styled(ItemListComponent)`
   height: 80%;
 `
 
@@ -21,7 +21,7 @@ export default class SortingGame extends React.Component {
     return (
       <Container>
         <Label>{ this.props.data.topLabel }</Label>
-        <SortingItems items={this.props.data.items} />
+        <Items items={this.props.data.items} />
         <Label>{ this.props.data.bottomLabel }</Label>
       </Container>
     )

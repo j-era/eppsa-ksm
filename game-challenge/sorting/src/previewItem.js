@@ -2,21 +2,27 @@ import React from "react";
 import { DragLayer } from "react-dnd";
 import styled from "styled-components"
 
-const Preview = styled.div`
+const Container = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  background: green;
+
+  background: ${props => `url(${props.item.image})`};
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   border-radius: ${props => props.theme.borderRadius}px;
 
-  width: 100%;
   height: 80px;
+  width: 100%;
 `
 
 function collect (monitor) {
+  const item = monitor.getItem();
   return {
     currentOffset: monitor.getSourceClientOffset(),
-    isDragging: monitor.isDragging()
+    isDragging: monitor.isDragging(),
+    item: item && item.item
   }
 }
 
@@ -39,15 +45,14 @@ function getItemStyles (currentOffset) {
     }
 }
 
-function ItemPreview ({id, name, isDragging, currentOffset}) {
+function ItemPreview ({isDragging, item, currentOffset}) {
   if (!isDragging) {
       return null;
   }
 
   return (
-    <Preview style={getItemStyles(currentOffset)}>
-      Preview
-    </Preview>
+    <Container item={ item } style={ getItemStyles(currentOffset) }>
+    </Container>
   );
 }
 
