@@ -5,6 +5,8 @@ import styled, { ThemeProvider } from "styled-components"
 import "./App.css"
 import AnswerButton from "./components/answerButton"
 import NextButton from "./components/nextButton"
+import QuestionText from "./components/questionText"
+import QuestionTitle from "./components/questionTitle"
 import ScoreCalculation from "./score"
 import theme from "./theme"
 
@@ -16,26 +18,7 @@ const Container = styled.div `
   justify-content: center;
   padding-left: ${props => props.theme.layout.offsetX};
   padding-right: ${props => props.theme.layout.offsetX};
-
   height: 100%;
-`
-
-const QuestionText = styled.div`
-  font-size: ${props => props.theme.font.headline.size};
-  font-weight: ${props => props.theme.font.headline.weight};
-  color: ${props => props.theme.font.headline.color};
-  text-align: center;
-  opacity: ${props => props.visible ? 1 : 0};
-  transition: opacity 250ms linear 250ms;
-`
-
-const QuestionTitle = styled.div`
-  font-size: ${props => props.theme.font.text.size};
-  font-weight: ${props => props.theme.font.text.weight};
-  color: ${props => props.theme.font.text.color};
-  text-align: center;
-  opacity: ${props => props.visible ? 1 : 0};
-  transition: opacity 250ms linear;
 `
 
 export default class App extends React.Component {

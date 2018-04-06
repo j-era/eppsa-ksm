@@ -86,11 +86,18 @@ function selectionAnimation(selection, blinking, initialColor, colorType, theme)
 }
 
 function selectionColor(selection, theme, colorType="area") {
+  const {
+    rightAnswer,
+    wrongAnswer,
+    secondary,
+    areaColor,
+    primaryFont
+  } = theme.colors
   switch (selection) {
-    case "right": return theme.colors.rightAnswer
-    case "wrong": return theme.colors.wrongAnswer
-    case "greyed": return theme.colors.secondary
-    default: return colorType === "area" ? theme.colors.areaColor : theme.colors.primaryFont
+    case "right": return rightAnswer
+    case "wrong": return wrongAnswer
+    case "greyed": return secondary
+    default: return colorType === "area" ? areaColor : primaryFont
   }
 }
 
