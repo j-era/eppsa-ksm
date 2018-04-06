@@ -56,14 +56,14 @@ contentServer.getData().then(transform).then(async (content) => {
 
   async function resumeGame() {
     store.dispatch(actions.updateGame(
-      await gameServer.resumeGame(resumableGame.gameId, maxChallenges)
+      await gameServer.resumeGame(resumableGame.gameId)
     ))
     gameServer.setHandshakeQuery({ gameId: resumableGame.gameId })
   }
 
   async function startNewGame(name, avatar) {
     console.log("Starting new game")
-    const game = await gameServer.newGame(name, avatar, maxChallenges)
+    const game = await gameServer.startGame(name, avatar, maxChallenges)
     store.dispatch(actions.updateGame(game))
     setCookie("gameId", game.gameId)
     gameServer.setHandshakeQuery({ gameId: game.gameId })
