@@ -13,6 +13,7 @@ const Container = styled.div`
   background-size: cover;
   border-radius: ${props => props.theme.borderRadius}px;
 
+  border: 5px solid black;
   height: 80px;
   width: 100%;
 `
@@ -45,15 +46,19 @@ function getItemStyles (currentOffset) {
     }
 }
 
-function ItemPreview ({isDragging, item, currentOffset}) {
-  if (!isDragging) {
-      return null;
-  }
+class PreviewItem extends React.Component {
+  render() {
+    if (!this.props.isDragging) {
+        return null;
+    }
 
-  return (
-    <Container item={ item } style={ getItemStyles(currentOffset) }>
-    </Container>
-  );
+    console.log("dragging")
+
+    return (
+      <Container item={ this.props.item } style={ getItemStyles(this.props.currentOffset) }>
+      </Container>
+    )
+  }
 }
 
-export default DragLayer(collect)(ItemPreview);
+export default DragLayer(collect)(PreviewItem);

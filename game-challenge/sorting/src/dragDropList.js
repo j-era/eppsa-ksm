@@ -1,10 +1,11 @@
 import React from "react"
-import SortingItem from "./sortingItem"
 import { DragDropContext } from "react-dnd"
-import { default as TouchBackend } from "react-dnd-touch-backend";
 import styled from "styled-components"
 
+import { default as TouchBackend } from "../lib/react-dnd-touch-backend/src/Touch.js";
+
 import PreviewItem from "./previewItem";
+import SortingItem from "./sortingItem"
 
 const Container = styled.div`
   display: flex;
@@ -28,4 +29,4 @@ class ItemListComponent extends React.Component {
   }
 }
 
-export default DragDropContext(TouchBackend)(ItemListComponent);
+export default DragDropContext(TouchBackend({ delayHoldTouchStart: 1000 }))(ItemListComponent);

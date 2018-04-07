@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 
-import ItemListComponent from "./itemListComponent"
+import DragDropList from "./dragDropList"
 
 const Container = styled.div`
   height: 100vh;
@@ -12,7 +12,7 @@ const Label = styled.div`
   padding: 5%;
 `
 
-const Items = styled(ItemListComponent)`
+const Items = styled(DragDropList)`
   height: 80%;
 `
 
