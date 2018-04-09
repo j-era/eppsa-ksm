@@ -2,5 +2,6 @@
 content
 certificate/letsencrypt
 *.pem
+node_modules
 
 certificate/development/openssl\.cnf
