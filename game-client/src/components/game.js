@@ -2,6 +2,7 @@ import React from "react"
 import QrReader from "react-qr-reader"
 
 import GameBoard from "./gameBoard"
+import Challenge from "./challenge"
 
 export default function Game(props) {
   return props.challengeStarted ?
@@ -54,18 +55,11 @@ function renderNavigation(props) {
 }
 
 function renderChallenge({ challenge, challengeUri, onChallengeReady }) {
-  return (
-    <iframe
-      allow="camera"
-      src={ challengeUri }
-      ref={ iframe => {
-        if (iframe) {
-          // eslint-disable-next-line no-param-reassign
-          iframe.onload = () =>
-            onChallengeReady(iframe.contentWindow, challenge, challengeUri)
-        }
-      } } />
-  )
+
+  return <Challenge
+    challenge={ challenge }
+    challengeUri={ challengeUri }
+    onChallengeReady={ onChallengeReady } />
 }
 
 function renderQrReader(props) {

@@ -135,8 +135,11 @@ async function receiveMessage(event) {
   if (event.data.source === "challenge") { // ignore react dev tool messages
     console.log(`Challenge message received: ${JSON.stringify(event.data)}`)
 
+
     const challengeData = omit(event.data, "source")
-    store.dispatch(actions.updateGame(await gameServer.finishChallenge(challengeData)))
+    const data = await gameServer.finishChallenge(challengeData)
+    store.dispatch(actions.finishChallenge())
+    store.dispatch(actions.updateGame(data))
   }
 }
 

@@ -34,6 +34,12 @@ export function startChallenge() {
   }
 }
 
+export function finishChallenge() {
+  return {
+    type: types.FINISH_CHALLENGE
+  }
+}
+
 export function updateConnected(connected) {
   return {
     type: types.UPDATE_CONNECTED,

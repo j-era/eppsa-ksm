@@ -43,10 +43,10 @@ export function challengeNumber(state = 1, action) {
 
 export function challengeStarted(state = false, action) {
   switch (action.type) {
-    case types.UPDATE_GAME:
-      return false
     case types.START_CHALLENGE:
       return true
+    case types.FINISH_CHALLENGE:
+      return false
     default:
       return state
   }
