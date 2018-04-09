@@ -1,8 +1,8 @@
 {
-  "name": "boat",
+  "name": "graph",
   "version": "0.1.0",
   "scripts": {
-    "watch": "http-server src/ -p $PORT",
+   "watch": "http-server src/ -p $PORT",
     "start": "http-server src/ -p $PORT -c 0"
   },
   "dependencies": {

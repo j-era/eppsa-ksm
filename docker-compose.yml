@@ -123,6 +123,12 @@ services:
     environment:
       PORT: 80
 
+  game-challenge-graph:
+    build:
+      context: ./game-challenge/graph
+    environment:
+      PORT: 80
+
   mongo:
     image: "mongo:3.6.3-jessie"
     volumes:

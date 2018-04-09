@@ -83,3 +83,10 @@ services:
     volumes:
       - ./game-challenge/boat:/app
       - /app/node_modules
+
+  game-challenge-graph:
+    build:
+      dockerfile: Dockerfile.development
+    volumes:
+      - ./game-challenge/graph:/app
+      - /app/node_modules
