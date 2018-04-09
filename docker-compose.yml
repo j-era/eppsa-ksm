@@ -129,6 +129,12 @@ services:
     environment:
       PORT: 80
 
+  game-challenge-hidden:
+    build:
+      context: ./game-challenge/hidden
+    environment:
+      PORT: 80
+
   mongo:
     image: "mongo:3.6.3-jessie"
     volumes:

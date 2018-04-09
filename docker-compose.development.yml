@@ -90,3 +90,10 @@ services:
     volumes:
       - ./game-challenge/graph:/app
       - /app/node_modules
+
+  game-challenge-hidden:
+    build:
+      dockerfile: Dockerfile.development
+    volumes:
+      - ./game-challenge/hidden:/app
+      - /app/node_modules
