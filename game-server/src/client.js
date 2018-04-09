@@ -32,7 +32,7 @@ module.exports = class Client {
 
       if (game) {
         this.log.info({ socketId: this.socket.id, gameId }, "Continuing game")
-        this.mongoDB.connectGame(gameId)
+        this.mongoDB.connectGame(gameId, this.socket.id)
         this.game = game
       } else {
         this.log.error({ socketId: this.socket.id, gameId }, "Could not continue game")
@@ -55,7 +55,7 @@ module.exports = class Client {
 
     this.log.info({ socketId: this.socket.id, game: this.game }, "Starting a new game")
 
-    this.mongoDB.startGame(this.game)
+    this.mongoDB.startGame(this.game, this.socket.id)
     toSocket(this.game)
   }
 
@@ -66,7 +66,7 @@ module.exports = class Client {
     if (game && !game.finished) {
       this.log.info({ socketId: this.socket.id, gameId }, "Resuming game")
 
-      this.mongoDB.connectGame(gameId)
+      this.mongoDB.resumeGame(gameId, this.socket.id)
       this.game = game
     } else {
       this.log.error({ socketId: this.socket.id, gameId }, "Could not resume game ")
