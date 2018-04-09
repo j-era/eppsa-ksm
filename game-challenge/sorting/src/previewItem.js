@@ -1,5 +1,5 @@
-import React from "react";
-import { DragLayer } from "react-dnd";
+import React from "react"
+import { DragLayer } from "react-dnd"
 import styled from "styled-components"
 
 const Container = styled.div`
@@ -18,8 +18,8 @@ const Container = styled.div`
   width: 100%;
 `
 
-function collect (monitor) {
-  const item = monitor.getItem();
+function collect(monitor) {
+  const item = monitor.getItem()
   return {
     currentOffset: monitor.getSourceClientOffset(),
     isDragging: monitor.isDragging(),
@@ -27,36 +27,32 @@ function collect (monitor) {
   }
 }
 
-function getItemStyles (currentOffset) {
-    if (!currentOffset) {
-        return {
-            display: 'none'
-        }
-    }
-
-    // http://www.paulirish.com/2012/why-moving-elements-with-translate-is-better-than-posabs-topleft/
-    var x = currentOffset.x;
-    var y = currentOffset.y;
-    var transform = `translate(${x}px, ${y}px)`;
-
+function getItemStyles(currentOffset) {
+  if (!currentOffset) {
     return {
-        pointerEvents: 'none',
-        transform: transform,
-        WebkitTransform: transform
+      display: "none"
     }
-}
+  }
 
-class PreviewItem extends React.Component {
-  render() {
-    if (!this.props.isDragging) {
-        return null;
-    }
+  // http://www.paulirish.com/2012/why-moving-elements-with-translate-is-better-than-posabs-topleft/
+  const x = currentOffset.x
+  const y = currentOffset.y
+  const transform = `translate(${x}px, ${y}px)`
 
-    return (
-      <Container item={ this.props.item } style={ getItemStyles(this.props.currentOffset) }>
-      </Container>
-    )
+  return {
+    pointerEvents: "none",
+    transform
   }
 }
 
-export default DragLayer(collect)(PreviewItem);
+const PreviewItem = (props) => {
+  if (!props.isDragging) {
+    return null
+  }
+
+  return (
+    <Container item={ props.item } style={ getItemStyles(props.currentOffset) } />
+  )
+}
+
+export default DragLayer(collect)(PreviewItem)

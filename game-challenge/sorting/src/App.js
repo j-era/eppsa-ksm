@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React from "react"
 
 import { ThemeProvider } from "styled-components"
 import SortingGame from "./sortingGame"
@@ -8,14 +8,7 @@ const theme = {
   borderRadius: 15
 }
 
-class App extends Component {
-  render() {
-    return (
-      <ThemeProvider theme={theme}>
-        <SortingGame data={ this.props.data }/>
-      </ThemeProvider>
-    );
-  }
-}
-
-export default App;
+export default ({ data }) =>
+  <ThemeProvider theme={ theme }>
+    <SortingGame data={ data } />
+  </ThemeProvider>

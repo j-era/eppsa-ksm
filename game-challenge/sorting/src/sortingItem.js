@@ -24,9 +24,8 @@ const dragSource = {
 }
 
 const dropTarget = {
-  drop (props, monitor) {
+  drop(props, monitor) {
     const item = monitor.getItem()
-    console.log(JSON.stringify(item))
 
     // Don't trigger reorder if it's to the same spot
     if (item.id === props.id) {
@@ -34,15 +33,16 @@ const dropTarget = {
     }
     item.onReorder(item.id, props.id)
   }
-};
+}
 
 class SortingItem extends React.Component {
   render() {
-    let content = (
+    let content =
       <div>
-        <ItemContainer image={ this.props.item.image } {...this.props}>{ this.props.item.info } / { this.props.id }</ItemContainer>
+        <ItemContainer image={ this.props.item.image } { ...this.props }>
+          { this.props.item.info } / { this.props.id }
+        </ItemContainer>
       </div>
-    )
 
     content = this.props.connectDragSource(content)
     content = this.props.connectDropTarget(content)

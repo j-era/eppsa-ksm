@@ -16,14 +16,9 @@ const ItemList = styled(DragDropList)`
   height: 80%;
 `
 
-export default class SortingGame extends React.Component {
-  render() {
-    return (
-      <Container>
-        <Label>{ this.props.data.topLabel }</Label>
-        <ItemList items={this.props.data.items} />
-        <Label>{ this.props.data.bottomLabel }</Label>
-      </Container>
-    )
-  }
-}
+export default ({ data }) =>
+  <Container>
+    <Label>{ data.topLabel }</Label>
+    <ItemList items={ data.items } />
+    <Label>{ data.bottomLabel }</Label>
+  </Container>

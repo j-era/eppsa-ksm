@@ -3,9 +3,9 @@ import React from "react"
 import { DragDropContext } from "react-dnd"
 import styled from "styled-components"
 
-import { default as TouchBackend } from "../lib/react-dnd-touch-backend/src/Touch.js";
+import { default as TouchBackend } from "../lib/react-dnd-touch-backend/src/Touch"
 
-import PreviewItem from "./previewItem";
+import PreviewItem from "./previewItem"
 import SortingItem from "./sortingItem"
 
 const Container = styled.div`
@@ -16,19 +16,19 @@ const Container = styled.div`
 `
 
 class ItemListComponent extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     autoBind(this)
 
     const itemsMap = new Map()
-    Object.keys(this.props.items).forEach((key, index) =>
+    Object.keys(this.props.items).forEach((key) =>
       itemsMap.set(key, this.props.items[key])
     )
 
     console.log(itemsMap)
 
     this.state = {
-      itemsMap: itemsMap
+      itemsMap
     }
   }
 
@@ -37,7 +37,11 @@ class ItemListComponent extends React.Component {
       <Container className={ this.props.className }>
         {
           Array.from(this.state.itemsMap.keys()).map(
-            (key) => <SortingItem key={ key } id={ key } item={ this.state.itemsMap.get(key) } onReorder={ this.reorder } />
+            (key) =>
+              <SortingItem
+                key={ key } id={ key }
+                item={ this.state.itemsMap.get(key) }
+                onReorder={ this.reorder } />
           )
         }
         <PreviewItem />
@@ -46,7 +50,7 @@ class ItemListComponent extends React.Component {
   }
 
   reorder(dragItemId, hoverItemId) {
-    console.log(`Dragged ${dragItemId} to ${hoverItemId}`);
+    console.log(`Dragged ${dragItemId} to ${hoverItemId}`)
 
     const itemsMap = new Map(this.state.itemsMap)
 
@@ -57,7 +61,6 @@ class ItemListComponent extends React.Component {
 
     this.setState({ itemsMap })
   }
-
 }
 
-export default DragDropContext(TouchBackend({ delayHoldTouchStart: 500 }))(ItemListComponent);
+export default DragDropContext(TouchBackend({ delayHoldTouchStart: 500 }))(ItemListComponent)
