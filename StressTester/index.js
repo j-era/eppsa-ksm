@@ -44,7 +44,7 @@ async function ghostClient(browser, i) {
 
       const mainFrameWindow = await mainFrameContext.evaluateHandle(() => window)
 
-      mainFrameContext.evaluate(
+      await mainFrameContext.evaluate(
         window => window.postMessage({ source: "challenge", score: 1 }, "*"),
         mainFrameWindow
       )
