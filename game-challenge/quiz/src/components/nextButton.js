@@ -18,14 +18,12 @@ const NextButton = styled(Button)`
   width: 67%;
   align-self: center;
   ${props => props.visible ? css`
-      transform: scale(1, 1);
-      transition:
-        transform 250ms cubic-bezier(0.2, 0.7, 0.55, 1.6) 250ms;
+    transform: scale(1, 1);
+    transition: transform 250ms cubic-bezier(0.2, 0.7, 0.55, 1.6) 250ms;
     ` : css`
       transform: scale(0, 0);
       transition: transform 250ms ease;
-    `
-  }
+    `}
   ${props => props.clicked ? css`${clickEffect()}` : ""}
 `
 
@@ -36,10 +34,7 @@ const NextIcon = styled(ButtonIcon)`
   fill: black;
 `
 
-export default props => {
-  return (
-    <Container { ...props }>
-      <NextButton { ...props }>{ props.text }<NextIcon/></NextButton>
-    </Container>
-  )
-}
+export default props =>
+  <Container { ...props }>
+    <NextButton { ...props }>{ props.text }<NextIcon /></NextButton>
+  </Container>

@@ -14,20 +14,17 @@ const StyledButton = styled(Button)`
       props.theme.colors.areaColor,
       "border-color",
       props.theme
-    )
-  };
+    )};
   ${props => props.visible ? css`
       transform: scale(1, 1);
       transition:
-        transform 150ms cubic-bezier(0.2, 0.7, 0.55, 1.2) ${props =>
-          props.initialDelay + props.index * 150
-        }ms,
+        transform 150ms cubic-bezier(0.2, 0.7, 0.55, 1.2)
+          ${props => props.initialDelay + props.index * 150}ms,
         opacity  150ms ease ${props => props.initialDelay + props.index * 150}ms;
     ` : css`
       transform: scale(0, 0);
       opacity: 0;
-    `
-  }
+    `}
   ${props => props.clicked ? css`${clickEffect()}` : ""}
   ${props => props.selection === "greyed" ? css`
     opacity: 0.8;
@@ -48,8 +45,7 @@ const Title = styled.div`
       props.theme.colors.primaryFont,
       "color",
       props.theme
-    )
-  };
+    )};
   opacity: 0.5;
 `
 
@@ -64,8 +60,7 @@ const Answer = styled.div`
       props.theme.colors.primaryFont,
       "color",
       props.theme
-    )
-  };
+    )};
   }
 `
 
@@ -78,7 +73,7 @@ function selectionAnimation(selection, blinking, initialColor, colorType, theme)
   }
 }
 
-function selectionColor(selection, theme, colorType="area") {
+function selectionColor(selection, theme, colorType = "area") {
   const {
     rightAnswer,
     wrongAnswer,

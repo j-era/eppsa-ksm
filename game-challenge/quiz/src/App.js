@@ -41,7 +41,7 @@ export default class App extends React.Component {
 
   componentDidMount() {
     this.startTime = new Date()
-    setTimeout(() => this.setState({ visible: true}), 0)
+    setTimeout(() => this.setState({ visible: true }), 0)
   }
 
   render() {
@@ -87,17 +87,16 @@ export default class App extends React.Component {
         greyOutDuration={ this.greyOutDuration }
         answer={ answer }
         title={ titles[i] }
-        index={ i }>
-      </AnswerButton>
+        index={ i } />
     )
   }
 
   renderNextButton() {
     return <NextButton
-        visible={ this.state.showNext }
-        onClick={ async () => await this.nextChallenge() }
-        clicked={ this.state.nextClicked }
-        text={ this.props.content.shared.texts.next } />
+      visible={ this.state.showNext }
+      onClick={ async () => await this.nextChallenge() }
+      clicked={ this.state.nextClicked }
+      text={ this.props.content.shared.texts.next } />
   }
 
   getSelection(i) {
