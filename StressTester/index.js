@@ -38,7 +38,7 @@ async function ghostClient(browser, i) {
 
       const challengeFrame = page.frames()[1]
 
-      await challengeFrame.waitFor(".button")
+      await challengeFrame.waitForSelector("HTML")
 
       const mainFrameContext = await page.frames()[0].executionContext()
 
