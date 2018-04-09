@@ -12,7 +12,7 @@ const Label = styled.div`
   padding: 5%;
 `
 
-const Items = styled(DragDropList)`
+const ItemList = styled(DragDropList)`
   height: 80%;
 `
 
@@ -21,7 +21,7 @@ export default class SortingGame extends React.Component {
     return (
       <Container>
         <Label>{ this.props.data.topLabel }</Label>
-        <Items items={this.props.data.items} />
+        <ItemList items={this.props.data.items} />
         <Label>{ this.props.data.bottomLabel }</Label>
       </Container>
     )

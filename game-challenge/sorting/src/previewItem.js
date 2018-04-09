@@ -52,8 +52,6 @@ class PreviewItem extends React.Component {
         return null;
     }
 
-    console.log("dragging")
-
     return (
       <Container item={ this.props.item } style={ getItemStyles(this.props.currentOffset) }>
       </Container>

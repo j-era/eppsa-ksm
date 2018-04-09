@@ -1,3 +1,4 @@
+import autoBind from "react-autobind"
 import React from "react"
 import { DragDropContext } from "react-dnd"
 import styled from "styled-components"
@@ -15,18 +16,48 @@ const Container = styled.div`
 `
 
 class ItemListComponent extends React.Component {
+  constructor(props){
+    super(props)
+    autoBind(this)
+
+    const itemsMap = new Map()
+    Object.keys(this.props.items).forEach((key, index) =>
+      itemsMap.set(key, this.props.items[key])
+    )
+
+    console.log(itemsMap)
+
+    this.state = {
+      itemsMap: itemsMap
+    }
+  }
+
   render() {
     return (
-      <Container items={ Object.keys(this.props.items) } className={ this.props.className }>
+      <Container className={ this.props.className }>
         {
-          Object.keys(this.props.items).map((key, index) =>
-            <SortingItem key={ index } item={ this.props.items[key] }/>
+          Array.from(this.state.itemsMap.keys()).map(
+            (key) => <SortingItem key={ key } id={ key } item={ this.state.itemsMap.get(key) } onReorder={ this.reorder } />
           )
         }
         <PreviewItem />
       </Container>
     )
   }
+
+  reorder(dragItemId, hoverItemId) {
+    console.log(`Dragged ${dragItemId} to ${hoverItemId}`);
+
+    const itemsMap = new Map(this.state.itemsMap)
+
+    itemsMap.set(dragItemId, this.state.itemsMap.get(hoverItemId))
+    itemsMap.set(hoverItemId, this.state.itemsMap.get(dragItemId))
+
+    console.log(itemsMap)
+
+    this.setState({ itemsMap })
+  }
+
 }
 
-export default DragDropContext(TouchBackend({ delayHoldTouchStart: 1000 }))(ItemListComponent);
+export default DragDropContext(TouchBackend({ delayHoldTouchStart: 500 }))(ItemListComponent);
