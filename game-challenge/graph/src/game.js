@@ -36,7 +36,7 @@ let GraphGame = new Phaser.Class({
 	
 		//other variables needed
 		this.agentSpawnRates = [];
-		this.spawnSum = 0;
+		//this.spawnSum = 0;
 
 		this.currentAgentsOnBoard = 0;
 		this.currentAgents = {};	
@@ -78,13 +78,14 @@ let GraphGame = new Phaser.Class({
 		this.load.image('tailorh', 'assets/EPPSA_Heinzel_TailorMaennchen.png');
 		this.load.image('shoemakerh', 'assets/EPPSA_Heinzel_ShoemakerMaennchen.png');
 		this.load.image('tailorwife', 'assets/EPPSA_Heinzel_TailorWife.png');
+
+		this.load.image('button', 'assets/EPPSA_Heinzel_Button.png');
 	}, 
 
 	create: function(data){
 		var that = this;
 
 		this.drawNodes();
-
 		this.setupAgentSpawnRates();
 		
 
@@ -92,8 +93,10 @@ let GraphGame = new Phaser.Class({
 
 		this.displayPointsText = this.add.text(350, 550, this.countedWinEvents * 10, {color: '#ff00ff', fontSize: '20px'});
 
-		//set bounds of camera
-		this.cameras.main.setBounds(0, 0, 600, 800);
+		//TODO camera movement depending on screen size
+		this.moveRight = this.add.image(200, 500, 'button').setScale(0.1, 0.1).setName("right").setInteractive();
+		this.moveLeft = this.add.image(900, 500, 'button').setScale(0.1, 0.1).setName("left").setInteractive();
+		this.moveLeft.flipX = !this.moveLeft.flipX;
 
 		this.input.on('gameobjectdown', function(pointer, gameObject){
 			if(gameObject.name == 'agent'){
@@ -109,6 +112,10 @@ let GraphGame = new Phaser.Class({
 				}
 
 				console.log('current path ', that.currentPath);
+			}else if(gameObject.name == 'right'){
+				this.cameras.main.scrollX = 500 * window.devicePixelRatio;
+			}else if(gameObject.name == 'left'){
+				this.cameras.main.scrollX = 0;
 			}
 		});
 
@@ -366,9 +373,9 @@ let GraphGame = new Phaser.Class({
 	setupAgentSpawnRates: function(){
 		for (var agentClass in this.agentClasses){
 			this.agentSpawnRates.push(this.agentClasses[agentClass].spawnProbability);
-			this.spawnSum += parseFloat(this.agentClasses[agentClass].spawnProbability);
+			//this.spawnSum += parseFloat(this.agentClasses[agentClass].spawnProbability);
 		}
-		this.spawnSum = Number.parseFloat(this.spawnSum).toFixed(2);
+		//this.spawnSum = Number.parseFloat(this.spawnSum).toFixed(2);
 	},
 
 	getAgentAccordingToSpawnRate: function(list, weight){
