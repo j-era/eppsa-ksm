@@ -1,4 +1,5 @@
-import { keys, pickBy } from "lodash"
+import keys from "lodash.keys"
+import pickBy from "lodash.pickby"
 
 
 export default function selectContent(data) {

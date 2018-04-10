@@ -29,12 +29,12 @@ export default class GameServer {
     return this.send("findConnectedGames")
   }
 
-  newGame(name, avatar, maxChallenges) {
-    return this.send("newGame", name, avatar, maxChallenges)
+  startGame(name, avatar, maxChallenges) {
+    return this.send("startGame", name, avatar, maxChallenges)
   }
 
-  resumeGame(gameId, maxChallenges) {
-    return this.send("resumeGame", gameId, maxChallenges)
+  resumeGame(gameId) {
+    return this.send("resumeGame", gameId)
   }
 
   startChallenge() {
