@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer")
 
 const GAME_URL = `https://${process.env.GAME_URL}`
-const clientCount = Number(process.env.MAX_CLIENTS)
+const clientCount = Number(process.env.MAX_CLIENTS || 1)
 
 const config = {
   headless: true,
