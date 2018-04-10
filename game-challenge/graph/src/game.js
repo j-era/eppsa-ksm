@@ -154,11 +154,6 @@ let GraphGame = new Phaser.Class({
 				that.spawnedNodes.forEach(function(element){
 					element.img.clearTint();
 				});
-				/* Array notation
-				that.currentAgents.forEach(function(element){
-					element.img.clearTint();
-				});
-				*/
 				for (var agent in that.currentAgents){
 					that.currentAgents[agent].img.clearTint();
 				}
@@ -248,14 +243,6 @@ let GraphGame = new Phaser.Class({
 							}
 							let agentPush = that.currentAgents[otherAgentID].img;
 
-							/*let nodeIndex = Math.floor(Math.random() * that.nodes[node.id].connectedTo.length);
-							nextNode.id = that.nodes[node.id].connectedTo[nodeIndex];
-							nextNode.x = that.nodes[nextNode.id].xPosition;
-							nextNode.y = that.nodes[nextNode.id].yPosition;*/
-							//let nodePush = [];
-							//nodePush.id = that.nodes[node.id].connectedTo[nodeIndex];
-
-							//that.time.addEvent({delay: 10, callback: that.moveAgentToNextNode, args: [that.currentAgents[otherAgentID].img, node], callbackScope: that});
 							console.log(node);
 							that.moveAgentToNextNode(that.currentAgents[otherAgentID].img, nextNode);
 							//TODO maybe delete his path?
@@ -274,8 +261,18 @@ let GraphGame = new Phaser.Class({
 					that.currentAgentsOnBoard --;
 					//TODO remove from currentAgents
 					//TODO adjust distribution
-					agent.setVisible(false);
-					agent.destroy();
+					that.tweens.add({
+						targets: agent,
+						alpha: 0,
+						duration: 1000,
+						ease: 'Power2',
+						yoyo: false,
+						repeat: 0,
+						onComplete: function(){
+							agent.destroy();
+						}
+					});
+					
 					return null;
 				}
 
@@ -300,21 +297,6 @@ let GraphGame = new Phaser.Class({
 				
 			}
 		});
-
-		/*if(pathID != null){
-			that.currentPath[pathID].path.shift();
-			if(that.currentPath[pathID].path[1] != undefined){
-				node = that.currentPath[pathID].path[1];
-				agent.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[node.id].nodePauseTime), callback: that.moveAgentToNextNode, args: [agent, node, pathID], callbackScope: this});
-			}else{
-				//TODO fix bug that agent at end of defined path jumps one node to far
-				var nodeIndex = Math.floor(Math.random() * that.nodes[node.id].connectedTo.length);
-				node.id = that.nodes[node.id].connectedTo[nodeIndex];
-				agent.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[node.id].nodePauseTime), callback: that.moveAgentToNextNode, args: [agent, node], callbackScope: this});
-			}
-		}else{
-			agent.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[node.id].nodePauseTime), callback: that.moveAgentToNextNode, args: [agent, node], callbackScope: this});
-		}*/
 			
 	},
 
@@ -416,12 +398,21 @@ let GraphGame = new Phaser.Class({
 
 
 			var newAgent = {};
-			newAgent.img = this.add.image(startNode.x, startNode.y, agentType.name).setInteractive().setName('agent').setDepth(1).setScale(0.1,0.1);
+			newAgent.img = this.add.image(startNode.x, startNode.y, agentType.name).setInteractive().setName('agent').setDepth(1).setScale(0.1,0.1).setAlpha(0);
 			newAgent.type = agentType.name;
 			newAgent.id = this.currentAgentID;
 			newAgent.isHostile = agentType.isHostile;
 			newAgent.pauseTime = agentType.pauseTime;
 			newAgent.nodeID = startNode.id;
+
+			this.tweens.add({
+				targets: newAgent.img,
+				alpha: 1,
+				duration: 1000,
+				ease: 'Power2',
+				yoyo: false,
+				repeat: 0,
+			});
 
 			this.currentAgents[this.currentAgentID] = newAgent;
 			this.spawnedNodes[startNode.id].agentOnNode = this.currentAgentID;
