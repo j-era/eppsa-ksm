@@ -110,13 +110,13 @@ class gameScene extends Phaser.Scene {
 			var PosX = 0;
 			var temp = 'row' + i;
 			for(var j = 0; j < that[temp].length; j++){
-				that[temp][j].displayWidth = that.picMaxWidth
+				that[temp][j].displayWidth = that.picMaxWidth;
 				that[temp][j].x = PosX;
 				PosX += that[temp][j].displayWidth;
 				that[temp][j].y = this.PosY;
 				var Height = that[temp][j].displayHeight;
 			}
-			this.PosY += Height;
+			this.PosY += Height * 0.75;
 		}
 	}
 
