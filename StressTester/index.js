@@ -25,7 +25,7 @@ async function ghostClient(browser, i) {
 
     await page.waitFor("input")
 
-    await page.type("input", `Bobo ${i}`, { deplay: 0 })
+    await page.type("input", `BotPlayer ${i}`, { deplay: 0 })
 
     await page.click(".startNewGame")
 
