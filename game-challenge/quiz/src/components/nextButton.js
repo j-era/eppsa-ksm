@@ -24,7 +24,7 @@ const NextButton = styled(Button)`
       transform: scale(0, 0);
       transition: transform 250ms ease;
     `}
-  ${props => props.clicked ? css`${clickEffect()}` : ""}
+  animation: ${props => props.clicked ? css`${clickEffect()};` : ";"}
 `
 
 const NextIcon = styled(ButtonIcon)`

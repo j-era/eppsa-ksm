@@ -15,5 +15,5 @@ export default function clickEffect() {
       opacity: 1;
     }
   `
-  return css`animation: ${click} 100ms ease 0ms 1;`
+  return css`${click} 100ms ease 0ms 1`
 }
