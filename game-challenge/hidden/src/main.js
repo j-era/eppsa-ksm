@@ -1,6 +1,6 @@
 //import Boot from "./Boot.js";
 import GameScene from "./gameScene.js";
-//import Win from "./Win.js";
+import Win from "./Win.js";
 //import Lose from "./Lose.js";
 
 var config = {
@@ -10,10 +10,8 @@ var config = {
 	height: window.innerHeight,
 
 	scene: [
-		//Boot,
 		GameScene,
-		//Win,
-		//Lose
+		Win,
 	]
 };
 

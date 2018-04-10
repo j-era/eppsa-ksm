@@ -59,11 +59,8 @@ class gameScene extends Phaser.Scene {
 		this.imageArray.forEach(function(element) {
 			var i = 0;
 			that.loadedImages[element.img].displayHeight = window.innerHeight/3;
-			//that.loadedImages[element.img].height = window.innerHeight/3;
-			//that.loadedImages[element.img].setScale(1, (window.innerHeight/3/that.loadedImages[element.img].height))
 			if(that.loadedImages[element.img].displayHeight > that.picMaxHeight){
 				that.loadedImages[element.img].displayHeight = that.picMaxHeight;
-				//that.loadedImages[element.img].height = that.picMaxHeight;
 			}
 
 			var temp = 'row' + element.depth;
@@ -82,7 +79,7 @@ class gameScene extends Phaser.Scene {
 						if(temp[i] == temp2[j]){
 							console.log("yes")
 							found = true;
-							changeQuestion();
+							that.changeQuestion();
 							break;
 							//TODO change question
 						}else{
@@ -96,36 +93,11 @@ class gameScene extends Phaser.Scene {
 
 		});
 
-		this.input.on('gameobjectdown', function(pointer, gameObject){
-			console.log(gameObject);
-			/*var found = false;
-				var temp = element.tag.split(',');
-				console.log('clicked: ' + temp);
-				var temp2 = that.questions[that.random].tag.split(',');
-				console.log('question: ' + temp2);
-				for(var i = 0; i < temp.length; i++){
-					for(var j = 0; j < temp2.length; j++){
-						if(temp[i] == temp2[j]){
-							console.log("yes")
-							found = true;
-							changeQuestion();
-							break;
-							//TODO change question
-						}else{
-							console.log("No")
-							//TODO response
-						}
-
-					}
-				}*/
-		});
-
 this.PosY = 0;
 for(var i = 1; i < 4; i++){
 	var PosX = 0;
 	var temp = 'row' + i;
 	for(var j = 0; j < that[temp].length; j++){
-		//that[temp][j].width = window.innerWidth/that[temp].length
 		that[temp][j].displayWidth = window.innerWidth/that[temp].length
 		that[temp][j].x = PosX;
 		PosX += that[temp][j].displayWidth;
@@ -137,13 +109,11 @@ for(var i = 1; i < 4; i++){
 }
 
 
-/*update(){
+update(){
 
 
 	for(var i = 0; i < this.moveRight.length; i++){
-		//console.log(this.moveRight[i]);
 		this.moveRight[i].x += 5;
-
 		if(this.moveRight[i].x > window.innerWidth){
 			this.moveRight[i].x = 0;
 			this.movingRight  = 0;
@@ -152,17 +122,36 @@ for(var i = 1; i < 4; i++){
 
 	for(var i = 0; i < this.moveLeft.length; i++){
 		this.moveLeft[i].x -= 5;
-
 		if(this.moveLeft[i].x < -(window.innerWidth)){
 			this.moveLeft[i].x = window.innerWidth;
 			this.movingLeft  = 0;
 		}
 	}
 
-}*/
+}
 
 changeQuestion(){
-	console.log("Wup");
+	this.questions.splice(this.random,1);
+	if(this.questions.length > 0){
+		this.random = Math.floor(Math.random() * this.questions.length);
+
+		this.QuesText = this.questions[this.random].question;
+
+		this.add.tween({
+			targets: this.ques,
+			duration: 1000,
+			alpha: {
+				getStart: () => 1,
+				getEnd: () => 0.1
+			},
+			onComplete: () => {
+				this.ques.setText(this.QuesText);
+				this.ques.alpha = 1;
+			}
+		})
+	}else{
+		this.scene.start('WinScene');
+	}
 }
 
 		/*for(var k = 0; k < this.Depth1.length; k++){
