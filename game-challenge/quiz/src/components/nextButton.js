@@ -1,8 +1,8 @@
 import styled, { css } from "styled-components"
 import React from "react"
-import Button from "./button"
-import ButtonIcon from "../assets/svg/EPPSA_Assets_Button_Icon.svg"
-import clickEffect from "../animations/clickEffect"
+import Button from "../../lib/eppsa-ksm-shared/styled-components/components/button"
+import ButtonIcon from "../../lib/eppsa-ksm-shared/svg/EPPSA_Assets_Button_Icon.svg"
+import clickEffect from "../../lib/eppsa-ksm-shared/styled-components/animations/clickEffect"
 
 
 const Container = styled.div`

@@ -1,8 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { injectGlobalStyle } from "./globalStyle"
+import { injectGlobalStyle } from "../lib/eppsa-ksm-shared/styled-components/globalStyle"
 import App from "./App"
-import "./index.css"
 import selectContent from "./selectContent"
 
 
