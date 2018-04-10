@@ -26,7 +26,7 @@ let GraphGame = new Phaser.Class({
 		//agentAttributes
 		this.agentCounter = 0;				//Counts the number of agents that trigger a win-event (used for score calculation).
 		this.spawnInterval = 3;				//Sets the time interval after which the next agent spawns.
-		this.maxAgents = 8;					//Defines the max. amount of agents that can be on the board. Spawn is paused while the amount of agents on the board = this value.
+		this.maxAgents = 1;					//Defines the max. amount of agents that can be on the board. Spawn is paused while the amount of agents on the board = this value.
 
 		this.agentClasses = availableClasses; //currently getting those from other js file, should come from cms
 
@@ -49,7 +49,7 @@ let GraphGame = new Phaser.Class({
 
 		this.startNodes = [];
 		this.spawnedNodes = [];
-		//this.lines = {};
+		this.lines = [];
 
 		this.graphicsPath = [];
 		this.pathCounter = 0;
@@ -102,12 +102,6 @@ let GraphGame = new Phaser.Class({
 				that.currentPath[that.currentPathID] = {'agent' : gameObject, 'path' : []};
 				gameObject.setTint(0xff0000);
 
-				/* Array notation
-				that.currentAgents.forEach(function(element){
-					if(gameObject == element.img){
-						that.currentPath[that.currentPathID].path.push(that.spawnedNodes[element.nodeID]);
-					}
-				});*/
 				for(var agent in that.currentAgents){
 					if(gameObject == that.currentAgents[agent].img){
 						that.currentPath[that.currentPathID].path.push(that.spawnedNodes[that.currentAgents[agent].nodeID]);
@@ -136,7 +130,7 @@ let GraphGame = new Phaser.Class({
 							var lastElement = that.currentPath[that.currentPathID].path[pathLength-1];
 							if(element.connectedTo.indexOf(lastElement.id) != -1){
 								middleLine = new Phaser.Geom.Line(that.nodes[lastElement.id].xPosition, that.nodes[lastElement.id].yPosition, that.nodes[element.id].xPosition, that.nodes[element.id].yPosition);
-								that.graphicsPath[that.pathCounter] = that.add.graphics({lineStyle: {width: 4, color: 0xff0000}});
+								that.graphicsPath[that.pathCounter] = that.add.graphics({lineStyle: {width: 4, color: 0xCCD6DF}});
 								that.graphicsPath[that.pathCounter].strokeLineShape(middleLine);
 								that.currentPath[that.currentPathID].path.push(element);
 								gameObject.setTint(0xff0000);
@@ -319,21 +313,53 @@ let GraphGame = new Phaser.Class({
 			this.node.id = currentNode.nodeID;
 			this.node.img.setScale(0.1,0.1).setName('node');
 
+			that.add.text(that.nodes[node].xPosition, that.nodes[node].yPosition, that.nodes[node].nodeID, {fill: '#ffffff'});
 			that.nodes[node].connectedTo.forEach(function(element){
-				middleLine = new Phaser.Geom.Line(that.nodes[node].xPosition, that.nodes[node].yPosition, that.nodes[element].xPosition, that.nodes[element].yPosition);
-				that.add.text(that.nodes[node].xPosition, that.nodes[node].yPosition, that.nodes[node].nodeID, {fill: '#ffffff'});
-				var graphics = that.add.graphics({lineStyle: {width: 4, color: 0xCCD6DF}});
-				graphics.strokeLineShape(middleLine);
-				//TODO lines should only be drawn once!
-				//that.lines[counter] = {'line' : middleLine};
-				//counter ++;
+				let lineTemp = {};
+				lineTemp.pos1x = that.nodes[node].xPosition;
+				lineTemp.pos1y = that.nodes[node].yPosition;
+				lineTemp.pos2x = that.nodes[element].xPosition;
+				lineTemp.pos2y = that.nodes[element].yPosition;
+
+				if(that.lines.length == 0){
+						var graphics = that.add.graphics({fillStyle: {color: 0xCCD6DF}});
+						middleLine = new Phaser.Geom.Line(that.nodes[node].xPosition, that.nodes[node].yPosition, that.nodes[element].xPosition, that.nodes[element].yPosition);
+
+						var length = Phaser.Geom.Line.Length(middleLine);
+						var points = middleLine.getPoints(length/10);
+
+						for (var i = 0; i < points.length; i++)
+						{
+							var p = points[i];
+							graphics.fillCircle(p.x - 1, p.y - 1, 2);
+						}
+						that.lines.push(lineTemp);
+				}else{
+					let insert = true;
+					that.lines.forEach(function(lineElement){
+						if(lineElement.pos1x == lineTemp.pos2x && lineElement.pos1y == lineTemp.pos2y && lineElement.pos2x == lineTemp.pos1x && lineElement.pos2y == lineTemp.pos1y){
+							insert = false;
+						}
+					});
+					if(insert){
+						var graphics = that.add.graphics({fillStyle: {color: 0xCCD6DF}});
+							middleLine = new Phaser.Geom.Line(that.nodes[node].xPosition, that.nodes[node].yPosition, that.nodes[element].xPosition, that.nodes[element].yPosition);
+	
+							var length = Phaser.Geom.Line.Length(middleLine);
+							var points = middleLine.getPoints(length/10);
+	
+							for (var i = 0; i < points.length; i++)
+							{
+								var p = points[i];
+								graphics.fillCircle(p.x - 1, p.y - 1, 2);
+							}
+						that.lines.push(lineTemp);
+					}
+				}
 			})
 			this.spawnedNodes.push(this.node);
-			this.node.img.setDepth(1);
-
-			
+			this.node.img.setDepth(1);	
 		}
-		//console.log(this.lines);
 		console.log('spawned Nodes ', this.spawnedNodes);
 	},
 
