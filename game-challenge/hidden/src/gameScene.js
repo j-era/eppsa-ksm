@@ -71,20 +71,31 @@ class gameScene extends Phaser.Scene {
 			that.loadedImages[element.img].on('pointerup', function(pointer){
 				var found = false;
 				var temp = element.tag.split(',');
-				console.log('clicked: ' + temp);
 				var temp2 = that.questions[that.random].tag.split(',');
-				console.log('question: ' + temp2);
 				for(var i = 0; i < temp.length; i++){
 					for(var j = 0; j < temp2.length; j++){
 						if(temp[i] == temp2[j]){
-							console.log("yes")
 							found = true;
 							that.changeQuestion();
 							break;
-							//TODO change question
 						}else{
-							console.log("No")
-							//TODO response
+							that.QuesText = that.questions[that.random].question;
+							if(found == false){
+								that.ques.setText("Nope");
+								that.add.tween({
+									targets: that.ques,
+									duration: 1000,
+									alpha: {
+										getStart: () => 1,
+										getEnd: () => 0.1
+									},
+									onComplete: () => {
+										that.ques.setText(that.QuesText);
+										that.ques.alpha = 1;
+									}
+								})
+							}
+							
 						}
 
 					}
@@ -137,6 +148,8 @@ changeQuestion(){
 
 		this.QuesText = this.questions[this.random].question;
 
+		this.ques.setText("Ja^^")
+
 		this.add.tween({
 			targets: this.ques,
 			duration: 1000,
@@ -154,44 +167,6 @@ changeQuestion(){
 	}
 }
 
-		/*for(var k = 0; k < this.Depth1.length; k++){
-			this.Depth1[k].displayWidth = window.innerWidth/this.Depth1.length;
+}
 
-			if(this.Depth1[k].displayWidth > this.picMaxWidth){
-				this.Depth1[k].displayWidth = this.picMaxWidth;
-			}
-			this.Depth1[k].y = this.pos;
-			if(k == this.Depth1.length-1){
-				this.pos += this.Depth1[k].displayHeight/4;
-			}
-		}
-		
-		for(var l = 0; l < this.Depth2.length; l++){
-			this.Depth2[l].displayWidth= window.innerWidth/this.Depth2.length;
-
-			if(this.Depth2[l].displayWidth > this.picMaxWidth){
-				this.Depth2[l].dispalyWidth = this.picMaxWidth;
-			}
-
-			this.Depth2[l].y = this.pos;
-			if(l == this.Depth2.length-1){
-				this.pos += this.Depth2[l].displayHeight/4;
-			}
-		}
-
-		for(var k = 0; k < this.Depth3.length; k++){
-			this.Depth3[k].width= window.innerWidth/this.Depth3.length;
-
-			if(this.Depth3[k].width > this.picMaxWidth){
-				this.Depth3[k].width = this.picMaxWidth;
-			}
-
-			this.Depth3[k].style.top = this.pos;
-			if(k == this.Depth3.length-1){
-				this.pos += this.Depth3[k].height/4;
-			}
-		}*/
-
-	}
-
-	export default gameScene;
+export default gameScene;
