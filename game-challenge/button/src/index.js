@@ -24,9 +24,9 @@ const completeChallenge = () => {
 // eslint-disable-next-line no-use-before-define
 const url = new URL(window.location)
 
-const contentServerUri = url.searchParams.get("contentServerUri")
-const assetServerUri = url.searchParams.get("assetServerUri")
-const gameServerUri = url.searchParams.get("gameServerUri")
+const contentServerUri = process.env.CONTENT_SERVER_URI || url.searchParams.get("contentServerUri")
+const assetServerUri = process.env.ASSET_SERVER_URI || url.searchParams.get("assetServerUri")
+const gameServerUri = process.env.GAME_SERVER_URI || url.searchParams.get("gameServerUri")
 const challengeNumber = url.searchParams.get("challengeNumber")
 
 ReactDOM.render(<App
