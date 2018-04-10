@@ -74,14 +74,16 @@ function renderFinalScore(props) {
 }
 
 function resolveChallengeWebAppUri(webApp, props) {
+  const { contentServerUri, assetServerUri, gameServerUri, challengeNumber } = props
+
   const protocol = document.location.protocol
   const environment = document.location.hostname.split(".").slice(1).join(".")
   const challengeUri = new URL(`${protocol}//${webApp}.${environment}`)
 
-  challengeUri.searchParams.append("contentServerUri", props.contentServerUri)
-  challengeUri.searchParams.append("assetServerUri", props.assetServerUri)
-  challengeUri.searchParams.append("gameServerUri", props.gameServerUri)
-  challengeUri.searchParams.append("challengeNumber", props.challengeNumber)
+  challengeUri.searchParams.append("contentServerUri", contentServerUri)
+  challengeUri.searchParams.append("assetServerUri", assetServerUri)
+  challengeUri.searchParams.append("gameServerUri", gameServerUri)
+  challengeUri.searchParams.append("challengeNumber", challengeNumber)
 
   return challengeUri.toString()
 }
