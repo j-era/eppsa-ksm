@@ -70,10 +70,7 @@ class gameScene extends Phaser.Scene {
 		for(var element in this.imageArray){
 			console.log(element);
 			var i = 0;
-			that.loadedImages[element].displayHeight = window.innerHeight/3;
-			if(that.loadedImages[element].displayHeight > that.picMaxHeight){
-				that.loadedImages[element].displayHeight = that.picMaxHeight;
-			}
+			that.loadedImages[element].displayHeight = that.picMaxHeight;
 			console.log(that.loadedImages[element].displayHeight)
 
 			var temp = 'row' + that.imageArray[element].depth;
@@ -124,7 +121,7 @@ class gameScene extends Phaser.Scene {
 			var PosX = 0;
 			var temp = 'row' + i;
 			for(var j = 0; j < that[temp].length; j++){
-				that[temp][j].displayWidth = window.innerWidth/that[temp].length
+				that[temp][j].displayWidth = that.picMaxWidth
 				that[temp][j].x = PosX;
 				PosX += that[temp][j].displayWidth;
 				that[temp][j].y = this.PosY;
