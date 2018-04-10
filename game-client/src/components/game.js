@@ -41,7 +41,7 @@ function renderNavigation(props) {
               showQrReader ? "hide Scanner" : "show Scanner" }
             </button>
             <button
-              className={ "startChallenge" }
+              id={ "startChallenge" }
               onClick={ onStartChallenge }>
               start Challenge
             </button>

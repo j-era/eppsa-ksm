@@ -27,14 +27,14 @@ async function ghostClient(browser, i) {
 
     await page.type("input", `BotPlayer ${i}`, { deplay: 0 })
 
-    await page.click(".startNewGame")
+    await page.click("#startNewGame")
 
     for (let j = 0; j < 11; j++) {
       console.log(`Client ${i} started Challenge ${j}`)
 
-      await page.waitFor(".startChallenge")
+      await page.waitFor("#startChallenge")
 
-      await page.click(".startChallenge")
+      await page.click("#startChallenge")
 
       const challengeFrame = page.frames()[1]
 
