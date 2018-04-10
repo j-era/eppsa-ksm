@@ -1,8 +1,8 @@
 import React from "react"
 import styled, { css, withTheme } from "styled-components"
-import Button from "./button"
-import clickEffect from "../animations/clickEffect"
-import pulse from "../animations/pulse"
+import Button from "../../lib/eppsa-ksm-shared/styled-components/components/button"
+import clickEffect from "../../lib/eppsa-ksm-shared/styled-components/animations/clickEffect"
+import pulse from "../../lib/eppsa-ksm-shared/styled-components/animations/pulse"
 
 
 const StyledButton = styled(Button)`

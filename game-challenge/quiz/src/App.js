@@ -2,23 +2,23 @@ import React from "react"
 import autoBind from "react-autobind"
 import delay from "delay"
 import styled, { ThemeProvider } from "styled-components"
-import "./App.css"
 import AnswerButton from "./components/answerButton"
 import NextButton from "./components/nextButton"
 import QuestionText from "./components/questionText"
 import QuestionTitle from "./components/questionTitle"
-import ScoreCalculation from "./score"
-import theme from "./theme"
+import ScoreCalculation from "../lib/eppsa-ksm-shared/functions/score"
+import theme from "../lib/eppsa-ksm-shared/styled-components/theme"
 
 
 const Container = styled.div `
   font-family: ${props => props.theme.font.fontFamily};
+  background-color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding-left: ${props => props.theme.layout.offsetX};
   padding-right: ${props => props.theme.layout.offsetX};
-  height: 100%;
+  height: 100vh;
 `
 
 export default class App extends React.Component {
