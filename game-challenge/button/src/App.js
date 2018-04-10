@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import './App.css';
+import React, { Component } from "react"
+import "./App.css"
 import styled from "styled-components"
 import QrReader from "react-qr-reader"
 
@@ -21,30 +21,39 @@ const ButtonDiv = styled.div `
 `
 
 class Button extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
+
+    this.contentServerUri = props.contentServerUri
+    this.assetServerUri = props.assetServerUri
+    this.gameServerUri = props.gameServerUri
+    this.challengeNumber = props.challengeNumber
+
     this.state = {
       scanned: "nothing scanned yet",
       onClick: props.onClick
     }
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <Container>
         <QrReader
           onScan={ data => this.onScan(data) }
           onError={ err => this.onError(err) }
-          style={{ width: '50%' }}
-        />
+          style={ { width: "50%" } } />
         <div>{ this.state.scanned }</div>
-        <ButtonDiv className={ "button" } onClick={ this.state.onClick }/>
+        <ButtonDiv className={ "button" } onClick={ this.state.onClick } />
+        <div>contentServerUri: { this.contentServerUri }</div>
+        <div>assetServerUri: { this.assetServerUri }</div>
+        <div>gameServerUri: { this.gameServerUri }</div>
+        <div>challengeNumber: { this.challengeNumber }</div>
       </Container>
     )
   }
 
-  onScan(data){
-    if(data){
+  onScan(data) {
+    if (data) {
       this.setState({
         scanned: data
       })
@@ -52,7 +61,7 @@ class Button extends Component {
     }
   }
 
-  onError(err){
+  onError(err) {
     console.error(err)
   }
 }
