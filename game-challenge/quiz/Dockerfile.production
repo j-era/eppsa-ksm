@@ -10,8 +10,7 @@ COPY package-lock.json /app/package-lock.json
 RUN npm install
 
 COPY src /app/src
-COPY public /app/public
-RUN npm run build
+COPY lib /app/lib
 
 # start app
-CMD ["npm", "run", "serve"]
+CMD ["npm", "start"]

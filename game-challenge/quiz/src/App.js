@@ -1,7 +1,7 @@
 import React from "react"
 import autoBind from "react-autobind"
-import delay from "delay"
 import styled, { ThemeProvider } from "styled-components"
+import delay from "./delay"
 import AnswerButton from "./components/answerButton"
 import NextButton from "./components/nextButton"
 import QuestionText from "./components/questionText"
