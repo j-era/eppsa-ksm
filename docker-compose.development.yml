@@ -97,3 +97,10 @@ services:
     volumes:
       - ./game-challenge/hidden:/app
       - /app/node_modules
+
+  game-challenge-skill:
+    build:
+      dockerfile: Dockerfile.development
+    volumes:
+      - ./game-challenge/skill:/app
+      - /app/node_modules
