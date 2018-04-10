@@ -5,7 +5,7 @@ const clientCount = Number(process.env.MAX_CLIENTS || 1)
 
 const config = {
   headless: true,
-  slowMo: 400
+  slowMo: 10
 }
 
 puppeteer.launch(config).then(browser => {
