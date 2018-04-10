@@ -15,15 +15,15 @@ class gameScene extends Phaser.Scene {
 	create() {
 
 		this.imageArray = [
-		this.puppy = {'img': 'puppy', 'tag': 'good,doggie', 'direction' : 'right', 'depth': '1'},
-		this.kitty = {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'right', 'depth': '1'},
-		this.piggy = {'img': 'piggy', 'tag': 'litty,piggy', 'direction': 'left', 'depth': '2'}
+		this.puppy = {'img': 'puppy', 'tag': 'good,doggie', 'direction' : 'Right', 'depth': '1'},
+		this.kitty = {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '1'},
+		this.piggy = {'img': 'piggy', 'tag': 'litty,piggy', 'direction': 'Left', 'depth': '2'}
 		];
 
 		this.loadedImages = {};
 
 		for (var i = 0; i < this.imageArray.length; i++){
-			var image = this.add.image(0,0, this.imageArray[i].img).setOrigin(0,0).setInteractive();
+			var image = this.add.image(0,0, this.imageArray[i].img).setOrigin(0,0).setInteractive().setName(this.imageArray[i].img);
 			this.loadedImages[this.imageArray[i].img] = image;
 		}
 
@@ -53,30 +53,36 @@ class gameScene extends Phaser.Scene {
 		this.row1 = [];
 		this.row2 = [];
 		this.row3 = [];
+		this.moveLeft = [];
+		this.moveRight = [];
 
 		this.imageArray.forEach(function(element) {
 			var i = 0;
 			that.loadedImages[element.img].displayHeight = window.innerHeight/3;
+			//that.loadedImages[element.img].height = window.innerHeight/3;
+			//that.loadedImages[element.img].setScale(1, (window.innerHeight/3/that.loadedImages[element.img].height))
 			if(that.loadedImages[element.img].displayHeight > that.picMaxHeight){
 				that.loadedImages[element.img].displayHeight = that.picMaxHeight;
+				//that.loadedImages[element.img].height = that.picMaxHeight;
 			}
 
 			var temp = 'row' + element.depth;
 			that[temp].push(that.loadedImages[element.img]);
-
-			//TODO sort pics + width
+			var dirTemp = 'move' + element.direction;
+			that[dirTemp].push(that.loadedImages[element.img]);
 
 			that.loadedImages[element.img].on('pointerup', function(pointer){
 				var found = false;
 				var temp = element.tag.split(',');
-				console.log(temp);
+				console.log('clicked: ' + temp);
 				var temp2 = that.questions[that.random].tag.split(',');
-				console.log(temp2);
+				console.log('question: ' + temp2);
 				for(var i = 0; i < temp.length; i++){
 					for(var j = 0; j < temp2.length; j++){
 						if(temp[i] == temp2[j]){
 							console.log("yes")
 							found = true;
+							changeQuestion();
 							break;
 							//TODO change question
 						}else{
@@ -88,29 +94,76 @@ class gameScene extends Phaser.Scene {
 				}
 			})
 
-		})
+		});
 
-		this.PosY = 0;
-		for(var i = 1; i < 4; i++){
-			var PosX = 0;
-			var temp = 'row' + i;
-			console.log(temp)
-			for(var j = 0; j < that[temp].length; j++){
-				that[temp][j].displayWidth = window.innerWidth/that[temp].length
-				that[temp][j].x = PosX;
-				PosX += that[temp][j].displayWidth;
-				that[temp][j].y = this.PosY;
-				console.log(that[temp][j].y)
-				var Height = that[temp][j].displayHeight;
-			}
-			this.PosY += Height;
+		this.input.on('gameobjectdown', function(pointer, gameObject){
+			console.log(gameObject);
+			/*var found = false;
+				var temp = element.tag.split(',');
+				console.log('clicked: ' + temp);
+				var temp2 = that.questions[that.random].tag.split(',');
+				console.log('question: ' + temp2);
+				for(var i = 0; i < temp.length; i++){
+					for(var j = 0; j < temp2.length; j++){
+						if(temp[i] == temp2[j]){
+							console.log("yes")
+							found = true;
+							changeQuestion();
+							break;
+							//TODO change question
+						}else{
+							console.log("No")
+							//TODO response
+						}
+
+					}
+				}*/
+		});
+
+this.PosY = 0;
+for(var i = 1; i < 4; i++){
+	var PosX = 0;
+	var temp = 'row' + i;
+	for(var j = 0; j < that[temp].length; j++){
+		//that[temp][j].width = window.innerWidth/that[temp].length
+		that[temp][j].displayWidth = window.innerWidth/that[temp].length
+		that[temp][j].x = PosX;
+		PosX += that[temp][j].displayWidth;
+		that[temp][j].y = this.PosY;
+		var Height = that[temp][j].displayHeight;
+	}
+	this.PosY += Height;
+}
+}
+
+
+/*update(){
+
+
+	for(var i = 0; i < this.moveRight.length; i++){
+		//console.log(this.moveRight[i]);
+		this.moveRight[i].x += 5;
+
+		if(this.moveRight[i].x > window.innerWidth){
+			this.moveRight[i].x = 0;
+			this.movingRight  = 0;
 		}
 	}
 
+	for(var i = 0; i < this.moveLeft.length; i++){
+		this.moveLeft[i].x -= 5;
 
-	update(){
-			//TODO movement of pics
+		if(this.moveLeft[i].x < -(window.innerWidth)){
+			this.moveLeft[i].x = window.innerWidth;
+			this.movingLeft  = 0;
 		}
+	}
+
+}*/
+
+changeQuestion(){
+	console.log("Wup");
+}
 
 		/*for(var k = 0; k < this.Depth1.length; k++){
 			this.Depth1[k].displayWidth = window.innerWidth/this.Depth1.length;
