@@ -10,6 +10,8 @@ class Win extends Phaser.Scene {
 	}
 
 	create () {
+
+		console.log("Win");
 		var x = window.innerWidth/2-(window.innerWidth/2*0.4);
 		var y = window.innerHeight/2;
 

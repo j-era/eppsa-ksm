@@ -15,15 +15,13 @@ class gameScene extends Phaser.Scene {
 	create() {
 
 		this.imageArray = {
-			"puppy" :{'img': 'puppy', 'tag': 'good,doggie', 'direction' : 'Right', 'depth': '1'},
+			"puppy" :{'img': 'puppy', 'tag': 'small,doggie', 'direction' : 'Right', 'depth': '1'},
 			"kitty" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '1'},
-			"piggy" : {'img': 'piggy', 'tag': 'litty,piggy', 'direction': 'Left', 'depth': '2'},
-			"Schwein" : {'img': 'piggy', 'tag': 'litty,piggy', 'direction': 'Left', 'depth': '2'},
+			"piggy" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
+			"Schwein" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
 			"Katze" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '3'},
-			"Hund" : {'img': 'puppy', 'tag': 'good,doggie', 'direction': 'Right', 'depth': '3'}
+			"Hund" : {'img': 'puppy', 'tag': 'small,doggie', 'direction': 'Right', 'depth': '3'}
 		};
-
-		console.log(this.imageArray);
 
 		this.loadedImages = {};
 
@@ -31,13 +29,6 @@ class gameScene extends Phaser.Scene {
 			var image = this.add.image(0,0, this.imageArray[imageKey].img).setOrigin(0,0).setInteractive().setName(imageKey);
 			this.loadedImages[imageKey] = image;
 		}
-
-		/*for (var i = 0; i < this.imageArray.length; i++){
-			console.log(i);
-			var image = this.add.image(0,0, this.imageArray[i].img).setOrigin(0,0).setInteractive();
-			this.loadedImages[this.imageArray[i].key] = image;
-		}*/
-		console.log(this.loadedImages)
 
 		this.movingRight = 0;
 		this.movingLeft = 0;
@@ -48,10 +39,12 @@ class gameScene extends Phaser.Scene {
 		this.picMaxHeight = this.picMaxWidth*0.75;
 
 		this.questions = [
-		{question: 'Wo ist das kleine Schweinchen?', tag: 'piggy,teacup,little,squeak'},
+		{question: 'Finde alle süßen Tiere!', tag: 'cute,doggie'},
 		{question: 'Wo ist das Babykätzchen?', tag: 'sad,kitty'}];
 
 		this.random = Math.floor(Math.random() * this.questions.length);
+
+		this.TempTags = this.questions[this.random].tag.split(',');
 
 		this.QuesText = this.questions[this.random].question;
 
@@ -66,53 +59,49 @@ class gameScene extends Phaser.Scene {
 		this.row3 = [];
 		this.moveLeft = [];
 		this.moveRight = [];
+		this.haveToClick = [];
 
 		for(var element in this.imageArray){
-			console.log(element);
 			var i = 0;
 			that.loadedImages[element].displayHeight = that.picMaxHeight;
-			console.log(that.loadedImages[element].displayHeight)
 
 			var temp = 'row' + that.imageArray[element].depth;
 			that[temp].push(that.loadedImages[element]);
 			var dirTemp = 'move' + that.imageArray[element].direction;
 			that[dirTemp].push(that.loadedImages[element]);	
 		}
+		this.Testfun();
 
 
 		this.input.on('gameobjectdown', function(pointer, gameObject){
-			var found = false;
-			var temp = that.imageArray[gameObject.name].tag.split(',');
-			console.log(temp);
-			var temp2 = that.questions[that.random].tag.split(',');
-			for(var i = 0; i < temp.length; i++){
-				for(var j = 0; j < temp2.length; j++){
-					if(temp[i] == temp2[j]){
-						found = true;
-						that.changeQuestion();
-						break;
-					}else{
-						that.QuesText = that.questions[that.random].question;
-						if(found == false){
-							that.ques.setText("Nope");
-							that.add.tween({
-								targets: that.ques,
-								duration: 1000,
-								alpha: {
-									getStart: () => 1,
-									getEnd: () => 0.1
-								},
-								onComplete: () => {
-									that.ques.setText(that.QuesText);
-									that.ques.alpha = 1;
-								}
-							})
-						}
 
-					}
 
+			for(var i = 0; i < that.haveToClick.length; i++){
+				if(gameObject == that.haveToClick[i]){
+					that.haveToClick.splice(i,1);
+					i=0;
+					that.tweens.add( {
+						targets: gameObject,
+						scaleX: 0.5,
+						scaleY: 0.5,
+						ease: 'Sine.easeOut',
+						duration: 500,
+						repeat: 0,
+						yoyo: true
+					})
 				}
 			}
+			if(that.haveToClick == 0){
+				that.questions.splice(that.random,1);
+				console.log(that.questions.length)
+				if(that.questions.length == 0){
+					that.scene.start('WinScene');
+				}else{
+					that.changeQuestion();
+					that.Testfun();
+				}
+			}
+
 		});
 
 
@@ -153,8 +142,23 @@ class gameScene extends Phaser.Scene {
 
 	}
 
+	Testfun() {
+		this.haveToClick = [];
+		for(var element in this.imageArray){
+			this.testTags = this.imageArray[element].tag.split(',');
+			this.questionTags = this.questions[this.random].tag.split(',');
+			for (var i = 0; i < this.testTags.length; i++) {
+				for(var j = 0; j < this.questionTags.length; j++){
+					if(this.testTags[i] == this.questionTags[j]){
+						this.haveToClick.push(this.loadedImages[element])
+					}
+				}
+			};	
+		}
+	}
+
 	changeQuestion(){
-		this.questions.splice(this.random,1);
+		//this.questions.splice(this.random,1);
 		if(this.questions.length > 0){
 			this.random = Math.floor(Math.random() * this.questions.length);
 
