@@ -8,5 +8,5 @@ export default function pulse(initialColor, blinkColor, blinking, colorType) {
     50%   { ${colorType}: ${initialColor}; }
     100% { ${colorType}: ${blinkColor}; }
   `
-  return css`animation: ${blink} ${duration}ms ease 0ms ${repeats};`
+  return css`${blink} ${duration}ms ease 0ms ${repeats}`
 }

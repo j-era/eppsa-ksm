@@ -7,14 +7,6 @@ import pulse from "../animations/pulse"
 
 const StyledButton = styled(Button)`
   border-color: ${props => selectionColor(props.selection, props.theme)};
-  ${props =>
-    selectionAnimation(
-      props.selection,
-      props.blinking,
-      props.theme.colors.areaColor,
-      "border-color",
-      props.theme
-    )};
   ${props => props.visible ? css`
       transform: scale(1, 1);
       transition:
@@ -25,7 +17,15 @@ const StyledButton = styled(Button)`
       transform: scale(0, 0);
       opacity: 0;
     `}
-  ${props => props.clicked ? css`${clickEffect()}` : ""}
+  animation: ${props =>
+    selectionAnimation(
+      props.selection,
+      props.blinking,
+      props.theme.colors.areaColor,
+      "border-color",
+      props.theme
+    )}
+  ${props => props.clicked ? css`, ${clickEffect()};` : ";"}
   ${props => props.selection === "greyed" ? css`
     opacity: 0.8;
     transition: opacity ${props.greyOutDuration}ms ease;
@@ -38,7 +38,7 @@ const Title = styled.div`
   flex-basis: 10%;
   align-self: center;
   color: ${props => selectionColor(props.selection, props.theme)};
-  ${props =>
+  animation: ${props =>
     selectionAnimation(
       props.selection,
       props.blinking,
@@ -53,7 +53,7 @@ const Answer = styled.div`
   flex-basis: 90%;
   padding-right: 10%;
   color: ${props => selectionColor(props.selection, props.theme, "text")};
-  ${props =>
+  animation: ${props =>
     selectionAnimation(
       props.selection,
       props.blinking,
