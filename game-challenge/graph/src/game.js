@@ -7,7 +7,6 @@ function receiveMessage(event)
   gameClient = { source: event.source, origin: event.origin }
 }
 
-
 let GraphGame = new Phaser.Class({
 	Extends: Phaser.Scene,
 
@@ -19,7 +18,7 @@ let GraphGame = new Phaser.Class({
 		//global attributes
 		this.gameType = "graph";
 		this.areaID = 34;
-		this.timer = 30;
+		this.timer = 330;
 		this.score = 0;
 
 		//game specific attributes
@@ -29,15 +28,16 @@ let GraphGame = new Phaser.Class({
 		this.spawnInterval = 3;				//Sets the time interval after which the next agent spawns.
 		this.maxAgents = 8;					//Defines the max. amount of agents that can be on the board. Spawn is paused while the amount of agents on the board = this value.
 
-		this.agentClasses = availableClasses;
-		this.agentSpawnRates = [];
-		this.spawnSum = 0;
+		this.agentClasses = availableClasses; //currently getting those from other js file, should come from cms
 
 		//nodeAttributes
 		this.nodeCount = 35; 		//Defines the amount nodes for the graph.
-		this.nodes = assetsNodes;
+		this.nodes = assetsNodes; 	//currently getting those from other js file, should come from cms
 	
 		//other variables needed
+		this.agentSpawnRates = [];
+		this.spawnSum = 0;
+
 		this.currentAgentsOnBoard = 0;
 		this.currentAgents = {};	
 		this.currentAgentDistribution = {};	
@@ -88,9 +88,12 @@ let GraphGame = new Phaser.Class({
 		this.setupAgentSpawnRates();
 		
 
-		this.spawnAgentTimer = this.time.addEvent({delay: this.spawnInterval * 1000, callback: this.spawnAgent, callbackScope: this, loop: true});
+		this.spawnAgentTimer = this.time.addEvent({delay: this.spawnInterval * 1000, callback: this.spawnAgent, callbackScope: this, startAt: 0, loop: true});
 
 		this.displayPointsText = this.add.text(350, 550, this.countedWinEvents * 10, {color: '#ff00ff', fontSize: '20px'});
+
+		//set bounds of camera
+		this.cameras.main.setBounds(0, 0, 600, 800);
 
 		this.input.on('gameobjectdown', function(pointer, gameObject){
 			if(gameObject.name == 'agent'){
@@ -145,38 +148,7 @@ let GraphGame = new Phaser.Class({
 			}
 		});
 	
-		//everything related to camera movement
-		//set bounds of camera
-		this.cameras.main.setBounds(0, 0, 600, 800);
-		this.scrolling = false;
-
-		this.input.on('pointerdown', function (pointer) {
-
-			//this.scrolling = true;
-
-		});
-
-
-		this.input.on('pointermove', function (pointer) {
-
-			if (this.scrolling)
-			{
-				if (this.origDragPoint) {		
-					this.cameras.main.scrollX += this.origDragPoint.x - pointer.position.x;		
-					this.cameras.main.scrollY += this.origDragPoint.y - pointer.position.y;	
-				}
-				this.origDragPoint = pointer.position.clone();
-			}
-			else {	
-				this.origDragPoint = null;
-			}
-		});
-		//endof camera movement
-
-		
-
 		this.input.on('pointerup', function(){
-			//this.scrolling = false;
 			if(this.pathSelectionActive){
 				this.pathSelectionActive = false;
 				that.spawnedNodes.forEach(function(element){
@@ -215,92 +187,135 @@ let GraphGame = new Phaser.Class({
 
 	moveAgentToNextNode(agent, node, pathID = null){
 		//console.log(agent);
+		console.log(node);
+		let nextNode = {};
+		//if agent has no path selected, move him randomly
+		if(pathID == null){
+			var nodeIndex = Math.floor(Math.random() * this.nodes[node.id].connectedTo.length);
+			//node.id = this.nodes[node.id].connectedTo[nodeIndex];
+			nextNode.id = this.nodes[node.id].connectedTo[nodeIndex];
+			nextNode.x = this.nodes[nextNode.id].xPosition;
+			nextNode.y = this.nodes[nextNode.id].yPosition;
+		}else{
+			nextNode.id = node.id
+			nextNode.x = this.nodes[node.id].xPosition;
+			nextNode.y = this.nodes[node.id].yPosition;
+		}
 
 		var currentlyMovingAgent;
-
 		for (var a in this.currentAgents){
 			if(agent == this.currentAgents[a].img){
 				currentlyMovingAgent = this.currentAgents[a];
 			}
 		}
 
-		//if agent has no path selected, move him randomly
-		if(pathID == null){
-			var nodeIndex = Math.floor(Math.random() * this.nodes[node.id].connectedTo.length);
-			node.id = this.nodes[node.id].connectedTo[nodeIndex];
-		}
+		let that = this;
 
 		agent.tween = this.tweens.add({
 			targets: agent,
-			x: this.nodes[node.id].xPosition,
-			y: this.nodes[node.id].yPosition,
+			x: nextNode.x,
+			y: nextNode.y,
 			duration: 1000,
 			ease: 'Power2',
 			yoyo: false,
-			repeat: 0
-		});
-	
+			repeat: 0,
+			onStart: function(){
+				//remove agent from node
+				that.spawnedNodes[currentlyMovingAgent.nodeID].agentOnNode = undefined;
+			},
+			onComplete: function(){
+				//set agents node to new node
+				currentlyMovingAgent.nodeID = nextNode.id;
 
-		//agent.x = this.nodes[node.id].xPosition;
-		//agent.y = this.nodes[node.id].yPosition;
-	
-		//adjust agents current nodeID
-		/* Array notation
-		this.currentAgents.forEach(function(element){
-			if(agent == element.img){
-				element.nodeID = node.id;
+				//check if there is an agent on the destination node
+				if(that.spawnedNodes[nextNode.id].agentOnNode != undefined){
+					//console.log('Trying to move onto node that already has agent ' + that.spawnedNodes[node.id].agentOnNode);
+					if(currentlyMovingAgent.isHostile){
+						console.log('destroying agent because of hostile agent');
+						that.currentAgents[that.spawnedNodes[nextNode.id].agentOnNode].img.destroy();
+					}
+					else{
+						let otherAgentID = that.spawnedNodes[nextNode.id].agentOnNode;
+						if(that.currentAgents[otherAgentID].isHostile){
+							console.log('moved onto hostile agent, was destroyed');
+							agent.destroy();
+						}
+						else{
+							//stop movement of agent that blocks node and send him directly to random neighboring node
+							console.log('otherAgent has to be moved at node ' + nextNode.id);
+							if(that.currentAgents[otherAgentID].img.timer){
+								that.currentAgents[otherAgentID].img.timer.remove(false);
+							}
+							let agentPush = that.currentAgents[otherAgentID].img;
+
+							/*let nodeIndex = Math.floor(Math.random() * that.nodes[node.id].connectedTo.length);
+							nextNode.id = that.nodes[node.id].connectedTo[nodeIndex];
+							nextNode.x = that.nodes[nextNode.id].xPosition;
+							nextNode.y = that.nodes[nextNode.id].yPosition;*/
+							//let nodePush = [];
+							//nodePush.id = that.nodes[node.id].connectedTo[nodeIndex];
+
+							//that.time.addEvent({delay: 10, callback: that.moveAgentToNextNode, args: [that.currentAgents[otherAgentID].img, node], callbackScope: that});
+							console.log(node);
+							that.moveAgentToNextNode(that.currentAgents[otherAgentID].img, nextNode);
+							//TODO maybe delete his path?
+						}
+							
+					}
+						
+				}
+				that.spawnedNodes[nextNode.id].agentOnNode = currentlyMovingAgent.id;
+
+				if(that.nodes[nextNode.id].nodeState == 'exit'){
+					//TODO check if can enter
+					console.log('agent at exit');
+					that.countedWinEvents ++;
+					that.displayPointsText.setText(that.countedWinEvents * 10);
+					that.currentAgentsOnBoard --;
+					//TODO remove from currentAgents
+					//TODO adjust distribution
+					agent.setVisible(false);
+					agent.destroy();
+					return null;
+				}
+
+				if(pathID != null){
+					that.currentPath[pathID].path.shift();
+					if(that.currentPath[pathID].path[1] != undefined){
+						node = that.currentPath[pathID].path[1];
+						agent.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[nextNode.id].nodePauseTime), callback: that.moveAgentToNextNode, args: [agent, node, pathID], callbackScope: that});
+					}else{
+						//TODO fix bug that agent at end of defined path jumps one node to far
+						var nodeIndex = Math.floor(Math.random() * that.nodes[node.id].connectedTo.length);
+						//node.id = that.nodes[node.id].connectedTo[nodeIndex];
+						nextNode.id = that.nodes[nextNode.id].connectedTo[nodeIndex];
+						nextNode.x = that.nodes[nextNode.id].xPosition;
+						nextNode.y = that.nodes[nextNode.id].yPosition;
+
+						agent.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[nextNode.id].nodePauseTime), callback: that.moveAgentToNextNode, args: [agent, node], callbackScope: that});
+					}
+				}else{
+					agent.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[nextNode.id].nodePauseTime), callback: that.moveAgentToNextNode, args: [agent, nextNode], callbackScope: that});
+				}
+				
 			}
 		});
-		*/
-		console.log(this.spawnedNodes[node.id].agentOnNode);
-		if(this.spawnedNodes[node.id].agentOnNode != undefined){
-			console.log('Trying to move onto node that already has agent ' + this.spawnedNodes[node.id].agentOnNode);
-			if(currentlyMovingAgent.isHostile){
-				console.log('destroying agent because of hostile agent');
-				this.currentAgents[this.spawnedNodes[node.id].agentOnNode].img.destroy();
-			}
-			//else 
-				//check if agent there is hostile, if yes, destroy self
-				//else
-					//stop movement of agent that blocks node and send him directly to random neighboring node
-		}
 
-
-		this.spawnedNodes[currentlyMovingAgent.nodeID].agentOnNode = undefined;
-		currentlyMovingAgent.nodeID = node.id;
-		this.spawnedNodes[node.id].agentOnNode = currentlyMovingAgent.id;
-			
-		
-		
-		if(this.nodes[node.id].nodeState == 'exit'){
-			//TODO check if can enter
-			console.log('agent at exit');
-			this.countedWinEvents ++;
-			this.displayPointsText.setText(this.countedWinEvents * 10);
-			this.currentAgentsOnBoard --;
-			//TODO remove from currentAgents
-			//TODO adjust distribution
-			agent.setVisible(false);
-			agent.destroy();
-			return null;
-		}
-	
-		if(pathID != null){
-			this.currentPath[pathID].path.shift();
-			if(this.currentPath[pathID].path[1] != undefined){
-				node = this.currentPath[pathID].path[1];
-				agent.timer = this.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + this.nodes[node.id].nodePauseTime), callback: this.moveAgentToNextNode, args: [agent, node, pathID], callbackScope: this});
+		/*if(pathID != null){
+			that.currentPath[pathID].path.shift();
+			if(that.currentPath[pathID].path[1] != undefined){
+				node = that.currentPath[pathID].path[1];
+				agent.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[node.id].nodePauseTime), callback: that.moveAgentToNextNode, args: [agent, node, pathID], callbackScope: this});
 			}else{
 				//TODO fix bug that agent at end of defined path jumps one node to far
-				var nodeIndex = Math.floor(Math.random() * this.nodes[node.id].connectedTo.length);
-				node.id = this.nodes[node.id].connectedTo[nodeIndex];
-				agent.timer = this.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + this.nodes[node.id].nodePauseTime), callback: this.moveAgentToNextNode, args: [agent, node], callbackScope: this});
+				var nodeIndex = Math.floor(Math.random() * that.nodes[node.id].connectedTo.length);
+				node.id = that.nodes[node.id].connectedTo[nodeIndex];
+				agent.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[node.id].nodePauseTime), callback: that.moveAgentToNextNode, args: [agent, node], callbackScope: this});
 			}
 		}else{
-			agent.timer = this.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + this.nodes[node.id].nodePauseTime), callback: this.moveAgentToNextNode, args: [agent, node], callbackScope: this});
-		}
+			agent.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[node.id].nodePauseTime), callback: that.moveAgentToNextNode, args: [agent, node], callbackScope: this});
+		}*/
 			
-		
 	},
 
 	drawNodes: function(){
@@ -393,7 +408,7 @@ let GraphGame = new Phaser.Class({
 
 			var nodeIndex = Math.floor(Math.random() * this.startNodes.length);
 
-			//copying values of selected startNode to now impact the startNode by later changes
+			//copying values of selected startNode to not impact the startNode by later changes
 			var startNode = {};
 			for (var prop in this.startNodes[nodeIndex]){
 				startNode[prop] = this.startNodes[nodeIndex][prop];
@@ -403,19 +418,18 @@ let GraphGame = new Phaser.Class({
 			var newAgent = {};
 			newAgent.img = this.add.image(startNode.x, startNode.y, agentType.name).setInteractive().setName('agent').setDepth(1).setScale(0.1,0.1);
 			newAgent.type = agentType.name;
+			newAgent.id = this.currentAgentID;
 			newAgent.isHostile = agentType.isHostile;
 			newAgent.pauseTime = agentType.pauseTime;
 			newAgent.nodeID = startNode.id;
 
-
-			//this.currentAgents.push(newAgent);
 			this.currentAgents[this.currentAgentID] = newAgent;
 			this.spawnedNodes[startNode.id].agentOnNode = this.currentAgentID;
 			this.currentAgentID ++;
 			this.currentAgentsOnBoard ++;
 		
 			//if agent was spawned, start his movement
-			this.time.addEvent({delay: 1000, callback: this.moveAgentToNextNode, args: [newAgent.img, startNode], callbackScope: this});
+			newAgent.img.timer = this.time.addEvent({delay: 1000, callback: this.moveAgentToNextNode, args: [newAgent.img, startNode], callbackScope: this});
 		}
 	},
 
