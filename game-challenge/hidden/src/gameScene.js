@@ -44,8 +44,8 @@ class gameScene extends Phaser.Scene {
 
 		this.pos = 50;
 
-		this.picMaxHeight = 300;
-		this.picMaxWidth = 300;
+		this.picMaxWidth = window.innerWidth/3;
+		this.picMaxHeight = this.picMaxWidth*0.75;
 
 		this.questions = [
 		{question: 'Wo ist das kleine Schweinchen?', tag: 'piggy,teacup,little,squeak'},
