@@ -12,6 +12,7 @@ COPY conf.d /etc/nginx/conf.d
 COPY sites-available/default.conf /etc/nginx/sites-available/default.conf
 COPY sites-available/${environment}/* /etc/nginx/sites-available/
 COPY config /etc/nginx/config
+COPY .htpasswd /etc/nginx/.htpasswd
 
 RUN mkdir /etc/nginx/sites-enabled
 RUN ln -s /etc/nginx/sites-available/* /etc/nginx/sites-enabled/
