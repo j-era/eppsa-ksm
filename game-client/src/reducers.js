@@ -1,10 +1,10 @@
 import * as gameStates from "./gameStates"
 import * as types from "./actionTypes"
 
-export function gameState(state = gameStates.WELCOME, action) {
+export function gameState(state = gameStates.NEW_GAME_AVATAR_SELECTION, action) {
   switch (action.type) {
-    case types.UPDATE_GAME:
-      return action.game.finished ? gameStates.FINISHED : gameStates.RUNNING
+    case types.UPDATE_GAME_STATE:
+      return action.state
     default:
       return state
   }
@@ -41,30 +41,10 @@ export function challengeNumber(state = 1, action) {
   }
 }
 
-export function challengeStarted(state = false, action) {
-  switch (action.type) {
-    case types.START_CHALLENGE:
-      return true
-    case types.FINISH_CHALLENGE:
-      return false
-    default:
-      return state
-  }
-}
-
 export function score(state = 0, action) {
   switch (action.type) {
     case types.UPDATE_GAME:
       return action.game.score
-    default:
-      return state
-  }
-}
-
-export function connectedGames(state = [], action) {
-  switch (action.type) {
-    case types.UPDATE_CONNECTED_GAMES:
-      return action.games
     default:
       return state
   }
@@ -79,10 +59,30 @@ export function connected(state = false, action) {
   }
 }
 
-export function showQrReader(state = false, action) {
+export function connectedGames(state = [], action) {
   switch (action.type) {
-    case types.TOGGLE_QR_READER:
-      return !state
+    case types.UPDATE_CONNECTED_GAMES:
+      return action.games
+    default:
+      return state
+  }
+}
+
+export function showGameManual(state = false, action) {
+  switch (action.type) {
+    case types.SHOW_GAME_MANUAL:
+      return action.show
+    default:
+      return state
+  }
+}
+
+export function wrongQrCodeScanned(state = false, action) {
+  switch (action.type) {
+    case types.WRONG_QR_CODE_SCANNED:
+      return true
+    case types.UPDATE_GAME_STATE:
+      return false
     default:
       return state
   }
