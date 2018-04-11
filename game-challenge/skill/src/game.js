@@ -86,6 +86,11 @@ let SkillGameAirship = new Phaser.Class({
 	
 		this.destabiliser = 0.03;	//0.0x Factor that is multiplied with the time spent within win-state. The closer the product reaches 1, the more Sensitivity will increase, possibly throwing them out of win-state.
 	
+		this.NPCHorizontalStay = 0.7;	//Sets the probability with which the NPC stays in its horizontal state.
+		this.NPCHorizontalExit = 0.3;	//Sets the probability with which the NPC goes from horizontal state to tilt state.
+		this.NPCTiltStay = 0.3;			//Sets the probability with which the NPC stays in its tilt state.
+		this.NPCTiltExit = 0.7;			//Sets the probability with which the NPC goes form tilt state to horizontal state.
+		
 		//other variables needed
 		this.vehiclearrow;
 		this.streamArrow;
@@ -107,6 +112,10 @@ let SkillGameAirship = new Phaser.Class({
 		this.width = window.innerWidth ;
 		this.height = window.innerHeight ;
 	
+		this.NPCState = 'horizontal';
+		this.npcStates = ['horizontal', 'tilt']; 
+		this.npcHorizontalWeight = [this.NPCHorizontalStay, this.NPCHorizontalExit];
+		this.npcTiltWeight = [this.NPCTiltExit, this.NPCTiltStay];
 		
 	},
 
@@ -119,15 +128,48 @@ let SkillGameAirship = new Phaser.Class({
 		this.load.image('wind', 'assets/EPPSA_Airship_Wind.png');
 		this.load.image('windDirection', 'assets/EPPSA_Airship_WindDirection.png');
 
-
 		this.load.image('vehicle', 'assets/EPPSA_Airship_Vehicle.png');
 
 		this.load.image('pointHUD', 'assets/EPPSA_Airship_PointCountHUD.png');
+
+		this.load.image('cloud1', 'assets/EPPSA_Airship_Cloud1.png');
+		this.load.image('cloud2', 'assets/EPPSA_Airship_Cloud2.png');
+		this.load.image('cloud3', 'assets/EPPSA_Airship_Cloud3.png');
 	}, 
 
 	create: function(data){
 		//setup gameboard
 		//this.timeLeft = this.add.graphics();
+		this.cloud1 = this.add.image(this.width/3, -200, 'cloud1').setScale(0.2);
+		this.cloud2 = this.add.image(2 * this.width/3, -100, 'cloud2').setScale(0.2);
+		this.cloud3 = this.add.image(3 * this.width/4, -500, 'cloud3').setScale(0.2);
+
+		this.tweens.add({
+			targets: this.cloud1,
+			y: this.height + 200,
+			duration: 10 * this.height,
+			ease: 'Sine.easeInOut',
+			loop: true,
+			loopDelay: 400
+		});
+
+		this.tweens.add({
+			targets: this.cloud2,
+			y: this.height + 300,
+			duration: 15 * this.height,
+			ease: 'Sine.easeInOut',
+			loop: true,
+			loopDelay: 900
+		});
+
+		this.tweens.add({
+			targets: this.cloud3,
+			y: this.height + 200,
+			duration: 20 * this.height,
+			ease: 'Sine.easeInOut',
+			loop: true,
+			loopDelay: 100
+		});
 
 		//text for debugging
 		this.rotationText = this.add.text(10, 10, 'phaser', {fill: '#000000'});
@@ -144,7 +186,8 @@ let SkillGameAirship = new Phaser.Class({
 			this.streamArrow = this.add.image(this.width/2,this.height/2 - this.height/8, 'windArrowSmall').setOrigin(0.5,1).setScale(0.2);
 			this.vehicleArrow = this.add.image(this.width/2, this.height/2 + 10, 'vehicleArrowLarge').setOrigin(0.5,0).setScale(0.2);
 
-			
+			this.windDirectionLeft = this.add.image(this.width/4, this.height/6, 'windDirection').setScale(0.2);
+			this.windDirectionRight = this.add.image(3 * this.width/4, this.height/3, 'windDirection').setScale(0.2);
 
 			this.countdownText = this.add.text(this.width/2, this.height/2, this.countdown, {font: '60px Arial', fill: '#000000'});
 			this.countdownTimer = this.time.addEvent({delay: 1000, callback: this.countdownFunc, callbackScope: this, repeat: this.countdown});
@@ -187,6 +230,8 @@ let SkillGameAirship = new Phaser.Class({
 			Client.readyToPlay({'own' : this.ownID, 'other': this.opponentID});
 		}
 
+		
+
 		this.pointHUD = this.add.image(this.width/2, this.height, 'pointHUD').setOrigin(0.5, 1).setScale(0.2);
 		
 	},
@@ -201,7 +246,7 @@ let SkillGameAirship = new Phaser.Class({
 			this.lastTimeInWinState = this.currentlyInWinState;
 			this.currentlyInWinState = this.checkIfWinState();
 
-			this.vehicle.angle = this.vehicleArrow.angle;
+			this.vehicleImage.angle = this.vehicleArrow.angle;
 			this.windDirectionLeft.angle = this.streamArrow.angle;
 			this.windDirectionRight.angle = this.streamArrow.angle;
 
@@ -246,7 +291,7 @@ let SkillGameAirship = new Phaser.Class({
 			window.addEventListener("deviceorientation", this.listenerFunc, true);
 
 			if(this.singleplayer){
-				this.timedEvent = this.time.addEvent({ delay: 1500, callback: this.onEventRotateSingleplayer, callbackScope: this, loop: true });
+				this.timedEvent = this.time.addEvent({ delay: 300, callback: this.onEventRotateSingleplayer, callbackScope: this, loop: true });
 			}
 		}
 
@@ -268,8 +313,44 @@ let SkillGameAirship = new Phaser.Class({
 
 	},
 
+	rand: function(min, max){
+		return Math.random() * (max - min) + min;
+	},
+
+	getRandomItem: function(list, weight){
+		var total_weight = weight.reduce(function (prev, cur, i, arr) {
+			return prev + cur;
+		});
+		 
+		var random_num = this.rand(0, total_weight);
+		var weight_sum = 0;
+		//console.log(random_num)
+		 
+		for (var i = 0; i < list.length; i++) {
+			weight_sum += weight[i];
+			weight_sum = +weight_sum.toFixed(2);
+			 
+			if (random_num <= weight_sum) {
+				return list[i];
+			}
+		}
+	},
+
 	onEventRotateSingleplayer: function(){
-		this.streamArrow.angle = Math.random() * (15 - (-14)) + (-15);
+		let mewState;
+		if(this.NPCState == 'horizontal'){
+			newState = this.getRandomItem(this.npcStates, this.npcHorizontalWeight);
+		}else{
+			newState = this.getRandomItem(this.npcStates, this.npcTiltWeight);
+		}
+		console.log('newState ', newState);
+		if(newState == 'horizontal'){
+			this.streamArrow.angle = 0;
+		}else{
+			this.streamArrow.angle = this.rand(-this.streamRange, this.streamRange);
+		}
+
+		//this.streamArrow.angle = Math.random() * (15 - (-14)) + (-15);
 	},
 
 	moveOpponentArrow: function(data){
