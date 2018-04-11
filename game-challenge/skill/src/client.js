@@ -17,6 +17,10 @@ Client.ArrowChange = function(data){
     Client.socket.emit('arrowchange', data);
 }
 
+Client.FinalScore = function(data){
+    Client.socket.emit('finalscore', data);
+}
+
 Client.socket.on('newplayer',function(data){
     console.log('newplayer client ', data);
     game.scene.scenes[0].addNewPlayer(data.id,data.x,data.y);
@@ -46,6 +50,10 @@ Client.socket.on('startgame', function(){
 
 Client.socket.on('arrowchange', function(data){
     game.scene.scenes[1].moveOpponentArrow(data);
+})
+
+Client.socket.on('score', function(data){
+    game.scene.scenes[1].sendScore(data);
 })
 
 Client.socket.on('remove', function(id){

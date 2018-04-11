@@ -64,6 +64,30 @@ io.on('connection',function(socket){
             });
         });
 
+        socket.on('finalscore', function(data){
+            console.log('receiving score', data);
+            socket.player.score = data.score;
+
+            Object.keys(io.sockets.connected).forEach(function(socketID){
+                if(io.sockets.connected[socketID].player != null){
+                    console.log('players found');
+                    if(io.sockets.connected[socketID].player.id == data.other && io.sockets.connected[socketID].player.score != undefined){
+                        console.log('partner found');
+                        if(io.sockets.connected[socketID].player.score == socket.player.score){
+                            io.sockets.connected[socketID].emit('score', socket.player.score);
+                            socket.emit('score', socket.player.score);
+                        }else{
+                            let finalScore = io.sockets.connected[socketID].player.score > socket.player.score ? io.sockets.connected[socketID].player.score : socket.player.score;
+                            io.sockets.connected[socketID].emit('score', finalScore);
+                            socket.emit('score', finalScore);
+                            
+                        }
+                    }
+                }
+                
+            });
+        })
+
     });
 
     

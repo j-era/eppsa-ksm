@@ -94,7 +94,7 @@ let SkillGameAirship = new Phaser.Class({
 		//other variables needed
 		this.vehiclearrow;
 		this.streamArrow;
-		this.rotationText;
+		//this.rotationText;
 
 		this.countdownTimer;
 		this.countdownText;
@@ -172,7 +172,8 @@ let SkillGameAirship = new Phaser.Class({
 		});
 
 		//text for debugging
-		this.rotationText = this.add.text(10, 10, 'phaser', {fill: '#000000'});
+		//this.rotationText = this.add.text(10, 10, 'phaser', {fill: '#000000'});
+		
 
 		if(data.type == 'singleplayer'){
 			this.singleplayer = true;
@@ -230,9 +231,8 @@ let SkillGameAirship = new Phaser.Class({
 			Client.readyToPlay({'own' : this.ownID, 'other': this.opponentID});
 		}
 
-		
-
 		this.pointHUD = this.add.image(this.width/2, this.height, 'pointHUD').setOrigin(0.5, 1).setScale(0.2);
+		this.scoreText = this.add.text(this.width/2, this.height, "0 Punkte", {font: '16px Cabin', fill: '#ffffff'}).setOrigin(0.5, 1);
 		
 	},
 
@@ -252,13 +252,13 @@ let SkillGameAirship = new Phaser.Class({
 
 			if(!this.lastTimeInWinState && this.currentlyInWinState ){
 				console.log("starting Winning counter");
-				this.rotationText.setStyle({color: '#ff00ff', fontSize: '50px'});
+				//this.rotationText.setStyle({color: '#ff00ff', fontSize: '50px'});
 				this.winStateCounter = this.time.addEvent({delay: 1000, callback: this.increaseWinStateTime, callbackScope: this, loop: true});
 			}
 
 			if(this.lastTimeInWinState && !this.currentlyInWinState){
 				console.log("stopping Winning counter");
-				this.rotationText.setStyle({color: '#ff0000', fontSize: '20px'});
+				//this.rotationText.setStyle({color: '#ff0000', fontSize: '20px'});
 				this.winStateCounter.remove(false);
 				this.currentTimeInWinState = 0;
 			}		
@@ -267,6 +267,7 @@ let SkillGameAirship = new Phaser.Class({
 
 	increaseWinStateTime: function(){
 		console.log('increasing win state time');
+		this.scoreText.setText(this.timeInWinState * 100 + " Punkte");
 		this.timeInWinState ++;
 		this.currentTimeInWinState ++;
 		this.sensitivity += 1 - this.destabiliser * this.currentTimeInWinState
@@ -302,15 +303,21 @@ let SkillGameAirship = new Phaser.Class({
 		this.winStateCounter.remove(false);
 		this.gameStarted = false;
 
-		this.rotationText.setText("Game Ended, \n time in winning State " + this.timeInWinState);
+		//this.rotationText.setText("Game Ended, \n time in winning State " + this.timeInWinState);
 		let score = this.timeInWinState * 100;
 
+		Client.FinalScore({'own' : this.ownID, 'other': this.opponentID, 'score': score});
+
+		
+
+	},
+
+	sendScore: function(score){
 		gameClient.source.postMessage(
 			{
 			  source: "challenge",
 			  score
 			}, gameClient.origin)
-
 	},
 
 	rand: function(min, max){
@@ -363,7 +370,7 @@ let SkillGameAirship = new Phaser.Class({
 
 	handleOrientation: function(e){
 		let that = this;
-		this.rotationText.setText("Rotated by " + event.gamma);
+		//this.rotationText.setText("Rotated by " + event.gamma);
 
 		let orientationGamma = event.gamma;
 	
@@ -408,6 +415,20 @@ let SkillGameAirship = new Phaser.Class({
 });
 
  
+var wfconfig = {
+ 
+    active: function() { 
+        console.log("font loaded");
+        init();
+    },
+ 
+    google: {
+        families: ['Cabin', 'Sniglet']
+    }
+ 
+};
+ 
+WebFont.load(wfconfig);
 
 // our game's configuration
 let config = {
@@ -420,7 +441,11 @@ let config = {
 	scene: [ MatchmakingLobby, SkillGameAirship ] // our newly created scene
   };
 
-  console.log(window.devicePixelRatio);
-   
-  // create the game, and pass it the configuration
-  let game = new Phaser.Game(config);
+console.log(window.devicePixelRatio);
+let game;  
+
+  let init = function(){
+	// create the game, and pass it the configuration
+	game = new Phaser.Game(config);
+  }
+  
