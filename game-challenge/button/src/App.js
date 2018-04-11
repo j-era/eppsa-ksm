@@ -36,23 +36,26 @@ class Button extends Component {
   }
 
   render() {
-    const orientation = this.props.orientation !== undefined
-    ? this.props.orientation
-    : { x: "undefined", y: "undefined"}
     return (
       <Container>
-        <QrReader
-          onScan={ data => this.onScan(data) }
-          onError={ err => this.onError(err) }
-          style={ { width: "50%" } } />
         <div>{ this.state.scanned }</div>
         <ButtonDiv className={ "button" } onClick={ this.state.onClick } />
         <div>contentServerUri: { this.contentServerUri }</div>
         <div>assetServerUri: { this.assetServerUri }</div>
         <div>gameServerUri: { this.gameServerUri }</div>
         <div>challengeNumber: { this.challengeNumber }</div>
-        <div>x: { Math.round(orientation.x) }, y: { Math.round(orientation.y) }</div>
+        { this.props.orientation && this.renderOrientationValues() }
       </Container>
+    )
+  }
+
+  renderOrientationValues() {
+    return (
+      <div>
+        <div>alpha: { this.props.orientation.alpha }</div>
+        <div>beta: { this.props.orientation.beta }</div>
+        <div>gamma: { this.props.orientation.gamma }</div>
+      </div>
     )
   }
 
