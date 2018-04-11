@@ -38,6 +38,10 @@ class Button extends Component {
   render() {
     return (
       <Container>
+        <QrReader
+          onScan={ data => this.onScan(data) }
+          onError={ err => this.onError(err) }
+          style={ { width: "50%" } } />
         <div>{ this.state.scanned }</div>
         <ButtonDiv className={ "button" } onClick={ this.state.onClick } />
         <div>contentServerUri: { this.contentServerUri }</div>
