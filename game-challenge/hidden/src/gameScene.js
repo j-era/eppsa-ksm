@@ -68,6 +68,8 @@ class gameScene extends Phaser.Scene {
 
 		var that = this;
 
+		this.lastDepth = 4;
+
 		this.row1 = [];
 		this.row2 = [];
 		this.row3 = [];
@@ -93,7 +95,8 @@ class gameScene extends Phaser.Scene {
 			for(var i = 0; i < this.questionTags.length; i++){
 				for(var j = 0; j < this.testTags.length; j++){
 					if(this.questionTags[i] == this.testTags[j]){
-						this.correct += 1
+						that.correct += 1
+						console.log(that.correct)
 						gameObject.input.enabled = false;
 						that.tweens.add( {
 							targets: gameObject,
@@ -131,17 +134,12 @@ class gameScene extends Phaser.Scene {
 		}
 
 		var timedEvent = this.time.addEvent({
-			delay: 600000,
+			delay: 60000,
 			callback: this.gameWin,
 			callbackScope: this
 		});
 
-		var SpawnTimer = this.time.addEvent( {
-			delay: 3000,
-			callback:this.spawn,
-			callbackScope: this,
-			loop: true
-		})
+
 		this.spawn();
 
 	}
@@ -150,19 +148,34 @@ class gameScene extends Phaser.Scene {
 	}
 
 	spawn() {
+		//console.log("Hey")
 		var element = Math.floor(Math.random() * this.wait.length)
 		if(this.wait.length > 0){
-			var dirTemp = 'move' + this.imageArray[this.wait[0]].direction;
-			this[dirTemp].push(this.loadedImages[this.wait[0]]);	
-			this.wait.splice(0,1);
+			//console.log("current Depth ", this.imageArray[this.wait[element]].depth);
+			//console.log("last Depth ", this.lastDepth);
+			if(this.imageArray[this.wait[element]].depth == this.lastDepth){
+				//this.lastDepth = this.imageArray[this.wait[element]].depth;
+				//console.log(this.lastDepth)
+				this.spawn();
+				return false;
+				console.log("break")
+			}
+			console.log(this.imageArray[this.wait[element]].depth + " is a new one compared to " + this.lastDepth);
+			this.lastDepth = this.imageArray[this.wait[element]].depth;
+			var dirTemp = 'move' + this.imageArray[this.wait[element]].direction;
+			this[dirTemp].push(this.loadedImages[this.wait[element]]);	
+			this.wait.splice(element,1);
 		}
+		var SpawnTimer = this.time.addEvent( {
+			delay: Math.random() * (5000 - 1000) + 1000,
+			callback:this.spawn,
+			callbackScope: this
+		})
 	}
 
 	update(){
-
 		for(var i = 0; i < this.moveRight.length; i++){
 			this.moveRight[i].x += 5;
-			//this.moveRight[i].x += this.imageArray[this.wait[0]].depth;
 			if(this.moveRight[i].x > window.innerWidth){
 				this.moveRight[i].x = 0 - this.moveRight[i].displayWidth;
 				this.wait.push(this.moveRight[i].name);
