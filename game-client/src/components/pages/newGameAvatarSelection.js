@@ -1,5 +1,5 @@
 import React from "react"
 
-export default function NewGameAvatarSelection(props) {
+export default function NewGameAvatarSelection() {
   return <div>NewGameAvatarSelection</div>
 }
