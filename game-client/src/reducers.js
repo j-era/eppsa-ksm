@@ -10,7 +10,7 @@ export function gameState(state = gameStates.WELCOME, action) {
   }
 }
 
-export function name(state = "Bob", action) {
+export function name(state = "", action) {
   switch (action.type) {
     case types.UPDATE_GAME:
       return action.game.name

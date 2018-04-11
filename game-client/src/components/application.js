@@ -47,7 +47,7 @@ function renderGame(props) {
   const challengeTypes = props.content.challenges[props.challengeNumber].challengeTypes
   const challengeType = Object.keys(omit(challengeTypes, "template"))[0]
   const challenge = { challenge: challengeTypes[challengeType], shared: props.content.shared }
-  const challengeUri = resolveChallengeWebAppUri(challengeType)
+  const challengeUri = resolveChallengeWebAppUri(challengeType, props)
 
   return <Game
     connectedGames={ props.connectedGames }
@@ -73,10 +73,19 @@ function renderFinalScore(props) {
     text={ props.content.finalScoreText } />
 }
 
-function resolveChallengeWebAppUri(webApp) {
+function resolveChallengeWebAppUri(webApp, props) {
+  const { contentServerUri, assetServerUri, gameServerUri, challengeNumber } = props
+
   const protocol = document.location.protocol
   const environment = document.location.hostname.split(".").slice(1).join(".")
-  return `${protocol}//${webApp}.${environment}`
+  const challengeUri = new URL(`${protocol}//${webApp}.${environment}`)
+
+  challengeUri.searchParams.append("contentServerUri", contentServerUri)
+  challengeUri.searchParams.append("assetServerUri", assetServerUri)
+  challengeUri.searchParams.append("gameServerUri", gameServerUri)
+  challengeUri.searchParams.append("challengeNumber", challengeNumber)
+
+  return challengeUri.toString()
 }
 
 export default connect(

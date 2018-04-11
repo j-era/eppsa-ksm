@@ -26,7 +26,11 @@ export default class WelcomeDialog extends React.Component {
       <div>
         <img src={ `${assetServerUri}/${avatars[avatar].icon.src}` } />
         <input type="text" value={ name } onChange={ event => onUpdateName(event.target.value) } />
-        <button onClick={ () => onStartNewGame(name, avatar) }>Start</button>
+        <button
+          id={ "startNewGame" }
+          onClick={ () => onStartNewGame(name, avatar) }>
+          Start
+        </button>
       </div>
     )
   }
@@ -40,7 +44,7 @@ export default class WelcomeDialog extends React.Component {
         <button onClick={ () => onResumeGame() }>Resume</button>
         {
           !this.state.urlHasToken &&
-          <button onClick={
+          <button id={ "startNewGame" } onClick={
             () => this.setState({ startNewGame: true }) }>
           Start New Game
           </button> }
