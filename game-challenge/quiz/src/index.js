@@ -1,22 +1,68 @@
 import React from "react"
 import ReactDOM from "react-dom"
+
 import { injectGlobalStyle } from "../lib/eppsa-ksm-shared/styled-components/globalStyle"
+import ContentServer from "../lib/eppsa-ksm-shared/api/contentServer"
+import { transform } from "../lib/eppsa-ksm-shared/api/helpers"
+
 import App from "./App"
 import selectContent from "./selectContent"
 
 
-const FONT_URI = process.env.FONT_URI
+const contentServerUrl = process.env.CONTENT_SERVER_URI
+const assetServerUrl = process.env.ASSET_SERVER_URI
+const staticServerUrl = process.env.STATIC_SERVER_URI
 
-injectGlobalStyle(FONT_URI)
+let gameClient
 
-window.addEventListener("message", receiveMessage, false)
+const completeChallenge = (score) => {
+  gameClient.source.postMessage(
+    {
+      source: "challenge",
+      score
+    }, gameClient.origin)
+}
 
 function receiveMessage(event) {
   console.log(event)
-  const content = selectContent(event.data)
+
+  const data = event.data
+  if (data.type !== "challengeData") {
+    return
+  }
+
+  gameClient = { source: event.source, origin: event.origin }
+
+  render(data.data, completeChallenge)
+}
+
+try {
+  console.assert(window.parent.origin)
+
+  // We are in the same window
+  if (!contentServerUrl || !assetServerUrl || !staticServerUrl) {
+    console.log(
+      `Missing config parameter: ${contentServerUrl}, ${assetServerUrl}, ${staticServerUrl}`
+    )
+  } else {
+    const contentServer = new ContentServer(contentServerUrl)
+    contentServer.getData()
+      .then((data) => {
+        render(selectContent(transform(data), 1))
+      })
+  }
+} catch (e) {
+  // We are in an iframe
+  window.addEventListener("message", receiveMessage, false)
+}
+
+function render(data) {
+  injectGlobalStyle(staticServerUrl)
+
+  const score = data.challenge["score-calculation"].reward
+
   ReactDOM.render(
-    <App content={ content } areaColor="#92cad6" completeChallenge={ score =>
-      event.source.postMessage({ source: "challenge", score }, event.origin) } />,
+    <App content={ data } completeChallenge={ () => completeChallenge(score) } />,
     document.getElementById("root")
   )
 }

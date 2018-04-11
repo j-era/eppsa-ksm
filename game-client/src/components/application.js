@@ -46,14 +46,19 @@ function renderWelcomeDialog(props) {
 function renderGame(props) {
   const challengeTypes = props.content.challenges[props.challengeNumber].challengeTypes
   const challengeType = Object.keys(omit(challengeTypes, "template"))[0]
-  const challenge = { challenge: challengeTypes[challengeType], shared: props.content.shared }
-  const challengeUri = resolveChallengeWebAppUri(challengeType, props)
+  const challengeData = {
+    color: props.content.challenges[props.challengeNumber].color,
+    challenge: challengeTypes[challengeType],
+    shared: props.content.shared,
+    staticServerUri: props.staticServerUri
+  }
+  const challengeUri = resolveChallengeWebAppUri(challengeType)
 
   return <Game
     connectedGames={ props.connectedGames }
     challengeNumber={ props.challengeNumber }
     challengeUri={ challengeUri }
-    challenge={ challenge }
+    challengeData={ challengeData }
     score={ props.score }
     maxChallenges={ props.maxChallenges }
     connected={ props.connected }
@@ -73,17 +78,10 @@ function renderFinalScore(props) {
     text={ props.content.finalScoreText } />
 }
 
-function resolveChallengeWebAppUri(webApp, props) {
-  const { contentServerUri, assetServerUri, gameServerUri, challengeNumber } = props
-
+function resolveChallengeWebAppUri(webApp) {
   const protocol = document.location.protocol
   const environment = document.location.hostname.split(".").slice(1).join(".")
   const challengeUri = new URL(`${protocol}//${webApp}.${environment}`)
-
-  challengeUri.searchParams.append("contentServerUri", contentServerUri)
-  challengeUri.searchParams.append("assetServerUri", assetServerUri)
-  challengeUri.searchParams.append("gameServerUri", gameServerUri)
-  challengeUri.searchParams.append("challengeNumber", challengeNumber)
 
   return challengeUri.toString()
 }

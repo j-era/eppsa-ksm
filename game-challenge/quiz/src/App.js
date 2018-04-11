@@ -45,7 +45,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { question } = this.props.content
+    const { question } = this.props.content.challenge
     theme.colors.areaColor = this.props.areaColor
     return (
       <ThemeProvider theme={ theme }>
@@ -72,7 +72,7 @@ export default class App extends React.Component {
   }
 
   renderAnswers() {
-    const answers = [1, 2, 3, 4].map(i => this.props.content[`answer${i}`])
+    const answers = [1, 2, 3, 4].map(i => this.props.content.challenge[`answer${i}`])
     const titles = ["A", "B", "C", "D"]
 
     return answers.map((answer, i) =>
@@ -113,7 +113,9 @@ export default class App extends React.Component {
   }
 
   confirm(answerIndex) {
-    const { correctAnswer, scoreCalculation, shared } = this.props.content
+    const { correctAnswer, scoreCalculation } = this.props.content.challenge
+    const { shared } = this.props.content
+
     this.timeToAnswer = (new Date() - this.startTime) / 1000
     if (answerIndex === correctAnswer) {
       const scoreCalc = new ScoreCalculation(

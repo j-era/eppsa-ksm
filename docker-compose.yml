@@ -67,9 +67,10 @@ services:
     build:
       context: ./game-client
     environment:
-      CONTENT_SERVER_URI: https://content-server.${HOST}
       ASSET_SERVER_URI: https://asset-server.${HOST}
+      CONTENT_SERVER_URI: https://content-server.${HOST}
       GAME_SERVER_URI: https://game-server.${HOST}
+      STATIC_SERVER_URI: https://static.${HOST}
       PORT: 443
     depends_on:
       - content-server
@@ -118,7 +119,10 @@ services:
       context: ./game-challenge/quiz
     environment:
       PORT: 80
-      FONT_URI: https://static.${HOST}/fonts
+      ASSET_SERVER_URI: https://asset-server.${HOST}
+      CONTENT_SERVER_URI: https://content-server.${HOST}
+      GAME_SERVER_URI: https://game-server.${HOST}
+      STATIC_SERVER_URI: https://static.${HOST}
 
   game-challenge-boat:
     build:

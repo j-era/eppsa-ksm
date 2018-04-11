@@ -48,12 +48,11 @@ function renderNavigation(props) {
           </div> :
           "not connected"
       }
-
     </div>
   )
 }
 
-function renderChallenge({ challenge, challengeUri, onChallengeReady }) {
+function renderChallenge({ challengeData, challengeUri, onChallengeReady }) {
   return (
     <iframe
       allow="camera"
@@ -62,7 +61,7 @@ function renderChallenge({ challenge, challengeUri, onChallengeReady }) {
         if (iframe) {
           // eslint-disable-next-line no-param-reassign
           iframe.onload = () =>
-            onChallengeReady(iframe.contentWindow, challenge, challengeUri)
+            onChallengeReady(iframe.contentWindow, challengeData, challengeUri)
         }
       } } />
   )
