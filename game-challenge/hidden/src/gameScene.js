@@ -59,17 +59,16 @@ class gameScene extends Phaser.Scene {
 		this.row3 = [];
 		this.moveLeft = [];
 		this.moveRight = [];
+		this.wait = [];
 		this.correct = 0;
 		for(var element in this.imageArray){
 			var i = 0;
 			that.loadedImages[element].displayHeight = that.picMaxHeight * (that.imageArray[element].depth/2);
-			console.log(that.picMaxHeight + 1)
 			var temp = 'row' + that.imageArray[element].depth;
 			that[temp].push(that.loadedImages[element]);
-			var dirTemp = 'move' + that.imageArray[element].direction;
-			that[dirTemp].push(that.loadedImages[element]);	
+			this.wait.push(element)
+			
 		}
-		//this.checkTags();
 
 
 		this.input.on('gameobjectdown', function(pointer, gameObject){
@@ -92,7 +91,6 @@ class gameScene extends Phaser.Scene {
 						})
 					}
 
-
 				}
 			}
 
@@ -112,15 +110,43 @@ class gameScene extends Phaser.Scene {
 			}
 			this.PosY += Height * 0.75;
 		}
+
+		var timedEvent = this.time.addEvent({
+			delay: 20000,
+			callback: this.gameWin,
+			callbackScope: this
+		});
+
+		var SpawnTimer = this.time.addEvent( {
+			delay: 5000,
+			callback:this.spawn,
+			callbackScope: this,
+			loop: true
+		})
+		this.spawn();
+
+	}
+	gameWin() {
+		this.scene.start('WinScene', { t: this.correct})
 	}
 
+	spawn() {
+		console.log(this.wait)
+		var element = Math.floor(Math.random() * this.wait.length)
+		console.log(element)
+		console.log(this.imageArray[this.wait[element]])
+		var dirTemp = 'move' + this.imageArray[this.wait[element]].direction;
+		this[dirTemp].push(this.loadedImages[this.wait[element]]);	
+	}
 
 	update(){
 
 		for(var i = 0; i < this.moveRight.length; i++){
 			this.moveRight[i].x += 5;
 			if(this.moveRight[i].x > window.innerWidth){
-				this.moveRight[i].x = 0;
+				this.moveRight[i].x = 0 - this.moveRight[i].displayWidth;
+				this.moveRight.splice(i,1);
+
 				this.movingRight  = 0;
 			}
 		}
@@ -129,6 +155,7 @@ class gameScene extends Phaser.Scene {
 			this.moveLeft[i].x -= 5;
 			if(this.moveLeft[i].x < (0 - this.moveLeft[i].displayWidth)){
 				this.moveLeft[i].x = window.innerWidth;
+				this.moveLeft.splice(i,1)
 				this.movingLeft  = 0;
 			}
 		}
