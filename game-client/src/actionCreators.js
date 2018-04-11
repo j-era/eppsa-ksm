@@ -1,5 +1,3 @@
-import omit from "lodash.omit"
-
 import { setCookie } from "./cookie"
 import * as gameStates from "./gameStates"
 import * as types from "./actionTypes"
@@ -7,8 +5,7 @@ import * as types from "./actionTypes"
 export function resumeGame(gameId, gameServer) {
   return async (dispatch) => {
     const data = await gameServer.resumeGame(gameId)
-    dispatch(updateGame(data))
-    dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_CHALLENGE))
+    dispatch(updateGameData(data))
     gameServer.setHandshakeQuery({ gameId })
   }
 }
@@ -26,8 +23,7 @@ export function configureNewGame() {
 export function startNewGame(name, avatar, maxChallenges, gameServer) {
   return async (dispatch) => {
     const data = await gameServer.startGame(name, avatar, maxChallenges)
-    dispatch(updateGame(data))
-    dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_CHALLENGE))
+    dispatch(updateGameData(data))
     setCookie("gameId", data.gameId)
     gameServer.setHandshakeQuery({ gameId: data.gameId })
   }
@@ -47,10 +43,10 @@ export function updateAvatar(avatar) {
   }
 }
 
-export function updateGame(game) {
+export function updateGameData(data) {
   return {
-    type: types.UPDATE_GAME,
-    game
+    type: types.UPDATE_GAME_DATA,
+    data
   }
 }
 
@@ -79,19 +75,6 @@ export function showGameManual(show) {
   return {
     type: types.SHOW_GAME_MANUAL,
     show
-  }
-}
-
-export function handleChallengeMessage(gameServer, event) {
-  return async (dispatch) => {
-    if (event.data.source === "challenge") { // ignore react dev tool messages
-      console.log(`Challenge message received: ${JSON.stringify(event.data)}`)
-
-      const challengeData = omit(event.data, "source")
-      const data = await gameServer.finishChallenge(challengeData)
-      dispatch(updateGame(data))
-      dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_CHALLENGE))
-    }
   }
 }
 

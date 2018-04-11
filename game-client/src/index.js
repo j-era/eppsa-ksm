@@ -48,7 +48,7 @@ contentServer.getData().then(transform).then(async (content) => {
     }
   }
 
-  window.addEventListener("message", actions.handleChallengeMessage.bind(this, gameServer), false)
+  window.addEventListener("message", receiveMessage, false)
 
   render(
     <Provider store={ store }>
@@ -60,7 +60,8 @@ contentServer.getData().then(transform).then(async (content) => {
         gameServerUri={ process.env.GAME_SERVER_URI }
         maxChallenges={ maxChallenges }
         dispatch={ store.dispatch }
-        gameServer={ gameServer } />
+        gameServer={ gameServer }
+        onChallengeReady={ onChallengeReady } />
     </Provider>,
     document.getElementById("app")
   )
@@ -80,6 +81,37 @@ async function findResumableGame() {
     }
   }
   return null
+}
+
+async function onChallengeReady(challengeWindow, config, uri) {
+  challengeWindow.postMessage({ data: config, type: "challengeData" }, uri)
+  activateDeviceOrientation(challengeWindow, config.challenge.template, uri)
+}
+
+function activateDeviceOrientation(challengeWindow, template, uri) {
+  const gyroGames = ["button", "skill"]
+  if (gyroGames.indexOf(template) >= 0) {
+    window.addEventListener("deviceorientation", event => {
+      console.log(event)
+      challengeWindow.postMessage({
+        data: {
+          alpha: event.alpha,
+          beta: event.beta,
+          gamma: event.gamma
+        },
+        type: "deviceOrientation"
+      }, uri)
+    })
+  }
+}
+
+async function receiveMessage(event) {
+  if (event.data.source === "challenge") { // ignore react dev tool messages
+    console.log(`Challenge message received: ${JSON.stringify(event.data)}`)
+
+    const challengeData = omit(event.data, "source")
+    store.dispatch(actions.updateGameData(await gameServer.finishChallenge(challengeData)))
+  }
 }
 
 gameServer.on("connectedGames", (connectedGames) => {

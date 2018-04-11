@@ -1,8 +1,10 @@
 import React from "react"
 
 export default function Challenge(props) {
-  const challenge = props.content.challenges[props.challengeNumber].challengeTypes[props.challengeType]
+  const challenge =
+    props.content.challenges[props.challengeNumber].challengeTypes[props.challengeType]
   const shared = props.content.shared
+  const challengeData = { challenge, shared }
 
   return (
     <iframe
@@ -13,7 +15,7 @@ export default function Challenge(props) {
         if (iframe) {
           // eslint-disable-next-line no-param-reassign
           iframe.onload =
-            () => iframe.contentWindow.postMessage({ challenge, shared }, props.challengeUri)
+            () => props.onChallengeReady(iframe.contentWindow, challengeData, props.challengeUri)
         }
       } } />
   )

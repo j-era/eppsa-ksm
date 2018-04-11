@@ -3,6 +3,7 @@ import React from "react"
 import { connect } from "react-redux"
 
 import { showGameManual } from "../actionCreators"
+import { FINISHED } from "../gameStates"
 import GameBoard from "./gameBoard"
 import GameManual from "./gameManual"
 import pages from "./pages"
@@ -33,6 +34,10 @@ function renderHeader(props) {
 }
 
 function enhance(props) {
+  if (props.gameState === FINISHED) {
+    return props
+  }
+
   const challengeTypes = props.content.challenges[props.challengeNumber].challengeTypes
   const challengeType = Object.keys(omit(challengeTypes, "template"))[0]
   const challengeUri = resolveChallengeWebAppUri(challengeType, props)

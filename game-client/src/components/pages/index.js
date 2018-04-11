@@ -38,5 +38,5 @@ export default {
   [CHALLENGE_LOBBY]: { render: ChallengeLobby, showHeader: true },
   [CHALLENGE_MANUAL]: { render: ChallengeManual, showHeader: true },
   [CHALLENGE]: { render: Challenge, showHeader: false },
-  [FINISHED]: { render: Finished, showHeader: true }
+  [FINISHED]: { render: Finished, showHeader: false }
 }

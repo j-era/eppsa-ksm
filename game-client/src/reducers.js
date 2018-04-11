@@ -5,6 +5,8 @@ export function gameState(state = gameStates.NEW_GAME_AVATAR_SELECTION, action) 
   switch (action.type) {
     case types.UPDATE_GAME_STATE:
       return action.state
+    case types.UPDATE_GAME_DATA:
+      return action.data.finished ? gameStates.FINISHED : gameStates.NAVIGATION_TO_NEXT_CHALLENGE
     default:
       return state
   }
@@ -12,8 +14,8 @@ export function gameState(state = gameStates.NEW_GAME_AVATAR_SELECTION, action) 
 
 export function name(state = "", action) {
   switch (action.type) {
-    case types.UPDATE_GAME:
-      return action.game.name
+    case types.UPDATE_GAME_DATA:
+      return action.data.name
     case types.UPDATE_NAME:
       return action.name
     default:
@@ -23,8 +25,8 @@ export function name(state = "", action) {
 
 export function avatar(state = null, action) {
   switch (action.type) {
-    case types.UPDATE_GAME:
-      return action.game.avatar
+    case types.UPDATE_GAME_DATA:
+      return action.data.avatar
     case types.UPDATE_AVATAR:
       return action.avatar
     default:
@@ -34,8 +36,8 @@ export function avatar(state = null, action) {
 
 export function challengeNumber(state = 1, action) {
   switch (action.type) {
-    case types.UPDATE_GAME:
-      return action.game.challengeNumber
+    case types.UPDATE_GAME_DATA:
+      return action.data.challengeNumber
     default:
       return state
   }
@@ -43,8 +45,8 @@ export function challengeNumber(state = 1, action) {
 
 export function score(state = 0, action) {
   switch (action.type) {
-    case types.UPDATE_GAME:
-      return action.game.score
+    case types.UPDATE_GAME_DATA:
+      return action.data.score
     default:
       return state
   }
