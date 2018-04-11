@@ -17,16 +17,25 @@ let MatchmakingLobby = new Phaser.Class({
 	},
 
 	preload: function(){
-
+		this.load.image('singleplayer', 'assets/singleplayer.jpg');
 	},
 
 	create: function(){
+		var gameScene = this;
 		this.welcomeText = this.add.text(10, 10, 'waiting for a second player', {font: '12px Arial', fill: '#000000'});
+
+		this.add.image(250, 50, 'singleplayer').setInteractive().on('pointerdown', function (pointer) {
+
+			gameScene.scene.start('skillGameAirship', {'type' : 'singleplayer'});
+	
+		});;
 
 		//server code
 		this.connectedPlayers = {};
 		this.ownID = 0;
 		Client.askNewPlayer();
+
+
 	},
 
 	showMatchingStatus: function(info){
@@ -34,7 +43,7 @@ let MatchmakingLobby = new Phaser.Class({
 	},
 
 	startGameWithMatchedPartner: function(match){
-		this.scene.start('skillGameAirship', {'match': match.other, 'own': match.own});
+		this.scene.start('skillGameAirship', {'type': 'multiplayer', 'match': match.other, 'own': match.own, 'playing': match.playing});
 	},
 
 	addNewPlayer: function(id, x, y){
@@ -88,7 +97,7 @@ let SkillGameAirship = new Phaser.Class({
 		this.gameStarted = false;
 
 		this.gameTimer = 0;
-		this.timeLeft;
+		//this.timeLeft;
 
 		this.timeInWinState = 0;
 		this.currentlyInWinState = false;
@@ -102,37 +111,84 @@ let SkillGameAirship = new Phaser.Class({
 	},
 
 	preload: function(){
-		this.load.image('ownArrow', 'assets/arrow.jpg');
-		this.load.image('otherArrow', 'assets/other-arrow.jpg');
+		this.load.image('vehicleArrowLarge', 'assets/EPPSA_Airship_VehicleHUDlarge.png');
+		this.load.image('vehicleArrowSmall', 'assets/EPPSA_Airship_VehicleHUDsmall.png');
+		this.load.image('windArrowLarge', 'assets/EPPSA_Airship_WindHUDlarge.png');
+		this.load.image('windArrowSmall', 'assets/EPPSA_Airship_WindHUDsmall.png');
+
+		this.load.image('wind', 'assets/EPPSA_Airship_Wind.png');
+		this.load.image('windDirection', 'assets/EPPSA_Airship_WindDirection.png');
+
+
+		this.load.image('vehicle', 'assets/EPPSA_Airship_Vehicle.png');
+
+		this.load.image('pointHUD', 'assets/EPPSA_Airship_PointCountHUD.png');
 	}, 
 
 	create: function(data){
-		//server code
-		console.log('starting a new game with ', data);
-		this.ownID = data.own;
-		this.opponentID = data.match;
-		
-		//TODO decide who is wind and who is Airship
-		this.streamArrow = this.add.sprite(this.width/2,150, 'otherArrow');
-		this.vehicleArrow = this.add.sprite(this.width/2, this.height - 150, 'ownArrow');
-		
 		//setup gameboard
-		var middleLine = new Phaser.Geom.Line(this.width, this.height/2, 0, this.height/2);
-		var graphics = this.add.graphics({lineStyle: {width: 4, color: 0xaa0aa}});
-		graphics.strokeLineShape(middleLine);
+		//this.timeLeft = this.add.graphics();
 
-		var thirdLine = new Phaser.Geom.Line(this.width, this.height/3, 0, this.height/3);
-		graphics.lineStyle(2, 0xaa0aa, 0.4);
-		graphics.strokeLineShape(thirdLine);
-
-		this.timeLeft = this.add.graphics();
-
-		
-	
 		//text for debugging
 		this.rotationText = this.add.text(10, 10, 'phaser', {fill: '#000000'});
 
-		Client.readyToPlay({'own' : this.ownID, 'other': this.opponentID});
+		if(data.type == 'singleplayer'){
+			this.singleplayer = true;
+			this.playingShip = true;
+
+			this.windImage = this.add.image(this.width, this.height/2, 'wind').setOrigin(1,1);
+			this.windImage.setScale(this.width/this.windImage.width, this.width/this.windImage.width);
+
+			this.vehicleImage = this.add.image(this.width/2, this.height/2 + this.height/6, 'vehicle').setOrigin(0.5, 0).setScale(0.15);
+
+			this.streamArrow = this.add.image(this.width/2,this.height/2 - this.height/8, 'windArrowSmall').setOrigin(0.5,1).setScale(0.2);
+			this.vehicleArrow = this.add.image(this.width/2, this.height/2 + 10, 'vehicleArrowLarge').setOrigin(0.5,0).setScale(0.2);
+
+			
+
+			this.countdownText = this.add.text(this.width/2, this.height/2, this.countdown, {font: '60px Arial', fill: '#000000'});
+			this.countdownTimer = this.time.addEvent({delay: 1000, callback: this.countdownFunc, callbackScope: this, repeat: this.countdown});
+		}else{
+			//server code
+			console.log('starting a new game with ', data);
+			this.ownID = data.own;
+			this.opponentID = data.match;
+
+			console.log("This player is playing as " + data.playing);
+
+			if(data.playing == 'ship'){
+				this.playingShip = true;
+				this.windImage = this.add.image(this.width, this.height/2, 'wind').setOrigin(1,1);
+				this.windImage.setScale(this.width/this.windImage.width, this.width/this.windImage.width);
+
+				this.vehicleImage = this.add.image(this.width/2, this.height - this.height/6, 'vehicle').setOrigin(0.5, 0).setScale(0.15);
+
+				this.streamArrow = this.add.image(this.width/2,this.height/2 - this.height/8, 'windArrowSmall').setOrigin(0.5,1).setScale(0.2);
+				this.vehicleArrow = this.add.image(this.width/2, this.height/2 + 10, 'vehicleArrowLarge').setOrigin(0.5,0).setScale(0.2);
+
+				this.windDirectionLeft = this.add.image(this.width/4, this.height/6, 'windDirection').setScale(0.2);
+				this.windDirectionRight = this.add.image(3 * this.width/4, this.height/3, 'windDirection').setScale(0.2);
+			}else{
+				this.playingShip = false;
+				this.windImage = this.add.image(0, this.height/2, 'wind').setOrigin(0, 0);
+				this.windImage.flipY = -1;
+				this.windImage.setScale(this.width/this.windImage.width);
+				
+				this.vehicleImage = this.add.image(this.width/2, this.height/6, 'vehicle').setOrigin(0.5, 0).setScale(0.15);
+				this.vehicleImage.flipY = -1;
+
+				this.streamArrow = this.add.image(this.width/2,this.height/2 + this.height/8, 'windArrowLarge').setOrigin(0.5,1).setScale(0.2);
+				this.vehicleArrow = this.add.image(this.width/2, this.height/2 - 10, 'vehicleArrowSmall').setOrigin(0.5,0).setScale(0.2);
+
+				this.windDirectionLeft = this.add.image(this.width/4, this.height-this.height/6, 'windDirection').setScale(0.2);
+				this.windDirectionRight = this.add.image(3 * this.width/4, this.height-this.height/3, 'windDirection').setScale(0.2);
+			}
+
+			Client.readyToPlay({'own' : this.ownID, 'other': this.opponentID});
+		}
+
+		this.pointHUD = this.add.image(this.width/2, this.height, 'pointHUD').setOrigin(0.5, 1).setScale(0.2);
+		
 	},
 
 	startMultiplayerGame: function(){
@@ -145,31 +201,22 @@ let SkillGameAirship = new Phaser.Class({
 			this.lastTimeInWinState = this.currentlyInWinState;
 			this.currentlyInWinState = this.checkIfWinState();
 
+			this.vehicle.angle = this.vehicleArrow.angle;
+			this.windDirectionLeft.angle = this.streamArrow.angle;
+			this.windDirectionRight.angle = this.streamArrow.angle;
+
 			if(!this.lastTimeInWinState && this.currentlyInWinState ){
 				console.log("starting Winning counter");
 				this.rotationText.setStyle({color: '#ff00ff', fontSize: '50px'});
-				//this.rotationText.setTint(0xff00ff, 0xffff00, 0x0000ff, 0xff0000);
-				//game.config.backgroundColor = "#ff00ff";
 				this.winStateCounter = this.time.addEvent({delay: 1000, callback: this.increaseWinStateTime, callbackScope: this, loop: true});
 			}
 
 			if(this.lastTimeInWinState && !this.currentlyInWinState){
 				console.log("stopping Winning counter");
 				this.rotationText.setStyle({color: '#ff0000', fontSize: '20px'});
-				//this.rotationText.setTint(0xff00ff, 0xffffff, 0x00ffff, 0xff0000);
 				this.winStateCounter.remove(false);
 				this.currentTimeInWinState = 0;
-			}
-
-			this.timeLeft.clear();
-			this.timeLeft.fillStyle(0x000000, 1);
-			var currentWidthMultiplier = 1 - this.gameTimer.getProgress()
-			this.timeLeft.fillRect(0,170,300 * currentWidthMultiplier, 60);
-
-			/*if(this.currentTimeInWinState > 0){
-				this.sensitivity += 1 - this.destabiliser * this.currentTimeInWinState
-			}*/
-			
+			}		
 		}
 	},
 
@@ -198,8 +245,9 @@ let SkillGameAirship = new Phaser.Class({
 			}
 			window.addEventListener("deviceorientation", this.listenerFunc, true);
 
-			//function to controll the stream if singlePlayer
-			//this.timedEvent = this.time.addEvent({ delay: 1500, callback: this.onEventRotate, callbackScope: this, loop: true });
+			if(this.singleplayer){
+				this.timedEvent = this.time.addEvent({ delay: 1500, callback: this.onEventRotateSingleplayer, callbackScope: this, loop: true });
+			}
 		}
 
 	},
@@ -220,12 +268,16 @@ let SkillGameAirship = new Phaser.Class({
 
 	},
 
-	moveOpponentArrow: function(data){
-		this.streamArrow.angle = data;
+	onEventRotateSingleplayer: function(){
+		this.streamArrow.angle = Math.random() * (15 - (-14)) + (-15);
 	},
 
-	onEventRotate: function(){
-		this.streamArrow.angle = Math.random() * (15 - (-14)) + (-15);
+	moveOpponentArrow: function(data){
+		if(this.playingShip){
+			this.streamArrow.angle = data;
+		}else{
+			this.vehicleArrow.angle = data;
+		}
 	},
 
 	handleOrientation: function(e){
@@ -236,14 +288,20 @@ let SkillGameAirship = new Phaser.Class({
 	
 		//clamp value of tilt input to minTilt and maxTilt as defined in backend
 		orientationGamma = orientationGamma <= that.minTilt ? that.minTilt : orientationGamma >= that.maxTilt ? that.maxTilt : orientationGamma;
-	
 		let newRotation = orientationGamma * that.sensitivity;
 	
-		//clamp value of newRotation to vehicleAngle and negative vehicleAngle
-		newRotation = newRotation <= -that.vehicleAngle ? -that.vehicleAngle : newRotation >= that.vehicleAngle ? that.vehicleAngle : newRotation;
-	
-		//TODO only inertia if player is controlling Airship
-		let orientatationEvent = that.time.addEvent({delay: that.inertia * 1000, callback: that.rotateArrow, args: [that.vehicleArrow, newRotation], callbackScope: that})
+		if(this.playingShip){
+			//clamp value of newRotation to vehicleAngle and negative vehicleAngle
+			newRotation = newRotation <= -that.vehicleAngle ? -that.vehicleAngle : newRotation >= that.vehicleAngle ? that.vehicleAngle : newRotation;
+			//TODO only inertia if player is controlling Airship
+			let orientatationEvent = that.time.addEvent({delay: that.inertia * 1000, callback: that.rotateArrow, args: [that.vehicleArrow, newRotation], callbackScope: that});
+		}else{
+			//clamp value of newRotation to streamRange and negative streamRange
+			newRotation = newRotation <= -that.streamRange ? -that.streamRange : newRotation >= that.streamRange ? that.streamRange : newRotation;
+			//TODO only inertia if player is controlling Airship
+			let orientatationEvent = that.time.addEvent({delay: 0, callback: that.rotateArrow, args: [that.windArrow, newRotation], callbackScope: that});
+		}
+		
 	},
 
 	rotateArrow: function(arrow, newRotation){
@@ -275,7 +333,7 @@ let config = {
 	type: Phaser.AUTO,  //Phaser will decide how to render our game (WebGL or Canvas)
 	width: window.innerWidth /** window.devicePixelRatio*/, // game width
 	height: window.innerHeight /** window.devicePixelRatio*/, // game height
-	backgroundColor: "#ffffff",
+	backgroundColor: "#F2FCFF",
 	parent: 'game',
 	displayVisibilityChange: true,
 	scene: [ MatchmakingLobby, SkillGameAirship ] // our newly created scene
