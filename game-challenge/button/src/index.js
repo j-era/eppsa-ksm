@@ -5,19 +5,14 @@ import App from "./App"
 
 let gameClient
 let config
+let orientation
 
-window.addEventListener("message", receiveMessage, false)
-function receiveMessage(event) {
-  console.log(event)
-  gameClient = { source: event.source, origin: event.origin }
-  config = event.data
-}
 
 const completeChallenge = () => {
   gameClient.source.postMessage(
     {
       source: "challenge",
-      score: config.challenge["score-calculation"].reward
+      score: config.challenge.reward
     }, gameClient.origin)
 }
 
@@ -29,13 +24,25 @@ const assetServerUri = process.env.ASSET_SERVER_URI || url.searchParams.get("ass
 const gameServerUri = process.env.GAME_SERVER_URI || url.searchParams.get("gameServerUri")
 const challengeNumber = url.searchParams.get("challengeNumber")
 
-ReactDOM.render(<App
-  onClick={ completeChallenge }
-  contentServerUri={ contentServerUri }
-  assetServerUri={ assetServerUri }
-  gameServerUri={ gameServerUri }
-  challengeNumber={ challengeNumber } />,
-document.getElementById("root"))
+window.addEventListener("message", receiveMessage, false)
+function receiveMessage(event) {
+  if (event.data.type === "config") {
+    console.log(event)
+    gameClient = { source: event.source, origin: event.origin }
+    config = event.data
+  } else if (event.data.type === "deviceorientation") {
+    orientation = handleOrientation(event.data)
+  }
+
+  ReactDOM.render(<App
+    onClick={ completeChallenge }
+    contentServerUri={ contentServerUri }
+    assetServerUri={ assetServerUri }
+    gameServerUri={ gameServerUri }
+    challengeNumber={ challengeNumber }
+    orientation={ orientation } />,
+  document.getElementById("root"))
+}
 
 function handleOrientation(event) {
   let x = event.beta // In degree in the range [-180,180]
@@ -51,7 +58,5 @@ function handleOrientation(event) {
   x += 90
   y += 90
 
-  console.log(`x: ${x}, y: ${y}`)
+  return { x, y }
 }
-
-window.addEventListener("deviceorientation", handleOrientation)

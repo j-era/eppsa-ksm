@@ -110,7 +110,15 @@ async function startChallenge() {
 }
 
 async function onChallengeReady(challengeWindow, config, uri) {
+  const gyroGames = ["button"]
+  config.type = "config"
   challengeWindow.postMessage(config, uri)
+
+  if (gyroGames.indexOf(config.challenge.template) >= 0) {
+    window.addEventListener("deviceorientation", event => {
+      challengeWindow.postMessage({ beta: event.beta, gamma: event.gamma, type: event.type }, uri)
+    })
+  }
 }
 
 async function receiveMessage(event) {
