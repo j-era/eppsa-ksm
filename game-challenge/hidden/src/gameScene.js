@@ -79,7 +79,8 @@ class gameScene extends Phaser.Scene {
 			for(var i = 0; i < this.questionTags.length; i++){
 				for(var j = 0; j < this.testTags.length; j++){
 					if(this.questionTags[i] == this.testTags[j]){
-						this.correct += 1;
+						this.correct += 1
+						gameObject.input.enabled = false;
 						that.tweens.add( {
 							targets: gameObject,
 							scaleX: 0.5,
@@ -87,7 +88,8 @@ class gameScene extends Phaser.Scene {
 							ease: 'Sine.easeOut',
 							duration: 500,
 							repeat: 0,
-							yoyo: true
+							yoyo: true,
+							onComplete: function() {gameObject.input.enabled = true}
 						})
 					}
 
@@ -99,12 +101,10 @@ class gameScene extends Phaser.Scene {
 
 		this.PosY = 0;
 		for(var i = 1; i < 4; i++){
-			var PosX = 0;
 			var temp = 'row' + i;
 			for(var j = 0; j < that[temp].length; j++){
 				that[temp][j].displayWidth = that.picMaxWidth * (that.imageArray[that[temp][j].name].depth / 2);
-				that[temp][j].x = PosX;
-				PosX += that[temp][j].displayWidth;
+				that[temp][j].x = 0 - (2 * that[temp][j].displayWidth);
 				that[temp][j].y = this.PosY;
 				var Height = that[temp][j].displayHeight;
 			}
@@ -112,13 +112,13 @@ class gameScene extends Phaser.Scene {
 		}
 
 		var timedEvent = this.time.addEvent({
-			delay: 20000,
+			delay: 600000,
 			callback: this.gameWin,
 			callbackScope: this
 		});
 
 		var SpawnTimer = this.time.addEvent( {
-			delay: 5000,
+			delay: 2000,
 			callback:this.spawn,
 			callbackScope: this,
 			loop: true
@@ -131,20 +131,25 @@ class gameScene extends Phaser.Scene {
 	}
 
 	spawn() {
-		console.log(this.wait)
 		var element = Math.floor(Math.random() * this.wait.length)
 		console.log(element)
-		console.log(this.imageArray[this.wait[element]])
-		var dirTemp = 'move' + this.imageArray[this.wait[element]].direction;
-		this[dirTemp].push(this.loadedImages[this.wait[element]]);	
+		if(this.wait.length > 0){
+			var dirTemp = 'move' + this.imageArray[this.wait[0]].direction;
+			this[dirTemp].push(this.loadedImages[this.wait[0]]);	
+			console.log(this.wait)
+			this.wait.splice(0,1);
+			console.log(this.wait)
+		}
 	}
 
 	update(){
 
 		for(var i = 0; i < this.moveRight.length; i++){
 			this.moveRight[i].x += 5;
+			//this.moveRight[i].x += this.imageArray[this.wait[0]].depth;
 			if(this.moveRight[i].x > window.innerWidth){
 				this.moveRight[i].x = 0 - this.moveRight[i].displayWidth;
+				this.wait.push(this.moveRight[i].name);
 				this.moveRight.splice(i,1);
 
 				this.movingRight  = 0;
