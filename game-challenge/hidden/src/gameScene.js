@@ -59,46 +59,40 @@ class gameScene extends Phaser.Scene {
 		this.row3 = [];
 		this.moveLeft = [];
 		this.moveRight = [];
-		this.haveToClick = [];
-
+		this.correct = 0;
 		for(var element in this.imageArray){
 			var i = 0;
-			that.loadedImages[element].displayHeight = that.picMaxHeight;
-
+			that.loadedImages[element].displayHeight = that.picMaxHeight * (that.imageArray[element].depth/2);
+			console.log(that.picMaxHeight + 1)
 			var temp = 'row' + that.imageArray[element].depth;
 			that[temp].push(that.loadedImages[element]);
 			var dirTemp = 'move' + that.imageArray[element].direction;
 			that[dirTemp].push(that.loadedImages[element]);	
 		}
-		this.Testfun();
+		//this.checkTags();
 
 
 		this.input.on('gameobjectdown', function(pointer, gameObject){
 
+			this.questionTags = that.questions[that.random].tag.split(',');
+			this.testTags = that.imageArray[gameObject.name].tag.split(',');
 
-			for(var i = 0; i < that.haveToClick.length; i++){
-				if(gameObject == that.haveToClick[i]){
-					that.haveToClick.splice(i,1);
-					i=0;
-					that.tweens.add( {
-						targets: gameObject,
-						scaleX: 0.5,
-						scaleY: 0.5,
-						ease: 'Sine.easeOut',
-						duration: 500,
-						repeat: 0,
-						yoyo: true
-					})
-				}
-			}
-			if(that.haveToClick == 0){
-				that.questions.splice(that.random,1);
-				console.log(that.questions.length)
-				if(that.questions.length == 0){
-					that.scene.start('WinScene');
-				}else{
-					that.changeQuestion();
-					that.Testfun();
+			for(var i = 0; i < this.questionTags.length; i++){
+				for(var j = 0; j < this.testTags.length; j++){
+					if(this.questionTags[i] == this.testTags[j]){
+						this.correct += 1;
+						that.tweens.add( {
+							targets: gameObject,
+							scaleX: 0.5,
+							scaleY: 0.5,
+							ease: 'Sine.easeOut',
+							duration: 500,
+							repeat: 0,
+							yoyo: true
+						})
+					}
+
+
 				}
 			}
 
@@ -110,7 +104,7 @@ class gameScene extends Phaser.Scene {
 			var PosX = 0;
 			var temp = 'row' + i;
 			for(var j = 0; j < that[temp].length; j++){
-				that[temp][j].displayWidth = that.picMaxWidth;
+				that[temp][j].displayWidth = that.picMaxWidth * (that.imageArray[that[temp][j].name].depth / 2);
 				that[temp][j].x = PosX;
 				PosX += that[temp][j].displayWidth;
 				that[temp][j].y = this.PosY;
@@ -122,7 +116,6 @@ class gameScene extends Phaser.Scene {
 
 
 	update(){
-
 
 		for(var i = 0; i < this.moveRight.length; i++){
 			this.moveRight[i].x += 5;
@@ -140,47 +133,6 @@ class gameScene extends Phaser.Scene {
 			}
 		}
 
-	}
-
-	Testfun() {
-		this.haveToClick = [];
-		for(var element in this.imageArray){
-			this.testTags = this.imageArray[element].tag.split(',');
-			this.questionTags = this.questions[this.random].tag.split(',');
-			for (var i = 0; i < this.testTags.length; i++) {
-				for(var j = 0; j < this.questionTags.length; j++){
-					if(this.testTags[i] == this.questionTags[j]){
-						this.haveToClick.push(this.loadedImages[element])
-					}
-				}
-			};	
-		}
-	}
-
-	changeQuestion(){
-		//this.questions.splice(this.random,1);
-		if(this.questions.length > 0){
-			this.random = Math.floor(Math.random() * this.questions.length);
-
-			this.QuesText = this.questions[this.random].question;
-
-			this.ques.setText("Ja^^")
-
-			this.add.tween({
-				targets: this.ques,
-				duration: 1000,
-				alpha: {
-					getStart: () => 1,
-					getEnd: () => 0.1
-				},
-				onComplete: () => {
-					this.ques.setText(this.QuesText);
-					this.ques.alpha = 1;
-				}
-			})
-		}else{
-			this.scene.start('WinScene');
-		}
 	}
 
 }
