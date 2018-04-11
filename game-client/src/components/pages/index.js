@@ -31,7 +31,7 @@ export default {
   [NEW_GAME_AVATAR_SELECTION]: { render: NewGameAvatarSelection, showHeader: false },
   [NEW_GAME_AVATAR_CONFIRMATION]: { render: NewGameAvatarConfirmation, showHeader: false },
   [NEW_GAME_NAME_SELECTION]: { render: NewGameNameSelection, showHeader: false },
-  [NAVIGATION_TO_START]: { render: NavigationToStart, showHeader: true },
+  [NAVIGATION_TO_START]: { render: NavigationToStart, showHeader: false },
   [NAVIGATION_TO_NEXT_CHALLENGE]: { render: NavigationToNextChallenge, showHeader: true },
   [QR_READER]: { render: QrReader, showHeader: true },
   [CHALLENGE_MODE_SELECTION]: { render: ChallengeModeSelection, showHeader: true },
