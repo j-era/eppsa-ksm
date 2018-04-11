@@ -35,7 +35,7 @@ function renderHeader(props) {
 function enhance(props) {
   const challengeTypes = props.content.challenges[props.challengeNumber].challengeTypes
   const challengeType = Object.keys(omit(challengeTypes, "template"))[0]
-  const challengeUri = resolveChallengeWebAppUri(challengeType)
+  const challengeUri = resolveChallengeWebAppUri(challengeType, props)
 
   return Object.assign({ challengeUri, challengeType }, props)
 }

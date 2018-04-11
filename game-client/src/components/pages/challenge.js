@@ -6,6 +6,7 @@ export default function Challenge(props) {
 
   return (
     <iframe
+      style={ { width: "200px", height: "300px" } }
       allow="camera"
       src={ props.challengeUri }
       ref={ iframe => {
