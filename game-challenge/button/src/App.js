@@ -7,14 +7,14 @@ const Container = styled.div `
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   flex-direction: column;
-  
+
   width: 100%;
   height: 100%;
 `
 const ButtonDiv = styled.div `
-  
+
   width: 100px;
   height: 100px;
   background-color: green;
@@ -48,7 +48,18 @@ class Button extends Component {
         <div>assetServerUri: { this.assetServerUri }</div>
         <div>gameServerUri: { this.gameServerUri }</div>
         <div>challengeNumber: { this.challengeNumber }</div>
+        { this.props.orientation && this.renderOrientationValues() }
       </Container>
+    )
+  }
+
+  renderOrientationValues() {
+    return (
+      <div>
+        <div>alpha: { this.props.orientation.alpha }</div>
+        <div>beta: { this.props.orientation.beta }</div>
+        <div>gamma: { this.props.orientation.gamma }</div>
+      </div>
     )
   }
 
