@@ -20,7 +20,21 @@ class gameScene extends Phaser.Scene {
 			"piggy" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
 			"Schwein" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
 			"Katze" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '3'},
-			"Hund" : {'img': 'puppy', 'tag': 'small,doggie', 'direction': 'Right', 'depth': '3'}
+			"Hund" : {'img': 'puppy', 'tag': 'small,doggie', 'direction': 'Right', 'depth': '3'},
+
+			"puppy" :{'img': 'puppy', 'tag': 'small,doggie', 'direction' : 'Right', 'depth': '1'},
+			"kitty1" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '1'},
+			"piggy1" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
+			"Schwein1" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
+			"Katze1" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '3'},
+			"Hund1" : {'img': 'puppy', 'tag': 'small,doggie', 'direction': 'Right', 'depth': '3'},
+
+			"puppy" :{'img': 'puppy', 'tag': 'small,doggie', 'direction' : 'Right', 'depth': '1'},
+			"kitty2" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '1'},
+			"piggy2" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
+			"Schwein2" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
+			"Katze2" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '3'},
+			"Hund2" : {'img': 'puppy', 'tag': 'small,doggie', 'direction': 'Right', 'depth': '3'}
 		};
 
 		this.loadedImages = {};
@@ -104,7 +118,12 @@ class gameScene extends Phaser.Scene {
 			var temp = 'row' + i;
 			for(var j = 0; j < that[temp].length; j++){
 				that[temp][j].displayWidth = that.picMaxWidth * (that.imageArray[that[temp][j].name].depth / 2);
-				that[temp][j].x = 0 - (2 * that[temp][j].displayWidth);
+				if(that.imageArray[that[temp][j].name].direction == "Left"){
+					that[temp][j].x = window.innerWidth
+				}else{
+					that[temp][j].x = 0 - that[temp][j].displayWidth;
+				}
+				
 				that[temp][j].y = this.PosY;
 				var Height = that[temp][j].displayHeight;
 			}
@@ -118,7 +137,7 @@ class gameScene extends Phaser.Scene {
 		});
 
 		var SpawnTimer = this.time.addEvent( {
-			delay: 2000,
+			delay: 3000,
 			callback:this.spawn,
 			callbackScope: this,
 			loop: true
@@ -132,13 +151,10 @@ class gameScene extends Phaser.Scene {
 
 	spawn() {
 		var element = Math.floor(Math.random() * this.wait.length)
-		console.log(element)
 		if(this.wait.length > 0){
 			var dirTemp = 'move' + this.imageArray[this.wait[0]].direction;
 			this[dirTemp].push(this.loadedImages[this.wait[0]]);	
-			console.log(this.wait)
 			this.wait.splice(0,1);
-			console.log(this.wait)
 		}
 	}
 
@@ -160,6 +176,7 @@ class gameScene extends Phaser.Scene {
 			this.moveLeft[i].x -= 5;
 			if(this.moveLeft[i].x < (0 - this.moveLeft[i].displayWidth)){
 				this.moveLeft[i].x = window.innerWidth;
+				this.wait.push(this.moveLeft[i].name);
 				this.moveLeft.splice(i,1)
 				this.movingLeft  = 0;
 			}
