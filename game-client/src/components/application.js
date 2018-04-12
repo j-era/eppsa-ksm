@@ -6,6 +6,7 @@ import { showGameManual } from "../actionCreators"
 import { FINISHED } from "../gameStates"
 import GameBoard from "./gameBoard"
 import GameManual from "./gameManual"
+import GameManualButton from "./gameManualButton"
 import pages from "./pages"
 
 function Application(props) {
@@ -27,7 +28,7 @@ function Application(props) {
 function renderHeader(props) {
   return (
     <div>
-      <button onClick={ () => props.dispatch(showGameManual(true)) }>i</button>
+      { !props.showGameManual && <GameManualButton { ...props } /> }
       <GameBoard { ...props } />
     </div>
   )
