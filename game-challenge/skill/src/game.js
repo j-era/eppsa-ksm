@@ -1,10 +1,14 @@
 let gameClient;
+let gameData;
 
 window.addEventListener("message", receiveMessage, false)
 function receiveMessage(event)
 {
   console.log(event)
+  gameData = event.data.challenge;
   gameClient = { source: event.source, origin: event.origin }
+
+  init();
 }
 
 let MatchmakingLobby = new Phaser.Class({
@@ -69,27 +73,27 @@ let SkillGameAirship = new Phaser.Class({
 
 		this.gameType = "Luftfahrt";
 		this.areaID = 34;
-		this.timer = 15;
+		this.timer = gameData.timer;
 		this.score = 0;
-		this.countdown = 3;		//Sets the time (usually 3 s) in which the player can prepare before the game starts.
-		this.minTilt = -30;		//Define the threshold of the range in which the tilt input will have effect on the game controls.
-		this.maxTilt = 30;			//Define the threshold of the range in which the tilt input will have effect on the game controls.
-		this.sensitivity = 1;		//Value to influence the ratio which translates tilt angle of mobile device to rotation angle of game object.
+		this.countdown = gameData.countdown;		//Sets the time (usually 3 s) in which the player can prepare before the game starts.
+		this.minTilt = gameData.minTilt;		//Define the threshold of the range in which the tilt input will have effect on the game controls.
+		this.maxTilt = gameData.maxTilt;			//Define the threshold of the range in which the tilt input will have effect on the game controls.
+		this.sensitivity = gameData.sensitivity;		//Value to influence the ratio which translates tilt angle of mobile device to rotation angle of game object.
 
-		this.vehicleAngle = 40;	//Defines the max. angle in which Player A can steer the ship left or right.
-		this.inertia = 0.2;		//0.x Factor that delays the execution of the vehicle's controls, to simulate its inertia.
-		this.vehicleWinAngle = 3;	//Defines the angle in which Player A has to keep the ship within, to possibly reach win-state. The win-state is only triggered if Player B is within StreamWinAngle.
+		this.vehicleAngle = gameData.vehicleAngle;	//Defines the max. angle in which Player A can steer the ship left or right.
+		this.inertia = gameData.inertia;		//0.x Factor that delays the execution of the vehicle's controls, to simulate its inertia.
+		this.vehicleWinAngle = gameData.vehicleWinAngle;	//Defines the angle in which Player A has to keep the ship within, to possibly reach win-state. The win-state is only triggered if Player B is within StreamWinAngle.
 
-		this.streamRange = 30;		//Defines the max. angle in which the Player B can veer the Stream's vector.
-		this.streamForce = 2;		//Factor with which the force of stream's vector can be adjusted.
-		this.streamWinAngle = 3;	//Defines the angle in which Player B has to keep the stream's vector within, to possibly reach win-state. The win-state is only triggered if Player A's ship is within VehicleWinAngle.
+		this.streamRange = gameData.streamRange;		//Defines the max. angle in which the Player B can veer the Stream's vector.
+		this.streamForce = gameData.streamForce;		//Factor with which the force of stream's vector can be adjusted.
+		this.streamWinAngle = gameData.streamWinAngle;	//Defines the angle in which Player B has to keep the stream's vector within, to possibly reach win-state. The win-state is only triggered if Player A's ship is within VehicleWinAngle.
 	
-		this.destabiliser = 0.03;	//0.0x Factor that is multiplied with the time spent within win-state. The closer the product reaches 1, the more Sensitivity will increase, possibly throwing them out of win-state.
+		this.destabiliser = gameData.destabiliser;	//0.0x Factor that is multiplied with the time spent within win-state. The closer the product reaches 1, the more Sensitivity will increase, possibly throwing them out of win-state.
 	
-		this.NPCHorizontalStay = 0.7;	//Sets the probability with which the NPC stays in its horizontal state.
-		this.NPCHorizontalExit = 0.3;	//Sets the probability with which the NPC goes from horizontal state to tilt state.
-		this.NPCTiltStay = 0.3;			//Sets the probability with which the NPC stays in its tilt state.
-		this.NPCTiltExit = 0.7;			//Sets the probability with which the NPC goes form tilt state to horizontal state.
+		this.NPCHorizontalStay = gameData.npcHorizontalStay;	//Sets the probability with which the NPC stays in its horizontal state.
+		this.NPCHorizontalExit = gameData.npcHorizontalExit;	//Sets the probability with which the NPC goes from horizontal state to tilt state.
+		this.NPCTiltStay = gameData.npcTiltStay;			//Sets the probability with which the NPC stays in its tilt state.
+		this.NPCTiltExit = gameData.npcTiltExit;			//Sets the probability with which the NPC goes form tilt state to horizontal state.
 		
 		//other variables needed
 		this.vehiclearrow;
@@ -306,10 +310,11 @@ let SkillGameAirship = new Phaser.Class({
 		//this.rotationText.setText("Game Ended, \n time in winning State " + this.timeInWinState);
 		let score = this.timeInWinState * 100;
 
-		Client.FinalScore({'own' : this.ownID, 'other': this.opponentID, 'score': score});
-
-		
-
+		if(this.singleplayer){
+			this.sendScore(score);
+		}else{
+			Client.FinalScore({'own' : this.ownID, 'other': this.opponentID, 'score': score});
+		}
 	},
 
 	sendScore: function(score){
@@ -387,7 +392,7 @@ let SkillGameAirship = new Phaser.Class({
 			//clamp value of newRotation to streamRange and negative streamRange
 			newRotation = newRotation <= -that.streamRange ? -that.streamRange : newRotation >= that.streamRange ? that.streamRange : newRotation;
 			//TODO only inertia if player is controlling Airship
-			let orientatationEvent = that.time.addEvent({delay: 0, callback: that.rotateArrow, args: [that.windArrow, newRotation], callbackScope: that});
+			let orientatationEvent = that.time.addEvent({delay: 0, callback: that.rotateArrow, args: [that.streamArrow, newRotation], callbackScope: that});
 		}
 		
 	},
@@ -419,7 +424,7 @@ var wfconfig = {
  
     active: function() { 
         console.log("font loaded");
-        init();
+       
     },
  
     google: {
