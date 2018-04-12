@@ -113,8 +113,9 @@ export default class App extends React.Component {
   }
 
   confirm(answerIndex) {
-    const { correctAnswer, scoreCalculation } = this.props.content.challenge
+    const { correctAnswer } = this.props.content.challenge
     const { shared } = this.props.content
+    const scoreCalculation = this.props.content.challenge["score-calculation"]
 
     this.timeToAnswer = (new Date() - this.startTime) / 1000
     if (answerIndex === correctAnswer) {
