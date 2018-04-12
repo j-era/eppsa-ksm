@@ -34,6 +34,7 @@ io.on('connection',function(socket){
 
         socket.on('disconnect', function(){
             io.emit('remove', socket.player.id);
+            server.freePlayers.splice(0, 1);
         });
 
         socket.on('arrowchange', function(data){
