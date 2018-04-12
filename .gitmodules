@@ -7,3 +7,6 @@
 [submodule "content-repo"]
 	path = content-repo
 	url = https://github.com/artcom/git-json-cms-content-repo.git
+[submodule "game-challenge/quiz/lib/eppsa-ksm-shared"]
+	path = game-challenge/quiz/lib/eppsa-ksm-shared
+	url = https://github.com/artcom/eppsa-ksm-shared.git
