@@ -9,6 +9,7 @@ export default function NavigationToNextChallenge(props) {
   return (
     <div>
       <div>{ text }</div>
+      { props.wrongQrCodeScanned && "Der QR-Code ist leider falsch."}
       <button onClick={ () => props.dispatch(updateGameState(QR_READER)) }>QR-Code Scannen</button>
     </div>
   )

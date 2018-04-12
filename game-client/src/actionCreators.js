@@ -87,14 +87,19 @@ export function updateConnected(connected) {
 
 export function handleChallengeQrCode(data, challenge) {
   return (dispatch) => {
-    if (data != null && data === challenge.token) {
-      if (challenge.multiplayer) {
-        dispatch(updateGameState(gameStates.CHALLENGE_MODE_SELECTION))
+    if (data != null) {
+      if (data === challenge.token) {
+        dispatch({ type: types.CORRECT_QR_CODE_SCANNED })
+
+        if (challenge.multiplayer) {
+          dispatch(updateGameState(gameStates.CHALLENGE_MODE_SELECTION))
+        } else {
+          dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
+        }
       } else {
-        dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
+        dispatch({ type: types.WRONG_QR_CODE_SCANNED })
+        dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_CHALLENGE))
       }
-    } else {
-      dispatch({ type: types.WRONG_QR_CODE_SCANNED })
     }
   }
 }

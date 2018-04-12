@@ -83,7 +83,7 @@ export function wrongQrCodeScanned(state = false, action) {
   switch (action.type) {
     case types.WRONG_QR_CODE_SCANNED:
       return true
-    case types.UPDATE_GAME_STATE:
+    case types.CORRECT_QR_CODE_SCANNED:
       return false
     default:
       return state
