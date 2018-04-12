@@ -100,7 +100,7 @@ export default class App extends React.Component {
   }
 
   getSelection(i) {
-    const { correctAnswer } = this.props.content
+    const { correctAnswer } = this.props.content.challenge
     if (this.state.confirmed) {
       if (i === correctAnswer && this.state.showRight) {
         return "right"
