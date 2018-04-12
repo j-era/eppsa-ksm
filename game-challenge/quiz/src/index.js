@@ -8,7 +8,6 @@ import { transform } from "../lib/eppsa-ksm-shared/api/helpers"
 import App from "./App"
 import selectContent from "./selectContent"
 
-
 const contentServerUrl = process.env.CONTENT_SERVER_URI
 const assetServerUrl = process.env.ASSET_SERVER_URI
 const staticServerUrl = process.env.STATIC_SERVER_URI
@@ -40,16 +39,24 @@ try {
   console.assert(window.parent.origin)
 
   // We are in the same window
-  if (!contentServerUrl || !assetServerUrl || !staticServerUrl) {
-    console.log(
-      `Missing config parameter: ${contentServerUrl}, ${assetServerUrl}, ${staticServerUrl}`
-    )
+
+  const url = new URL(window.location)
+
+  const challengeNumber = url.searchParams.get("challengeNumber")
+  if (!challengeNumber) {
+    console.error("Missing challengeNumber query parameter.")
   } else {
-    const contentServer = new ContentServer(contentServerUrl)
-    contentServer.getData()
-      .then((data) => {
-        render(selectContent(transform(data), 1))
-      })
+    if (!contentServerUrl || !assetServerUrl || !staticServerUrl) {
+      console.log(
+        `Missing config parameter: ${contentServerUrl}, ${assetServerUrl}, ${staticServerUrl}`
+      )
+    } else {
+      const contentServer = new ContentServer(contentServerUrl)
+      contentServer.getData()
+        .then((data) => {
+          render(selectContent(transform(data), challengeNumber))
+        })
+    }
   }
 } catch (e) {
   // We are in another window (iframe)
