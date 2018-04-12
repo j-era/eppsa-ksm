@@ -52,7 +52,7 @@ try {
       })
   }
 } catch (e) {
-  // We are in an iframe
+  // We are in another window (iframe)
   window.addEventListener("message", receiveMessage, false)
 }
 
