@@ -54,8 +54,8 @@ let GraphGame = new Phaser.Class({
 		this.graphicsPath = [];
 		this.pathCounter = 0;
 
-		//this.width = window.innerWidth;
-		//this.height = window.innerHeight;
+		this.width = window.innerWidth * window.devicePixelRatio;
+		this.height = window.innerHeight * window.devicePixelRatio;
 
 		this.countedWinEvents = 0;
 		this.displayPointsText;
@@ -94,9 +94,11 @@ let GraphGame = new Phaser.Class({
 		this.displayPointsText = this.add.text(350, 550, this.countedWinEvents * 10, {color: '#ff00ff', fontSize: '20px'});
 
 		//TODO camera movement depending on screen size
-		this.moveRight = this.add.image(200, 500, 'button').setScale(0.1, 0.1).setName("right").setInteractive();
-		this.moveLeft = this.add.image(900, 500, 'button').setScale(0.1, 0.1).setName("left").setInteractive();
+		this.moveRight = this.add.image(this.width - this.width/10, 500, 'button').setScale(0.1, 0.1).setName("right").setInteractive();
+		this.moveLeft = this.add.image(2 * this.width - this.width/10, 500, 'button').setScale(0.1, 0.1).setName("left").setInteractive();
 		this.moveLeft.flipX = !this.moveLeft.flipX;
+
+		var that = this;
 
 		this.input.on('gameobjectdown', function(pointer, gameObject){
 			if(gameObject.name == 'agent'){
@@ -113,7 +115,7 @@ let GraphGame = new Phaser.Class({
 
 				console.log('current path ', that.currentPath);
 			}else if(gameObject.name == 'right'){
-				this.cameras.main.scrollX = 500 * window.devicePixelRatio;
+				that.cameras.main.scrollX = that.width;
 			}else if(gameObject.name == 'left'){
 				this.cameras.main.scrollX = 0;
 			}
@@ -311,9 +313,9 @@ let GraphGame = new Phaser.Class({
 				this.startNodes.push({'id': this.nodes[node].nodeID, 'x': this.nodes[node].xPosition, 'y': this.nodes[node].yPosition});
 			}
 			if(currentNode.skin != ''){
-				this.node.img = that.add.sprite(currentNode.xPosition,this.nodes[node].yPosition, currentNode.skin).setInteractive();
+				this.node.img = that.add.sprite(currentNode.xPosition,currentNode.yPosition, currentNode.skin).setInteractive();
 			}else{
-				this.node.img = that.add.sprite(this.nodes[node].xPosition,this.nodes[node].yPosition, this.nodes[node].nodeState).setInteractive();
+				this.node.img = that.add.sprite(currentNode.xPosition,currentNode.yPosition, currentNode.nodeState).setInteractive();
 			}
 			this.node.connectedTo = currentNode.connectedTo;
 			this.node.pauseTime = currentNode.nodePauseTime;
@@ -497,8 +499,8 @@ let GameOverScene = new Phaser.Class({
 // our game's configuration
 let config = {
 	type: Phaser.AUTO,  //Phaser will decide how to render our game (WebGL or Canvas)
-	width: 500 * window.devicePixelRatio, // game width
-	height:  600 * window.devicePixelRatio, // game height
+	width: window.innerWidth * window.devicePixelRatio, // game width
+	height:  window.innerHeight * window.devicePixelRatio, // game height
 	backgroundColor: "#18516A",
 	parent: 'game',
 	displayVisibilityChange: true,
