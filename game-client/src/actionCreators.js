@@ -6,6 +6,7 @@ export function resumeGame(gameId, gameServer) {
   return async (dispatch) => {
     const data = await gameServer.resumeGame(gameId)
     dispatch(updateGameData(data))
+    dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_CHALLENGE))
     gameServer.setHandshakeQuery({ gameId })
   }
 }
@@ -24,6 +25,9 @@ export function startNewGame(name, avatar, maxChallenges, gameServer) {
   return async (dispatch) => {
     const data = await gameServer.startGame(name, avatar, maxChallenges)
     dispatch(updateGameData(data))
+    dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_CHALLENGE))
+    dispatch(showGameManual(true))
+
     setCookie("gameId", data.gameId)
     gameServer.setHandshakeQuery({ gameId: data.gameId })
   }

@@ -5,8 +5,6 @@ export function gameState(state = gameStates.NEW_GAME_AVATAR_SELECTION, action) 
   switch (action.type) {
     case types.UPDATE_GAME_STATE:
       return action.state
-    case types.UPDATE_GAME_DATA:
-      return action.data.finished ? gameStates.FINISHED : gameStates.NAVIGATION_TO_NEXT_CHALLENGE
     default:
       return state
   }

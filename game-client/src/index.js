@@ -110,7 +110,13 @@ async function receiveMessage(event) {
     console.log(`Challenge message received: ${JSON.stringify(event.data)}`)
 
     const challengeData = omit(event.data, "source")
-    store.dispatch(actions.updateGameData(await gameServer.finishChallenge(challengeData)))
+    const data = await gameServer.finishChallenge(challengeData)
+
+    if (data.finished) {
+      store.dispatch(actions.updateGameState(gameStates.FINISHED))
+    }
+
+    store.dispatch(actions.updateGameData(data))
   }
 }
 
