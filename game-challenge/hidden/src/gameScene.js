@@ -15,27 +15,44 @@ class gameScene extends Phaser.Scene {
 	create() {
 
 		this.imageArray = {
-			"puppy" :{'img': 'puppy', 'tag': 'small,doggie', 'direction' : 'Right', 'depth': '1'},
-			"kitty" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '1'},
+			"puppy" :{'img': 'puppy', 'tag': 'cute,doggie,is,pure,love', 'direction' : 'Right','depth':'1'},
+			"kitty" : {'img': 'kitty', 'tag': 'sad,kitty', 'direction': 'Right', 'depth': '1'},
 			"piggy" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
 			"Schwein" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
 			"Katze" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '3'},
-			"Hund" : {'img': 'puppy', 'tag': 'small,doggie', 'direction': 'Right', 'depth': '3'},
+			"Hund" : {'img': 'puppy', 'tag': 'cute,doggie,is,fluff', 'direction': 'Right', 'depth':'3'},
 
-			"puppy" :{'img': 'puppy', 'tag': 'small,doggie', 'direction' : 'Right', 'depth': '1'},
+			"puppy" :{'img': 'puppy', 'tag': 'cute,doggie,needs,love', 'direction' : 'Right', 'depth': '1'},
 			"kitty1" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '1'},
 			"piggy1" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
 			"Schwein1" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
 			"Katze1" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '3'},
-			"Hund1" : {'img': 'puppy', 'tag': 'small,doggie', 'direction': 'Right', 'depth': '3'},
+			"Hund1" : {'img': 'puppy', 'tag': 'cute,doggie,makes,woof', 'direction': 'Right', 'depth': '3'},
 
-			"puppy" :{'img': 'puppy', 'tag': 'small,doggie', 'direction' : 'Right', 'depth': '1'},
+			"puppy" :{'img': 'puppy', 'tag': 'cute,doggie,wants,cuddles', 'direction' : 'Right', 'depth': '1'},
 			"kitty2" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '1'},
 			"piggy2" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
 			"Schwein2" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
 			"Katze2" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '3'},
-			"Hund2" : {'img': 'puppy', 'tag': 'small,doggie', 'direction': 'Right', 'depth': '3'}
+			"Hund2" : {'img': 'puppy', 'tag': 'cute,doggie,kiss', 'direction': 'Right', 'depth': '3'}
 		};
+
+		this.blockImages = {
+			"block" : {'img': 'puppy', 'positionX' : '5', 'positionY' : '10', 'depth': '4'},
+			"block1" : {'img': 'kitty', 'positionX' : '50', 'positionY' : '150', 'depth': '4'},
+			"block2" : {'img': 'piggy', 'positionX' : '20', 'positionY' : '500', 'depth': '4'},
+			"block3" : {'img': 'piggy', 'positionX' : '60', 'positionY' : '750', 'depth': '4'},
+		};
+
+		this.picMaxWidth = window.innerWidth/3;
+		this.picMaxHeight = this.picMaxWidth*0.75;
+
+		for(var blockElements in this.blockImages){
+			var blocking = this.add.image(this.blockImages[blockElements].positionX,this.blockImages[blockElements].positionY, this.blockImages[blockElements].img).setOrigin(0,0).setName(imageKey);
+			blocking.displayWidth = this.picMaxWidth;
+			blocking.displayHeight = this.picMaxHeight;
+			blocking.depth = this.blockImages[blockElements].depth
+		}
 
 		this.loadedImages = {};
 
@@ -49,11 +66,10 @@ class gameScene extends Phaser.Scene {
 
 		this.pos = 50;
 
-		this.picMaxWidth = window.innerWidth/3;
-		this.picMaxHeight = this.picMaxWidth*0.75;
+
 
 		this.questions = [
-		{question: 'Finde alle süßen Tiere!', tag: 'cute,doggie'},
+		{question: 'Finde alle süßen Hunde!', tag: 'cute,doggie'},
 		{question: 'Wo ist das Babykätzchen?', tag: 'sad,kitty'}];
 
 		this.random = Math.floor(Math.random() * this.questions.length);
@@ -85,89 +101,86 @@ class gameScene extends Phaser.Scene {
 			this.wait.push(element)
 			
 		}
-
-
 		this.input.on('gameobjectdown', function(pointer, gameObject){
-
+			var count = 0;
+			console.log(gameObject)
 			this.questionTags = that.questions[that.random].tag.split(',');
 			this.testTags = that.imageArray[gameObject.name].tag.split(',');
+			var bla = this;
 
-			for(var i = 0; i < this.questionTags.length; i++){
-				for(var j = 0; j < this.testTags.length; j++){
-					if(this.questionTags[i] == this.testTags[j]){
-						that.correct += 1
-						console.log(that.correct)
-						gameObject.input.enabled = false;
-						that.tweens.add( {
-							targets: gameObject,
-							scaleX: 0.5,
-							scaleY: 0.5,
-							ease: 'Sine.easeOut',
-							duration: 500,
-							repeat: 0,
-							yoyo: true,
-							onComplete: function() {gameObject.input.enabled = true}
-						})
+			this.questionTags.forEach(function(tag) {
+				for(var i = 0; i < bla.testTags.length; i++){
+					//console.log(tag)
+					if(tag == bla.testTags[i]){
+						console.log(count)
+						//console.log("Ja")
+						count += 1;
+						break;
+					}else{
+						//console.log("Nope")
 					}
-
 				}
+			})
+			if(count == this.questionTags.length){
+				gameObject.input.enabled = false;
+				that.correct += 1;
+
+				that.tweens.add( {
+					targets: gameObject,
+					scaleX: 0.5,
+					scaleY: 0.5,
+					ease: 'Sine.easeOut',
+					duration: 500,
+					repeat: 0,
+					yoyo: true,
+					onComplete: function() {gameObject.input.enabled = true}
+				})
 			}
 
 		});
 
 
-		this.PosY = 0;
+		this.PosY = 350;
 		for(var i = 1; i < 4; i++){
 			var temp = 'row' + i;
 			for(var j = 0; j < that[temp].length; j++){
 				that[temp][j].displayWidth = that.picMaxWidth * (that.imageArray[that[temp][j].name].depth / 2);
+				that[temp][j].depth = that.imageArray[that[temp][j].name].depth;
 				if(that.imageArray[that[temp][j].name].direction == "Left"){
 					that[temp][j].x = window.innerWidth
 				}else{
 					that[temp][j].x = 0 - that[temp][j].displayWidth;
 				}
-				
 				that[temp][j].y = this.PosY;
 				var Height = that[temp][j].displayHeight;
 			}
-			this.PosY += Height * 0.75;
+			this.PosY += Height * 0.5;
 		}
-
 		var timedEvent = this.time.addEvent({
-			delay: 60000,
+			delay: 10000,
 			callback: this.gameWin,
 			callbackScope: this
 		});
-
-
 		this.spawn();
-
 	}
 	gameWin() {
 		this.scene.start('WinScene', { t: this.correct})
 	}
 
 	spawn() {
-		//console.log("Hey")
 		var element = Math.floor(Math.random() * this.wait.length)
 		if(this.wait.length > 0){
-			//console.log("current Depth ", this.imageArray[this.wait[element]].depth);
-			//console.log("last Depth ", this.lastDepth);
 			if(this.imageArray[this.wait[element]].depth == this.lastDepth){
-				//this.lastDepth = this.imageArray[this.wait[element]].depth;
-				//console.log(this.lastDepth)
 				this.spawn();
 				return false;
-				console.log("break")
 			}
-			console.log(this.imageArray[this.wait[element]].depth + " is a new one compared to " + this.lastDepth);
 			this.lastDepth = this.imageArray[this.wait[element]].depth;
 			var dirTemp = 'move' + this.imageArray[this.wait[element]].direction;
 			this[dirTemp].push(this.loadedImages[this.wait[element]]);	
 			this.wait.splice(element,1);
 		}
 		var SpawnTimer = this.time.addEvent( {
-			delay: Math.random() * (5000 - 1000) + 1000,
+			delay: Math.random() * (3000 - 1000) + 1000,
 			callback:this.spawn,
 			callbackScope: this
 		})
