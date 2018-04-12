@@ -11,6 +11,8 @@ RUN npm install
 
 COPY src /app/src
 COPY lib /app/lib
+COPY .babelrc /app/.babelrc
+COPY webpack.config.js /app/webpack.config.js
 
 # start app
 CMD ["npm", "start"]
