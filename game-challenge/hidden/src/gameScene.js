@@ -48,10 +48,11 @@ class gameScene extends Phaser.Scene {
 		this.picMaxHeight = this.picMaxWidth*0.75;
 
 		for(var blockElements in this.blockImages){
-			var blocking = this.add.image(this.blockImages[blockElements].positionX,this.blockImages[blockElements].positionY, this.blockImages[blockElements].img).setOrigin(0,0).setName(imageKey);
+			var blocking = this.add.image(this.blockImages[blockElements].positionX,this.blockImages[blockElements].positionY, this.blockImages[blockElements].img).setOrigin(0,0).setName(imageKey).setInteractive();
 			blocking.displayWidth = this.picMaxWidth;
 			blocking.displayHeight = this.picMaxHeight;
-			blocking.depth = this.blockImages[blockElements].depth
+			blocking.depth = this.blockImages[blockElements].depth;
+			blocking.eppsaInactive = true;
 		}
 
 		this.loadedImages = {};
@@ -70,7 +71,7 @@ class gameScene extends Phaser.Scene {
 
 		this.questions = [
 		{question: 'Finde alle süßen Hunde!', tag: 'cute,doggie'},
-		{question: 'Wo ist das Babykätzchen?', tag: 'sad,kitty'}];
+		{question: 'Wo ist das Babykätzchen?', tag: 'cute,kitty'}];
 
 		this.random = Math.floor(Math.random() * this.questions.length);
 
@@ -102,6 +103,10 @@ class gameScene extends Phaser.Scene {
 			
 		}
 		this.input.on('gameobjectdown', function(pointer, gameObject){
+			if(gameObject.eppsaInactive != undefined && gameObject.eppsaInactive == true){
+				return;
+			}
+
 			var count = 0;
 			console.log(gameObject)
 			this.questionTags = that.questions[that.random].tag.split(',');
