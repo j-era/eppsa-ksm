@@ -80,7 +80,7 @@ services:
       - game-challenge-hunt-client
       - game-challenge-hunt-server
       - game-challenge-phaser-demo
-      - game-challenge-boat
+      - game-challenge-clicker
 
   game-server:
     build:
@@ -124,9 +124,9 @@ services:
       GAME_SERVER_URI: https://game-server.${HOST}
       STATIC_SERVER_URI: https://static.${HOST}
 
-  game-challenge-boat:
+  game-challenge-clicker:
     build:
-      context: ./game-challenge/boat
+      context: ./game-challenge/clicker
     environment:
       PORT: 80
 
