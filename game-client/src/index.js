@@ -41,6 +41,9 @@ contentServer.getData().then(transform).then(async (content) => {
         showLobbyNavigation={ showLobbyNavigation }
         resumableGame={ resumableGame }
         assetServerUri={ process.env.ASSET_SERVER_URI }
+        contentServerUri={ process.env.CONTENT_SERVER_URI }
+        gameServerUri={ process.env.GAME_SERVER_URI }
+        staticServerUri={ process.env.STATIC_SERVER_URI }
         maxChallenges={ maxChallenges }
         onResumeGame={ resumeGame }
         onStartNewGame={ startNewGame }
@@ -56,14 +59,14 @@ contentServer.getData().then(transform).then(async (content) => {
 
   async function resumeGame() {
     store.dispatch(actions.updateGame(
-      await gameServer.resumeGame(resumableGame.gameId, maxChallenges)
+      await gameServer.resumeGame(resumableGame.gameId)
     ))
     gameServer.setHandshakeQuery({ gameId: resumableGame.gameId })
   }
 
   async function startNewGame(name, avatar) {
     console.log("Starting new game")
-    const game = await gameServer.newGame(name, avatar, maxChallenges)
+    const game = await gameServer.startGame(name, avatar, maxChallenges)
     store.dispatch(actions.updateGame(game))
     setCookie("gameId", game.gameId)
     gameServer.setHandshakeQuery({ gameId: game.gameId })
@@ -107,8 +110,26 @@ async function startChallenge() {
   store.dispatch(actions.startChallenge())
 }
 
-async function onChallengeReady(challengeWindow, config, uri) {
-  challengeWindow.postMessage(config, uri)
+async function onChallengeReady(challengeWindow, data, uri) {
+  challengeWindow.postMessage({ data, type: "challengeData" }, uri)
+  activateDeviceOrientation(challengeWindow, data.challenge.template, uri)
+}
+
+function activateDeviceOrientation(challengeWindow, template, uri) {
+  const gyroGames = ["button", "skill"]
+  if (gyroGames.indexOf(template) >= 0) {
+    window.addEventListener("deviceorientation", event => {
+      console.log(event)
+      challengeWindow.postMessage({
+        data: {
+          alpha: event.alpha,
+          beta: event.beta,
+          gamma: event.gamma
+        },
+        type: "deviceOrientation"
+      }, uri)
+    })
+  }
 }
 
 async function receiveMessage(event) {

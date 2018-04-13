@@ -1,5 +1,6 @@
 {
   "extends": "artcom-react",
   "rules": {
+    "import/no-commonjs": 0
   }
 }
