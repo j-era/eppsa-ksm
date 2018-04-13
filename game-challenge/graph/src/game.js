@@ -28,14 +28,31 @@ let GraphGame = new Phaser.Class({
 		//game specific attributes
 
 		//agentAttributes
-		this.spawnInterval = 3;				//Sets the time interval after which the next agent spawns.
-		this.maxAgents = 1;					//Defines the max. amount of agents that can be on the board. Spawn is paused while the amount of agents on the board = this value.
+		this.spawnInterval = gameData.spawnInterval;	//Sets the time interval after which the next agent spawns.
+		this.maxAgents = gameData.maxAgents; 			//Defines the max. amount of agents that can be on the board. Spawn is paused while the amount of agents on the board = this value.
 
-		this.agentClasses = availableClasses; //currently getting those from other js file, should come from cms
+		this.agentClasses = [];
+		for(var key in gameData.agents){
+			if(key == "template"){
+				continue;
+			}
+			this.agentClasses.push(gameData.agents[key]);
+		}
+		console.log(this.agentClasses);
 
 		//nodeAttributes
 		this.nodeCount = 35; 		//Defines the amount nodes for the graph.
-		this.nodes = assetsNodes; 	//currently getting those from other js file, should come from cms
+
+		this.nodes = {};
+		for(var key in gameData.nodes){
+			if(key == "template"){
+				continue;
+			}
+			this.nodes[key] = gameData.nodes[key];
+			this.nodes[key].connectedTo = JSON.parse(gameData.nodes[key].connectedTo);
+		}
+		console.log(this.nodes);
+		//this.nodes = assetsNodes; 	//currently getting those from other js file, should come from cms
 	
 		//other variables needed
 		this.agentSpawnRates = [];
@@ -71,12 +88,12 @@ let GraphGame = new Phaser.Class({
 	},
 
 	preload: function(){
-		console.log(gameData.assets);
+		//console.log(gameData.assets);
 		for(var key in gameData.assets){
 			if(key == "template"){
 				continue;
 			}
-			console.log(gameData.assets[key].name);
+			//console.log(gameData.assets[key].name);
 			this.load.image(gameData.assets[key].name, 'https://asset-server.barbara.eppsa.de/' + gameData.assets[key].image.src);
 		}
 		/*this.load.image('regular', 'assets/EPPSA_Heinzel_Node.png');
