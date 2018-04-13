@@ -43,6 +43,7 @@ contentServer.getData().then(transform).then(async (content) => {
         assetServerUri={ process.env.ASSET_SERVER_URI }
         contentServerUri={ process.env.CONTENT_SERVER_URI }
         gameServerUri={ process.env.GAME_SERVER_URI }
+        staticServerUri={ process.env.STATIC_SERVER_URI }
         maxChallenges={ maxChallenges }
         onResumeGame={ resumeGame }
         onStartNewGame={ startNewGame }
@@ -109,9 +110,9 @@ async function startChallenge() {
   store.dispatch(actions.startChallenge())
 }
 
-async function onChallengeReady(challengeWindow, config, uri) {
-  challengeWindow.postMessage({ data: config, type: "challengeData" }, uri)
-  activateDeviceOrientation(challengeWindow, config.challenge.template, uri)
+async function onChallengeReady(challengeWindow, data, uri) {
+  challengeWindow.postMessage({ data, type: "challengeData" }, uri)
+  activateDeviceOrientation(challengeWindow, data.challenge.template, uri)
 }
 
 function activateDeviceOrientation(challengeWindow, template, uri) {
