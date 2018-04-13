@@ -1,10 +1,14 @@
 let gameClient;
+let gameData;
 
 window.addEventListener("message", receiveMessage, false)
 function receiveMessage(event)
 {
   console.log(event)
+  gameData = event.data.challenge;
   gameClient = { source: event.source, origin: event.origin }
+
+  init();
 }
 
 let GraphGame = new Phaser.Class({
@@ -24,7 +28,6 @@ let GraphGame = new Phaser.Class({
 		//game specific attributes
 
 		//agentAttributes
-		this.agentCounter = 0;				//Counts the number of agents that trigger a win-event (used for score calculation).
 		this.spawnInterval = 3;				//Sets the time interval after which the next agent spawns.
 		this.maxAgents = 1;					//Defines the max. amount of agents that can be on the board. Spawn is paused while the amount of agents on the board = this value.
 
@@ -68,7 +71,15 @@ let GraphGame = new Phaser.Class({
 	},
 
 	preload: function(){
-		this.load.image('regular', 'assets/EPPSA_Heinzel_Node.png');
+		console.log(gameData.assets);
+		for(var key in gameData.assets){
+			if(key == "template"){
+				continue;
+			}
+			console.log(gameData.assets[key].name);
+			this.load.image(gameData.assets[key].name, 'https://asset-server.barbara.eppsa.de/' + gameData.assets[key].image.src);
+		}
+		/*this.load.image('regular', 'assets/EPPSA_Heinzel_Node.png');
 		this.load.image('start', 'assets/EPPSA_Heinzel_Node.png');
 		this.load.image('exit', 'assets/EPPSA_Heinzel_Node.png');
 
@@ -84,6 +95,7 @@ let GraphGame = new Phaser.Class({
 		this.load.image('tailorwife', 'assets/EPPSA_Heinzel_TailorWife.png');
 
 		this.load.image('button', 'assets/EPPSA_Heinzel_Button.png');
+		*/
 	}, 
 
 	create: function(data){
@@ -327,7 +339,7 @@ let GraphGame = new Phaser.Class({
 			}else{
 				this.node.img = that.add.sprite(this.xPosToScreen(currentNode.xPosition),this.yPosToScreen(currentNode.yPosition), currentNode.nodeState).setInteractive();
 				this.node.img.setScale(this.width * window.devicePixelRatio/this.node.img.width * 0.008)
-				console.log(this.xPosToScreen(currentNode.xPosition), this.yPosToScreen(currentNode.yPosition));
+				//console.log(this.xPosToScreen(currentNode.xPosition), this.yPosToScreen(currentNode.yPosition));
 			}
 			this.node.connectedTo = currentNode.connectedTo;
 			this.node.pauseTime = currentNode.nodePauseTime;
@@ -527,6 +539,12 @@ let config = {
 	displayVisibilityChange: true,
 	scene: [ GraphGame, GameOverScene ] // our newly created scene
   };
+
+  let game;
+
+  let init = function(){
+	// create the game, and pass it the configuration
+	game = new Phaser.Game(config);
+  }
    
-  // create the game, and pass it the configuration
-  let game = new Phaser.Game(config);
+  
