@@ -4,89 +4,72 @@ import querystring from "querystring"
 import React from "react"
 import { render } from "react-dom"
 import { Provider } from "react-redux"
+import thunk from "redux-thunk"
 import { applyMiddleware, createStore, combineReducers } from "redux"
 import { createLogger } from "redux-logger"
 
 import Application from "./components/application"
+import * as gameStates from "./gameStates"
 import * as reducers from "./reducers"
 import ContentServer from "./api/contentServer"
-import { getCookie, setCookie } from "./cookie"
+import { getCookie } from "./cookie"
 import GameServer from "./api/gameServer"
 import * as actions from "./actionCreators"
 
-const store = applyMiddleware(createLogger())(createStore)(combineReducers(reducers))
+const store = createStore(combineReducers(reducers), applyMiddleware(thunk, createLogger()))
 const contentServer = new ContentServer(process.env.CONTENT_SERVER_URI)
 const gameServer = new GameServer(process.env.GAME_SERVER_URI)
 
 const config = querystring.parse(window.location.search.substring(1))
 
 contentServer.getData().then(transform).then(async (content) => {
-  const resumableGame = await findResumableGame()
-  const showLobbyNavigation = config.token && !resumableGame
   const maxChallenges = Object.keys(content.challenges).length - 1
 
-  const selectedAvatar = config.avatar ? config.avatar : Object.keys(content.avatars)[0]
-  store.dispatch(actions.updateAvatar(selectedAvatar))
+  if (config.avatar) {
+    store.dispatch(actions.updateAvatar(config.avatar))
+  }
+
+  const resumableGame = await findResumableGame()
+  if (resumableGame) {
+    if (config.token) {
+      store.dispatch(actions.resumeGame(resumableGame.gameId, gameServer))
+    } else {
+      store.dispatch(actions.updateGameState(gameStates.RESUME_OR_NEW_GAME_SELECTION))
+    }
+  } else {
+    if (config.token) {
+      store.dispatch(actions.updateGameState(gameStates.NAVIGATION_TO_START))
+    } else {
+      if (config.avatar) {
+        store.dispatch(actions.updateGameState(gameStates.NEW_GAME_NAME_SELECTION))
+      } else {
+        store.dispatch(actions.updateGameState(gameStates.NEW_GAME_AVATAR_SELECTION))
+      }
+    }
+  }
 
   window.addEventListener("message", receiveMessage, false)
-
-  if (config.token && resumableGame) {
-    resumeGame()
-  }
 
   render(
     <Provider store={ store }>
       <Application
         content={ content }
-        showLobbyNavigation={ showLobbyNavigation }
         resumableGame={ resumableGame }
         assetServerUri={ process.env.ASSET_SERVER_URI }
         contentServerUri={ process.env.CONTENT_SERVER_URI }
         gameServerUri={ process.env.GAME_SERVER_URI }
         staticServerUri={ process.env.STATIC_SERVER_URI }
         maxChallenges={ maxChallenges }
-        onResumeGame={ resumeGame }
-        onStartNewGame={ startNewGame }
-        onUpdateName={ (name) => store.dispatch(actions.updateName(name)) }
-        onToggleQrReader={ toggleQrReader }
-        onHandleQrReaderData={ handleQrReaderData }
-        onHandleQrReaderError={ handleQrReaderError }
-        onStartChallenge={ startChallenge }
+        dispatch={ store.dispatch }
+        gameServer={ gameServer }
         onChallengeReady={ onChallengeReady } />
     </Provider>,
     document.getElementById("app")
   )
-
-  async function resumeGame() {
-    store.dispatch(actions.updateGame(
-      await gameServer.resumeGame(resumableGame.gameId)
-    ))
-    gameServer.setHandshakeQuery({ gameId: resumableGame.gameId })
-  }
-
-  async function startNewGame(name, avatar) {
-    console.log("Starting new game")
-    const game = await gameServer.startGame(name, avatar, maxChallenges)
-    store.dispatch(actions.updateGame(game))
-    setCookie("gameId", game.gameId)
-    gameServer.setHandshakeQuery({ gameId: game.gameId })
-  }
-
-  function handleQrReaderData(data, challengeNumber) {
-    if (data != null && data === content.challenges[challengeNumber].token) {
-      startChallenge()
-      store.dispatch(actions.toggleQrReader())
-    }
-  }
 })
 
-function toggleQrReader() {
-  store.dispatch(actions.toggleQrReader())
-}
-
-function handleQrReaderError(error) {
-  store.dispatch(actions.handleQrReaderError(error.name))
-  console.error(error)
+function transform(content) {
+  return Object.assign(mapValues(omit(content, "index"), transform), content.index)
 }
 
 async function findResumableGame() {
@@ -99,15 +82,6 @@ async function findResumableGame() {
     }
   }
   return null
-}
-
-function transform(content) {
-  return Object.assign(mapValues(omit(content, "index"), transform), content.index)
-}
-
-async function startChallenge() {
-  await gameServer.startChallenge()
-  store.dispatch(actions.startChallenge())
 }
 
 async function onChallengeReady(challengeWindow, data, uri) {
@@ -137,7 +111,15 @@ async function receiveMessage(event) {
     console.log(`Challenge message received: ${JSON.stringify(event.data)}`)
 
     const challengeData = omit(event.data, "source")
-    store.dispatch(actions.updateGame(await gameServer.finishChallenge(challengeData)))
+    const data = await gameServer.finishChallenge(challengeData)
+
+    if (data.finished) {
+      store.dispatch(actions.updateGameState(gameStates.FINISHED))
+    } else {
+      store.dispatch(actions.updateGameState(gameStates.NAVIGATION_TO_NEXT_CHALLENGE))
+    }
+
+    store.dispatch(actions.updateGameData(data))
   }
 }
 
