@@ -1,20 +1,21 @@
 import React from "react"
 import ReactDOM from "react-dom"
 
-import { injectGlobalStyle } from "../lib/eppsa-ksm-shared/styled-components/globalStyle"
+import { injectGlobalStyle } from "./eppsa-ksm-shared/styled-components/globalStyle"
 
 import App from "./App"
-import bootstrap from "../lib/eppsa-ksm-shared/functions/bootstrap"
+import bootstrap from "./eppsa-ksm-shared/functions/bootstrap"
 
-bootstrap((data, config, onCompleteChallenge) => {
-  render(data, config, onCompleteChallenge)
+bootstrap((data, config, callbacks) => {
+  render(data, config, callbacks)
 })
 
-function render(data, onCompleteChallenge) {
+function render(data, callbacks) {
+  console.log(callbacks)
   injectGlobalStyle(data.staticServerUri)
 
   ReactDOM.render(
-    <App content={ data } completeChallenge={ onCompleteChallenge } />,
+    <App content={ data } completeChallenge={ callbacks.onCompleteChallenge } />,
     document.getElementById("root")
   )
 }

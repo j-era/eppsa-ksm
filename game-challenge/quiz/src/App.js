@@ -6,8 +6,8 @@ import AnswerButton from "./components/answerButton"
 import NextButton from "./components/nextButton"
 import QuestionText from "./components/questionText"
 import QuestionTitle from "./components/questionTitle"
-import ScoreCalculation from "../lib/eppsa-ksm-shared/functions/score"
-import theme from "../lib/eppsa-ksm-shared/styled-components/theme"
+import ScoreCalculation from "./eppsa-ksm-shared/functions/score"
+import theme from "./eppsa-ksm-shared/styled-components/theme"
 
 
 const Container = styled.div `
