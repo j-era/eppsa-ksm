@@ -54,8 +54,12 @@ let GraphGame = new Phaser.Class({
 		this.graphicsPath = [];
 		this.pathCounter = 0;
 
-		this.width = window.innerWidth * window.devicePixelRatio;
-		this.height = window.innerHeight * window.devicePixelRatio;
+		this.width = window.innerWidth;
+		this.height = window.innerHeight;
+		this.scrolled = false;
+
+		console.log("Width ", this.width);
+		console.log("Height ", this.height);
 
 		this.countedWinEvents = 0;
 		this.displayPointsText;
@@ -89,7 +93,7 @@ let GraphGame = new Phaser.Class({
 		this.setupAgentSpawnRates();
 		
 
-		this.spawnAgentTimer = this.time.addEvent({delay: this.spawnInterval * 1000, callback: this.spawnAgent, callbackScope: this, startAt: 0, loop: true});
+		this.spawnAgentTimer = this.time.addEvent({delay: this.spawnInterval * 1000, callback: this.spawnAgent, callbackScope: this, startAt: 5, loop: true});
 
 		this.displayPointsText = this.add.text(350, 550, this.countedWinEvents * 10, {color: '#ff00ff', fontSize: '20px'});
 
@@ -103,7 +107,7 @@ let GraphGame = new Phaser.Class({
 		this.input.on('gameobjectdown', function(pointer, gameObject){
 			if(gameObject.name == 'agent'){
 				gameObject.timer.remove(false); //stopping autonomous movement
-				this.pathSelectionActive = true;
+				that.pathSelectionActive = true;
 				that.currentPath[that.currentPathID] = {'agent' : gameObject, 'path' : []};
 				gameObject.setTint(0xff0000);
 
@@ -116,25 +120,30 @@ let GraphGame = new Phaser.Class({
 				console.log('current path ', that.currentPath);
 			}else if(gameObject.name == 'right'){
 				that.cameras.main.scrollX = that.width;
+				this.scrolled = true;
 			}else if(gameObject.name == 'left'){
 				this.cameras.main.scrollX = 0;
+				this.scrolled = false;
 			}
 		});
 
-		//TODO
-		/*
-		- look at tweens
-		*/
-		this.input.on('gameobjectover', function (pointer, gameObject) {
-			if(this.pathSelectionActive && gameObject.name == 'node'){
-				var pathLength = that.currentPath[that.currentPathID].path.length;
-				//check if node is first or is connected to last node in path
+		this.input.on('pointermove', function (pointer) {
+			if(that.pathSelectionActive){
+				let x = pointer.position.x;
+				let y = pointer.position.y;
+				if(this.scrolled){
+					x += that.width;
+				}
+
+				console.log("Checking nodes");
 				that.spawnedNodes.forEach(function(element){
-					if(gameObject == element.img){
+					if( x - 35 <= element.img.x && element.img.x <= x + 35 && y - 35  <= element.img.y &&  element.img.y <= y + 35){
+						console.log("found node " + element.id);
+						var pathLength = that.currentPath[that.currentPathID].path.length;
 						if(pathLength == 0){
 							console.log('this should not be logged out');
 							that.currentPath[that.currentPathID].path.push(element);
-							gameObject.setTint(0xff0000);
+							element.img.setTint(0xff0000);
 						}else{
 							var lastElement = that.currentPath[that.currentPathID].path[pathLength-1];
 							if(element.connectedTo.indexOf(lastElement.id) != -1){
@@ -142,7 +151,7 @@ let GraphGame = new Phaser.Class({
 								that.graphicsPath[that.pathCounter] = that.add.graphics({lineStyle: {width: 4, color: 0xCCD6DF}});
 								that.graphicsPath[that.pathCounter].strokeLineShape(middleLine);
 								that.currentPath[that.currentPathID].path.push(element);
-								gameObject.setTint(0xff0000);
+								element.img.setTint(0xff0000);
 								that.pathCounter ++;
 							}
 						}
@@ -152,8 +161,8 @@ let GraphGame = new Phaser.Class({
 		});
 	
 		this.input.on('pointerup', function(){
-			if(this.pathSelectionActive){
-				this.pathSelectionActive = false;
+			if(that.pathSelectionActive){
+				that.pathSelectionActive = false;
 				that.spawnedNodes.forEach(function(element){
 					element.img.clearTint();
 				});
@@ -214,7 +223,7 @@ let GraphGame = new Phaser.Class({
 			x: nextNode.x,
 			y: nextNode.y,
 			duration: 1000,
-			ease: 'Power2',
+			//ease: 'Power2',
 			yoyo: false,
 			repeat: 0,
 			onStart: function(){
@@ -314,13 +323,16 @@ let GraphGame = new Phaser.Class({
 			}
 			if(currentNode.skin != ''){
 				this.node.img = that.add.sprite(this.xPosToScreen(currentNode.xPosition),this.yPosToScreen(currentNode.yPosition), currentNode.skin).setInteractive();
+				this.node.img.setScale(this.width * window.devicePixelRatio/this.node.img.width * 0.1)
 			}else{
 				this.node.img = that.add.sprite(this.xPosToScreen(currentNode.xPosition),this.yPosToScreen(currentNode.yPosition), currentNode.nodeState).setInteractive();
+				this.node.img.setScale(this.width * window.devicePixelRatio/this.node.img.width * 0.008)
+				console.log(this.xPosToScreen(currentNode.xPosition), this.yPosToScreen(currentNode.yPosition));
 			}
 			this.node.connectedTo = currentNode.connectedTo;
 			this.node.pauseTime = currentNode.nodePauseTime;
 			this.node.id = currentNode.nodeID;
-			this.node.img.setScale(0.1,0.1).setName('node');
+			this.node.img.setName('node');
 
 			that.add.text(this.xPosToScreen(currentNode.xPosition), this.yPosToScreen(currentNode.yPosition), that.nodes[node].nodeID, {fill: '#ffffff'});
 
@@ -442,7 +454,8 @@ let GraphGame = new Phaser.Class({
 
 
 			var newAgent = {};
-			newAgent.img = this.add.image(startNode.x, startNode.y, agentType.name).setInteractive().setName('agent').setDepth(1).setScale(0.1,0.1).setAlpha(0);
+			newAgent.img = this.add.image(startNode.x, startNode.y, agentType.name).setInteractive().setName('agent').setDepth(1).setAlpha(0).setOrigin(0.5,0.5);
+			newAgent.img.setScale(this.width/newAgent.img.width * 0.08);
 			newAgent.type = agentType.name;
 			newAgent.id = this.currentAgentID;
 			newAgent.isHostile = agentType.isHostile;
