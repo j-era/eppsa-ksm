@@ -1,5 +1,5 @@
 {
-  "name": "boat",
+  "name": "hidden",
   "version": "0.1.0",
   "scripts": {
     "watch": "http-server src/ -p $PORT",
