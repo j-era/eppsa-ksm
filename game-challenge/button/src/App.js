@@ -44,7 +44,7 @@ class Button extends Component {
           showViewFinder={ false }
           style={ { width: "50%" } } />
         <div>{ this.state.scanned }</div>
-        <div>{ this.props.config.scoreCalculation.sessionLength }</div>
+        <div>sessionLength: { this.props.sessionLength }</div>
         <ButtonDiv className={ "button" } onClick={ this.state.onClick } />
         <div>contentServerUri: { this.contentServerUri }</div>
         <div>assetServerUri: { this.assetServerUri }</div>

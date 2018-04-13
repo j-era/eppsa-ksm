@@ -27,8 +27,6 @@ const challengeNumber = url.searchParams.get("challengeNumber")
 
 window.addEventListener("message", receiveMessage, false)
 function receiveMessage(event) {
-  console.log(event)
-  console.log(event.data)
   if (event.data.type === "challengeData") {
     gameClient = { source: event.source, origin: event.origin }
     config = selectContent(event.data.data)
@@ -43,7 +41,7 @@ function receiveMessage(event) {
     assetServerUri={ assetServerUri }
     gameServerUri={ gameServerUri }
     challengeNumber={ challengeNumber }
-    sessionTime={ config.scoreCalculation.sessionLength }
+    sessionLength={ config.scoreCalculation.sessionLength }
     orientation={ orientation } />,
   document.getElementById("root"))
 }
