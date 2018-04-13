@@ -192,12 +192,12 @@ let GraphGame = new Phaser.Class({
 			var nodeIndex = Math.floor(Math.random() * this.nodes[node.id].connectedTo.length);
 			//node.id = this.nodes[node.id].connectedTo[nodeIndex];
 			nextNode.id = this.nodes[node.id].connectedTo[nodeIndex];
-			nextNode.x = this.nodes[nextNode.id].xPosition;
-			nextNode.y = this.nodes[nextNode.id].yPosition;
+			nextNode.x = this.xPosToScreen(this.nodes[nextNode.id].xPosition);
+			nextNode.y = this.yPosToScreen(this.nodes[nextNode.id].yPosition);
 		}else{
 			nextNode.id = node.id
-			nextNode.x = this.nodes[node.id].xPosition;
-			nextNode.y = this.nodes[node.id].yPosition;
+			nextNode.x = this.xPosToScreen(this.nodes[node.id].xPosition);
+			nextNode.y = this.yPosToScreen(this.nodes[node.id].yPosition);
 		}
 
 		var currentlyMovingAgent;
@@ -310,19 +310,20 @@ let GraphGame = new Phaser.Class({
 			this.node = {};
 			var currentNode = this.nodes[node];
 			if(this.nodes[node].nodeState == "start" /*or startExit*/){
-				this.startNodes.push({'id': this.nodes[node].nodeID, 'x': this.nodes[node].xPosition, 'y': this.nodes[node].yPosition});
+				this.startNodes.push({'id': this.nodes[node].nodeID, 'x': this.xPosToScreen(this.nodes[node].xPosition), 'y': this.yPosToScreen(this.nodes[node].yPosition)});
 			}
 			if(currentNode.skin != ''){
-				this.node.img = that.add.sprite(currentNode.xPosition,currentNode.yPosition, currentNode.skin).setInteractive();
+				this.node.img = that.add.sprite(this.xPosToScreen(currentNode.xPosition),this.yPosToScreen(currentNode.yPosition), currentNode.skin).setInteractive();
 			}else{
-				this.node.img = that.add.sprite(currentNode.xPosition,currentNode.yPosition, currentNode.nodeState).setInteractive();
+				this.node.img = that.add.sprite(this.xPosToScreen(currentNode.xPosition),this.yPosToScreen(currentNode.yPosition), currentNode.nodeState).setInteractive();
 			}
 			this.node.connectedTo = currentNode.connectedTo;
 			this.node.pauseTime = currentNode.nodePauseTime;
 			this.node.id = currentNode.nodeID;
 			this.node.img.setScale(0.1,0.1).setName('node');
 
-			that.add.text(that.nodes[node].xPosition, that.nodes[node].yPosition, that.nodes[node].nodeID, {fill: '#ffffff'});
+			that.add.text(this.xPosToScreen(currentNode.xPosition), this.yPosToScreen(currentNode.yPosition), that.nodes[node].nodeID, {fill: '#ffffff'});
+
 			that.nodes[node].connectedTo.forEach(function(element){
 				let lineTemp = {};
 				lineTemp.pos1x = that.nodes[node].xPosition;
@@ -332,7 +333,7 @@ let GraphGame = new Phaser.Class({
 
 				if(that.lines.length == 0){
 						var graphics = that.add.graphics({fillStyle: {color: 0xCCD6DF}});
-						middleLine = new Phaser.Geom.Line(that.nodes[node].xPosition, that.nodes[node].yPosition, that.nodes[element].xPosition, that.nodes[element].yPosition);
+						middleLine = new Phaser.Geom.Line(that.xPosToScreen(that.nodes[node].xPosition), that.yPosToScreen(that.nodes[node].yPosition), that.xPosToScreen(that.nodes[element].xPosition), that.yPosToScreen(that.nodes[element].yPosition));
 
 						var length = Phaser.Geom.Line.Length(middleLine);
 						var points = middleLine.getPoints(length/10);
@@ -352,7 +353,7 @@ let GraphGame = new Phaser.Class({
 					});
 					if(insert){
 						var graphics = that.add.graphics({fillStyle: {color: 0xCCD6DF}});
-							middleLine = new Phaser.Geom.Line(that.nodes[node].xPosition, that.nodes[node].yPosition, that.nodes[element].xPosition, that.nodes[element].yPosition);
+							middleLine = new Phaser.Geom.Line(that.xPosToScreen(that.nodes[node].xPosition), that.yPosToScreen(that.nodes[node].yPosition), that.xPosToScreen(that.nodes[element].xPosition), that.yPosToScreen(that.nodes[element].yPosition));
 	
 							var length = Phaser.Geom.Line.Length(middleLine);
 							var points = middleLine.getPoints(length/10);
@@ -378,6 +379,14 @@ let GraphGame = new Phaser.Class({
 			//this.spawnSum += parseFloat(this.agentClasses[agentClass].spawnProbability);
 		}
 		//this.spawnSum = Number.parseFloat(this.spawnSum).toFixed(2);
+	},
+
+	xPosToScreen: function(pos){
+		return this.width * pos/100;
+	},
+
+	yPosToScreen: function(pos){
+		return this.height * pos/100;
 	},
 
 	getAgentAccordingToSpawnRate: function(list, weight){
