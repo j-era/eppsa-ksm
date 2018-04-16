@@ -1,7 +1,9 @@
 let gameClient;
 let gameData;
 
-window.addEventListener("message", receiveMessage, false)
+
+
+//window.addEventListener("message", receiveMessage, false)
 function receiveMessage(event)
 {
   console.log(event)
@@ -9,6 +11,46 @@ function receiveMessage(event)
   gameClient = { source: event.source, origin: event.origin }
 
   init();
+}
+
+const contentServerUri = 'https://content-server.barbara.eppsa.de'
+const assetServerUri = 'https://asset-server.barbara.eppsa.de'
+const staticServerUri = 'https://static.barbara.eppsa.de'
+
+try {
+    console.assert(window.parent.origin)
+
+    // We are in the same window
+
+    const url = new URL(window.location)
+
+    const challengeNumber = url.searchParams.get("challengeNumber")
+    const challengeType = url.searchParams.get("challengeType")
+
+    if (!challengeNumber || !challengeType) {
+      console.error(`Missing query parameters: ${challengeNumber}, ${challengeType}`)
+    } else {
+      if (!contentServerUri || !assetServerUri || !staticServerUri) {
+        console.log(
+          `Missing config parameters: ${contentServerUri}, ${assetServerUri}, ${staticServerUri}`
+        )
+      } else {
+		  console.log("getting content");
+		const contentServer = new ContentServer(contentServerUri)
+		console.log(contentServer);
+        contentServer.getData()
+          .then((data) => {
+            const content = selectContent(transform(data), challengeType, challengeNumber)
+            console.log(content)
+			onReadyCallback(content, completeChallenge)
+			init();
+		  })
+		  
+      }
+    }
+  } catch (e) {
+    // We are in another window (iframe)
+    window.addEventListener("message", receiveMessage, false)
 }
 
 let GraphGame = new Phaser.Class({
@@ -22,7 +64,7 @@ let GraphGame = new Phaser.Class({
 		//global attributes
 		this.gameType = "graph";
 		this.areaID = 34;
-		this.timer = 330;
+		this.timer = gameData.timer;
 		this.score = 0;
 
 		//game specific attributes
