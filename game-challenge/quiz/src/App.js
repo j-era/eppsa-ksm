@@ -6,8 +6,8 @@ import AnswerButton from "./components/answerButton"
 import NextButton from "./components/nextButton"
 import QuestionText from "./components/questionText"
 import QuestionTitle from "./components/questionTitle"
-import ScoreCalculation from "../lib/eppsa-ksm-shared/functions/score"
-import theme from "../lib/eppsa-ksm-shared/styled-components/theme"
+import ScoreCalculation from "../node_modules/eppsa-ksm-shared/functions/score"
+import theme from "../node_modules/eppsa-ksm-shared/styled-components/theme"
 
 
 const Container = styled.div `
@@ -20,6 +20,7 @@ const Container = styled.div `
   padding-right: ${props => props.theme.layout.offsetX};
   height: 100vh;
 `
+
 
 export default class App extends React.Component {
   constructor(props) {
@@ -120,6 +121,7 @@ export default class App extends React.Component {
       }
     }
   }
+
 
   confirm(answerIndex) {
     clearTimeout(this.timeLineTimeout)
