@@ -41,10 +41,20 @@ export default class App extends React.Component {
 
   componentDidMount() {
     this.startTime = new Date()
+    const { sessionLength } = this.props.content.challenge["score-calculation"]
+    const { showTimeline, startTimelineClock, stopTimelineClock } = this.props.callbacks
+    showTimeline(sessionLength)
+    startTimelineClock()
+    this.timeLineTimeout = setTimeout(() => {
+      this.setState({ confirmed: true })
+      stopTimelineClock()
+      this.nextChallenge()
+    }, sessionLength * 1000)
     setTimeout(() => this.setState({ visible: true }), 0)
   }
 
   render() {
+    console.log(this.props.content.challenge)
     const { question } = this.props.content.challenge
     theme.colors.areaColor = this.props.content.color
     return (
@@ -141,8 +151,11 @@ export default class App extends React.Component {
   }
 
   async nextChallenge() {
+    clearTimeout(this.timeLineTimeout)
     this.setState({ nextClicked: true })
     await delay(100)
-    this.props.completeChallenge(this.points.score + this.points.bonus)
+    const { hideTimeline } = this.props.callbacks
+    hideTimeline()
+    this.props.callbacks.completeChallenge(this.points.score + this.points.bonus)
   }
 }

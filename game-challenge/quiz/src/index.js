@@ -11,11 +11,10 @@ bootstrap((data, config, callbacks) => {
 })
 
 function render(data, callbacks) {
-  console.log(callbacks)
   injectGlobalStyle(data.staticServerUri)
 
   ReactDOM.render(
-    <App content={ data } completeChallenge={ callbacks.onCompleteChallenge } />,
+    <App content={ data } callbacks={ callbacks.callbacks } />,
     document.getElementById("root")
   )
 }

@@ -106,49 +106,19 @@ function activateDeviceOrientation(challengeWindow, template, uri) {
   }
 }
 
-async function receiveMessage(event) {
+function receiveMessage(event) {
   if (event.data.source === "challenge") { // ignore react dev tool messages
     console.log(`Challenge message received: ${JSON.stringify(event.data)}`)
     const challengeData = omit(event.data, "source")
 
     switch (event.data.id) {
-      case "finish": await completeChallenge(challengeData)
-        break
-      case "showTimeline": showTimeline(challengeData)
-        break
-      case "startTimeClock": startTimeClock(challengeData)
-        break
-      case "stopTimeClock": stopTimeClock(challengeData)
-        break
-      case "hideTimeLine": hideTimeLine(challengeData)
-        break
-      case "playAvatarAnimation": playAvatarAnimation(challengeData)
+      case "finish": return store.dispatch(actions.finishChallenge(challengeData, gameServer))
+      case "showTimeline": return store.dispatch(actions.showTimeline(event.data.startTime))
+      case "startTimelineClock": return store.dispatch(actions.startTimelineClock())
+      case "stopTimelineClock": return store.dispatch(actions.stopTimelineClock())
+      case "hideTimeline": return store.dispatch(actions.hideTimeline())
     }
   }
-}
-
-function showTimeline(challengeData) { console.log(challengeData) }
-
-function startTimeClock(challengeData) { console.log(challengeData) }
-
-function stopTimeClock(challengeData) { console.log(challengeData) }
-
-function hideTimeLine(challengeData) { console.log(challengeData) }
-
-function playAvatarAnimation(challengeData) {
-  console.log(`avatarAnimation: ${challengeData.name}`)
-}
-
-async function completeChallenge(challengeData) {
-  const data = await gameServer.finishChallenge(challengeData)
-
-  if (data.finished) {
-    store.dispatch(actions.updateGameState(gameStates.FINISHED))
-  } else {
-    store.dispatch(actions.updateGameState(gameStates.NAVIGATION_TO_NEXT_CHALLENGE))
-  }
-
-  store.dispatch(actions.updateGameData(data))
 }
 
 gameServer.on("connectedGames", (connectedGames) => {

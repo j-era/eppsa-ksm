@@ -50,6 +50,37 @@ export function score(state = 0, action) {
   }
 }
 
+export function showTimeline(state = false, action) {
+  switch (action.type) {
+    case types.SHOW_TIMELINE:
+      return true
+    case types.HIDE_TIMELINE:
+      return false
+    default:
+      return state
+  }
+}
+
+export function timelineClockTime(state = 0, action) {
+  switch (action.type) {
+    case types.SHOW_TIMELINE:
+      return action.startTime
+    default:
+      return state
+  }
+}
+
+export function timelineClockRunning(state = false, action) {
+  switch (action.type) {
+    case types.START_TIMELINE_CLOCK:
+      return true
+    case types.STOP_TIMELINE_CLOCK:
+      return true
+    default:
+      return state
+  }
+}
+
 export function connected(state = false, action) {
   switch (action.type) {
     case types.UPDATE_CONNECTED:
