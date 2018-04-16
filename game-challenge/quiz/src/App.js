@@ -42,7 +42,7 @@ export default class App extends React.Component {
 
   componentDidMount() {
     this.startTime = new Date()
-    const { sessionLength } = this.props.content.challenge["score-calculation"]
+    const { sessionLength } = this.props.content.challenge.score
     const { showTimeline, startTimelineClock, stopTimelineClock } = this.props.callbacks
     showTimeline(sessionLength)
     startTimelineClock()
@@ -122,11 +122,10 @@ export default class App extends React.Component {
     }
   }
 
-
   confirm(answerIndex) {
     clearTimeout(this.timeLineTimeout)
     this.props.callbacks.stopTimelineClock()
-    const { correctAnswer } = this.props.content.challenge
+    const { correctAnswer, score } = this.props.content.challenge
     const { shared } = this.props.content
 
     this.timeToAnswer = (new Date() - this.startTime) / 1000
