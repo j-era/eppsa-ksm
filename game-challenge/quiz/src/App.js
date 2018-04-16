@@ -158,6 +158,6 @@ export default class App extends React.Component {
     }
     const { hideTimeline } = this.props.callbacks
     hideTimeline()
-    this.props.callbacks.completeChallenge(this.points.score + this.points.bonus)
+    this.props.callbacks.finishChallenge(this.points.score + this.points.bonus)
   }
 }
