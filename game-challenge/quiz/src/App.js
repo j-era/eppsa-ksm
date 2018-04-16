@@ -54,7 +54,6 @@ export default class App extends React.Component {
   }
 
   render() {
-    console.log(this.props.content.challenge)
     const { question } = this.props.content.challenge
     theme.colors.areaColor = this.props.content.color
     return (

@@ -52,15 +52,6 @@ const hideTimeline = () => {
     }, gameClient.origin)
 }
 
-const playAvatarAnimation = (name) => {
-  gameClient.source.postMessage(
-    {
-      source: "challenge",
-      name,
-      id: "showTimeline"
-    }, gameClient.origin)
-}
-
 function receiveMessage(event) {
   const data = event.data
   if (data.type !== "challengeData") {
@@ -78,8 +69,7 @@ function receiveMessage(event) {
     showTimeline,
     startTimelineClock,
     stopTimelineClock,
-    hideTimeline,
-    playAvatarAnimation
+    hideTimeline
   } })
 }
 
@@ -114,8 +104,7 @@ export default function bootstrap(onReady) {
               showTimeline,
               startTimelineClock,
               stopTimelineClock,
-              hideTimeline,
-              playAvatarAnimation
+              hideTimeline
             } })
           })
       }
