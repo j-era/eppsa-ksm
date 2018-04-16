@@ -146,6 +146,8 @@ class gameScene extends Phaser.Scene {
 
 
 		this.PosY = 350;
+		this.row1Dif = 150;
+		this.row2Dif = 50;
 		for(var i = 1; i < 4; i++){
 			var temp = 'row' + i;
 			for(var j = 0; j < that[temp].length; j++){
@@ -157,9 +159,11 @@ class gameScene extends Phaser.Scene {
 					that[temp][j].x = 0 - that[temp][j].displayWidth;
 				}
 				that[temp][j].y = this.PosY;
-				var Height = that[temp][j].displayHeight;
+				//var Height = that[temp][j].displayHeight;
 			}
-			this.PosY += Height * 0.5;
+			var Height = 'row' + i + 'Dif';
+			this.PosY += this[Height];
+			console.log(Height)
 		}
 		var timedEvent = this.time.addEvent({
 			delay: 10000,
