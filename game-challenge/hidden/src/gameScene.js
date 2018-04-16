@@ -22,14 +22,14 @@ class gameScene extends Phaser.Scene {
 			"Katze" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '3'},
 			"Hund" : {'img': 'puppy', 'tag': 'cute,doggie,is,fluff', 'direction': 'Right', 'depth':'3'},
 
-			"puppy" :{'img': 'puppy', 'tag': 'cute,doggie,needs,love', 'direction' : 'Right', 'depth': '1'},
+			"puppy1" :{'img': 'puppy', 'tag': 'cute,doggie,needs,love', 'direction' : 'Right', 'depth': '1'},
 			"kitty1" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '1'},
 			"piggy1" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
 			"Schwein1" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
 			"Katze1" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '3'},
 			"Hund1" : {'img': 'puppy', 'tag': 'cute,doggie,makes,woof', 'direction': 'Right', 'depth': '3'},
 
-			"puppy" :{'img': 'puppy', 'tag': 'cute,doggie,wants,cuddles', 'direction' : 'Right', 'depth': '1'},
+			"puppy2" :{'img': 'puppy', 'tag': 'cute,doggie,wants,cuddles', 'direction' : 'Right', 'depth': '1'},
 			"kitty2" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '1'},
 			"piggy2" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
 			"Schwein2" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
@@ -94,7 +94,7 @@ class gameScene extends Phaser.Scene {
 		this.waitrow2 = [];
 		this.waitrow3 = [];
 		this.correct = 0;
-		
+
 		for(var element in this.imageArray){
 			var i = 0;
 			that.loadedImages[element].displayHeight = that.picMaxHeight * (that.imageArray[element].depth/2);
@@ -192,8 +192,6 @@ class gameScene extends Phaser.Scene {
 	gameWin() {
 		this.scene.start('WinScene', { t: this.correct})
 	}
-
-
 
 	/*spawn() {
 		var element = Math.floor(Math.random() * this.wait.length)
