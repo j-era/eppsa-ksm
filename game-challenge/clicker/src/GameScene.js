@@ -19,8 +19,9 @@ class GameScene extends Phaser.Scene {
 
 		var TempZiel = this.textures.get('Ziel');
 		var ZielScale = window.innerHeight / TempZiel.source[0].height *0.04;
-		var Ziel = this.add.image(0, window.innerHeight-(window.innerHeight*0.85), 'Ziel').setOrigin(0,0);
-		Ziel.setScale(window.innerWidth/Ziel.width, ZielScale);
+		var Ziel = this.add.image(window.innerHeight - (window.innerHeight*0.35), window.innerHeight-(window.innerHeight*0.85), 'Ziel').setOrigin(0,0);
+
+		Ziel.setScale(ZielScale,window.innerWidth/Ziel.width);
 
 
 		waterPic.setScale(window.innerWidth/waterPic.width, window.innerHeight/waterPic.height);
@@ -40,7 +41,7 @@ class GameScene extends Phaser.Scene {
 			frameRate: 8,
 			repeat: -1
 		});
-		this.boatPic = this.add.sprite(window.innerWidth - window.innerWidth*0.25, window.innerHeight - tempImg.source[0].width * boatPicScaleHeightBy, 'boat').play('boatAnim');
+		this.boatPic = this.add.sprite(window.innerWidth - window.innerWidth*0.85, window.innerHeight - (tempImg.source[0].width * boatPicScaleHeightBy * 5), 'boat').play('boatAnim');
 		this.boatPic.setScale(boatPicScaleWidthBy, boatPicScaleHeightBy);
 
 		var timedEvent = this.time.addEvent({
@@ -51,8 +52,8 @@ class GameScene extends Phaser.Scene {
 
 		var bla = this;
 		waterPic.on('pointerup', function(pointer){
-			bla.boatPic.y -= window.innerHeight/10;
-			if(bla.boatPic.y < window.innerHeight-(window.innerHeight*0.85)){
+			bla.boatPic.x += window.innerHeight/10;
+			if(bla.boatPic.x > window.innerHeight-(window.innerHeight*0.35)){
 				timedEvent.paused = true;
 				var Timeleft = timedEvent.getProgress().toString().substr(0,4) * 10;
 				Timeleft = Timeleft.toFixed(1);
