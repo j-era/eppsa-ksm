@@ -80,6 +80,7 @@ services:
       - game-challenge-hunt-client
       - game-challenge-hunt-server
       - game-challenge-phaser-demo
+      - game-challenge-quiz
       - game-challenge-clicker
 
   game-server:
