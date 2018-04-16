@@ -1,10 +1,10 @@
 import React from "react"
 import ReactDOM from "react-dom"
 
-import { injectGlobalStyle } from "./eppsa-ksm-shared/styled-components/globalStyle"
+import { injectGlobalStyle } from "../lib/eppsa-ksm-shared/styled-components/globalStyle"
 
 import App from "./App"
-import bootstrap from "./eppsa-ksm-shared/functions/bootstrap"
+import bootstrap from "../lib/eppsa-ksm-shared/functions/bootstrap"
 
 bootstrap((data, config, callbacks) => {
   render(data, config, callbacks)

@@ -6,8 +6,8 @@ import AnswerButton from "./components/answerButton"
 import NextButton from "./components/nextButton"
 import QuestionText from "./components/questionText"
 import QuestionTitle from "./components/questionTitle"
-import ScoreCalculation from "./eppsa-ksm-shared/functions/score"
-import theme from "./eppsa-ksm-shared/styled-components/theme"
+import ScoreCalculation from "../lib/eppsa-ksm-shared/functions/score"
+import theme from "../lib/eppsa-ksm-shared/styled-components/theme"
 
 
 const Container = styled.div `
@@ -48,7 +48,7 @@ export default class App extends React.Component {
     this.timeLineTimeout = setTimeout(() => {
       this.setState({ confirmed: true })
       stopTimelineClock()
-      this.nextChallenge()
+      this.nextChallenge(true)
     }, sessionLength * 1000)
     setTimeout(() => this.setState({ visible: true }), 0)
   }
@@ -149,10 +149,12 @@ export default class App extends React.Component {
     this.setState({ showNext: true })
   }
 
-  async nextChallenge() {
+  async nextChallenge(timedOut = false) {
     clearTimeout(this.timeLineTimeout)
-    this.setState({ nextClicked: true })
-    await delay(100)
+    if (!timedOut) {
+      this.setState({ nextClicked: true })
+      await delay(100)
+    }
     const { hideTimeline } = this.props.callbacks
     hideTimeline()
     this.props.callbacks.completeChallenge(this.points.score + this.points.bonus)
