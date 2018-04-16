@@ -10,6 +10,15 @@ export function gameState(state = gameStates.NEW_GAME_AVATAR_SELECTION, action) 
   }
 }
 
+export function gameId(state = null, action) {
+  switch (action.type) {
+    case types.UPDATE_GAME_DATA:
+      return action.data.gameId
+    default:
+      return state
+  }
+}
+
 export function name(state = "", action) {
   switch (action.type) {
     case types.UPDATE_GAME_DATA:

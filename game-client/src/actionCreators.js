@@ -132,6 +132,20 @@ export function hideTimeline() {
   }
 }
 
+export function joinChallengeLobby(gameServer) {
+  return async (dispatch) => {
+    gameServer.joinChallengeLobby()
+    dispatch(updateGameState(gameStates.CHALLENGE_LOBBY))
+  }
+}
+
+export function leaveChallengeLobby(gameServer) {
+  return async (dispatch) => {
+    gameServer.leaveChallengeLobby()
+    dispatch(updateGameState(gameStates.CHALLENGE_MODE_SELECTION))
+  }
+}
+
 export function handleChallengeQrCode(data, challenge) {
   return (dispatch) => {
     if (data != null) {

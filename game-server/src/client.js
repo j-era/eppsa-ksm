@@ -21,6 +21,9 @@ module.exports = class Client {
     this.socket.on("resumeGame", this.resumeGame.bind(this))
     this.socket.on("startChallenge", this.startChallenge.bind(this))
     this.socket.on("finishChallenge", this.finishChallenge.bind(this))
+    this.socket.on("joinChallengeLobby", this.joinChallengeLobby.bind(this))
+    this.socket.on("leaveChallengeLobby", this.leaveChallengeLobby.bind(this))
+    this.socket.on("sendMessage", this.sendMessage.bind(this))
     this.socket.on("disconnect", this.onDisconnect.bind(this))
     this.socket.conn.on("packet", this.onPacket.bind(this))
   }
@@ -75,10 +78,47 @@ module.exports = class Client {
     toSocket(this.game)
   }
 
+  async joinChallengeLobby() {
+    if (this.game) {
+      this.log.info({
+        socketId: this.socket.id,
+        gameId: this.game.gameId,
+        challengeNumber: this.game.challengeNumber
+      },
+      "Joining challenge lobby")
+
+      this.mongoDB.joinChallengeLobby(this.game.gameId, this.game.challengeNumber)
+    } else {
+      this.log.error({ socketId: this.socket.id },
+        "Could not join challenge lobby without current game")
+    }
+  }
+
+  async leaveChallengeLobby() {
+    if (this.game) {
+      this.log.info({
+        socketId: this.socket.id,
+        gameId: this.game.gameId,
+        challengeNumber: this.game.challengeNumber
+      },
+      "Leaving challenge lobby")
+
+      this.mongoDB.leaveChallengeLobby(this.game.gameId)
+    } else {
+      this.log.error({ socketId: this.socket.id },
+        "Could not leave challenge lobby without current game")
+    }
+  }
+
+
   async startChallenge() {
     if (this.game) {
-      this.log.info({ socketId: this.socket.id, gameId: this.game.gameId },
-        "Starting challenge")
+      this.log.info({
+        socketId: this.socket.id,
+        gameId: this.game.gameId,
+        challengeNumber: this.game.challengeNumber
+      },
+      "Starting challenge")
 
       this.mongoDB.startChallenge(this.game.gameId, this.game.challengeNumber)
     } else {
