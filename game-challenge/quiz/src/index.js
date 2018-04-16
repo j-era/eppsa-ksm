@@ -6,15 +6,11 @@ import { injectGlobalStyle } from "../lib/eppsa-ksm-shared/styled-components/glo
 import App from "./App"
 import bootstrap from "../lib/eppsa-ksm-shared/functions/bootstrap"
 
-bootstrap((data, config, callbacks) => {
-  render(data, config, callbacks)
-})
-
-function render(data, callbacks) {
+bootstrap((data, callbacks) => {
   injectGlobalStyle(data.staticServerUri)
 
   ReactDOM.render(
     <App content={ data } callbacks={ callbacks.callbacks } />,
     document.getElementById("root")
   )
-}
+})
