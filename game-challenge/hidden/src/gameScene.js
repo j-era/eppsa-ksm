@@ -62,9 +62,6 @@ class gameScene extends Phaser.Scene {
 			this.loadedImages[imageKey] = image;
 		}
 
-		this.movingRight = 0;
-		this.movingLeft = 0;
-
 		this.pos = 50;
 
 
@@ -92,37 +89,58 @@ class gameScene extends Phaser.Scene {
 		this.row3 = [];
 		this.moveLeft = [];
 		this.moveRight = [];
-		this.wait = [];
+
+		this.waitrow1 = [];
+		this.waitrow2 = [];
+		this.waitrow3 = [];
 		this.correct = 0;
+		
 		for(var element in this.imageArray){
 			var i = 0;
 			that.loadedImages[element].displayHeight = that.picMaxHeight * (that.imageArray[element].depth/2);
 			var temp = 'row' + that.imageArray[element].depth;
 			that[temp].push(that.loadedImages[element]);
-			this.wait.push(element)
-			
+			this['wait' + temp].push(element);	
 		}
+
+
+		var SpawnTimerRow1 = this.time.addEvent( {
+			delay: Math.random() * (5000 - 2000) + 2000,
+			callback:this.spawn,
+			args: [this.waitrow1, 5000, 2000],
+			callbackScope: this,
+		});
+		var SpawnTimerRow2 = this.time.addEvent( {
+			delay: Math.random() * (5000 - 1000) + 1000,
+			callback:this.spawn,
+			args: [this.waitrow2, 5000, 1000],
+			callbackScope: this,
+		});		 
+		var SpawnTimerRow3 = this.time.addEvent( {
+			delay: Math.random() * (5000 - 3000) + 3000,
+			callback:this.spawn,
+			args: [this.waitrow3, 5000, 3000],
+			callbackScope: this,
+		})
+
 		this.input.on('gameobjectdown', function(pointer, gameObject){
 			if(gameObject.eppsaInactive != undefined && gameObject.eppsaInactive == true){
 				return;
 			}
 
 			var count = 0;
-			console.log(gameObject)
 			this.questionTags = that.questions[that.random].tag.split(',');
 			this.testTags = that.imageArray[gameObject.name].tag.split(',');
 			var bla = this;
 
 			this.questionTags.forEach(function(tag) {
 				for(var i = 0; i < bla.testTags.length; i++){
-					//console.log(tag)
 					if(tag == bla.testTags[i]){
 						console.log(count)
-						//console.log("Ja")
 						count += 1;
 						break;
 					}else{
-						//console.log("Nope")
+
 					}
 				}
 			})
@@ -163,20 +181,21 @@ class gameScene extends Phaser.Scene {
 			}
 			var Height = 'row' + i + 'Dif';
 			this.PosY += this[Height];
-			console.log(Height)
 		}
 		var timedEvent = this.time.addEvent({
-			delay: 10000,
+			delay: 50000,
 			callback: this.gameWin,
 			callbackScope: this
 		});
-		this.spawn();
+		//this.spawn();
 	}
 	gameWin() {
 		this.scene.start('WinScene', { t: this.correct})
 	}
 
-	spawn() {
+
+
+	/*spawn() {
 		var element = Math.floor(Math.random() * this.wait.length)
 		if(this.wait.length > 0){
 			if(this.imageArray[this.wait[element]].depth == this.lastDepth){
@@ -188,22 +207,33 @@ class gameScene extends Phaser.Scene {
 			this[dirTemp].push(this.loadedImages[this.wait[element]]);	
 			this.wait.splice(element,1);
 		}
-		var SpawnTimer = this.time.addEvent( {
-			delay: Math.random() * (3000 - 1000) + 1000,
+
+	}*/
+
+	spawn(waitrow, max, min) {
+		var element = Math.floor(Math.random() * waitrow.length)
+		var dirTemp = 'move' + this.imageArray[waitrow[element]].direction;
+		this[dirTemp].push(this.loadedImages[waitrow[element]]);
+		waitrow.splice(element,1);
+
+		this.time.addEvent( {
+			delay: Math.random() * (max - min) + min,
 			callback:this.spawn,
-			callbackScope: this
-		})
+			callbackScope: this,
+			args: [waitrow, max, min]
+		});
 	}
+
 
 	update(){
 		for(var i = 0; i < this.moveRight.length; i++){
 			this.moveRight[i].x += 5;
 			if(this.moveRight[i].x > window.innerWidth){
 				this.moveRight[i].x = 0 - this.moveRight[i].displayWidth;
-				this.wait.push(this.moveRight[i].name);
+				var temp = 'waitrow' + this.imageArray[this.moveRight[i].name].depth
+				//console.log(temp)
+				this[temp].push(this.moveRight[i].name);
 				this.moveRight.splice(i,1);
-
-				this.movingRight  = 0;
 			}
 		}
 
@@ -211,9 +241,9 @@ class gameScene extends Phaser.Scene {
 			this.moveLeft[i].x -= 5;
 			if(this.moveLeft[i].x < (0 - this.moveLeft[i].displayWidth)){
 				this.moveLeft[i].x = window.innerWidth;
-				this.wait.push(this.moveLeft[i].name);
+				var temp = 'waitrow' + this.imageArray[this.moveLeft[i].name].depth
+				this[temp].push(this.moveLeft[i].name);
 				this.moveLeft.splice(i,1)
-				this.movingLeft  = 0;
 			}
 		}
 
