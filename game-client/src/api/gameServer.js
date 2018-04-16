@@ -45,6 +45,26 @@ export default class GameServer {
     return this.emit("finishChallenge", result)
   }
 
+  joinChallengeLobby() {
+    return this.emit("joinChallengeLobby")
+  }
+
+  leaveChallengeLobby() {
+    return this.emit("leaveChallengeLobby")
+  }
+
+  startRequestChallengeMate(socketId) {
+    return this.emit("startRequestChallengeMate", socketId)
+  }
+
+  stopRequestChallenge() {
+    return this.emit("stopRequestChallenge")
+  }
+
+  sendMessage(socketId, message) {
+    this.emit("sendMessage", socketId, message)
+  }
+
   emit(eventName, ...param) {
     return new Promise((resolve) => {
       this.socket.emit(eventName, ...param, result => {

@@ -65,6 +65,14 @@ module.exports = class MongoDB extends EventEmitter {
     return true
   }
 
+  async joinChallengeLobby(gameId) {
+    this.updateGame(gameId, { inLobby: true })
+  }
+
+  async leaveChallengeLobby(gameId) {
+    this.updateGame(gameId, { inLobby: false })
+  }
+
   async connectGame(gameId, socketId) {
     this.updateGame(gameId, { socketId, connected: true })
   }

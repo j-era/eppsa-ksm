@@ -1,14 +1,34 @@
 import React from "react"
 
-import { updateGameState } from "../../actionCreators"
-import { CHALLENGE_MODE_SELECTION } from "../../gameStates"
+import { leaveChallengeLobby } from "../../actionCreators"
+
+// class ChallengeLobby extends React.Component {
+//   componentWillMount()
+
+//   render() {
+//     return <h1>Hello, {this.props.name}</h1>;
+//   }
+// }
 
 export default function ChallengeLobby(props) {
+  const gamesInLobby = props.connectedGames.filter((game) =>
+    game.gameId !== props.gameId && game.challengeNumber === props.challengeNumber && game.inLobby
+  )
+
   return (
     <div>
       <div>ChallengeLobby</div>
-      <button onClick={ () => props.dispatch(updateGameState(CHALLENGE_MODE_SELECTION)) }>
-        QR-Code Scannen
+      {
+        gamesInLobby.map((game) => 
+          <button
+            key={ game.gameId }
+            onClick={ () => props.dispatch(leaveChallengeLobby(props.gameServer)) }>
+            { game.name }
+          </button>
+        )
+      }
+      <button onClick={ () => props.dispatch(leaveChallengeLobby(props.gameServer)) }>
+        Zurück
       </button>
     </div>
   )
