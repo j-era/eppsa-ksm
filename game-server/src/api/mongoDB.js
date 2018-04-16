@@ -24,17 +24,24 @@ module.exports = class MongoDB extends EventEmitter {
     this.database = client.db(DATABASE_NAME)
   }
 
-  async startGame(game) {
+  async startGame(game, socketId) {
     const gameData = {
       ...game,
       disconnects: 0,
       connected: true,
+      inLobby: false,
+      mateRequest: null,
+      socketId,
       lastUpdate: new Date(),
       startTime: new Date()
     }
 
     await this.database.collection(GAMES_COLLECTION).insertOne(gameData)
     await this.emit("connectedGames", await this.findConnectedGames())
+  }
+
+  async resumeGame(gameId, socketId) {
+    this.updateGame(gameId, { socketId, connected: true, inLobby: false })
   }
 
   async startChallenge(gameId, number) {
@@ -58,8 +65,8 @@ module.exports = class MongoDB extends EventEmitter {
     return true
   }
 
-  async connectGame(gameId) {
-    this.updateGame(gameId, { connected: true })
+  async connectGame(gameId, socketId) {
+    this.updateGame(gameId, { socketId, connected: true })
   }
 
   async disconnectGame(gameId) {
