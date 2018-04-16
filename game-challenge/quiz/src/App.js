@@ -122,7 +122,9 @@ export default class App extends React.Component {
   }
 
   confirm(answerIndex) {
-    const { correctAnswer, score } = this.props.content.challenge
+    clearTimeout(this.timeLineTimeout)
+    this.props.callbacks.stopTimelineClock()
+    const { correctAnswer } = this.props.content.challenge
     const { shared } = this.props.content
 
     this.timeToAnswer = (new Date() - this.startTime) / 1000
@@ -150,7 +152,6 @@ export default class App extends React.Component {
   }
 
   async nextChallenge(timedOut = false) {
-    clearTimeout(this.timeLineTimeout)
     if (!timedOut) {
       this.setState({ nextClicked: true })
       await delay(100)
