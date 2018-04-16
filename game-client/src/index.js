@@ -7,6 +7,7 @@ import { Provider } from "react-redux"
 import thunk from "redux-thunk"
 import { applyMiddleware, createStore, combineReducers } from "redux"
 import { createLogger } from "redux-logger"
+import { ThemeProvider } from "styled-components"
 
 import Application from "./components/application"
 import * as gameStates from "./gameStates"
@@ -57,17 +58,19 @@ contentServer.getData().then(transform).then(async (content) => {
 
   render(
     <Provider store={ store }>
-      <Application
-        content={ content }
-        resumableGame={ resumableGame }
-        assetServerUri={ process.env.ASSET_SERVER_URI }
-        contentServerUri={ process.env.CONTENT_SERVER_URI }
-        gameServerUri={ process.env.GAME_SERVER_URI }
-        staticServerUri={ process.env.STATIC_SERVER_URI }
-        maxChallenges={ maxChallenges }
-        dispatch={ store.dispatch }
-        gameServer={ gameServer }
-        onChallengeReady={ onChallengeReady } />
+      <ThemeProvider theme={ theme }>
+        <Application
+          content={ content }
+          resumableGame={ resumableGame }
+          assetServerUri={ process.env.ASSET_SERVER_URI }
+          contentServerUri={ process.env.CONTENT_SERVER_URI }
+          gameServerUri={ process.env.GAME_SERVER_URI }
+          staticServerUri={ process.env.STATIC_SERVER_URI }
+          maxChallenges={ maxChallenges }
+          dispatch={ store.dispatch }
+          gameServer={ gameServer }
+          onChallengeReady={ onChallengeReady } />
+      </ThemeProvider>
     </Provider>,
     document.getElementById("app")
   )
