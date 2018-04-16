@@ -53,8 +53,8 @@ services:
      volumes:
        - ./game-challenge/sorting:/app
        - /app/node_modules
-     ports:
-       - 8080:80
+     environment:
+       PORT: 443
 
   game-challenge-quiz:
     build:
