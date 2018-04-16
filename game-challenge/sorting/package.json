@@ -15,6 +15,7 @@
     "css-loader": "0.28.7",
     "dotenv": "4.0.0",
     "dotenv-expand": "4.2.0",
+    "eppsa-ksm-shared": "file:./lib/eppsa-ksm-shared",
     "eslint": "4.10.0",
     "eslint-config-artcom": "^0.7.0",
     "eslint-config-artcom-react": "^0.5.1",

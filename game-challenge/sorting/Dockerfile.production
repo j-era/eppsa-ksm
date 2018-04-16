@@ -5,13 +5,17 @@ RUN mkdir /app
 WORKDIR /app
 
 # install and cache app dependencies
+COPY lib /app/lib
 COPY package.json /app/package.json
 COPY package-lock.json /app/package-lock.json
 RUN npm install
 
 COPY src /app/src
 COPY public /app/public
+COPY .babelrc /app/.babelrc
+COPY webpack.config.js /app/webpack.config.js
 RUN npm run build
+
 
 # start app
 CMD ["npm", "run", "serve"]
