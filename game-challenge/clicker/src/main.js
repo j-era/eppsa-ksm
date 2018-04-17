@@ -33,7 +33,8 @@ game.completeChallenge = (score) => {
 	  gameClient.source.postMessage(
 	    {
 	      source: "challenge",
-	      score
+		  score,
+		  id: "finish"
 	    }, gameClient.origin)
 	}, 1000)
 }
