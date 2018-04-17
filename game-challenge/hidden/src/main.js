@@ -27,7 +27,7 @@ function transform(content) {
 function receiveMessage(event)
 {
   console.log(event)
-  gameData = event.data.challenge;
+  gameData = event.data.data.challenge;
   gameClient = { source: event.source, origin: event.origin }
 
   init();
@@ -109,7 +109,8 @@ var init = function(){
 		  gameClient.source.postMessage(
 		    {
 		      source: "challenge",
-		      score
+					score,
+					id: "finish"
 		    }, gameClient.origin)
 		}, 1000)
 	}
