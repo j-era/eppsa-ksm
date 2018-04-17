@@ -215,7 +215,8 @@ let SkillGameAirship = new Phaser.Class({
 		gameClient.source.postMessage(
 			{
 			  source: "challenge",
-			  score
+			  score,
+			  id: "finish"
 			}, gameClient.origin)
 
 	},
