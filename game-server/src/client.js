@@ -23,7 +23,7 @@ module.exports = class Client {
     this.socket.on("finishChallenge", this.finishChallenge.bind(this))
     this.socket.on("joinChallengeLobby", this.joinChallengeLobby.bind(this))
     this.socket.on("leaveChallengeLobby", this.leaveChallengeLobby.bind(this))
-    this.socket.on("sendMessage", this.sendMessage.bind(this))
+    this.socket.on("sendDirectMessage", this.sendDirectMessage.bind(this))
     this.socket.on("disconnect", this.onDisconnect.bind(this))
     this.socket.conn.on("packet", this.onPacket.bind(this))
   }
@@ -111,6 +111,15 @@ module.exports = class Client {
     }
   }
 
+  async sendDirectMessage(message, gameId) {
+    if (this.game) {
+      const socketId = await this.mongoDB.findSocketId(gameId)
+
+      this.log.info({ from: this.game.gameId, to: gameId, socketId, message }, "Delivering message")
+
+      this.socket.nsp.to(socketId).emit("directMessage", message, this.game.gameId)
+    }
+  }
 
   async startChallenge() {
     if (this.game) {

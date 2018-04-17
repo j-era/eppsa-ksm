@@ -117,6 +117,53 @@ export function showGameManual(state = false, action) {
   }
 }
 
+export function requestedMate(state = null, action) {
+  switch (action.type) {
+    case types.REQUEST_MATE:
+      return action.gameId
+    case types.INCOMING_MATE_REJECT:
+      return null
+    case types.CANCEL_REQUEST_MATE:
+      return null
+    case types.UPDATE_CONNECTED:
+      return null
+    default:
+      return state
+  }
+}
+
+export function mateRequests(state = new Set(), action) {
+  switch (action.type) {
+    case types.INCOMING_MATE_REQUEST:
+    {
+      const newState = new Set(state)
+      newState.add(action.gameId)
+      return newState
+    }
+    case types.REJECT_MATE:
+    {
+      const newState = new Set(state)
+      newState.delete(action.gameId)
+      return newState
+    }
+    case types.INCOMING_CANCEL_MATE_REQUEST:
+    {
+      const newState = new Set(state)
+      newState.delete(action.gameId)
+      return newState
+    }
+    case types.UPDATE_CONNECTED:
+      return new Set()
+    case types.UPDATE_CONNECTED_GAMES:
+      //  filter mateRequests of clients which are disconnected
+      return new Set(Array.from(state).filter((mateRequest) =>
+        action.games.find((game) => game.gameId === mateRequest)
+      ))
+    default:
+      return state
+  }
+}
+
 export function wrongQrCodeScanned(state = false, action) {
   switch (action.type) {
     case types.WRONG_QR_CODE_SCANNED:

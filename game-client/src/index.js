@@ -16,6 +16,7 @@ import ContentServer from "./api/contentServer"
 import { getCookie } from "./cookie"
 import GameServer from "./api/gameServer"
 import * as actions from "./actionCreators"
+import * as messages from "./messages"
 
 import { injectGlobalStyle } from "../node_modules/eppsa-ksm-shared/styled-components/globalStyle"
 
@@ -141,4 +142,18 @@ gameServer.on("connect", () => {
 
 gameServer.on("disconnect", () => {
   store.dispatch(actions.updateConnected(false))
+})
+
+gameServer.on("directMessage", (message, gameId) => {
+  console.log(`Message received from ${gameId}: ${message}`)
+  switch (message) {
+    case messages.REQUESTING_MATE:
+      return store.dispatch(actions.handleIncomingMateRequest(gameId))
+    case messages.CANCEL_REQUESTING_MATE:
+      return store.dispatch(actions.handleIncomingCancelMateRequest(gameId))
+    case messages.ACCEPTING_MATE:
+      return store.dispatch(actions.handleIncomingMateAccept(gameId, gameServer))
+    case messages.REJECTING_MATE:
+      return store.dispatch(actions.handleIncomingMateReject())
+  }
 })
