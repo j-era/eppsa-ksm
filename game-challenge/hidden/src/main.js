@@ -33,9 +33,9 @@ function receiveMessage(event)
   init();
 }
 
-const contentServerUri = 'https://content-server.ramona.eppsa.de'
-const assetServerUri = 'https://asset-server.ramona.eppsa.de'
-const staticServerUri = 'https://static.ramona.eppsa.de'
+const contentServerUri = 'https://content-server.barbara.eppsa.de'
+const assetServerUri = 'https://asset-server.barbara.eppsa.de'
+const staticServerUri = 'https://static.barbara.eppsa.de'
 
 try {
     console.assert(window.parent.origin)
