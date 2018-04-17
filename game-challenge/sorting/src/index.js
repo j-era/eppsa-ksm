@@ -6,15 +6,15 @@ import { injectGlobalStyle } from "../node_modules/eppsa-ksm-shared/styled-compo
 import App from "./App"
 import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
 
-bootstrap((data, config, onCompleteChallenge) => {
-  render(data, config, onCompleteChallenge)
+bootstrap((data, onCompleteChallenge) => {
+  render(data, onCompleteChallenge)
 })
 
 function render(data, onCompleteChallenge) {
   injectGlobalStyle(data.staticServerUri)
 
-  // ReactDOM.render(
-  //   <App content={ data } completeChallenge={ onCompleteChallenge } />,
-  //   document.getElementById("root")
-  // )
+  ReactDOM.render(
+    <App data={ data } completeChallenge={ onCompleteChallenge } />,
+    document.getElementById("root")
+  )
 }

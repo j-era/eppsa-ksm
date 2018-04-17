@@ -7,7 +7,7 @@ const Container = styled.div`
   top: 0;
   left: 0;
 
-  background: ${props => `url(${props.item.image})`};
+  background: ${props => `url(${props.item.image.src})`};
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -45,14 +45,16 @@ function getItemStyles(currentOffset) {
   }
 }
 
-const PreviewItem = (props) => {
-  if (!props.isDragging) {
-    return null
-  }
+class PreviewItem extends React.Component {
+  render() {
+    if (!this.props.isDragging) {
+      return null
+    }
 
-  return (
-    <Container item={ props.item } style={ getItemStyles(props.currentOffset) } />
-  )
+    return (
+      <Container item={ this.props.item } style={ getItemStyles(this.props.currentOffset) } />
+    )
+  }
 }
 
 export default DragLayer(collect)(PreviewItem)

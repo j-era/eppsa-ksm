@@ -5,7 +5,7 @@ import { ItemTypes } from "./constants"
 
 const ItemContainer = styled.div`
   height: 80px;
-  background: ${props => props.isOver ? "green" : `url(${props.image})`};
+  background: ${props => props.isOver ? "green" : `url(${props.image.src})`};
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -40,7 +40,7 @@ class SortingItem extends React.Component {
     let content =
       <div>
         <ItemContainer image={ this.props.item.image } { ...this.props }>
-          { this.props.item.info } / { this.props.id }
+          { this.props.item.text }
         </ItemContainer>
       </div>
 
