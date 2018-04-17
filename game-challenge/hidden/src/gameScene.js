@@ -209,7 +209,7 @@ class gameScene extends Phaser.Scene {
 	update(){
 		for(var i = 0; i < this.moveRight.length; i++){
 			this.moveRight[i].x += 5;
-			if(this.moveRight[i].x > window.innerWidth){
+			if(this.moveRight[i].x > window.innerWidth + this.moveRight[i].displayWidth){
 				this.moveRight[i].x = 0 - this.moveRight[i].displayWidth;
 				var temp = 'waitrow' + this.imageArray[this.moveRight[i].name].depth
 				this[temp].push(this.moveRight[i].name);
@@ -219,7 +219,7 @@ class gameScene extends Phaser.Scene {
 
 		for(var i = 0; i < this.moveLeft.length; i++){
 			this.moveLeft[i].x -= 5;
-			if(this.moveLeft[i].x < (0 - this.moveLeft[i].displayWidth)){
+			if(this.moveLeft[i].x < (0 - this.moveLeft[i].displayWidth - this.moveLeft[i].displayWidth)){
 				this.moveLeft[i].x = window.innerWidth;
 				var temp = 'waitrow' + this.imageArray[this.moveLeft[i].name].depth
 				this[temp].push(this.moveLeft[i].name);
