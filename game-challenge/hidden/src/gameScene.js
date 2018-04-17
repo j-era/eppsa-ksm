@@ -6,10 +6,14 @@ class gameScene extends Phaser.Scene {
 	}
 
 	preload() {
-		this.load.image('puppy', '/img/bsp1.jpg');
-		this.load.image('kitty', '/img/kitty.jpg');
-		this.load.image('piggy', '/img/piggy.jpg');
-
+		var scope = this;
+		for(var key in this.sys.game.gameData.assets){
+			if(key == "template"){
+				continue;
+			}
+			console.log(scope.sys.game.gameData.assets[key].name);
+			this.load.image(scope.sys.game.gameData.assets[key].name, 'https://asset-server.ramona.eppsa.de/' + scope.sys.game.gameData.assets[key].image.src);
+		}
 	}
 
 	create() {
