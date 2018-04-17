@@ -11,44 +11,34 @@ class gameScene extends Phaser.Scene {
 			if(key == "template"){
 				continue;
 			}
-			console.log(scope.sys.game.gameData.assets[key].name);
 			this.load.image(scope.sys.game.gameData.assets[key].name, 'https://asset-server.ramona.eppsa.de/' + scope.sys.game.gameData.assets[key].image.src);
 		}
 	}
 
 	create() {
 
-		console.log(this.sys.game.gameData);
+		this.imageArray = {};
+		this.blockImages = {};
+		this.questions = [];
 
-		this.imageArray = {
-			"puppy" :{'img': 'puppy', 'tag': 'cute,doggie,is,pure,love', 'direction' : 'Right','depth':'1'},
-			"kitty" : {'img': 'kitty', 'tag': 'sad,kitty', 'direction': 'Right', 'depth': '1'},
-			"piggy" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
-			"Schwein" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
-			"Katze" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '3'},
-			"Hund" : {'img': 'puppy', 'tag': 'cute,doggie,is,fluff', 'direction': 'Right', 'depth':'3'},
+		for(var key in this.sys.game.gameData.pictures){
+			if(key == "template"){
+				continue;
+			}
+			if(this.sys.game.gameData.pictures[key].type == 1){
+				this.imageArray[key] = this.sys.game.gameData.pictures[key];
+			}else{
+				this.blockImages[key] = this.sys.game.gameData.pictures[key];
+			}
+		}
 
-			"puppy1" :{'img': 'puppy', 'tag': 'cute,doggie,needs,love', 'direction' : 'Right', 'depth': '1'},
-			"kitty1" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '1'},
-			"piggy1" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
-			"Schwein1" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
-			"Katze1" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '3'},
-			"Hund1" : {'img': 'puppy', 'tag': 'cute,doggie,makes,woof', 'direction': 'Right', 'depth': '3'},
-
-			"puppy2" :{'img': 'puppy', 'tag': 'cute,doggie,wants,cuddles', 'direction' : 'Right', 'depth': '1'},
-			"kitty2" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '1'},
-			"piggy2" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
-			"Schwein2" : {'img': 'piggy', 'tag': 'cute,piggy', 'direction': 'Left', 'depth': '2'},
-			"Katze2" : {'img': 'kitty', 'tag': 'cute,kitty', 'direction': 'Right', 'depth': '3'},
-			"Hund2" : {'img': 'puppy', 'tag': 'cute,doggie,kiss', 'direction': 'Right', 'depth': '3'}
-		};
-
-		this.blockImages = {
-			"block" : {'img': 'puppy', 'positionX' : '5', 'positionY' : '10', 'depth': '4'},
-			"block1" : {'img': 'kitty', 'positionX' : '50', 'positionY' : '150', 'depth': '4'},
-			"block2" : {'img': 'piggy', 'positionX' : '20', 'positionY' : '500', 'depth': '4'},
-			"block3" : {'img': 'piggy', 'positionX' : '60', 'positionY' : '750', 'depth': '4'},
-		};
+		for(var element in this.sys.game.gameData.questions){
+			if(element == "template"){
+				continue;
+			}else{
+				this.questions.push(this.sys.game.gameData.questions[element]);
+			}
+		}
 
 		this.picMaxWidth = window.innerWidth/3;
 		this.picMaxHeight = this.picMaxWidth*0.75;
@@ -67,14 +57,12 @@ class gameScene extends Phaser.Scene {
 			var image = this.add.image(0,0, this.imageArray[imageKey].img).setOrigin(0,0).setInteractive().setName(imageKey);
 			this.loadedImages[imageKey] = image;
 		}
-
-		this.pos = 50;
-
+		console.log()
 
 
-		this.questions = [
+		/*this.questions = [
 		{question: 'Finde alle süßen Hunde!', tag: 'cute,doggie'},
-		{question: 'Wo ist das Babykätzchen?', tag: 'cute,kitty'}];
+		{question: 'Wo ist das Babykätzchen?', tag: 'cute,kitty'}];*/
 
 		this.random = Math.floor(Math.random() * this.questions.length);
 
@@ -87,8 +75,6 @@ class gameScene extends Phaser.Scene {
 		this.ques.setText(this.QuesText);
 
 		var that = this;
-
-		this.lastDepth = 4;
 
 		this.row1 = [];
 		this.row2 = [];
@@ -108,24 +94,25 @@ class gameScene extends Phaser.Scene {
 			that[temp].push(that.loadedImages[element]);
 			this['wait' + temp].push(element);	
 		}
-
+		this.syst = this.sys.game.gameData;
+		console.log(parseInt(this.syst.Row1Min))
 
 		var SpawnTimerRow1 = this.time.addEvent( {
-			delay: Math.random() * (5000 - 2000) + 2000,
+			delay: 0,
 			callback:this.spawn,
-			args: [this.waitrow1, 5000, 2000],
+			args: [this.waitrow1, this.syst.Row1Max, this.syst.Row1Min],
 			callbackScope: this,
 		});
 		var SpawnTimerRow2 = this.time.addEvent( {
-			delay: Math.random() * (5000 - 1000) + 1000,
+			delay: 0,
 			callback:this.spawn,
-			args: [this.waitrow2, 5000, 1000],
+			args: [this.waitrow2, this.syst.Row2Max, this.syst.Row2Min],
 			callbackScope: this,
 		});		 
 		var SpawnTimerRow3 = this.time.addEvent( {
-			delay: Math.random() * (5000 - 3000) + 3000,
+			delay: 0,
 			callback:this.spawn,
-			args: [this.waitrow3, 5000, 3000],
+			args: [this.waitrow3, this.syst.Row3Max, this.syst.Row3Min],
 			callbackScope: this,
 		})
 
@@ -142,7 +129,6 @@ class gameScene extends Phaser.Scene {
 			this.questionTags.forEach(function(tag) {
 				for(var i = 0; i < bla.testTags.length; i++){
 					if(tag == bla.testTags[i]){
-						console.log(count)
 						count += 1;
 						break;
 					}else{
@@ -169,9 +155,9 @@ class gameScene extends Phaser.Scene {
 		});
 
 
-		this.PosY = 350;
-		this.row1Dif = 150;
-		this.row2Dif = 50;
+		this.PosY = this.syst.YPosRow1;
+		this.row1Dif = this.syst.YPosRow2;
+		this.row2Dif = this.syst.YPosRow3;
 		for(var i = 1; i < 4; i++){
 			var temp = 'row' + i;
 			for(var j = 0; j < that[temp].length; j++){
@@ -186,10 +172,12 @@ class gameScene extends Phaser.Scene {
 				//var Height = that[temp][j].displayHeight;
 			}
 			var Height = 'row' + i + 'Dif';
-			this.PosY += this[Height];
+			console.log(this[Height])
+			this.PosY = this[Height];
+			console.log(this.PosY)
 		}
 		var timedEvent = this.time.addEvent({
-			delay: 50000,
+			delay: this.sys.game.gameData.timer * 1000,
 			callback: this.gameWin,
 			callbackScope: this
 		});
@@ -199,29 +187,18 @@ class gameScene extends Phaser.Scene {
 		this.scene.start('WinScene', { t: this.correct})
 	}
 
-	/*spawn() {
-		var element = Math.floor(Math.random() * this.wait.length)
-		if(this.wait.length > 0){
-			if(this.imageArray[this.wait[element]].depth == this.lastDepth){
-				this.spawn();
-				return false;
-			}
-			this.lastDepth = this.imageArray[this.wait[element]].depth;
-			var dirTemp = 'move' + this.imageArray[this.wait[element]].direction;
-			this[dirTemp].push(this.loadedImages[this.wait[element]]);	
-			this.wait.splice(element,1);
-		}
-
-	}*/
-
 	spawn(waitrow, max, min) {
 		var element = Math.floor(Math.random() * waitrow.length)
 		var dirTemp = 'move' + this.imageArray[waitrow[element]].direction;
 		this[dirTemp].push(this.loadedImages[waitrow[element]]);
 		waitrow.splice(element,1);
 
+		console.log('max: ' + max)
+		console.log('min: ' + min)
+		console.log(Math.floor(Math.random() * (5000 - 2000) + 2000))
+
 		this.time.addEvent( {
-			delay: Math.random() * (max - min) + min,
+			delay: Math.floor(Math.random() * (max - min) + min),
 			callback:this.spawn,
 			callbackScope: this,
 			args: [waitrow, max, min]
@@ -235,7 +212,6 @@ class gameScene extends Phaser.Scene {
 			if(this.moveRight[i].x > window.innerWidth){
 				this.moveRight[i].x = 0 - this.moveRight[i].displayWidth;
 				var temp = 'waitrow' + this.imageArray[this.moveRight[i].name].depth
-				//console.log(temp)
 				this[temp].push(this.moveRight[i].name);
 				this.moveRight.splice(i,1);
 			}
