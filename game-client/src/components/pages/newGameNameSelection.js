@@ -11,10 +11,17 @@ export default function NewGameNameSelection(props) {
       <input
         type="text"
         value={ name }
-        onChange={ event => dispatch(updateName(event.target.value)) } />
+        onChange={ event => dispatch(updateName(event.target.value)) }
+        ref={ focuseInput } />
       <button onClick={ () => dispatch(startNewGame(name, avatar, maxChallenges, gameServer)) }>
         Bestätigen
       </button>
     </div>
   )
+}
+
+function focuseInput(input) {
+  if (input) {
+    input.focus()
+  }
 }
