@@ -76,8 +76,6 @@ services:
     volumes:
       - ./game-challenge/quiz:/app
       - /app/node_modules
-    environment:
-      PORT: 443
 
   game-challenge-clicker:
     build:
