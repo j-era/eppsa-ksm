@@ -41,8 +41,10 @@ class Button extends Component {
         <QrReader
           onScan={ data => this.onScan(data) }
           onError={ err => this.onError(err) }
+          showViewFinder={ false }
           style={ { width: "50%" } } />
         <div>{ this.state.scanned }</div>
+        <div>sessionLength: { this.props.sessionLength }</div>
         <ButtonDiv className={ "button" } onClick={ this.state.onClick } />
         <div>contentServerUri: { this.contentServerUri }</div>
         <div>assetServerUri: { this.assetServerUri }</div>

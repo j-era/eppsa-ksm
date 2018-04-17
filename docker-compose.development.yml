@@ -79,11 +79,11 @@ services:
     environment:
       PORT: 443
 
-  game-challenge-boat:
+  game-challenge-clicker:
     build:
       dockerfile: Dockerfile.development
     volumes:
-      - ./game-challenge/boat:/app
+      - ./game-challenge/clicker:/app
       - /app/node_modules
 
   game-challenge-graph:

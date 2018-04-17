@@ -6,8 +6,8 @@ import AnswerButton from "./components/answerButton"
 import NextButton from "./components/nextButton"
 import QuestionText from "./components/questionText"
 import QuestionTitle from "./components/questionTitle"
-import ScoreCalculation from "../lib/eppsa-ksm-shared/functions/score"
-import theme from "../lib/eppsa-ksm-shared/styled-components/theme"
+import ScoreCalculation from "../node_modules/eppsa-ksm-shared/functions/score"
+import theme from "../node_modules/eppsa-ksm-shared/styled-components/theme"
 
 
 const Container = styled.div `
@@ -20,6 +20,7 @@ const Container = styled.div `
   padding-right: ${props => props.theme.layout.offsetX};
   height: 100vh;
 `
+
 
 export default class App extends React.Component {
   constructor(props) {
@@ -41,12 +42,21 @@ export default class App extends React.Component {
 
   componentDidMount() {
     this.startTime = new Date()
+    const { sessionLength } = this.props.content.challenge.score
+    const { showTimeline, startTimelineClock, stopTimelineClock } = this.props.callbacks
+    showTimeline(sessionLength)
+    startTimelineClock()
+    this.timeLineTimeout = setTimeout(() => {
+      this.setState({ confirmed: true })
+      stopTimelineClock()
+      this.nextChallenge(true)
+    }, sessionLength * 1000)
     setTimeout(() => this.setState({ visible: true }), 0)
   }
 
   render() {
     const { question } = this.props.content.challenge
-    theme.colors.areaColor = this.props.areaColor
+    theme.colors.areaColor = this.props.content.color
     return (
       <ThemeProvider theme={ theme }>
         <Container>
@@ -113,15 +123,16 @@ export default class App extends React.Component {
   }
 
   confirm(answerIndex) {
-    const { correctAnswer } = this.props.content.challenge
+    clearTimeout(this.timeLineTimeout)
+    this.props.callbacks.stopTimelineClock()
+    const { correctAnswer, score } = this.props.content.challenge
     const { shared } = this.props.content
-    const scoreCalculation = this.props.content.challenge["score-calculation"]
 
     this.timeToAnswer = (new Date() - this.startTime) / 1000
     if (answerIndex === correctAnswer) {
       const scoreCalc = new ScoreCalculation(
         this.timeToAnswer,
-        { ...scoreCalculation, gameFactor: shared.config.quizFactor }
+        { ...score, gameFactor: shared.config.quizFactor }
       )
       this.points = scoreCalc.getScore()
       this.setState({ confirmed: answerIndex })
@@ -141,9 +152,13 @@ export default class App extends React.Component {
     this.setState({ showNext: true })
   }
 
-  async nextChallenge() {
-    this.setState({ nextClicked: true })
-    await delay(100)
-    this.props.completeChallenge(this.points.score + this.points.bonus)
+  async nextChallenge(timedOut = false) {
+    if (!timedOut) {
+      this.setState({ nextClicked: true })
+      await delay(100)
+    }
+    const { hideTimeline } = this.props.callbacks
+    hideTimeline()
+    this.props.callbacks.finishChallenge(this.points.score + this.points.bonus)
   }
 }
