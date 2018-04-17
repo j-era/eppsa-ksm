@@ -5,7 +5,7 @@ import styled from "styled-components"
 import { updateGameState } from "../../actionCreators"
 import { NEW_GAME_AVATAR_SELECTION, NEW_GAME_NAME_SELECTION } from "../../gameStates"
 import Button from "../../../node_modules/eppsa-ksm-shared/styled-components/components/button"
-import ButtonIcon from "../../../node_modules/eppsa-ksm-shared/svg/EPPSA_Assets_Button_Icon.svg"
+import NextButton from "../../../node_modules/eppsa-ksm-shared/styled-components/components/nextButton"
 import delay from "../../../node_modules/eppsa-ksm-shared/functions/delay"
 
 
@@ -31,9 +31,9 @@ const Title = styled.div`
 `
 
 const Icon = styled.div`
-  height: 20vh;
-  width: 20vh;
-  border-radius: 20vh;
+  height: 15em;
+  width: 15em;
+  border-radius: 15em;
   align-self: center;
   border: ${props => props.theme.layout.iconBorder} solid ${props => props.theme.colors.primary};
   background-image: url(${props => props.icon});
@@ -50,16 +50,9 @@ const Description = styled.div`
   text-align: center;
 `
 
-const NextButton = styled(Button)`
-  align-self: center;
+const ConfirmButton = styled(NextButton)`
   border-color: ${props => props.theme.colors.primary};
-`
-
-const NextIcon = styled(ButtonIcon)`
-  margin-left: 1em;
-  margin-top: 0.2em;
-  height: 0.9em;
-  fill: black;
+  width: 100%;
 `
 
 const BackButton = styled(Button)`
@@ -83,11 +76,11 @@ export default class NewGameAvatarConfirmation extends React.Component {
         <Title>{ avatar }</Title>
         <Icon icon={ `${assetServerUri}/${content.avatars[avatar].icon.src}` } />
         <Description>{ content.avatars[avatar].description }</Description>
-        <NextButton
+        <ConfirmButton
+          visible
           onClick={ this.confirm }
-          clicked={ this.state.nextClicked }>
-          { content.shared.texts.toPlayerName }<NextIcon />
-        </NextButton>
+          clicked={ this.state.nextClicked }
+          text={ content.shared.texts.toPlayerName } />
         <BackButton
           onClick={ this.back }
           clicked={ this.state.backClicked }>
