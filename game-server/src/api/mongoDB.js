@@ -122,4 +122,15 @@ module.exports = class MongoDB extends EventEmitter {
     return this.database.collection(GAMES_COLLECTION)
       .find(filter).project(GAME_PROJECTION).toArray()
   }
+
+  async findSocketId(gameId) {
+    return (
+      await this.database
+        .collection(GAMES_COLLECTION)
+        .find({ gameId })
+        .project({ socketId: 1, _id: 0 })
+        .limit(1)
+        .next()
+    ).socketId
+  }
 }
