@@ -3,9 +3,10 @@ import autoBind from "react-autobind"
 import styled, { ThemeProvider } from "styled-components"
 import delay from "./delay"
 import AnswerButton from "./components/answerButton"
-import NextButton from "./components/nextButton"
 import QuestionText from "./components/questionText"
 import QuestionTitle from "./components/questionTitle"
+
+import NextButton from "../node_modules/eppsa-ksm-shared/styled-components/components/nextButton"
 import ScoreCalculation from "../node_modules/eppsa-ksm-shared/functions/score"
 import theme from "../node_modules/eppsa-ksm-shared/styled-components/theme"
 
