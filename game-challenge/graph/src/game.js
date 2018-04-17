@@ -1,5 +1,3 @@
-//import axios from "axios"
-
 class ContentServer {
   constructor(uri) {
 	  console.log(uri);
@@ -92,10 +90,10 @@ let GraphGame = new Phaser.Class({
 		Phaser.Scene.call(this, { key: 'graphGame' });
 
 		//global attributes
-		this.gameType = "graph";
-		this.areaID = 34;
+		//this.gameType = "graph";
+		//this.areaID = 34;
 		this.timer = gameData.timer;
-		this.score = 0;
+		//this.score = 0;
 
 		//game specific attributes
 
@@ -114,7 +112,7 @@ let GraphGame = new Phaser.Class({
 		console.log(this.agentClasses);
 
 		//nodeAttributes
-		this.nodeCount = 35; 		//Defines the amount nodes for the graph.
+		//this.nodeCount = 35; 		//Defines the amount nodes for the graph.
 
 		this.nodes = {};
 		for(var key in gameData.nodes){
@@ -124,11 +122,10 @@ let GraphGame = new Phaser.Class({
 			this.nodes[key] = gameData.nodes[key];
 			this.nodes[key].connectedTo = JSON.parse(gameData.nodes[key].connectedTo);
 		}
-		console.log(this.nodes);
+		//console.log(this.nodes);
 	
 		//other variables needed
 		this.agentSpawnRates = [];
-		//this.spawnSum = 0;
 
 		this.currentAgentsOnBoard = 0;
 		this.currentAgents = {};	
@@ -151,42 +148,17 @@ let GraphGame = new Phaser.Class({
 		this.height = window.innerHeight;
 		this.scrolled = false;
 
-		console.log("Width ", this.width);
-		console.log("Height ", this.height);
-
 		this.countedWinEvents = 0;
 		this.displayPointsText;
-	
-		
 	},
 
 	preload: function(){
-		//console.log(gameData.assets);
 		for(var key in gameData.assets){
 			if(key == "template"){
 				continue;
 			}
-			//console.log(gameData.assets[key].name);
 			this.load.image(gameData.assets[key].name, 'https://asset-server.barbara.eppsa.de/' + gameData.assets[key].image.src);
 		}
-		/*
-		this.load.image('regular', 'assets/EPPSA_Heinzel_Node.png');
-		this.load.image('start', 'assets/EPPSA_Heinzel_Node.png');
-		this.load.image('exit', 'assets/EPPSA_Heinzel_Node.png');
-
-		this.load.image('baker', 'assets/EPPSA_Heinzel_HouseBaker.png');
-		this.load.image('shoemaker', 'assets/EPPSA_Heinzel_HouseShoemaker.png');
-		this.load.image('smith', 'assets/EPPSA_Heinzel_HouseSmith.png');
-		this.load.image('tailor', 'assets/EPPSA_Heinzel_HouseTailor.png');
-
-		this.load.image('bakerh', 'assets/EPPSA_Heinzel_BakerMaennchen.png');
-		this.load.image('smithh', 'assets/EPPSA_Heinzel_SmithMaennchen.png');
-		this.load.image('tailorh', 'assets/EPPSA_Heinzel_TailorMaennchen.png');
-		this.load.image('shoemakerh', 'assets/EPPSA_Heinzel_ShoemakerMaennchen.png');
-		this.load.image('tailorwife', 'assets/EPPSA_Heinzel_TailorWife.png');
-
-		this.load.image('button', 'assets/EPPSA_Heinzel_Button.png');
-		*/
 	}, 
 
 	create: function(data){
@@ -194,8 +166,6 @@ let GraphGame = new Phaser.Class({
 
 		this.drawNodes();
 		this.setupAgentSpawnRates();
-		
-		console.log("initiate spawn loop");
 		this.spawnAgent();
 
 		this.displayPointsText = this.add.text(350, 550, this.countedWinEvents * 10, {color: '#ff00ff', fontSize: '20px'});
@@ -207,17 +177,23 @@ let GraphGame = new Phaser.Class({
 		this.input.on('gameobjectdown', function(pointer, gameObject){
 			if(gameObject.name == 'agent'){
 				gameObject.timer.remove(false); //stopping autonomous movement
+				if(gameObject.tween){
+					gameObject.tween.stop();
+				}
+				
 				that.pathSelectionActive = true;
 				that.currentPath[that.currentPathID] = {'agent' : gameObject, 'path' : []};
 				gameObject.setTint(0xff0000);
 
+				//push current nodeID into path
 				for(var agent in that.currentAgents){
 					if(gameObject == that.currentAgents[agent].img){
+						console.log(that.spawnedNodes[that.currentAgents[agent].nodeID]);
 						that.currentPath[that.currentPathID].path.push(that.spawnedNodes[that.currentAgents[agent].nodeID]);
 					}
 				}
+				
 
-				console.log('current path ', that.currentPath);
 			}else if(gameObject.name == 'right'){
 				that.cameras.main.scrollX = that.width;
 				this.scrolled = true;
@@ -299,12 +275,8 @@ let GraphGame = new Phaser.Class({
 
 	},
 
-	update: function(data){
-
-	},
-
 	moveAgentToNextNode(agent, node, pathID = null){
-		console.log(agent.id);
+		//console.log(agent.id);
 		//console.log(node);
 		let nextNode = {};
 		//if agent has no path selected, move him randomly
@@ -384,13 +356,15 @@ let GraphGame = new Phaser.Class({
 							console.log('moved onto hostile agent, was destroyed');
 							that.destroyAgent(currentlyMovingAgent.id);
 							return;
-							//agent.destroy();
 						}
 						else{
 							//stop movement of agent that blocks node and send him directly to random neighboring node
 							console.log('otherAgent has to be moved at node ' + nextNode.id);
 							if(that.currentAgents[otherAgentID].img.timer){
 								that.currentAgents[otherAgentID].img.timer.remove(false);
+							}
+							if(that.currentAgents[otherAgentID].img.tween){
+								that.currentAgents[otherAgentID].img.tween.stop();
 							}
 							let agentPush = that.currentAgents[otherAgentID].img;
 							that.moveAgentToNextNode(agentPush, nextNode);
@@ -408,36 +382,6 @@ let GraphGame = new Phaser.Class({
 					that.displayPointsText.setText(that.countedWinEvents * 10);
 
 					that.destroyAgent(currentlyMovingAgent.id);
-					/*that.currentAgentsOnBoard --;
-					delete that.currentAgents[currentlyMovingAgent.id];
-					console.log(that.currentAgents);
-
-					that.currentAgentDistribution[currentlyMovingAgent.name].value --;
-
-					if(agent.selectedNodes != undefined){
-						agent.selectedNodes.forEach(function(element){
-							that.spawnedNodes.forEach(function(nodeElement){
-								if(nodeElement.id == element){
-									nodeElement.img.clearTint();
-								}
-							})
-						});
-						agent.graphicsPath.forEach(function(element){
-							element.clear();
-						});
-					}
-
-					that.tweens.add({
-						targets: agent,
-						alpha: 0,
-						duration: 1000,
-						yoyo: false,
-						repeat: 0,
-						onComplete: function(){
-							agent.destroy();
-						}
-					});*/
-					
 					return null;
 				}
 
@@ -458,7 +402,6 @@ let GraphGame = new Phaser.Class({
 									nodeElement.img.clearTint();
 								}
 							})
-							
 						});
 						agent.graphicsPath.forEach(function(element){
 							element.clear();
@@ -550,9 +493,7 @@ let GraphGame = new Phaser.Class({
 	setupAgentSpawnRates: function(){
 		for (var agentClass in this.agentClasses){
 			this.agentSpawnRates.push(this.agentClasses[agentClass].spawnProbability);
-			//this.spawnSum += parseFloat(this.agentClasses[agentClass].spawnProbability);
 		}
-		//this.spawnSum = Number.parseFloat(this.spawnSum).toFixed(2);
 	},
 
 	xPosToScreen: function(pos){
@@ -596,6 +537,9 @@ let GraphGame = new Phaser.Class({
 
 		agent.img.timer.paused = true;
 		agent.img.timer.remove(false);
+		if(agent.img.tween){
+			agent.img.tween.stop();
+		}
 
 		if(agent.img.selectedNodes != undefined){
 			agent.img.selectedNodes.forEach(function(element){
@@ -667,13 +611,10 @@ let GraphGame = new Phaser.Class({
 			newAgent.name = agentType.name;
 			newAgent.nodeID = startNode.id;
 
-			
-
 			this.tweens.add({
 				targets: newAgent.img,
 				alpha: 1,
 				duration: 500,
-				//ease: 'Power2',
 				yoyo: false,
 				repeat: 0,
 			});
@@ -684,7 +625,7 @@ let GraphGame = new Phaser.Class({
 			this.currentAgentsOnBoard ++;
 		
 			//if agent was spawned, start his movement
-			newAgent.img.timer = this.time.addEvent({delay: 1000, callback: this.moveAgentToNextNode, args: [newAgent.img, startNode], callbackScope: this});
+			newAgent.img.timer = this.time.addEvent({delay: 1000 * newAgent.pauseTime, callback: this.moveAgentToNextNode, args: [newAgent.img, startNode], callbackScope: this});
 		}
 		this.spawnAgentTimer = this.time.addEvent({delay: this.spawnInterval * 1000, callback: this.spawnAgent, callbackScope: this});
 	},
@@ -709,7 +650,7 @@ let game;
 let init = function(){
 	// our game's configuration
 	let config = {
-		type: Phaser.AUTO,  //Phaser will decide how to render our game (WebGL or Canvas)
+		type: Phaser.CANVAS,  //using Canvas because performance is better
 		width: window.innerWidth * window.devicePixelRatio,
 		height:  window.innerHeight * window.devicePixelRatio,
 		backgroundColor: gameData.backgroundColor,
