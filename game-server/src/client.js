@@ -53,6 +53,7 @@ module.exports = class Client {
       score: 0,
       challengeNumber: 1,
       maxChallenges,
+      inLobby: false,
       finished: false
     }
 
@@ -69,7 +70,7 @@ module.exports = class Client {
     if (game && !game.finished) {
       this.log.info({ socketId: this.socket.id, gameId }, "Resuming game")
 
-      this.mongoDB.resumeGame(gameId, this.socket.id)
+      this.mongoDB.resumeGame(gameId, this.socket.id, { inLobby: false })
       this.game = game
     } else {
       this.log.error({ socketId: this.socket.id, gameId }, "Could not resume game ")
@@ -87,7 +88,7 @@ module.exports = class Client {
       },
       "Joining challenge lobby")
 
-      this.mongoDB.joinChallengeLobby(this.game.gameId, this.game.challengeNumber)
+      this.mongoDB.updateGame(this.game.gameId, { inLobby: true })
     } else {
       this.log.error({ socketId: this.socket.id },
         "Could not join challenge lobby without current game")
@@ -103,7 +104,7 @@ module.exports = class Client {
       },
       "Leaving challenge lobby")
 
-      this.mongoDB.leaveChallengeLobby(this.game.gameId)
+      this.mongoDB.updateGame(this.game.gameId, { inLobby: false })
     } else {
       this.log.error({ socketId: this.socket.id },
         "Could not leave challenge lobby without current game")
