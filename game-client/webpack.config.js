@@ -30,9 +30,10 @@ module.exports = {
       filename: "./index.html"
     }),
     new webpack.EnvironmentPlugin([
-      "CONTENT_SERVER_URI",
       "ASSET_SERVER_URI",
-      "GAME_SERVER_URI"
+      "CONTENT_SERVER_URI",
+      "GAME_SERVER_URI",
+      "STATIC_SERVER_URI"
     ])
   ],
   devServer: {

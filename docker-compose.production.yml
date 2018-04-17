@@ -50,6 +50,18 @@ services:
     build:
       dockerfile: Dockerfile.production
 
-  game-challenge-boat:
+  game-challenge-clicker:
+    build:
+      dockerfile: Dockerfile.production
+
+  game-challenge-graph:
+    build:
+      dockerfile: Dockerfile.production
+
+  game-challenge-hidden:
+    build:
+      dockerfile: Dockerfile.production
+
+  game-challenge-skill:
     build:
       dockerfile: Dockerfile.production

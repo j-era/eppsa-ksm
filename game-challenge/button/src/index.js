@@ -1,46 +1,47 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import './index.css'
-import App from './App'
+import React from "react"
+import ReactDOM from "react-dom"
+import "./index.css"
+import App from "./App"
+import selectContent from "./selectContent"
 
 let gameClient
 let config
+let orientation
 
-window.addEventListener("message", receiveMessage, false)
-function receiveMessage(event)
-{
-  console.log(event)
-  gameClient = { source: event.source, origin: event.origin }
-  config = event.data
-}
 
 const completeChallenge = () => {
   gameClient.source.postMessage(
     {
       source: "challenge",
-      score: config.challenge.reward
+      score: config.challenge.score.reward
     }, gameClient.origin)
 }
 
-ReactDOM.render(<App
-  onClick={ completeChallenge }
-/>, document.getElementById('root'))
+// eslint-disable-next-line no-use-before-define
+const url = new URL(window.location)
 
-function handleOrientation(event) {
-  let x = event.beta // In degree in the range [-180,180]
-  let y = event.gamma // In degree in the range [-90,90]
+const contentServerUri = process.env.CONTENT_SERVER_URI || url.searchParams.get("contentServerUri")
+const assetServerUri = process.env.ASSET_SERVER_URI || url.searchParams.get("assetServerUri")
+const gameServerUri = process.env.GAME_SERVER_URI || url.searchParams.get("gameServerUri")
+const challengeNumber = url.searchParams.get("challengeNumber")
 
-  // Because we don't want to have the device upside down
-  // We constrain the x value to the range [-90,90]
-  if (x > 90) { x = 90 }
-  if (x < -90) { x = -90 }
+window.addEventListener("message", receiveMessage, false)
+function receiveMessage(event) {
+  if (event.data.type === "challengeData") {
+    gameClient = { source: event.source, origin: event.origin }
+    config = selectContent(event.data.data)
+  }
+  if (event.data.type === "deviceOrientation") {
+    orientation = event.data.data
+  }
 
-  // To make computation easier we shift the range of
-  // x and y to [0,180]
-  x += 90
-  y += 90
-
-  console.log(`x: ${x}, y: ${y}`)
+  ReactDOM.render(<App
+    onClick={ completeChallenge }
+    contentServerUri={ contentServerUri }
+    assetServerUri={ assetServerUri }
+    gameServerUri={ gameServerUri }
+    challengeNumber={ challengeNumber }
+    sessionLength={ config.scoreCalculation.sessionLength }
+    orientation={ orientation } />,
+  document.getElementById("root"))
 }
-
-window.addEventListener("deviceorientation", handleOrientation)

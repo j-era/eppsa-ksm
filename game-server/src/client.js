@@ -5,7 +5,7 @@ module.exports = class Client {
     this.socket = socket
     this.mongoDB = mongoDB
     this.log = log
-    this.currentGame = null
+    this.game = null
 
     this.log.info({ socketId: this.socket.id }, "Client connected")
   }
@@ -17,28 +17,98 @@ module.exports = class Client {
     this.socket.on("findRecentFinishedGames", this.findRecentFinishedGames.bind(this))
     this.socket.on("findHighscoreGames", this.findHighscoreGames.bind(this))
     this.socket.on("findConnectedGames", this.findConnectedGames.bind(this))
-    this.socket.on("newGame", this.newGame.bind(this))
+    this.socket.on("startGame", this.startGame.bind(this))
     this.socket.on("resumeGame", this.resumeGame.bind(this))
     this.socket.on("startChallenge", this.startChallenge.bind(this))
     this.socket.on("finishChallenge", this.finishChallenge.bind(this))
-    this.socket.on("disconnect", this.disconnect.bind(this))
+    this.socket.on("disconnect", this.onDisconnect.bind(this))
     this.socket.conn.on("packet", this.onPacket.bind(this))
   }
 
   async tryContinueGame() {
     const gameId = this.socket.handshake.query.gameId
     if (gameId) {
-      this.currentGame = await this.mongoDB.findGame(gameId)
+      const game = await this.mongoDB.findGame(gameId)
 
-      if (this.currentGame) {
+      if (game) {
         this.log.info({ socketId: this.socket.id, gameId }, "Continuing game")
-
-        this.currentGame.connected = true
-        this.mongoDB.updateGame(this.currentGame)
+        this.mongoDB.connectGame(gameId, this.socket.id)
+        this.game = game
       } else {
         this.log.error({ socketId: this.socket.id, gameId }, "Could not continue game")
       }
     }
+  }
+
+  async startGame(name, avatar, maxChallenges, toSocket) {
+    this.disconnectGame()
+
+    this.game = {
+      gameId: uuid(),
+      name,
+      avatar,
+      score: 0,
+      challengeNumber: 1,
+      maxChallenges,
+      finished: false
+    }
+
+    this.log.info({ socketId: this.socket.id, game: this.game }, "Starting a new game")
+
+    this.mongoDB.startGame(this.game, this.socket.id)
+    toSocket(this.game)
+  }
+
+  async resumeGame(gameId, toSocket) {
+    this.disconnectGame()
+
+    const game = await this.mongoDB.findGame(gameId)
+    if (game && !game.finished) {
+      this.log.info({ socketId: this.socket.id, gameId }, "Resuming game")
+
+      this.mongoDB.resumeGame(gameId, this.socket.id)
+      this.game = game
+    } else {
+      this.log.error({ socketId: this.socket.id, gameId }, "Could not resume game ")
+    }
+
+    toSocket(this.game)
+  }
+
+  async startChallenge() {
+    if (this.game) {
+      this.log.info({ socketId: this.socket.id, gameId: this.game.gameId },
+        "Starting challenge")
+
+      this.mongoDB.startChallenge(this.game.gameId, this.game.challengeNumber)
+    } else {
+      this.log.error({ socketId: this.socket.id }, "Could not start challenge without current game")
+    }
+  }
+
+  async finishChallenge(result, toSocket) {
+    if (this.game) {
+      this.log.info({ socketId: this.socket.id, gameId: this.game.gameId },
+        "Finishing challenge")
+
+      if (await this.mongoDB.finishChallenge(this.game.gameId, this.game.challengeNumber, result)) {
+        this.game.score += result.score
+        this.game.challengeNumber++
+
+        if (this.game.challengeNumber > this.game.maxChallenges) {
+          this.game.finished = true
+          this.log.info({ socketId: this.socket.id, gameId: this.game.gameId },
+            "Game finished")
+        }
+
+        this.mongoDB.updateGame(this.game.gameId, this.game)
+      }
+    } else {
+      this.log.error({ socketId: this.socket.id },
+        "Could not finish challenge without current game")
+    }
+
+    toSocket(this.game)
   }
 
   async findGame(gameId, toSocket) {
@@ -57,121 +127,27 @@ module.exports = class Client {
     toSocket(await this.mongoDB.findConnectedGames())
   }
 
-  async newGame(name, avatar, maxChallenges, toSocket) {
-    if (this.currentGame) {
-      this.currentGame.connected = false
-      this.mongoDB.updateGame(this.currentGame)
-    }
+  onDisconnect() {
+    if (this.game) {
+      this.log.info({ socketId: this.socket.id, gameId: this.game.gameId },
+        "Client disconnected with gameId")
 
-    this.currentGame = {
-      gameId: uuid(),
-      finished: false,
-      name,
-      avatar,
-      score: 0,
-      challengeNumber: 1,
-      maxChallenges,
-      disconnects: 0,
-      connected: true,
-      lastUpdate: new Date(),
-      startTime: new Date()
-    }
-
-    this.log.info({
-      socketId: this.socket.id,
-      playerName: name,
-      avatar,
-      maxChallenges,
-      gameId: this.currentGame.gameId
-    }, "Starting a new game")
-
-    this.mongoDB.newGame(this.currentGame)
-    toSocket(this.currentGame)
-  }
-
-  async resumeGame(gameId, maxChallenges, toSocket) {
-    if (this.currentGame) {
-      this.currentGame.connected = false
-      this.mongoDB.updateGame(this.currentGame)
-    }
-
-    this.currentGame = await this.mongoDB.findGame(gameId)
-    if (this.currentGame) {
-      this.log.info({ socketId: this.socket.id, gameId, maxChallenges }, "Resuming game")
-
-      this.currentGame.maxChallenges = maxChallenges
-      this.handleGameFinished(this.currentGame)
-
-      this.currentGame.connected = true
-      this.mongoDB.updateGame(this.currentGame)
-    } else {
-      this.log.error({ socketId: this.socket.id, gameId }, "Could not find game in database")
-    }
-
-    toSocket(this.currentGame)
-  }
-
-  async startChallenge() {
-    if (this.currentGame) {
-      this.log.info({ socketId: this.socket.id, gameId: this.currentGame.gameId },
-        "Starting challenge")
-
-      const data = { startTime: new Date() }
-      this.mongoDB.startChallenge(
-        this.currentGame.gameId, this.currentGame.challengeNumber, data)
-    } else {
-      this.log.error({ socketId: this.socket.id }, "Could not start challenge without current game")
-    }
-  }
-
-  async finishChallenge(result, toSocket) {
-    if (this.currentGame) {
-      this.log.info({ socketId: this.socket.id, gameId: this.currentGame.gameId },
-        "Finishing challenge")
-
-      const data = { finishTime: new Date(), ...result }
-      if (await this.mongoDB.finishChallenge(
-        this.currentGame.gameId, this.currentGame.challengeNumber, data)) {
-        this.currentGame.score += result.score
-        this.currentGame.challengeNumber++
-        this.handleGameFinished(this.currentGame)
-
-        this.mongoDB.updateGame(this.currentGame)
-      }
-    } else {
-      this.log.error({ socketId: this.socket.id },
-        "Could not finish challenge without current game")
-    }
-
-    toSocket(this.currentGame)
-  }
-
-  disconnect() {
-    if (this.currentGame) {
-      this.log.info({ socketId: this.socket.id, gameId: this.currentGame.gameId },
-        "Client disconnected with currentGame")
-
-      this.currentGame.connected = false
-      this.currentGame.disconnects++
-      this.mongoDB.updateGame(this.currentGame)
+      this.disconnectGame()
     } else {
       this.log.info({ socketId: this.socket.id }, "Client disconnected")
     }
   }
 
   onPacket() {
-    if (this.currentGame) {
-      this.currentGame.lastUpdate = new Date()
-      this.mongoDB.updateGame(this.currentGame, false)
+    if (this.game) {
+      this.mongoDB.updateGame(this.game.gameId)
     }
   }
 
-  handleGameFinished() {
-    if (!this.currentGame.finished &&
-        this.currentGame.challengeNumber > this.currentGame.maxChallenges) {
-      this.currentGame.finished = true
-      this.currentGame.finishTime = new Date()
-      this.log.info({ socketId: this.socket.id, gameId: this.currentGame.gameId }, "Game finished")
+  disconnectGame() {
+    if (this.game) {
+      this.mongoDB.disconnectGame(this.game.gameId)
+      this.game = null
     }
   }
 }

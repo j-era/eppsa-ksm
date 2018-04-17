@@ -22,30 +22,30 @@ export default class GameServer {
   }
 
   findGame(gameId) {
-    return this.send("findGame", gameId)
+    return this.emit("findGame", gameId)
   }
 
   findConnectedGames() {
-    return this.send("findConnectedGames")
+    return this.emit("findConnectedGames")
   }
 
-  newGame(name, avatar, maxChallenges) {
-    return this.send("newGame", name, avatar, maxChallenges)
+  startGame(name, avatar, maxChallenges) {
+    return this.emit("startGame", name, avatar, maxChallenges)
   }
 
-  resumeGame(gameId, maxChallenges) {
-    return this.send("resumeGame", gameId, maxChallenges)
+  resumeGame(gameId) {
+    return this.emit("resumeGame", gameId)
   }
 
   startChallenge() {
-    this.send("startChallenge")
+    this.emit("startChallenge")
   }
 
   finishChallenge(result) {
-    return this.send("finishChallenge", result)
+    return this.emit("finishChallenge", result)
   }
 
-  send(eventName, ...param) {
+  emit(eventName, ...param) {
     return new Promise((resolve) => {
       this.socket.emit(eventName, ...param, result => {
         resolve(result)

@@ -1,107 +1,164 @@
 import React from "react"
 import autoBind from "react-autobind"
-import styled from "styled-components"
-import "./App.css"
+import styled, { ThemeProvider } from "styled-components"
+import delay from "./delay"
 import AnswerButton from "./components/answerButton"
-import Button from "./components/button"
-import Question from "./components/question"
-import ScoreCalculation from "./score"
+import NextButton from "./components/nextButton"
+import QuestionText from "./components/questionText"
+import QuestionTitle from "./components/questionTitle"
+import ScoreCalculation from "../node_modules/eppsa-ksm-shared/functions/score"
+import theme from "../node_modules/eppsa-ksm-shared/styled-components/theme"
 
 
 const Container = styled.div `
+  font-family: ${props => props.theme.font.fontFamily};
+  background-color: white;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  
-  width: 100%;
-  height: 100%;
+  padding-left: ${props => props.theme.layout.offsetX};
+  padding-right: ${props => props.theme.layout.offsetX};
+  height: 100vh;
 `
 
-const Score = styled.div`
-  margin-top: 5px;
-  width: 200px;
-  height: 50px;
-`
 
 export default class App extends React.Component {
   constructor(props) {
     super(props)
     autoBind(this)
     this.points = { bonus: 0, score: 0 }
-    this.state = { confirmed: false }
+    this.blinking = { duration: 250, repeats: 3 }
+    this.questionFadeIn = 250
+    this.greyOutDuration = 150
+    this.state = {
+      visible: false,
+      confirmed: false,
+      showRight: false,
+      greyOut: false,
+      showNext: false,
+      nextClicked: false
+    }
   }
 
   componentDidMount() {
     this.startTime = new Date()
+    const { sessionLength } = this.props.content.challenge.score
+    const { showTimeline, startTimelineClock, stopTimelineClock } = this.props.callbacks
+    showTimeline(sessionLength)
+    startTimelineClock()
+    this.timeLineTimeout = setTimeout(() => {
+      this.setState({ confirmed: true })
+      stopTimelineClock()
+      this.nextChallenge(true)
+    }, sessionLength * 1000)
+    setTimeout(() => this.setState({ visible: true }), 0)
   }
 
   render() {
-    const { question } = this.props.content
+    const { question } = this.props.content.challenge
+    theme.colors.areaColor = this.props.content.color
     return (
-      <Container>
-        { this.renderScore() }
-        <Question>{ question }</Question>
-        { this.renderAnswers() }
-        { this.renderNextButton() }
-      </Container>
+      <ThemeProvider theme={ theme }>
+        <Container>
+          <QuestionTitle
+            fadeIn={ this.questionFadeIn }
+            visible={ this.state.visible }>
+            {
+              this.props.content.shared.texts.questionTitle
+            }
+          </QuestionTitle>
+          <QuestionText
+            fadeIn={ this.questionFadeIn }
+            visible={ this.state.visible }>
+            {
+              question
+            }
+          </QuestionText>
+          { this.renderAnswers() }
+          { this.renderNextButton() }
+        </Container>
+      </ThemeProvider>
     )
   }
 
   renderAnswers() {
-    const answers = [1, 2, 3, 4].map(i => this.props.content[`answer${i}`])
+    const answers = [1, 2, 3, 4].map(i => this.props.content.challenge[`answer${i}`])
+    const titles = ["A", "B", "C", "D"]
 
     return answers.map((answer, i) =>
       <AnswerButton
         key={ i + 1 }
+        visible={ this.state.visible }
         onClick={ !this.state.confirmed ? () => this.confirm(i + 1) : () => {} }
-        selection={ this.getSelection(i + 1) }>
-        {
-          answer
-        }
-      </AnswerButton>
+        clicked={ this.state.confirmed === i + 1 }
+        selection={ this.getSelection(i + 1) }
+        initialDelay={ this.questionFadeIn }
+        blinking={ this.blinking }
+        greyOutDuration={ this.greyOutDuration }
+        answer={ answer }
+        title={ titles[i] }
+        index={ i } />
     )
   }
 
-  renderScore() {
-    return this.state.confirmed &&
-      <Score>
-        { this.points.score } +{ this.points.bonus }
-      </Score>
-  }
-
   renderNextButton() {
-    return this.state.confirmed &&
-      <Button onClick={ this.nextChallenge }>
-        { this.props.content.shared.texts.next }
-      </Button>
+    return <NextButton
+      visible={ this.state.showNext }
+      onClick={ async () => await this.nextChallenge() }
+      clicked={ this.state.nextClicked }
+      text={ this.props.content.shared.texts.next } />
   }
 
   getSelection(i) {
-    const { correctAnswer } = this.props.content
+    const { correctAnswer } = this.props.content.challenge
     if (this.state.confirmed) {
-      if (i === correctAnswer) {
+      if (i === correctAnswer && this.state.showRight) {
         return "right"
       } else if (this.state.confirmed === i) {
         return "wrong"
+      } else if (this.state.greyOut) {
+        return "greyed"
       }
     }
   }
 
   confirm(answerIndex) {
-    const { correctAnswer, scoreCalculation, shared } = this.props.content
+    clearTimeout(this.timeLineTimeout)
+    this.props.callbacks.stopTimelineClock()
+    const { correctAnswer, score } = this.props.content.challenge
+    const { shared } = this.props.content
+
     this.timeToAnswer = (new Date() - this.startTime) / 1000
     if (answerIndex === correctAnswer) {
       const scoreCalc = new ScoreCalculation(
         this.timeToAnswer,
-        { ...scoreCalculation, gameFactor: shared.config.quizFactor }
+        { ...score, gameFactor: shared.config.quizFactor }
       )
       this.points = scoreCalc.getScore()
+      this.setState({ confirmed: answerIndex })
+      this.animateAnswers(true)
+    } else {
+      this.setState({ confirmed: answerIndex })
+      this.animateAnswers(false)
     }
-    this.setState({ confirmed: answerIndex })
   }
 
-  nextChallenge() {
-    this.props.completeChallenge(this.points.score + this.points.bonus)
+  async animateAnswers(correct) {
+    !correct && await delay(this.blinking.duration * this.blinking.repeats)
+    this.setState({ showRight: true })
+    await delay(this.blinking.duration * this.blinking.repeats)
+    this.setState({ greyOut: true })
+    await delay(this.greyOutDuration)
+    this.setState({ showNext: true })
+  }
+
+  async nextChallenge(timedOut = false) {
+    if (!timedOut) {
+      this.setState({ nextClicked: true })
+      await delay(100)
+    }
+    const { hideTimeline } = this.props.callbacks
+    hideTimeline()
+    this.props.callbacks.finishChallenge(this.points.score + this.points.bonus)
   }
 }

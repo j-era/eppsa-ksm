@@ -1,19 +1,15 @@
 import React from "react"
 import ReactDOM from "react-dom"
+
+import { injectGlobalStyle } from "../node_modules/eppsa-ksm-shared/styled-components/globalStyle"
+
 import App from "./App"
-import "./index.css"
-import selectContent from "./selectContent"
+import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
 
-
-window.addEventListener("message", receiveMessage, false)
-
-function receiveMessage(event) {
-  console.log(event)
-  const content = selectContent(event.data)
-  console.log(content.scoreCalculation)
+bootstrap((data, callbacks) => {
+  injectGlobalStyle(data.staticServerUri)
   ReactDOM.render(
-    <App content={ content } completeChallenge={ score =>
-      event.source.postMessage({ source: "challenge", score }, event.origin) } />,
+    <App content={ data } callbacks={ callbacks.callbacks } />,
     document.getElementById("root")
   )
-}
+})

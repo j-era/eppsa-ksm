@@ -4,7 +4,14 @@ const EventEmitter = require("events")
 const MONGODB_URI = `${process.env.MONGODB_URI}:27017`
 const DATABASE_NAME = "EPPSA_KSM"
 const GAMES_COLLECTION = "games"
-const GAME_PROJECTION = { gameId: 1, name: 1, avatar: 1, score: 1, challengeNumber: 1, _id: 0 }
+const GAME_PROJECTION = {
+  startTime: 0,
+  finishTime: 0,
+  lastUpdate: 0,
+  disconnects: 0,
+  connected: 0,
+  _id: 0
+}
 
 module.exports = class MongoDB extends EventEmitter {
   constructor(log) {
@@ -17,15 +24,84 @@ module.exports = class MongoDB extends EventEmitter {
     this.database = client.db(DATABASE_NAME)
   }
 
-  disconnectGames() {
+  async startGame(game, socketId) {
+    const gameData = {
+      ...game,
+      disconnects: 0,
+      connected: true,
+      inLobby: false,
+      mateRequest: null,
+      socketId,
+      lastUpdate: new Date(),
+      startTime: new Date()
+    }
+
+    await this.database.collection(GAMES_COLLECTION).insertOne(gameData)
+    await this.emit("connectedGames", await this.findConnectedGames())
+  }
+
+  async resumeGame(gameId, socketId) {
+    this.updateGame(gameId, { socketId, connected: true, inLobby: false })
+  }
+
+  async startChallenge(gameId, number) {
+    const challenge = { gameId, finished: false, startTime: new Date() }
+    await this.database.collection(`challenge-${number}`).insertOne(challenge)
+  }
+
+  async finishChallenge(gameId, number, result) {
+    const filter = await this.database.collection(`challenge-${number}`)
+      .find({ gameId, finished: false })
+      .sort({ startTime: -1 })
+      .limit(1).next()
+
+    if (!filter) {
+      this.log.error({ gameId, number }, "Could not find challenge in database to be finished")
+      return false
+    }
+
+    const set = { $set: { finished: true, finishTime: new Date(), ...result } }
+    await this.database.collection(`challenge-${number}`).updateOne(filter, set)
+    return true
+  }
+
+  async connectGame(gameId, socketId) {
+    this.updateGame(gameId, { socketId, connected: true })
+  }
+
+  async disconnectGame(gameId) {
+    this.updateGame(gameId, { connected: false }, { disconnects: 1 })
+  }
+
+  async updateGame(gameId, set = null, increment = null) {
+    const lastUpdate = new Date()
+    const update = { $set: { ...set, lastUpdate } }
+
+    if (increment) {
+      update.$inc = increment
+    }
+
+    await this.database.collection(GAMES_COLLECTION).updateOne({ gameId }, update)
+
+    if (set || increment) {
+      await this.emit("connectedGames", await this.findConnectedGames())
+
+      if (update.$set.finished === true) {
+        await this.emit("recentFinishedGames", await this.findRecentFinishedGames())
+        await this.emit("highscoreGames", await this.findHighscoreGames())
+      }
+    }
+  }
+
+  ensureAllGamesDisconnected() {
     return this.database.collection(GAMES_COLLECTION).update(
-      { connected: true }, { connected: false }
+      { connected: true }, { $set: { connected: false } }
     )
   }
 
   findGame(gameId) {
     return this.database.collection(GAMES_COLLECTION)
-      .find({ gameId }).limit(1).next()
+      .find({ gameId }).project(GAME_PROJECTION).limit(1).next()
   }
 
   findRecentFinishedGames() {
@@ -46,45 +122,5 @@ module.exports = class MongoDB extends EventEmitter {
     const filter = { connected: true }
     return this.database.collection(GAMES_COLLECTION)
       .find(filter).project(GAME_PROJECTION).toArray()
-  }
-
-  async newGame(game) {
-    await this.database.collection(GAMES_COLLECTION).insertOne(game)
-    await this.emit("connectedGames", await this.findConnectedGames())
-  }
-
-  async updateGame(game, emitUpdate = true) {
-    await this.database.collection(GAMES_COLLECTION)
-      .updateOne({ gameId: game.gameId }, { $set: game })
-
-    if (emitUpdate) {
-      await this.emit("connectedGames", await this.findConnectedGames())
-
-      if (game.finished) {
-        await this.emit("recentFinishedGames", await this.findRecentFinishedGames())
-        await this.emit("highscoreGames", await this.findHighscoreGames())
-      }
-    }
-  }
-
-  async startChallenge(gameId, number, data) {
-    const challenge = { gameId, finished: false, ...data }
-    await this.database.collection(`challenge-${number}`).insertOne(challenge)
-  }
-
-  async finishChallenge(gameId, number, data) {
-    const filter = await this.database.collection(`challenge-${number}`)
-      .find({ gameId, finished: false })
-      .sort({ startTime: -1 })
-      .limit(1).next()
-
-    if (!filter) {
-      this.log.error({ gameId, number }, "Could not find challenge in database to be finished")
-      return false
-    }
-
-    const challenge = { finished: true, ...data }
-    await this.database.collection(`challenge-${number}`).updateOne(filter, { $set: challenge })
-    return true
   }
 }

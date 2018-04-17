@@ -2,83 +2,61 @@ import omit from "lodash.omit"
 import React from "react"
 import { connect } from "react-redux"
 
-import * as gameStates from "../gameStates"
-import Game from "./game"
-import WelcomeDialog from "./welcomeDialog"
-import FinalScore from "./finalScore"
+import { FINISHED } from "../gameStates"
+import GameBoard from "./gameBoard"
+import GameManual from "./gameManual"
+import GameManualButton from "./gameManualButton"
+import pages from "./pages"
 
 function Application(props) {
-  if (props.showLobbyNavigation) {
-    return renderLobbyNavigation(props)
-  }
+  const pageData = pages[props.gameState]
 
-  switch (props.gameState) {
-    case gameStates.WELCOME: return renderWelcomeDialog(props)
-    case gameStates.RUNNING: return renderGame(props)
-    case gameStates.FINISHED: return renderFinalScore(props)
-    default: console.log("Invalid game state")
-  }
-}
+  const enhancedProps = enhance(props)
 
-function renderLobbyNavigation(props) {
-  const { lobbyNavigation } = props.content
   return (
     <div>
-      { lobbyNavigation }
+      { pageData.showHeader && renderHeader(enhancedProps) }
+      { props.showGameManual
+        ? <GameManual { ...props } />
+        : React.createElement(pageData.render, enhancedProps)
+      }
     </div>
   )
 }
 
-function renderWelcomeDialog(props) {
-  return <WelcomeDialog
-    content={ props.content }
-    resumableGame={ props.resumableGame }
-    urlHasToken={ props.urlHasToken }
-    name={ props.name }
-    avatars={ props.content.avatars }
-    avatar={ props.avatar }
-    assetServerUri={ props.assetServerUri }
-    onResumeGame={ props.onResumeGame }
-    onStartNewGame={ props.onStartNewGame }
-    onUpdateName={ props.onUpdateName } />
+function renderHeader(props) {
+  return (
+    <div>
+      { !props.showGameManual && <GameManualButton { ...props } /> }
+      <GameBoard { ...props } />
+    </div>
+  )
 }
 
-function renderGame(props) {
+function enhance(props) {
+  if (props.gameState === FINISHED) {
+    return props
+  }
+
   const challengeTypes = props.content.challenges[props.challengeNumber].challengeTypes
   const challengeType = Object.keys(omit(challengeTypes, "template"))[0]
-  const challenge = { challenge: challengeTypes[challengeType], shared: props.content.shared }
   const challengeUri = resolveChallengeWebAppUri(challengeType)
+  const challengeData = {
+    color: props.content.challenges[props.challengeNumber].color,
+    challenge: challengeTypes[challengeType],
+    shared: props.content.shared,
+    staticServerUri: props.staticServerUri
+  }
 
-  return <Game
-    connectedGames={ props.connectedGames }
-    challengeNumber={ props.challengeNumber }
-    challengeUri={ challengeUri }
-    challenge={ challenge }
-    score={ props.score }
-    maxChallenges={ props.maxChallenges }
-    connected={ props.connected }
-    challengeStarted={ props.challengeStarted }
-    showQrReader={ props.showQrReader }
-    onToggleQrReader={ props.onToggleQrReader }
-    onHandleQrReaderData={ props.onHandleQrReaderData }
-    onHandleQrReaderError={ props.onHandleQrReaderError }
-    cameraPermissonDenied={ props.cameraPermissonDenied }
-    onStartChallenge={ props.onStartChallenge }
-    onChallengeReady={ props.onChallengeReady } />
+  return Object.assign({ challengeUri, challengeType, challengeData }, props)
 }
 
-function renderFinalScore(props) {
-  return <FinalScore
-    score={ props.score }
-    text={ props.content.finalScoreText } />
-}
+export default connect((state) => state)(Application)
 
 function resolveChallengeWebAppUri(webApp) {
   const protocol = document.location.protocol
   const environment = document.location.hostname.split(".").slice(1).join(".")
-  return `${protocol}//${webApp}.${environment}`
-}
+  const challengeUri = new URL(`${protocol}//${webApp}.${environment}`)
 
-export default connect(
-  (state) => state
-)(Application)
+  return challengeUri.toString()
+}
