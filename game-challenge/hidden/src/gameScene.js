@@ -14,6 +14,8 @@ class gameScene extends Phaser.Scene {
 
 	create() {
 
+		console.log(this.sys.game.gameData);
+
 		this.imageArray = {
 			"puppy" :{'img': 'puppy', 'tag': 'cute,doggie,is,pure,love', 'direction' : 'Right','depth':'1'},
 			"kitty" : {'img': 'kitty', 'tag': 'sad,kitty', 'direction': 'Right', 'depth': '1'},
