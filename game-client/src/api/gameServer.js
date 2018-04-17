@@ -53,16 +53,8 @@ export default class GameServer {
     return this.emit("leaveChallengeLobby")
   }
 
-  startRequestChallengeMate(socketId) {
-    return this.emit("startRequestChallengeMate", socketId)
-  }
-
-  stopRequestChallenge() {
-    return this.emit("stopRequestChallenge")
-  }
-
-  sendMessage(socketId, message) {
-    this.emit("sendMessage", socketId, message)
+  sendDirectMessage(message, gameId) {
+    this.emit("sendDirectMessage", message, gameId)
   }
 
   emit(eventName, ...param) {
