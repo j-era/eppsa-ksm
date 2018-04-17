@@ -40,6 +40,20 @@ export function startChallenge(gameServer) {
   }
 }
 
+export function finishChallenge(challengeData, gameServer) {
+  return async (dispatch) => {
+    const data = await gameServer.finishChallenge(challengeData)
+
+    if (data.finished) {
+      dispatch(updateGameState(gameStates.FINISHED))
+    } else {
+      dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_CHALLENGE))
+    }
+
+    dispatch(updateGameData(data))
+  }
+}
+
 export function updateAvatar(avatar) {
   return {
     type: types.UPDATE_AVATAR,
@@ -86,6 +100,35 @@ export function updateConnected(connected) {
   return {
     type: types.UPDATE_CONNECTED,
     connected
+  }
+}
+
+export function showTimeline(startTime) {
+  console.log(`showTimeline ${startTime}`)
+  return {
+    type: types.SHOW_TIMELINE,
+    startTime
+  }
+}
+
+export function startTimelineClock() {
+  console.log("startTimeClock")
+  return {
+    type: types.START_TIMELINE_CLOCK
+  }
+}
+
+export function stopTimelineClock() {
+  console.log("stopTimelineClock")
+  return {
+    type: types.STOP_TIMELINE_CLOCK
+  }
+}
+
+export function hideTimeline() {
+  console.log("hideTimeline")
+  return {
+    type: types.HIDE_TIMELINE
   }
 }
 
