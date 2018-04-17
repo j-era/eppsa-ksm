@@ -11,7 +11,7 @@ class gameScene extends Phaser.Scene {
 			if(key == "template"){
 				continue;
 			}
-			this.load.image(scope.sys.game.gameData.assets[key].name, 'https://asset-server.ramona.eppsa.de/' + scope.sys.game.gameData.assets[key].image.src);
+			this.load.image(scope.sys.game.gameData.assets[key].name, 'https://asset-server.barbara.eppsa.de/' + scope.sys.game.gameData.assets[key].image.src);
 		}
 	}
 
