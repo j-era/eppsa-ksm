@@ -75,6 +75,7 @@ services:
       dockerfile: Dockerfile.development
     volumes:
       - ./game-challenge/quiz:/app
+      - /app/node_modules
     environment:
       PORT: 443
 
