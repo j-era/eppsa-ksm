@@ -14,7 +14,7 @@ import Page from "./page"
 
 
 const Container = styled.div`
-  background-color: ${props => props.theme.colors.secondary};
+  background-color: white;
 `
 
 const Background = styled.div`
@@ -23,7 +23,7 @@ const Background = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: blue;
+  background-color: ${props => props.theme.colors.secondary};
 `
 
 const Header = styled.div`
