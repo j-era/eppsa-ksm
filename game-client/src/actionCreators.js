@@ -160,7 +160,7 @@ export function requestMate(gameId, gameServer) {
 
 export function cancelRequestMate(gameServer) {
   return async (dispatch, getState) => {
-    gameServer.sendDirectMessage(messages.CANCEL_REQUESTING_MATE, getState().requestedMate)
+    gameServer.sendDirectMessage(messages.CANCEL_REQUESTING_MATE, getState().requestedMate.gameId)
 
     dispatch({
       type: types.CANCEL_REQUEST_MATE
