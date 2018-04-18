@@ -9,18 +9,6 @@ import GameManual from "./gameManual"
 import GameManualButton from "./gameManualButton"
 import pages from "./pages"
 
-import background from "../../node_modules/eppsa-ksm-shared/svg/SVG_Assets_180321_Category_Background.svg"
-
-const Background = styled(background)`
-  z-index: -1;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  transform: scale(1.0);
-  fill: grey;
-  
-`
 
 function Application(props) {
   const pageData = pages[props.gameState]
@@ -30,7 +18,6 @@ function Application(props) {
   return (
     <div>
       { pageData.showHeader && renderHeader(enhancedProps) }
-      <Background viewBox="0 0 1080 3000" />
       { props.showGameManual
         ? <GameManual { ...props } />
         : React.createElement(pageData.render, enhancedProps)
