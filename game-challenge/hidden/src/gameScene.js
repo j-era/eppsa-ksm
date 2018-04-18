@@ -11,15 +11,16 @@ class gameScene extends Phaser.Scene {
 			if(key == "template"){
 				continue;
 			}
-			this.load.image(scope.sys.game.gameData.assets[key].name, 'https://asset-server.barbara.eppsa.de/' + scope.sys.game.gameData.assets[key].image.src);
+			this.load.image(scope.sys.game.gameData.assets[key].name, 'https://asset-server.ramona.eppsa.de/' + scope.sys.game.gameData.assets[key].image.src);
 		}
 	}
 
-	create() {
+	create(data) {
+		console.log(data.QuestionTags)
 
 		this.imageArray = {};
 		this.blockImages = {};
-		this.questions = [];
+		//this.questions = [];
 
 		for(var key in this.sys.game.gameData.pictures){
 			if(key == "template"){
@@ -32,13 +33,13 @@ class gameScene extends Phaser.Scene {
 			}
 		}
 
-		for(var element in this.sys.game.gameData.questions){
+		/*for(var element in this.sys.game.gameData.questions){
 			if(element == "template"){
 				continue;
 			}else{
 				this.questions.push(this.sys.game.gameData.questions[element]);
 			}
-		}
+		}*/
 
 		this.picMaxWidth = window.innerWidth/3;
 		this.picMaxHeight = this.picMaxWidth*0.75;
@@ -57,22 +58,16 @@ class gameScene extends Phaser.Scene {
 			var image = this.add.image(0,0, this.imageArray[imageKey].img).setOrigin(0,0).setInteractive().setName(imageKey);
 			this.loadedImages[imageKey] = image;
 		}
-		console.log()
 
+		//this.random = Math.floor(Math.random() * this.questions.length);
 
-		/*this.questions = [
-		{question: 'Finde alle süßen Hunde!', tag: 'cute,doggie'},
-		{question: 'Wo ist das Babykätzchen?', tag: 'cute,kitty'}];*/
-
-		this.random = Math.floor(Math.random() * this.questions.length);
-
-		this.TempTags = this.questions[this.random].tag.split(',');
+		/*this.TempTags = this.questions[this.random].tag.split(',');
 
 		this.QuesText = this.questions[this.random].question;
 
 		this.ques = this.add.text(window.innerWidth/2, window.innerHeight*0.9, 'Hey',{ font: window.innerHeight/35 + 'px Arial', fill: 'green'});
 
-		this.ques.setText(this.QuesText);
+		this.ques.setText(this.QuesText);*/
 
 		var that = this;
 
@@ -95,7 +90,6 @@ class gameScene extends Phaser.Scene {
 			this['wait' + temp].push(element);	
 		}
 		this.syst = this.sys.game.gameData;
-		console.log(parseInt(this.syst.Row1Min))
 
 		var SpawnTimerRow1 = this.time.addEvent( {
 			delay: 0,
@@ -122,7 +116,11 @@ class gameScene extends Phaser.Scene {
 			}
 
 			var count = 0;
-			this.questionTags = that.questions[that.random].tag.split(',');
+			//this.questionTags = that.questions[that.random].tag.split(',');
+
+
+			this.questionTags = data.QuestionTags
+			console.log(this.questionTags)
 			this.testTags = that.imageArray[gameObject.name].tag.split(',');
 			var bla = this;
 
@@ -172,9 +170,7 @@ class gameScene extends Phaser.Scene {
 				//var Height = that[temp][j].displayHeight;
 			}
 			var Height = 'row' + i + 'Dif';
-			console.log(this[Height])
 			this.PosY = this[Height];
-			console.log(this.PosY)
 		}
 		var timedEvent = this.time.addEvent({
 			delay: this.sys.game.gameData.timer * 1000,
@@ -192,10 +188,6 @@ class gameScene extends Phaser.Scene {
 		var dirTemp = 'move' + this.imageArray[waitrow[element]].direction;
 		this[dirTemp].push(this.loadedImages[waitrow[element]]);
 		waitrow.splice(element,1);
-
-		console.log('max: ' + max)
-		console.log('min: ' + min)
-		console.log(Math.floor(Math.random() * (5000 - 2000) + 2000))
 
 		this.time.addEvent( {
 			delay: Math.floor(Math.random() * (max - min) + min),
