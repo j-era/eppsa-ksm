@@ -11,11 +11,12 @@ const Container = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  border-radius: ${props => props.theme.borderRadius}px;
+  border-radius: ${props => props.theme.layout.borderRadius};
+
+  height: 12vh;
+  width: ${props => `calc(100vw - ${props.theme.layout.offsetX} * 2)`};
 
   border: 5px solid black;
-  height: 80px;
-  width: 100%;
 `
 
 function collect(monitor) {

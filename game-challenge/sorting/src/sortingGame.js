@@ -6,25 +6,47 @@ import mapValues from "lodash.mapvalues"
 
 import DragDropList from "./dragDropList"
 
+import Button from "../node_modules/eppsa-ksm-shared/styled-components/components/button"
+import ButtonIcon from "../node_modules/eppsa-ksm-shared/svg/EPPSA_Assets_Button_Icon.svg"
+
 const Container = styled.div`
-  height: 100vh;
+  font-family: ${props => props.theme.font.fontFamily};
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: ${props => props.theme.layout.offsetX};
+  padding-right: ${props => props.theme.layout.offsetX};
+  padding-top: ${props => props.theme.layout.offsetY};
+  padding-bottom: ${props => props.theme.layout.offsetY};
 `
 
-const Label = styled.div`
+const TopLabel = styled.div`
   text-align: center;
-  padding: 5%;
+  margin-bottom: ${props => props.theme.layout.defaultSpacing};
 `
 
-const ItemList = styled(DragDropList)`
-  height: 80%;
+const BottomLabel = styled.div`
+  text-align: center;
+`
+
+const NextIcon = styled(ButtonIcon)`
+  margin-left: 1em;
+  margin-top: 0.2em;
+  height: 0.9em;
+  fill: black;
 `
 
 export default ({ data }) =>
   <Container>
-    <Label>{ data.topLabel }</Label>
-    <ItemList items={ selectItems(data) } />
-    <Label>{ data.bottomLabel }</Label>
+    <TopLabel>{ data.challenge.topLabel }</TopLabel>
+    <DragDropList items={ selectItems(data) } />
+    <BottomLabel>{ data.challenge.bottomLabel }</BottomLabel>
+    <Button onClick={ confirmSelection }>{ data.shared.texts.confirmSelection }<NextIcon /></Button>
   </Container>
+
+function confirmSelection() {
+}
 
 function selectItems(data) {
   const items = pickBy(data.challenge, (object) => object.template === "sortingItem")

@@ -12,7 +12,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  justify-content: space-between;
 `
 
 class ItemListComponent extends React.Component {
@@ -56,8 +55,6 @@ class ItemListComponent extends React.Component {
 
     itemsMap.set(dragItemId, this.state.itemsMap.get(hoverItemId))
     itemsMap.set(hoverItemId, this.state.itemsMap.get(dragItemId))
-
-    console.log(itemsMap)
 
     this.setState({ itemsMap })
   }

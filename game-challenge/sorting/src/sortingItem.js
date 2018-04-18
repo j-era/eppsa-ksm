@@ -4,13 +4,19 @@ import { DragSource, DropTarget } from "react-dnd"
 import { ItemTypes } from "./constants"
 
 const ItemContainer = styled.div`
-  height: 80px;
+  height: 12vh;
   background: ${props => props.isOver ? "green" : `url(${props.image.src})`};
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  border-radius: ${props => props.theme.borderRadius}px;
+  border-radius: ${props => props.theme.layout.borderRadius};
   visibility: ${props => props.isDragging ? "hidden" : "visible"};
+  margin-bottom: ${props => props.theme.layout.defaultSpacing};
+`
+
+const ItemText = styled.div`
+  font-size: ${props => props.theme.font.text.size};
+  padding: ${props => props.theme.layout.defaultSpacing}
 `
 
 const dragSource = {
@@ -40,7 +46,7 @@ class SortingItem extends React.Component {
     let content =
       <div>
         <ItemContainer image={ this.props.item.image } { ...this.props }>
-          { this.props.item.text }
+          <ItemText>{ this.props.item.text }</ItemText>
         </ItemContainer>
       </div>
 

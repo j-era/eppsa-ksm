@@ -3,10 +3,7 @@ import React from "react"
 import { ThemeProvider } from "styled-components"
 import SortingGame from "./sortingGame"
 
-const theme = {
-  gapHeight: 5,
-  borderRadius: 15
-}
+import theme from "../node_modules/eppsa-ksm-shared/styled-components/theme"
 
 export default ({ data }) =>
   <ThemeProvider theme={ theme }>
