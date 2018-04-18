@@ -1,5 +1,6 @@
-import * as gameStates from "./gameStates"
 import * as types from "./actionTypes"
+import * as gameStates from "./gameStates"
+import * as requestedMateStates from "./requestedMateStates"
 
 export function gameState(state = gameStates.NEW_GAME_AVATAR_SELECTION, action) {
   switch (action.type) {
@@ -117,16 +118,26 @@ export function showGameManual(state = false, action) {
   }
 }
 
-export function requestedMate(state = null, action) {
+const noRequestedMate = { gameId: null, requestState: requestedMateStates.NONE }
+
+export function requestedMate(state = noRequestedMate, action) {
   switch (action.type) {
     case types.REQUEST_MATE:
-      return action.gameId
+      return { gameId: action.gameId, requestState: requestedMateStates.PENDING }
     case types.INCOMING_MATE_REJECT:
-      return null
+      return state.requestState === requestedMateStates.PENDING
+        ? { gameId: state.gameId, requestState: requestedMateStates.REJECTED }
+        : state
     case types.CANCEL_REQUEST_MATE:
-      return null
+      return noRequestedMate
     case types.UPDATE_CONNECTED:
-      return null
+      return state.requestState === requestedMateStates.PENDING
+        ? { gameId: state.gameId, requestState: requestedMateStates.NOT_AVAILABLE }
+        : state
+    case types.UPDATE_CONNECTED_GAMES:
+      return !includesGame(state.gameId, action.games)
+        ? { gameId: state.gameId, requestState: requestedMateStates.NOT_AVAILABLE }
+        : state
     default:
       return state
   }
@@ -155,13 +166,14 @@ export function mateRequests(state = new Set(), action) {
     case types.UPDATE_CONNECTED:
       return new Set()
     case types.UPDATE_CONNECTED_GAMES:
-      //  filter mateRequests of clients which are disconnected
-      return new Set(Array.from(state).filter((mateRequest) =>
-        action.games.find((game) => game.gameId === mateRequest)
-      ))
+      return new Set(Array.from(state).filter((gameId) => includesGame(gameId, action.games)))
     default:
       return state
   }
+}
+
+function includesGame(gameId, games) {
+  return games.find((game) => game.gameId === gameId)
 }
 
 export function wrongQrCodeScanned(state = false, action) {

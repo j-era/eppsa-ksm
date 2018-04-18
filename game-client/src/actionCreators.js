@@ -202,7 +202,7 @@ export function handleIncomingCancelMateRequest(gameId) {
 
 export function handleIncomingMateAccept(gameId, gameServer) {
   return async (dispatch, getState) => {
-    if (getState().requestedMate === gameId) {
+    if (getState().requestedMate.gameId === gameId) {
       dispatch(startChallenge(gameServer))
     }
   }
