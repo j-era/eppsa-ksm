@@ -64,17 +64,18 @@ function renderLobby({ challengeNumber, connectedGames, dispatch, gameId, gameSe
   return (
     <div>
       <div>ChallengeLobby</div>
-      <div>
+      <ul>
         {
           gamesInLobby.map((game) =>
-            <button
-              key={ game.gameId }
-              onClick={ () => dispatch(requestMate(game.gameId, gameServer)) }>
-              { game.name }
-            </button>
+            <li key={ game.gameId }>
+              <button
+                onClick={ () => dispatch(requestMate(game.gameId, gameServer)) }>
+                { game.name }
+              </button>
+            </li>
           )
         }
-      </div>
+      </ul>
       <button onClick={ () => dispatch(leaveChallengeLobby(gameServer)) }>
         Zurück
       </button>
