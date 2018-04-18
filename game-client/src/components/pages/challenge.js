@@ -3,7 +3,6 @@ import React from "react"
 export default function Challenge(props) {
   return (
     <iframe
-      style={ { width: "300px", height: "600px" } }
       allow="camera"
       src={ props.challengeUri }
       ref={ iframe => {
