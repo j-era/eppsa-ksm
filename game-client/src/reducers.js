@@ -135,7 +135,8 @@ export function requestedMate(state = noRequestedMate, action) {
         ? { gameId: state.gameId, requestState: requestedMateStates.NOT_AVAILABLE }
         : state
     case types.UPDATE_CONNECTED_GAMES:
-      return !includesGame(state.gameId, action.games)
+      return state.requestState === requestedMateStates.PENDING
+        && !includesGame(state.gameId, action.games)
         ? { gameId: state.gameId, requestState: requestedMateStates.NOT_AVAILABLE }
         : state
     default:
