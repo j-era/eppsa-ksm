@@ -7,130 +7,79 @@ import {
   cancelRequestMate,
   leaveChallengeLobby
 } from "../../actionCreators"
+import * as requestedMateStates from "../../requestedMateStates"
 
-export default class ChallengeLobby extends React.Component {
-  static getDerivedStateFromProps(nextProps, { requestedMate, mateRequest, mateHasRejected }) {
-    const newRequestedMate = nextProps.requestedMate
-    const newMateHasRejected = newRequestedMate === null && requestedMate !== null
-
-    const shouldUpdateMateRequest = !mateRequest || !nextProps.mateRequests.has(mateRequest)
-    const newMateRequest = shouldUpdateMateRequest
-      ? nextProps.mateRequests.values().next().value
-      : mateRequest
-
-    return {
-      requestedMate: newRequestedMate,
-      mateRequest: newMateRequest,
-      mateHasRejected: mateHasRejected || newMateHasRejected
-    }
+export default function ChallengeLobby(props) {
+  if (props.requestedMate.gameId) {
+    return renderRequestedMate(props)
   }
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      requestedMate: null,
-      mateRequest: null,
-      mateHasRejected: false
-    }
+  if (props.mateRequests.size > 0) {
+    return renderMateRequest(props)
   }
 
-  render() {
-    if (this.state.requestedMate) {
-      return this.renderWaitingForRequestedMate()
-    }
+  return renderLobby(props)
+}
 
-    if (this.state.mateHasRejected) {
-      return this.renderMateHasRejected()
-    }
+function renderRequestedMate({ requestedMate, gameServer, dispatch }) {
+  const text = requestedMateText(requestedMate.requestState)
 
-    if (this.state.mateRequest) {
-      return this.renderMateRequest()
-    }
+  return (
+    <div>
+      { text }
+      <button onClick={ () => dispatch(cancelRequestMate(gameServer)) }>
+        Zurück
+      </button>
+    </div>
+  )
+}
 
-    return this.renderLobbyList()
+function requestedMateText(state) {
+  switch (state) {
+    case requestedMateStates.REJECTED: return "Der Spieler hat abgelehnt"
+    case requestedMateStates.NOT_AVAILABLE: return "Der Spieler hat die Lobby verlassen"
+    default: return "Warte auf Spieler"
   }
+}
 
-  renderWaitingForRequestedMate() {
-    const { challengeNumber, connectedGames, dispatch, gameServer } = this.props
-    const { requestedMate } = this.state
+function renderMateRequest({ mateRequests, gameServer, dispatch }) {
+  const mateRequest = mateRequests.values().next().value
 
-    const mateData = connectedGames.find((game) =>
-      requestedMate === game.gameId && challengeNumber === game.challengeNumber && game.inLobby)
+  return (
+    <div>
+      { "Jemand möchte mit dir spielen." }
+      <button onClick={ () => dispatch(rejectMateRequest(mateRequest, gameServer)) }>
+        Ablehnen
+      </button>
+      <button onClick={ () => dispatch(acceptMateRequest(mateRequest, gameServer)) }>
+        Annehmen
+      </button>
+    </div>
+  )
+}
 
-    return (
+function renderLobby({ challengeNumber, connectedGames, dispatch, gameId, gameServer }) {
+  const gamesInLobby = findGamesInLobby(challengeNumber, connectedGames, gameId)
+
+  return (
+    <div>
+      <div>ChallengeLobby</div>
       <div>
-        <div>ChallengeLobby</div>
         {
-          mateData ? "Warte auf Zustimmung." : "Der Spieler hat die Lobby verlassen."
+          gamesInLobby.map((game) =>
+            <button
+              key={ game.gameId }
+              onClick={ () => dispatch(requestMate(game.gameId, gameServer)) }>
+              { game.name }
+            </button>
+          )
         }
-        <button onClick={ () => {
-          this.setState({ requestedMate: null })
-          dispatch(cancelRequestMate(gameServer))
-        } }>
-          Zurück
-        </button>
       </div>
-    )
-  }
-
-  renderMateHasRejected() {
-    return (
-      <div>
-        <div>ChallengeLobby</div>
-        {
-          "Der Spieler hat abgelehnt."
-        }
-        <button onClick={ () => {
-          this.setState({ mateHasRejected: false })
-        } }>
-          Zurück
-        </button>
-      </div>
-    )
-  }
-
-  renderMateRequest() {
-    const { mateRequest } = this.state
-    const { gameServer, dispatch } = this.props
-
-    return (
-      <div>
-        <div>ChallengeLobby</div>
-        { "Jemand möchte mit dir spielen." }
-        <button onClick={ () => dispatch(rejectMateRequest(mateRequest, gameServer)) }>
-          Ablehnen
-        </button>
-        <button onClick={ () => dispatch(acceptMateRequest(mateRequest, gameServer)) }>
-          Annehmen
-        </button>
-      </div>
-    )
-  }
-
-  renderLobbyList() {
-    const { challengeNumber, connectedGames, dispatch, gameId, gameServer } = this.props
-    const gamesInLobby = findGamesInLobby(challengeNumber, connectedGames, gameId)
-
-    return (
-      <div>
-        <div>ChallengeLobby</div>
-        <div>
-          {
-            gamesInLobby.map((game) =>
-              <button
-                key={ game.gameId }
-                onClick={ () => dispatch(requestMate(game.gameId, gameServer)) }>
-                { game.name }
-              </button>
-            )
-          }
-        </div>
-        <button onClick={ () => dispatch(leaveChallengeLobby(gameServer)) }>
-          Zurück
-        </button>
-      </div>
-    )
-  }
+      <button onClick={ () => dispatch(leaveChallengeLobby(gameServer)) }>
+        Zurück
+      </button>
+    </div>
+  )
 }
 
 function findGamesInLobby(challengeNumber, connectedGames, gameId) {
