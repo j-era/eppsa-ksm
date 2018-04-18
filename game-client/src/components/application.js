@@ -4,25 +4,51 @@ import { connect } from "react-redux"
 import styled from "styled-components"
 
 import { FINISHED } from "../gameStates"
+
+import Card from "./card"
 import GameBoard from "./gameBoard"
 import GameManual from "./gameManual"
 import GameManualButton from "./gameManualButton"
 import pages from "./pages"
+import Page from "./page"
 
+
+const Container = styled.div`
+  background-color: ${props => props.theme.colors.secondary};
+`
+
+const Background = styled.div`
+  width: 100%;
+  height: 80vh;
+  margin-top: 20vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: blue;
+`
 
 function Application(props) {
   const pageData = pages[props.gameState]
 
   const enhancedProps = enhance(props)
+  const innerHeight = window.innerHeight
+  const innerWidth = window.innerWidth
+  const innerRatio = innerWidth / innerHeight
 
   return (
-    <div>
+    <Container>
       { pageData.showHeader && renderHeader(enhancedProps) }
-      { props.showGameManual
-        ? <GameManual { ...props } />
-        : React.createElement(pageData.render, enhancedProps)
-      }
-    </div>
+      <Background>
+        <Card innerRatio={ innerRatio }>
+          <Page>
+            { props.showGameManual
+              ? <GameManual { ...props } />
+              : React.createElement(pageData.render, enhancedProps)
+            }
+          </Page>
+        </Card>
+      </Background>
+    </Container>
   )
 }
 
