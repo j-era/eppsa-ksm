@@ -166,7 +166,7 @@ class gameScene extends Phaser.Scene {
 					duration: 500,
 					repeat: 0,
 					yoyo: true,
-					onComplete: function() {gameObject.input.enabled = true}
+					//onComplete: function() {gameObject.input.enabled = true}
 				})
 			}
 
@@ -221,6 +221,10 @@ class gameScene extends Phaser.Scene {
 		for(var i = 0; i < this.moveRight.length; i++){
 			this.moveRight[i].x += 5;
 			if(this.moveRight[i].x > window.innerWidth + this.moveRight[i].displayWidth){
+				if(this.moveRight[i].input.enabled == false){
+					this.moveRight[i].input.enabled = true
+				}
+
 				this.moveRight[i].x = 0 - this.moveRight[i].displayWidth;
 				var temp = 'waitrow' + this.imageArray[this.moveRight[i].name].depth
 				this[temp].push(this.moveRight[i].name);
