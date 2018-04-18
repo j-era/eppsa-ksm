@@ -20,11 +20,9 @@ const Container = styled.div `
   padding-left: ${props => props.theme.layout.offsetX};
   padding-right: ${props => props.theme.layout.offsetX};
   height: 100%;
-  width: 100%;
 `
 
 const Description = styled.div`
-  margin-top: 1em;
   padding-bottom: 0.25em;
   max-height: 4.5em;
   font-size: ${props => props.theme.font.text.size};
