@@ -20,11 +20,14 @@ const Container = styled.div`
 const Background = styled.div`
   width: 100%;
   height: 80vh;
-  margin-top: 20vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: blue;
+`
+
+const Header = styled.div`
+  height: 20vh;
 `
 
 function Application(props) {
@@ -37,7 +40,9 @@ function Application(props) {
 
   return (
     <Container>
-      { pageData.showHeader && renderHeader(enhancedProps) }
+      <Header>
+        { pageData.showHeader && renderHeader(enhancedProps) }
+      </Header>
       <Background>
         <Card innerRatio={ innerRatio }>
           <Page>
