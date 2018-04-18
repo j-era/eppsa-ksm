@@ -2,6 +2,7 @@ import { setCookie } from "./cookie"
 import * as gameStates from "./gameStates"
 import * as types from "./actionTypes"
 import * as messages from "./messages"
+import uuid from "uuid/v4"
 
 export function resumeGame(gameId, gameServer) {
   return async (dispatch) => {
@@ -34,9 +35,10 @@ export function startNewGame(name, avatar, maxChallenges, gameServer) {
   }
 }
 
-export function startChallenge(gameServer) {
+export function startChallenge(gameServer, room = null) {
   return async (dispatch) => {
     await gameServer.startChallenge()
+    dispatch({ type: types.SET_CHALLENGE_ROOM, room })
     dispatch(updateGameState(gameStates.CHALLENGE))
   }
 }
@@ -170,8 +172,9 @@ export function cancelRequestMate(gameServer) {
 
 export function acceptMateRequest(gameId, gameServer) {
   return async (dispatch) => {
-    gameServer.sendDirectMessage(messages.ACCEPTING_MATE, gameId)
-    dispatch(startChallenge(gameServer))
+    const room = uuid()
+    gameServer.sendDirectMessage(messages.ACCEPTING_MATE, gameId, { room })
+    dispatch(startChallenge(gameServer, room))
   }
 }
 
@@ -200,10 +203,10 @@ export function handleIncomingCancelMateRequest(gameId) {
   }
 }
 
-export function handleIncomingMateAccept(gameId, gameServer) {
+export function handleIncomingMateAccept(gameId, { room }, gameServer) {
   return async (dispatch, getState) => {
     if (getState().requestedMate.gameId === gameId) {
-      dispatch(startChallenge(gameServer))
+      dispatch(startChallenge(gameServer, room))
     }
   }
 }

@@ -53,8 +53,8 @@ export default class GameServer {
     return this.emit("leaveChallengeLobby")
   }
 
-  sendDirectMessage(message, gameId) {
-    this.emit("sendDirectMessage", message, gameId)
+  sendDirectMessage(message, gameId, payload = {}) {
+    this.emit("sendDirectMessage", message, gameId, payload)
   }
 
   emit(eventName, ...param) {

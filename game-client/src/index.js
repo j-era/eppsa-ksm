@@ -144,7 +144,7 @@ gameServer.on("disconnect", () => {
   store.dispatch(actions.updateConnected(false))
 })
 
-gameServer.on("directMessage", (message, gameId) => {
+gameServer.on("directMessage", (message, gameId, payload) => {
   console.log(`Message received from ${gameId}: ${message}`)
   switch (message) {
     case messages.REQUESTING_MATE:
@@ -152,7 +152,7 @@ gameServer.on("directMessage", (message, gameId) => {
     case messages.CANCEL_REQUESTING_MATE:
       return store.dispatch(actions.handleIncomingCancelMateRequest(gameId))
     case messages.ACCEPTING_MATE:
-      return store.dispatch(actions.handleIncomingMateAccept(gameId, gameServer))
+      return store.dispatch(actions.handleIncomingMateAccept(gameId, payload, gameServer))
     case messages.REJECTING_MATE:
       return store.dispatch(actions.handleIncomingMateReject())
   }
