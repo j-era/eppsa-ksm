@@ -7,6 +7,7 @@ import { Provider } from "react-redux"
 import thunk from "redux-thunk"
 import { applyMiddleware, createStore, combineReducers } from "redux"
 import { createLogger } from "redux-logger"
+import { ThemeProvider } from "styled-components"
 
 import Application from "./components/application"
 import * as gameStates from "./gameStates"
@@ -16,11 +17,16 @@ import { getCookie } from "./cookie"
 import GameServer from "./api/gameServer"
 import * as actions from "./actionCreators"
 
+import { injectGlobalStyle } from "../node_modules/eppsa-ksm-shared/styled-components/globalStyle"
+import theme from "../node_modules/eppsa-ksm-shared/styled-components/theme"
+
 const store = createStore(combineReducers(reducers), applyMiddleware(thunk, createLogger()))
 const contentServer = new ContentServer(process.env.CONTENT_SERVER_URI)
 const gameServer = new GameServer(process.env.GAME_SERVER_URI)
 
 const config = querystring.parse(window.location.search.substring(1))
+
+injectGlobalStyle(process.env.STATIC_SERVER_URI)
 
 contentServer.getData().then(transform).then(async (content) => {
   const maxChallenges = Object.keys(content.challenges).length - 1
@@ -52,17 +58,19 @@ contentServer.getData().then(transform).then(async (content) => {
 
   render(
     <Provider store={ store }>
-      <Application
-        content={ content }
-        resumableGame={ resumableGame }
-        assetServerUri={ process.env.ASSET_SERVER_URI }
-        contentServerUri={ process.env.CONTENT_SERVER_URI }
-        gameServerUri={ process.env.GAME_SERVER_URI }
-        staticServerUri={ process.env.STATIC_SERVER_URI }
-        maxChallenges={ maxChallenges }
-        dispatch={ store.dispatch }
-        gameServer={ gameServer }
-        onChallengeReady={ onChallengeReady } />
+      <ThemeProvider theme={ theme }>
+        <Application
+          content={ content }
+          resumableGame={ resumableGame }
+          assetServerUri={ process.env.ASSET_SERVER_URI }
+          contentServerUri={ process.env.CONTENT_SERVER_URI }
+          gameServerUri={ process.env.GAME_SERVER_URI }
+          staticServerUri={ process.env.STATIC_SERVER_URI }
+          maxChallenges={ maxChallenges }
+          dispatch={ store.dispatch }
+          gameServer={ gameServer }
+          onChallengeReady={ onChallengeReady } />
+      </ThemeProvider>
     </Provider>,
     document.getElementById("app")
   )
