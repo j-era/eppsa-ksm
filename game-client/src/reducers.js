@@ -51,6 +51,15 @@ export function challengeNumber(state = 0, action) {
   }
 }
 
+export function challengeRoom(state = null, action) {
+  switch (action.type) {
+    case types.SET_CHALLENGE_ROOM:
+      return action.room
+    default:
+      return state
+  }
+}
+
 export function score(state = 0, action) {
   switch (action.type) {
     case types.UPDATE_GAME_DATA:

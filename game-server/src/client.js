@@ -111,13 +111,19 @@ module.exports = class Client {
     }
   }
 
-  async sendDirectMessage(message, gameId) {
+  async sendDirectMessage(message, gameId, payload) {
     if (this.game) {
       const socketId = await this.mongoDB.findSocketId(gameId)
 
-      this.log.info({ from: this.game.gameId, to: gameId, socketId, message }, "Delivering message")
+      this.log.info({
+        from: this.game.gameId,
+        to: gameId,
+        socketId,
+        message,
+        payload
+      }, "Delivering message")
 
-      this.socket.nsp.to(socketId).emit("directMessage", message, this.game.gameId)
+      this.socket.nsp.to(socketId).emit("directMessage", message, this.game.gameId, payload)
     }
   }
 
