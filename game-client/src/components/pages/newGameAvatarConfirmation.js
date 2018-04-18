@@ -35,7 +35,7 @@ const Icon = styled.div`
   width: 15em;
   border-radius: 50%;
   align-self: center;
-  border: ${props => props.theme.layout.iconBorder} solid ${props => props.theme.colors.primary};
+  border: ${props => props.theme.layout.iconBorder} solid ${props => props.theme.colors.areaColor};
   background-image: url(${props => props.icon});
   background-size: cover;
 `
@@ -51,7 +51,7 @@ const Description = styled.div`
 `
 
 const ConfirmButton = styled(NextButton)`
-  border-color: ${props => props.theme.colors.primary};
+  border-color: ${props => props.theme.colors.areaColor};
   width: 100%;
 `
 
