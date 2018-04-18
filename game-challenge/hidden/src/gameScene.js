@@ -41,13 +41,35 @@ class gameScene extends Phaser.Scene {
 			}
 		}*/
 
+		this.blockMaxWidth = 500;
+		this.blockMaxHeight = 500;
+		this.blockMinWidth = 200;
+		this.blockMinHeight = 200;
+
 		this.picMaxWidth = window.innerWidth/3;
 		this.picMaxHeight = this.picMaxWidth*0.75;
+		this.picMinWidth = window.innerWidth/4;
+		this.picMinHeight = this.picMinWidth * 0.75;
+
 
 		for(var blockElements in this.blockImages){
 			var blocking = this.add.image(this.blockImages[blockElements].positionX,this.blockImages[blockElements].positionY, this.blockImages[blockElements].img).setOrigin(0,0).setName(imageKey).setInteractive();
-			blocking.displayWidth = this.picMaxWidth;
-			blocking.displayHeight = this.picMaxHeight;
+			if(blocking.displayWidth > this.blockMaxWidth){
+				blocking.displayWidth = this.blockMaxWidth;
+			}else if(blocking.displayWidth < this.blockMinWidth){
+				blocking.displayWidth = this.blockMinWidth;
+			}else {
+				blocking.displayWidth = blocking.displayWidth
+			}
+
+			if(blocking.displayHeight > this.picMaxHeight){
+				blocking.displayHeight = this.picMaxHeight;
+			}else if(blocking.displayHeight < this.picMinHeight){
+				blocking.displayHeight = this.picMinHeight;
+			}else {
+				blocking.displayHeight = blocking.displayHeight
+			}
+			
 			blocking.depth = this.blockImages[blockElements].depth;
 			blocking.eppsaInactive = true;
 		}
@@ -118,15 +140,13 @@ class gameScene extends Phaser.Scene {
 			var count = 0;
 			//this.questionTags = that.questions[that.random].tag.split(',');
 
-
 			this.questionTags = data.QuestionTags
-			console.log(this.questionTags)
 			this.testTags = that.imageArray[gameObject.name].tag.split(',');
-			var bla = this;
+			var scope = this;
 
 			this.questionTags.forEach(function(tag) {
-				for(var i = 0; i < bla.testTags.length; i++){
-					if(tag == bla.testTags[i]){
+				for(var i = 0; i < scope.testTags.length; i++){
+					if(tag == scope.testTags[i]){
 						count += 1;
 						break;
 					}else{
@@ -177,7 +197,6 @@ class gameScene extends Phaser.Scene {
 			callback: this.gameWin,
 			callbackScope: this
 		});
-		//this.spawn();
 	}
 	gameWin() {
 		this.scene.start('WinScene', { t: this.correct})
