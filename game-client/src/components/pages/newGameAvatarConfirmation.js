@@ -5,7 +5,9 @@ import styled from "styled-components"
 import { updateGameState } from "../../actionCreators"
 import { NEW_GAME_AVATAR_SELECTION, NEW_GAME_NAME_SELECTION } from "../../gameStates"
 import Button from "../../../node_modules/eppsa-ksm-shared/styled-components/components/button"
+import FramedIcon from "../../../node_modules/eppsa-ksm-shared/styled-components/components/framedIcon"
 import NextButton from "../../../node_modules/eppsa-ksm-shared/styled-components/components/nextButton"
+import PageTitle from "../../../node_modules/eppsa-ksm-shared/styled-components/components/pageTitle"
 import delay from "../../../node_modules/eppsa-ksm-shared/functions/delay"
 
 
@@ -19,25 +21,6 @@ const Container = styled.div `
   padding-right: ${props => props.theme.layout.offsetX};
   height: 100%;
   width: 100%;
-`
-
-const Title = styled.div`
-  margin-bottom: 0.5em;
-  align-self: center;
-  font-size: ${props => props.theme.font.headline.size};
-  font-weight: ${props => props.theme.font.headline.weight};
-  color: ${props => props.theme.font.headline.color};
-  text-align: center;
-`
-
-const Icon = styled.div`
-  height: 15em;
-  width: 15em;
-  border-radius: 50%;
-  align-self: center;
-  border: ${props => props.theme.layout.iconBorder} solid ${props => props.theme.colors.areaColor};
-  background-image: url(${props => props.icon});
-  background-size: cover;
 `
 
 const Description = styled.div`
@@ -73,8 +56,8 @@ export default class NewGameAvatarConfirmation extends React.Component {
 
     return (
       <Container>
-        <Title>{ avatar }</Title>
-        <Icon icon={ `${assetServerUri}/${content.avatars[avatar].icon.src}` } />
+        <PageTitle>{ avatar }</PageTitle>
+        <FramedIcon icon={ `${assetServerUri}/${content.avatars[avatar].icon.src}` } />
         <Description>{ content.avatars[avatar].description }</Description>
         <ConfirmButton
           visible
