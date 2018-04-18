@@ -16,8 +16,6 @@ class gameScene extends Phaser.Scene {
 	}
 
 	create(data) {
-		console.log(data.QuestionTags)
-
 		this.imageArray = {};
 		this.blockImages = {};
 		//this.questions = [];
@@ -55,17 +53,22 @@ class gameScene extends Phaser.Scene {
 		for(var blockElements in this.blockImages){
 			var blocking = this.add.image(this.blockImages[blockElements].positionX,this.blockImages[blockElements].positionY, this.blockImages[blockElements].img).setOrigin(0,0).setName(imageKey).setInteractive();
 			if(blocking.displayWidth > this.blockMaxWidth){
-				blocking.displayWidth = this.blockMaxWidth;
+				var scale = (this.blockMaxWidth / blocking.displayWidth)
+				blocking.setScale(scale,scale);
+
 			}else if(blocking.displayWidth < this.blockMinWidth){
-				blocking.displayWidth = this.blockMinWidth;
+				var scale = (this.blockMinWidth / blocking.displayWidth)
+				blocking.setScale(scale,scale);
 			}else {
 				blocking.displayWidth = blocking.displayWidth
 			}
 
-			if(blocking.displayHeight > this.picMaxHeight){
-				blocking.displayHeight = this.picMaxHeight;
-			}else if(blocking.displayHeight < this.picMinHeight){
-				blocking.displayHeight = this.picMinHeight;
+			if(blocking.displayHeight > this.blockMaxHeight){
+				var scale = (this.blockMinHeight / blocking.displayHeight)
+				blocking.setScale(scale,scale);
+			}else if(blocking.displayHeight < this.blockMinHeight){
+				var scale = (this.blockMinHeight / blocking.displayHeight)
+				blocking.setScale(scale,scale);
 			}else {
 				blocking.displayHeight = blocking.displayHeight
 			}
