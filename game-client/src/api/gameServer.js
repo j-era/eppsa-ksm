@@ -70,7 +70,6 @@ export default class GameServer {
   }
 
   setHandshakeQuery(params) {
-    console.log(`Set reconnect options: ${params}`)
     this.socket.io.opts.query = params
   }
 }
