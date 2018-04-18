@@ -10,7 +10,7 @@ class Boot extends Phaser.Scene {
 	create () {
 
 		var timedEvent = this.time.addEvent({
-			delay: 5000,
+			delay: 500,
 			callback: this.start,
 			callbackScope: this
 		});
