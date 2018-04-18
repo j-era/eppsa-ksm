@@ -7,11 +7,6 @@ class GameScene extends Phaser.Scene {
 	}
 
 	preload() {
-		//console.log(this.sys.game.gameData.assets)
-		/*this.load.image('water', 'img/Water.jpg');
-		this.load.image('boat', 'img/Boat.jpg');
-		this.load.image('boat2', 'img/Boat2.jpg');
-		this.load.image('Ziel', 'img/Ziellinie.jpg');*/
 
 		var scope = this;
 		for(var key in this.sys.game.gameData.assets){
@@ -28,7 +23,7 @@ class GameScene extends Phaser.Scene {
 
 		var TempZiel = this.textures.get('Ziellinie');
 		var ZielScale = window.innerHeight / TempZiel.source[0].height *0.04;
-		var Ziel = this.add.image(window.innerHeight - (window.innerHeight*0.35), window.innerHeight-(window.innerHeight*1), 'Ziellinie').setOrigin(0,0);
+		var Ziel = this.add.image(window.innerWidth - (window.innerWidth*0.15), window.innerHeight-(window.innerHeight*1), 'Ziellinie').setOrigin(0,0);
 
 		Ziel.setScale(ZielScale,window.innerWidth/(Ziel.width/2));
 
