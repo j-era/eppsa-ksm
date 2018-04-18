@@ -185,12 +185,14 @@ let GraphGame = new Phaser.Class({
 		this.setupAgentSpawnRates();
 		this.spawnAgent();
 
-		this.displayPointsText = this.add.text(that.xPosToScreen(10), that.yPosToScreen(10), this.countedWinEvents * 10, {color: '#ff00ff', fontSize: '20px'});
+		this.displayPointsText = this.add.text(that.xPosToScreen(10), that.yPosToScreen(10), this.calculateScore().toString(), {color: '#ff00ff', fontSize: '20px'});
 
-		this.moveRight = this.add.image(this.width - this.width/2, this.height - this.height/20, 'button').setScale(0.1, 0.1).setName("right").setInteractive();
-		this.moveLeft = this.add.image(2 * this.width - this.width/2, this.height - this.height/20, 'button').setScale(0.1, 0.1).setName("left").setInteractive();
-		this.moveLeft.flipX = !this.moveLeft.flipX;
-
+		if(gameData.showScrollButton == "true"){
+			this.moveRight = this.add.image(this.width - this.width/2, this.height - this.height/20, 'button').setScale(0.1, 0.1).setName("right").setInteractive();
+			this.moveLeft = this.add.image(2 * this.width - this.width/2, this.height - this.height/20, 'button').setScale(0.1, 0.1).setName("left").setInteractive();
+			this.moveLeft.flipX = !this.moveLeft.flipX;
+		}
+		
 		this.input.on('gameobjectdown', function(pointer, gameObject){
 			if(gameObject.name == 'agent'){
 				gameObject.timer.remove(false); //stopping autonomous movement
@@ -234,7 +236,9 @@ let GraphGame = new Phaser.Class({
 
 				//console.log("Checking nodes");
 				that.spawnedNodes.forEach(function(element){
-					if( x - 35 <= element.img.x && element.img.x <= x + 35 && y - 35  <= element.img.y &&  element.img.y <= y + 35){
+					let radius = element.edgeThreshold * devicePixelRatio;
+					console.log(radius);
+					if( x - radius <= element.img.x && element.img.x <= x + radius && y - radius  <= element.img.y &&  element.img.y <= y + radius){
 						//console.log("found node " + element.id);
 						var pathLength = that.currentPath[that.currentPathID].path.length;
 						if(pathLength == 0){
@@ -309,9 +313,9 @@ let GraphGame = new Phaser.Class({
 		}
 
 		var currentlyMovingAgent;
-		for (var a in this.currentAgents){
-			if(agent.id == this.currentAgents[a].id){
-				currentlyMovingAgent = this.currentAgents[a];
+		for (var ag in this.currentAgents){
+			if(agent.id == this.currentAgents[ag].id){
+				currentlyMovingAgent = this.currentAgents[ag];
 				break;
 			}
 		}
@@ -366,12 +370,15 @@ let GraphGame = new Phaser.Class({
 			return;
 		}
 
-		//TODO add agent.speed and line.length as variable in duration
+		let a = agent.x - nextNode.x;
+		let b = agent.y - nextNode.y;
+		let distance = Math.sqrt(a*a + b*b);
+
 		agent.tween = this.tweens.add({
 			targets: agent,
 			x: nextNode.x,
 			y: nextNode.y,
-			duration: 1000,
+			duration: distance * currentlyMovingAgent.speed,
 			yoyo: false,
 			repeat: 0,
 			onStart: function(){
@@ -434,7 +441,7 @@ let GraphGame = new Phaser.Class({
 					that.spawnedNodes[nextNode.id].agentOnNode = undefined;
 					console.log('agent at exit');
 					that.countedWinEvents ++;
-					that.displayPointsText.setText(that.countedWinEvents * 10);
+					that.displayPointsText.setText(that.calculateScore().toString());
 
 					that.destroyAgent(currentlyMovingAgent.id);
 					return null;
@@ -519,6 +526,10 @@ let GraphGame = new Phaser.Class({
 		})
 	},
 
+	calculateScore: function(){
+		return gameData.rewardValue * this.countedWinEvents * gameData.gameTypeFactor;
+	},
+
 	checkControlPoint: function(current, next){
 		console.log(current, next);
 		//console.log(this.controllPoints);
@@ -532,7 +543,7 @@ let GraphGame = new Phaser.Class({
 			}
 			if(point.pointsIf.indexOf(next) != -1){
 				this.countedWinEvents ++;
-				this.displayPointsText.setText(this.countedWinEvents * 10);
+				this.displayPointsText.setText(this.calculateScore().toString());
 				console.log("points");
 				return "points";
 			}
@@ -567,14 +578,18 @@ let GraphGame = new Phaser.Class({
 			}
 			this.node.connectedTo = currentNode.connectedTo;
 			this.node.pauseTime = currentNode.nodePauseTime;
+			console.log(currentNode.edgeThreshold);
+			this.node.edgeThreshold = currentNode.edgeThreshold;
 			this.node.id = currentNode.nodeID;
 			this.node.img.setName('node');
 			if(gameData.drawLinesAndNodes != "true"){
 				this.node.img.setAlpha(0);
 			}
 
-			that.add.text(this.xPosToScreen(currentNode.xPosition), this.yPosToScreen(currentNode.yPosition), that.nodes[node].nodeID, {fill: '#ffffff'});
-
+			if(gameData.designModeOn == "true"){
+				that.add.text(this.xPosToScreen(currentNode.xPosition), this.yPosToScreen(currentNode.yPosition), that.nodes[node].nodeID, {fill: '#ffffff'});
+			}
+			
 			let controllPoint = this.controllPoints[currentNode.nodeID];
 			if(controllPoint && controllPoint.skin != ''){
 				console.log(currentNode.nodeID);
@@ -771,6 +786,7 @@ let GraphGame = new Phaser.Class({
 			newAgent.assignedDestination = agentType.assignedDestination;
 			newAgent.name = agentType.name;
 			newAgent.nodeID = startNode.id;
+			newAgent.speed = agentType.speed;
 
 			console.log(newAgent.img.rotation);
 
@@ -799,7 +815,7 @@ let GraphGame = new Phaser.Class({
 
 	onGameEnd: function(){
 		console.log('game over');
-		let score = this.countedWinEvents * 10;
+		let score = this.calculateScore();
 		gameClient.source.postMessage(
 			{
 			  source: "challenge",
