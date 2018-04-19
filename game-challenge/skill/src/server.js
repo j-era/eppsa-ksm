@@ -34,6 +34,7 @@ io.on('connection',function(socket){
 
         socket.on('disconnect', function(){
             io.emit('remove', socket.player.id);
+            server.freePlayers.splice(0, 1);
         });
 
         socket.on('arrowchange', function(data){
@@ -64,6 +65,30 @@ io.on('connection',function(socket){
             });
         });
 
+        socket.on('finalscore', function(data){
+            console.log('receiving score', data);
+            socket.player.score = data.score;
+
+            Object.keys(io.sockets.connected).forEach(function(socketID){
+                if(io.sockets.connected[socketID].player != null){
+                    console.log('players found');
+                    if(io.sockets.connected[socketID].player.id == data.other && io.sockets.connected[socketID].player.score != undefined){
+                        console.log('partner found');
+                        if(io.sockets.connected[socketID].player.score == socket.player.score){
+                            io.sockets.connected[socketID].emit('score', socket.player.score);
+                            socket.emit('score', socket.player.score);
+                        }else{
+                            let finalScore = io.sockets.connected[socketID].player.score > socket.player.score ? io.sockets.connected[socketID].player.score : socket.player.score;
+                            io.sockets.connected[socketID].emit('score', finalScore);
+                            socket.emit('score', finalScore);
+                            
+                        }
+                    }
+                }
+                
+            });
+        })
+
     });
 
     
@@ -72,8 +97,16 @@ io.on('connection',function(socket){
 function findMatchForPlayer(socket, player){
     if(server.freePlayers.length != 0){
         let connectedPlayer = server.freePlayers[0].player;
-        socket.emit('matchedwith', {'other': connectedPlayer.id, 'own': player.id});
-        server.freePlayers[0].emit('matchedwith', {'other': player.id, 'own': connectedPlayer.id });
+
+        let first_ship = Math.random() >= 0.5;
+
+        if(first_ship){
+            socket.emit('matchedwith', {'other': connectedPlayer.id, 'own': player.id, 'playing' : 'ship'});
+            server.freePlayers[0].emit('matchedwith', {'other': player.id, 'own': connectedPlayer.id, 'playing' : 'wind' });
+        }else{
+            socket.emit('matchedwith', {'other': connectedPlayer.id, 'own': player.id, 'playing' : 'wind'});
+            server.freePlayers[0].emit('matchedwith', {'other': player.id, 'own': connectedPlayer.id, 'playing' : 'ship'});
+        }
 
         server.freePlayers.splice(0, 1);
         return('Trying to match you with player ' +  connectedPlayer.id);
