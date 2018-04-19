@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "eppsa-ksm-shared": "file:./lib/eppsa-ksm-shared",
     "eslint": "^4.18.2",
     "eslint-config-artcom": "^0.7.0",
     "eslint-config-artcom-react": "^0.5.1",
