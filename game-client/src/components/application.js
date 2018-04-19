@@ -84,7 +84,8 @@ function enhance(props) {
     shared: props.content.shared,
     staticServerUri: props.staticServerUri,
     assetServerUri: props.assetServerUri,
-    gameServerUri: props.gameServerUri
+    gameServerUri: props.gameServerUri,
+    room: props.challengeRoom
   }
 
   return Object.assign({ challengeUri, challengeType, challengeData }, props)
