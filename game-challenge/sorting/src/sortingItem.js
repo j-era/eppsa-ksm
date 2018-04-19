@@ -1,8 +1,10 @@
 import React from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import { DragSource, DropTarget } from "react-dnd"
 import { ItemTypes } from "./constants"
 import ItemComponent from "./components/itemComponent"
+
+import pulse from "../node_modules/eppsa-ksm-shared/styled-components/animations/pulse"
 
 const Container = styled(ItemComponent)`
   display: flex;
@@ -13,8 +15,15 @@ const Container = styled(ItemComponent)`
 
   width: 95%;
 
-  visibility: ${props => props.isOver  ? "hidden" : "visible"};
+  visibility: ${props => props.isOver ? "hidden" : "visible"};
   margin-bottom: ${props => props.theme.layout.mediumSpacing};
+
+  box-sizing: border-box;
+
+  ${props => props.isCorrect ? css`
+    border: 5px solid green;
+    animation: ${pulse("green", "black", { duration: 250, repeats: 3 }, "border-color")};
+  ` : ""}
 `
 
 const ItemText = styled.div`

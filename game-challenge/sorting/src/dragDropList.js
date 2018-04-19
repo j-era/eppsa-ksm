@@ -36,12 +36,13 @@ class ItemListComponent extends React.Component {
       <Container className={ this.props.className }>
         {
           Array.from(this.state.itemsMap.keys()).map(
-            (key) => {
-              return <SortingItem
-                key={ key } index={ key } id={ this.state.itemsMap.get(key).id }
+            (key) =>
+              <SortingItem
+                isCorrect={ this.props.isCorrect }
+                key={ key } index={ key }
+                id={ this.state.itemsMap.get(key).id }
                 item={ this.state.itemsMap.get(key) }
                 onReorder={ this.reorder } />
-            }
           )
         }
         <PreviewItem />
