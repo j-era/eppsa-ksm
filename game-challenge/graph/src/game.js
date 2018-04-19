@@ -124,14 +124,14 @@ let GraphGame = new Phaser.Class({
 		}
 		//console.log(this.nodes);
 
-		this.controllPoints = {
-			1 : {
-				afterNode: 1,
-				crashIf: [11, 0],
-				pointsIf: [2],
-				skin: 'schupo'
+		this.controllPoints = {};
+		for(var key in gameData.controlpoints){
+			if(key == "template"){
+				continue;
 			}
-		};
+			this.controllPoints[key] = gameData.controlpoints[key];
+		}
+		//console.log("controlPoints" ,this.controllPoints);
 	
 		//other variables needed
 		this.agentSpawnRates = [];
@@ -337,13 +337,13 @@ let GraphGame = new Phaser.Class({
 					element.clear();
 				});
 			}
+			agent.lastNode = node;
 			currentlyMovingAgent.img.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[nextNode.id].nodePauseTime), callback: that.moveAgentToNextNode, args: [currentlyMovingAgent.img, nextNode], callbackScope: that});
 			return;
 		}
 
 		if(gameData.rotateAgents == "true"){
 			if(Math.floor(agent.x) != Math.floor(nextNode.x)){
-				//Math.floor(agent.x) > Math.floor(nextNode.x) ? agent.angle = 270 : agent.angle = 90;
 				Math.floor(agent.x) > Math.floor(nextNode.x) ? that.changeToLeft(agent) : that.changeToRight(agent);
 			}
 			if(Math.floor(agent.y) != Math.floor(nextNode.y)){
@@ -351,7 +351,7 @@ let GraphGame = new Phaser.Class({
 			}
 		}
 		
-		let check = that.checkControlPoint(node.id, nextNode.id);
+		let check = that.checkControlPoint(agent.lastNode.id, node.id, nextNode.id);
 
 		if(check == "crash"){
 			that.spawnedNodes[currentlyMovingAgent.nodeID].agentOnNode = undefined;
@@ -429,6 +429,7 @@ let GraphGame = new Phaser.Class({
 								that.removePathVisuals(that.currentAgents[otherAgentID].img);
 							}
 							let agentPush = that.currentAgents[otherAgentID].img;
+							agentPush.lastNode = node;
 							that.moveAgentToNextNode(agentPush, nextNode);
 						}
 							
@@ -455,8 +456,9 @@ let GraphGame = new Phaser.Class({
 					that.currentPath[pathID].path.shift();
 					if(that.currentPath[pathID].path[1] != undefined){
 						//node = that.currentPath[pathID].path[1];
-						node = nextNode;
-						agent.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[nextNode.id].nodePauseTime), callback: that.moveAgentToNextNode, args: [agent, node, pathID], callbackScope: that});
+						//node = nextNode;
+						agent.lastNode = node;
+						agent.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[nextNode.id].nodePauseTime), callback: that.moveAgentToNextNode, args: [agent, nextNode, pathID], callbackScope: that});
 					}else{
 						agent.selectedNodes.forEach(function(element){
 							that.spawnedNodes.forEach(function(nodeElement){
@@ -468,9 +470,11 @@ let GraphGame = new Phaser.Class({
 						agent.graphicsPath.forEach(function(element){
 							element.clear();
 						});
+						agent.lastNode = node;
 						agent.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[nextNode.id].nodePauseTime), callback: that.moveAgentToNextNode, args: [agent, nextNode], callbackScope: that});
 					}
 				}else{
+					agent.lastNode = node;
 					agent.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[nextNode.id].nodePauseTime), callback: that.moveAgentToNextNode, args: [agent, nextNode], callbackScope: that});
 				}
 				
@@ -482,81 +486,90 @@ let GraphGame = new Phaser.Class({
 	changeToStraight: function(agent){
 		agent.angle = 0;
 		console.log("driving up");
-		this.tweens.add({
+		/*this.tweens.add({
 			targets: agent,
 				//angle: newAngle,
 				y: agent.y - agent.height,
 				duration: 100,
 				yoyo: false,
 				repeat: 0,
-		})
+		})*/
 	},
 	changeToBackwards: function(agent){
+		let group = this.add.group();
+		group.add(agent);
+		let oldRot = agent.rotation;
 		agent.angle = 180;
+		/*let newRot = agent.rotation;
 		console.log("driving down");
-		this.tweens.add({
+		p = new Phaser.Geom.Point(agent.x -10, agent.y - 10);
+		Phaser.Actions.RotateAroundDistance(group.getChildren(), p, oldRot-newRot, 100);
+		/*this.tweens.add({
 			targets: agent,
 				//angle: newAngle,
 				y: agent.y + agent.height,
 				duration: 100,
 				yoyo: false,
 				repeat: 0,
-		})
+				
+		})*/
 	},
 	changeToLeft: function(agent){
 		agent.angle = 270;
-		this.tweens.add({
+		/*this.tweens.add({
 			targets: agent,
 				//angle: newAngle,
 				x: agent.x - agent.width,
 				duration: 100,
 				yoyo: false,
 				repeat: 0,
-		})
+			})*/
 	},
 	changeToRight: function(agent){
 		agent.angle = 90;
-		this.tweens.add({
+		/*this.tweens.add({
 			targets: agent,
 				//angle: newAngle,
 				x: agent.x + agent.width,
 				duration: 100,
 				yoyo: false,
 				repeat: 0,
-		})
+		})*/
 	},
 
 	calculateScore: function(){
 		return gameData.rewardValue * this.countedWinEvents * gameData.gameTypeFactor;
 	},
 
-	checkControlPoint: function(current, next){
-		console.log(current, next);
+	checkControlPoint: function(last,current, next){
+		console.log(last, current, next);
 		//console.log(this.controllPoints);
-		let point = this.controllPoints[current];
-		//console.log(point);
-
-		if(point){
-			if(point.crashIf.indexOf(next) != -1){
-				console.log("crash");
-				return "crash";
-			}
-			if(point.pointsIf.indexOf(next) != -1){
-				this.countedWinEvents ++;
-				this.displayPointsText.setText(this.calculateScore().toString());
-				console.log("points");
-				return "points";
+		if(this.controllPoints[current]){
+			let point = this.controllPoints[current][last];
+			console.log(point);
+			if(point){
+				if(point.crashIf.indexOf(next) != -1){
+					console.log("crash");
+					return "crash";
+				}
+				if(point.pointsIf.indexOf(next) != -1){
+					this.countedWinEvents ++;
+					this.displayPointsText.setText(this.calculateScore().toString());
+					console.log("points");
+					return "points";
+				}
 			}
 		}
+		
 
 		return "";
 	},
 
 	rotateImage: function(image){
-		let imageToRotate = this.controllPoints[image].image;
-		console.log(imageToRotate);
-		imageToRotate.angle == 90 ? imageToRotate.angle = 0 : imageToRotate.angle = 90;
-		//imageToRotate.angle += 90;
+		if(this.controllPoints[image]){
+			let imageToRotate = this.controllPoints[image].image;
+			imageToRotate.angle == 90 ? imageToRotate.angle = 0 : imageToRotate.angle = 90;
+		}
 	},
 
 	drawNodes: function(){
@@ -808,6 +821,7 @@ let GraphGame = new Phaser.Class({
 			this.currentAgentsOnBoard ++;
 		
 			//if agent was spawned, start his movement
+			newAgent.img.lastNode = startNode;
 			newAgent.img.timer = this.time.addEvent({delay: 1000 * newAgent.pauseTime, callback: this.moveAgentToNextNode, args: [newAgent.img, startNode], callbackScope: this});
 		}
 		this.spawnAgentTimer = this.time.addEvent({delay: this.spawnInterval * 1000, callback: this.spawnAgent, callbackScope: this});
