@@ -17,8 +17,6 @@ const Container = styled.div `
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-left: ${props => props.theme.layout.offsetX};
-  padding-right: ${props => props.theme.layout.offsetX};
   height: 100%;
 `
 
