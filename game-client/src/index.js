@@ -18,6 +18,7 @@ import GameServer from "./api/gameServer"
 import * as actions from "./actionCreators"
 
 import { injectGlobalStyle } from "../node_modules/eppsa-ksm-shared/styled-components/globalStyle"
+
 import theme from "../node_modules/eppsa-ksm-shared/styled-components/theme"
 
 const store = createStore(combineReducers(reducers), applyMiddleware(thunk, createLogger()))

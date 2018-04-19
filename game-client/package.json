@@ -33,6 +33,7 @@
     "lodash.omit": "^4.5.0",
     "querystring": "^0.2.0",
     "react": "^16.2.0",
+    "react-autobind": "^1.0.6",
     "react-dom": "^16.2.0",
     "react-qr-reader": "^2.1.0",
     "react-redux": "^5.0.7",

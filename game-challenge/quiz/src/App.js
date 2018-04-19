@@ -1,7 +1,7 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled, { ThemeProvider } from "styled-components"
-import delay from "./delay"
+import delay from "../node_modules/eppsa-ksm-shared/functions/delay"
 import AnswerButton from "./components/answerButton"
 import QuestionText from "./components/questionText"
 import QuestionTitle from "./components/questionTitle"
