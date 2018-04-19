@@ -11,6 +11,8 @@ const Container = styled(ItemComponent)`
 
   background: ${props => props.isOver ? "green" : `url(${props.image.src})`};
 
+  width: 95%;
+
   visibility: ${props => props.isDragging ? "hidden" : "visible"};
   margin-bottom: ${props => props.theme.layout.mediumSpacing};
 `
@@ -46,7 +48,7 @@ class SortingItem extends React.Component {
   render() {
     let content =
       // `div` around a styled component is required by react-dnd
-      <div>
+      <div style={ { "display": "flex", "justify-content": "center" } }>
         <Container image={ this.props.item.image } { ...this.props }>
           <ItemText>{ this.props.item.text }</ItemText>
         </Container>

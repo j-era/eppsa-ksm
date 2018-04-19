@@ -10,9 +10,7 @@ const Container = styled(ItemComponent)`
 
   background: ${props => `url(${props.item.image.src})`};
 
-  width: ${props => `calc(100vw - ${props.theme.layout.offsetX} * 2)`};
-
-  border: 5px solid black;
+  width: 100%;
 `
 
 function collect(monitor) {
