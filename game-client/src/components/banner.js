@@ -38,7 +38,7 @@ const BannerSVG = styled(banner)`
 `
 
 const TextContainer = styled.div`
-  position: inherit;
+  position: relative;
 `
 
 function bannerTextHeight(width) {
