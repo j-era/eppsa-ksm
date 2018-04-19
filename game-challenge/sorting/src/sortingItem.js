@@ -24,6 +24,11 @@ const Container = styled(ItemComponent)`
     border: 5px solid green;
     animation: ${pulse("green", "black", { duration: 250, repeats: 3 }, "border-color")};
   ` : ""}
+
+  ${props => props.isWrong ? css`
+    border: 5px solid red;
+    animation: ${pulse("red", "black", { duration: 250, repeats: 3 }, "border-color")};
+  ` : ""}
 `
 
 const ItemText = styled.div`

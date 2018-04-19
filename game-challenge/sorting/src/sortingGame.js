@@ -42,16 +42,17 @@ export default class SortingGame extends React.Component {
 
     autoBind(this)
 
-    this.items = selectItems(this.props.data)
+    const items = selectItems(this.props.data)
     const itemsMap = new Map()
-    Object.keys(this.items).forEach((key, index) =>
-      itemsMap.set(index, this.items[key])
+    Object.keys(items).forEach((key, index) =>
+      itemsMap.set(index, items[key])
     )
 
     console.log(itemsMap)
 
     this.state = {
       isCorrect: false,
+      isWrong: false,
       itemsMap
     }
   }
@@ -64,6 +65,7 @@ export default class SortingGame extends React.Component {
           <DragDropList
             itemsMap={ this.state.itemsMap }
             isCorrect={ this.state.isCorrect }
+            isWrong={ this.state.isWrong }
             reorder={ this.reorder } />
           <BottomLabel>{ this.props.data.challenge.bottomLabel }</BottomLabel>
         </div>
@@ -103,8 +105,19 @@ export default class SortingGame extends React.Component {
   confirmSelection() {
     console.log("confirmSelection")
 
+    for (const [index, item] of this.state.itemsMap) {
+      if (item.correctPosition - 1 !== index) {
+        this.setState({
+          isCorrect: false,
+          isWrong: true
+        })
+        return
+      }
+    }
+
     this.setState({
-      isCorrect: true
+      isCorrect: true,
+      isWrong: false
     })
   }
 }
