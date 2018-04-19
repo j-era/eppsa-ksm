@@ -9,25 +9,22 @@ import Card from "./card"
 import GameBoard from "./gameBoard"
 import GameManual from "./gameManual"
 import GameManualButton from "./gameManualButton"
+import { default as BackgroundComponent } from "./background"
 import pages from "./pages"
 import Page from "./page"
 
+const appRatio = 80
 
 const Container = styled.div`
   background-color: white;
 `
 
-const Background = styled.div`
-  width: 100%;
-  height: 80vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${props => props.theme.colors.secondary};
+const Header = styled.div`
+  height: ${100 - appRatio}vh;
 `
 
-const Header = styled.div`
-  height: 20vh;
+const Background = styled(BackgroundComponent)`
+  height: ${appRatio}vh;
 `
 
 function Application(props) {
@@ -38,12 +35,19 @@ function Application(props) {
   const innerWidth = window.innerWidth
   const innerRatio = innerWidth / innerHeight
 
+  const fill = inGameSetup(props.gameState) === "true" ?
+    props.theme.colors.secondary
+    : enhancedProps.challengeData.color
+
   return (
     <Container>
       <Header>
         { pageData.showHeader && renderHeader(enhancedProps) }
       </Header>
-      <Background>
+      <Background
+        fill={ fill }
+        bannerText={ props.content.name }
+        inGameSetup={ inGameSetup(props.gameState) }>
         <Card innerRatio={ innerRatio }>
           <Page>
             { props.showGameManual
@@ -94,4 +98,17 @@ function resolveChallengeWebAppUri(webApp) {
   const challengeUri = new URL(`${protocol}//${webApp}.${environment}`)
 
   return challengeUri.toString()
+}
+
+function inGameSetup(gamestate) {
+  switch (gamestate) {
+    case "NEW_GAME_AVATAR_SELECTION":
+      return "true"
+    case "NEW_GAME_AVATAR_CONFIRMATION":
+      return "true"
+    case "NEW_GAME_NAME_SELECTION":
+      return "true"
+    default:
+      return "false"
+  }
 }
