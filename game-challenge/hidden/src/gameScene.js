@@ -16,6 +16,19 @@ class gameScene extends Phaser.Scene {
 	}
 
 	create(data) {
+		this.row1 = [];
+		this.row2 = [];
+		this.row3 = [];
+		this.row4 = [];
+		this.moveLeft = [];
+		this.moveRight = [];
+
+		this.waitrow1 = [];
+		this.waitrow2 = [];
+		this.waitrow3 = [];
+		this.waitrow4 = [];
+		this.correct = 0;
+
 		this.imageArray = {};
 		this.blockImages = {};
 		//this.questions = [];
@@ -28,6 +41,16 @@ class gameScene extends Phaser.Scene {
 				this.imageArray[key] = this.sys.game.gameData.pictures[key];
 			}else{
 				this.blockImages[key] = this.sys.game.gameData.pictures[key];
+				if(this.blockImages[key].direction != ""){
+					var temp = 'row' + this.blockImages[key].depth;
+					//this[temp].push(this.blockImages[key]);
+					this.imageArray[key] = this.sys.game.gameData.pictures[key]
+					//this['wait' + temp].push(key);
+					//console.log("this.waitrow4", this.waitrow4);
+					//console.log("this.row3", this.row3);
+					//console.log("temp", temp)
+					//console.log("this[temp]", this[temp])
+				}
 			}
 		}
 
@@ -39,42 +62,54 @@ class gameScene extends Phaser.Scene {
 			}
 		}*/
 
-		this.blockMaxWidth = 500;
-		this.blockMaxHeight = 500;
-		this.blockMinWidth = 200;
-		this.blockMinHeight = 200;
+		this.blockMaxWidth = window.innerWidth/3;
+		this.blockMaxHeight = this.picMaxWidth*0.75;
+		this.blockMinWidth = window.innerWidth/4;
+		this.blockMinHeight = this.picMinWidth * 0.75;
 
 		this.picMaxWidth = window.innerWidth/3;
 		this.picMaxHeight = this.picMaxWidth*0.75;
 		this.picMinWidth = window.innerWidth/4;
 		this.picMinHeight = this.picMinWidth * 0.75;
 
+		this.restPicMaxWidth = window.innerWidth/3;
+		this.restPicMaxHeight = this.picMaxWidth*0.75;
+		this.restPicMinWidth = window.innerWidth/4;
+		this.restPicMinHeight = this.picMinWidth * 0.75;
+
 
 		for(var blockElements in this.blockImages){
-			var blocking = this.add.image(this.blockImages[blockElements].positionX,this.blockImages[blockElements].positionY, this.blockImages[blockElements].img).setOrigin(0,0).setName(imageKey).setInteractive();
-			if(blocking.displayWidth > this.blockMaxWidth){
-				var scale = (this.blockMaxWidth / blocking.displayWidth)
-				blocking.setScale(scale,scale);
+			console.log(this.blockImages)
+			console.log(blockElements)
+			if(this.blockImages[blockElements].direction == ""){
+				var blocking = this.add.image(this.blockImages[blockElements].positionX,this.blockImages[blockElements].positionY, this.blockImages[blockElements].img).setOrigin(0,0).setName(imageKey).setInteractive();
+				if(blocking.displayWidth > this.blockMaxWidth){
+					var scale = (this.blockMaxWidth / blocking.displayWidth)
+					blocking.setScale(scale,scale);
 
-			}else if(blocking.displayWidth < this.blockMinWidth){
-				var scale = (this.blockMinWidth / blocking.displayWidth)
-				blocking.setScale(scale,scale);
-			}else {
-				blocking.displayWidth = blocking.displayWidth
-			}
+				}else if(blocking.displayWidth < this.blockMinWidth){
+					var scale = (this.blockMinWidth / blocking.displayWidth)
+					blocking.setScale(scale,scale);
+				}else {
+					blocking.displayWidth = blocking.displayWidth
+				}
 
-			if(blocking.displayHeight > this.blockMaxHeight){
-				var scale = (this.blockMinHeight / blocking.displayHeight)
-				blocking.setScale(scale,scale);
-			}else if(blocking.displayHeight < this.blockMinHeight){
-				var scale = (this.blockMinHeight / blocking.displayHeight)
-				blocking.setScale(scale,scale);
-			}else {
-				blocking.displayHeight = blocking.displayHeight
+				if(blocking.displayHeight > this.blockMaxHeight){
+					var scale = (this.blockMinHeight / blocking.displayHeight)
+					blocking.setScale(scale,scale);
+				}else if(blocking.displayHeight < this.blockMinHeight){
+					var scale = (this.blockMinHeight / blocking.displayHeight)
+					blocking.setScale(scale,scale);
+				}else {
+					blocking.displayHeight = blocking.displayHeight
+				}
+
+				blocking.depth = this.blockImages[blockElements].depth;
+				blocking.eppsaInactive = true;
+			}else{
+				continue;
 			}
 			
-			blocking.depth = this.blockImages[blockElements].depth;
-			blocking.eppsaInactive = true;
 		}
 
 		this.loadedImages = {};
@@ -96,24 +131,17 @@ class gameScene extends Phaser.Scene {
 
 		var that = this;
 
-		this.row1 = [];
-		this.row2 = [];
-		this.row3 = [];
-		this.moveLeft = [];
-		this.moveRight = [];
 
-		this.waitrow1 = [];
-		this.waitrow2 = [];
-		this.waitrow3 = [];
-		this.correct = 0;
 
 		for(var element in this.imageArray){
+			//console.log(element);
 			var i = 0;
 			that.loadedImages[element].displayHeight = that.picMaxHeight * (that.imageArray[element].depth/2);
 			var temp = 'row' + that.imageArray[element].depth;
 			that[temp].push(that.loadedImages[element]);
 			this['wait' + temp].push(element);	
 		}
+
 		this.syst = this.sys.game.gameData;
 
 		var SpawnTimerRow1 = this.time.addEvent( {
@@ -132,6 +160,13 @@ class gameScene extends Phaser.Scene {
 			delay: 0,
 			callback:this.spawn,
 			args: [this.waitrow3, this.syst.Row3Max, this.syst.Row3Min],
+			callbackScope: this,
+		})
+
+		var SpawnTimerRow4 = this.time.addEvent( {
+			delay: 2000,
+			callback:this.spawn,
+			args: [this.waitrow4, 2000, 2000],
 			callbackScope: this,
 		})
 
@@ -179,8 +214,12 @@ class gameScene extends Phaser.Scene {
 		this.PosY = this.syst.YPosRow1;
 		this.row1Dif = this.syst.YPosRow2;
 		this.row2Dif = this.syst.YPosRow3;
-		for(var i = 1; i < 4; i++){
+		this.row3Dif = 350;
+
+
+		for(var i = 1; i < 5; i++){
 			var temp = 'row' + i;
+
 			for(var j = 0; j < that[temp].length; j++){
 				that[temp][j].displayWidth = that.picMaxWidth * (that.imageArray[that[temp][j].name].depth / 2);
 				that[temp][j].depth = that.imageArray[that[temp][j].name].depth;
@@ -189,9 +228,15 @@ class gameScene extends Phaser.Scene {
 				}else{
 					that[temp][j].x = 0 - that[temp][j].displayWidth;
 				}
-				that[temp][j].y = this.PosY;
+				console.log(this.imageArray[that[temp][j].name].positionY)
+				if(this.imageArray[that[temp][j].name].positionY == ""){
+					that[temp][j].y = this.PosY;
+				}else{
+					that[temp][j].y = this.imageArray[that[temp][j].name].positionY 
+				}
 				//var Height = that[temp][j].displayHeight;
 			}
+
 			var Height = 'row' + i + 'Dif';
 			this.PosY = this[Height];
 		}
@@ -205,18 +250,25 @@ class gameScene extends Phaser.Scene {
 		this.scene.start('WinScene', { t: this.correct})
 	}
 
-	spawn(waitrow, max, min) {
-		var element = Math.floor(Math.random() * waitrow.length)
-		var dirTemp = 'move' + this.imageArray[waitrow[element]].direction;
-		this[dirTemp].push(this.loadedImages[waitrow[element]]);
-		waitrow.splice(element,1);
 
-		this.time.addEvent( {
-			delay: Math.floor(Math.random() * (max - min) + min),
-			callback:this.spawn,
-			callbackScope: this,
-			args: [waitrow, max, min]
-		});
+
+	spawn(waitrow, max, min) {
+		if(waitrow.length == 0){
+			this.spawn(waitrow,max,min)
+			return
+		}else{
+			var element = Math.floor(Math.random() * waitrow.length)
+			var dirTemp = 'move' + this.imageArray[waitrow[element]].direction;
+			this[dirTemp].push(this.loadedImages[waitrow[element]]);
+			waitrow.splice(element,1);
+
+			this.time.addEvent( {
+				delay: Math.floor(Math.random() * (max - min) + min),
+				callback:this.spawn,
+				callbackScope: this,
+				args: [waitrow, max, min]
+			});
+		}
 	}
 
 
