@@ -4,11 +4,11 @@ import styled from "styled-components"
 
 import { updateName, startNewGame } from "../../actionCreators"
 
-import FramedIcon from "../../../node_modules/eppsa-ksm-shared/styled-components/components/framedIcon"
-import Button from "../../../node_modules/eppsa-ksm-shared/styled-components/components/button"
 import delay from "../../../node_modules/eppsa-ksm-shared/functions/delay"
+import Button from "../../../node_modules/eppsa-ksm-shared/styled-components/components/button"
+import FramedIcon from "../../../node_modules/eppsa-ksm-shared/styled-components/components/framedIcon"
 import NextButton from "../../../node_modules/eppsa-ksm-shared/styled-components/components/nextButton"
-
+import PageTitle from "../../../node_modules/eppsa-ksm-shared/styled-components/components/pageTitle"
 
 const Container = styled.div `
   font-family: ${props => props.theme.font.fontFamily};
@@ -21,6 +21,7 @@ const Container = styled.div `
 
 const ConfirmButton = styled(NextButton)`
   border-color: ${props => props.theme.colors.secondary};
+  opacity: ${props => props.active ? 1 : 0.5};
 `
 
 const NameInputContainer = styled(Button)`
@@ -37,7 +38,7 @@ export default class NewGameNameSelection extends React.Component {
   constructor(props) {
     super(props)
     autoBind(this)
-    this.state = { confirmed: false }
+    this.state = { confirmed: false, nameEntered: false }
   }
 
   render() {
@@ -45,7 +46,6 @@ export default class NewGameNameSelection extends React.Component {
       assetServerUri,
       avatar,
       content,
-      dispatch,
       gameServer,
       name,
       maxChallenges
@@ -53,21 +53,33 @@ export default class NewGameNameSelection extends React.Component {
 
     return (
       <Container>
+        <PageTitle text="Wähle deinen Namen!" />
         <FramedIcon icon={ `${assetServerUri}/${content.avatars[avatar].icon.src}` } />
         <NameInputContainer>
           <NameInput
             type="text"
             value={ name }
             placeholder="Spielername eingeben"
-            onChange={ event => dispatch(updateName(event.target.value)) } />
+            onChange={ this.onInput } />
         </NameInputContainer>
         <ConfirmButton
           visible
-          onClick={ () => this.confirm(name, avatar, maxChallenges, gameServer) }
+          active={ this.state.nameEntered }
+          onClick={ this.state.nameEntered
+            ? () => this.confirm(name, avatar, maxChallenges, gameServer)
+            : () => {}
+          }
           clicked={ this.state.confirmed }
           text="Bestätigen" />
       </Container>
     )
+  }
+
+  onInput(event) {
+    if (!this.state.nameEntered) {
+      this.setState({ nameEntered: true })
+    }
+    this.props.dispatch(updateName(event.target.value))
   }
 
   async confirm(name, avatar, maxChallenges, gameServer) {
