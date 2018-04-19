@@ -3,7 +3,6 @@ import ReactDOM from "react-dom"
 import client from "socket.io-client"
 import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
 
-import "./index.css"
 import App from "./App"
 
 let socket
@@ -35,5 +34,5 @@ function render(config, callbacks) {
     gameServerUri={ config.gameServerUri }
     room={ config.room }
     orientation={ orientation } />,
-  document.getElementById("root"))
+  document.getElementById("app"))
 }

@@ -11,4 +11,4 @@ COPY lib /app/lib
 RUN npm install
 
 # start app
-CMD ["npm", "start"]
+CMD ["npm", "run", "watch"]
