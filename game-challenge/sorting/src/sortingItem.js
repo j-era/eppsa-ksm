@@ -2,21 +2,22 @@ import React from "react"
 import styled from "styled-components"
 import { DragSource, DropTarget } from "react-dnd"
 import { ItemTypes } from "./constants"
+import ItemComponent from "./components/itemComponent"
 
-const ItemContainer = styled.div`
-  height: 12vh;
+const Container = styled(ItemComponent)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
   background: ${props => props.isOver ? "green" : `url(${props.image.src})`};
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  border-radius: ${props => props.theme.layout.borderRadius};
+
   visibility: ${props => props.isDragging ? "hidden" : "visible"};
-  margin-bottom: ${props => props.theme.layout.defaultSpacing};
+  margin-bottom: ${props => props.theme.layout.mediumSpacing};
 `
 
 const ItemText = styled.div`
   font-size: ${props => props.theme.font.text.size};
-  padding: ${props => props.theme.layout.defaultSpacing}
+  padding: ${props => props.theme.layout.mediumSpacing}
 `
 
 const dragSource = {
@@ -44,10 +45,11 @@ const dropTarget = {
 class SortingItem extends React.Component {
   render() {
     let content =
+      // `div` around a styled component is required by react-dnd
       <div>
-        <ItemContainer image={ this.props.item.image } { ...this.props }>
+        <Container image={ this.props.item.image } { ...this.props }>
           <ItemText>{ this.props.item.text }</ItemText>
-        </ItemContainer>
+        </Container>
       </div>
 
     content = this.props.connectDragSource(content)

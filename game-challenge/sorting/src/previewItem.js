@@ -1,19 +1,15 @@
 import React from "react"
 import { DragLayer } from "react-dnd"
 import styled from "styled-components"
+import ItemComponent from "./components/itemComponent"
 
-const Container = styled.div`
+const Container = styled(ItemComponent)`
   position: absolute;
   top: 0;
   left: 0;
 
   background: ${props => `url(${props.item.image.src})`};
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  border-radius: ${props => props.theme.layout.borderRadius};
 
-  height: 12vh;
   width: ${props => `calc(100vw - ${props.theme.layout.offsetX} * 2)`};
 
   border: 5px solid black;

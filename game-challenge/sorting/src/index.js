@@ -12,7 +12,6 @@ bootstrap((data, onCompleteChallenge) => {
 
 function render(data, onCompleteChallenge) {
   injectGlobalStyle(data.staticServerUri)
-
   ReactDOM.render(
     <App data={ data } completeChallenge={ onCompleteChallenge } />,
     document.getElementById("root")
