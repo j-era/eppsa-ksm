@@ -5,10 +5,10 @@ import styled from "styled-components"
 import { updateName, startNewGame } from "../../actionCreators"
 
 import delay from "../../../node_modules/eppsa-ksm-shared/functions/delay"
-import Button from "../../../node_modules/eppsa-ksm-shared/styled-components/components/button"
 import FramedIcon from "../../../node_modules/eppsa-ksm-shared/styled-components/components/framedIcon"
 import NextButton from "../../../node_modules/eppsa-ksm-shared/styled-components/components/nextButton"
 import PageTitle from "../../../node_modules/eppsa-ksm-shared/styled-components/components/pageTitle"
+
 
 const Container = styled.div `
   font-family: ${props => props.theme.font.fontFamily};
@@ -19,19 +19,39 @@ const Container = styled.div `
   height: 100%;
 `
 
-const ConfirmButton = styled(NextButton)`
-  border-color: ${props => props.theme.colors.secondary};
-  opacity: ${props => props.active ? 1 : 0.5};
+const StyledFramedIcon = styled(FramedIcon)`
+  margin-top: ${props => props.theme.layout.smallSpacing};
 `
 
-const NameInputContainer = styled(Button)`
-  padding-left: 2em;
-  padding-right: 2em;
+const NameInputContainer = styled.div `
+  margin-top: ${props => props.theme.layout.largeSpacing};
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+  padding-left: 1em;
+  padding-right: 1em;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-radius: ${props => props.theme.layout.borderRadius};
+  border-style: solid;
+  border-width: ${props => props.theme.layout.buttonBorder};
+  border-color: ${props => props.theme.colors.areaColor};
+  text-align: center;
+  display: flex;
+  align-self: center;
+  justify-content: center;
 `
 
 const NameInput = styled.input`
   width: 100%;
   text-align: center;
+  font-size: ${props => props.theme.font.button.size};
+  font-weight: ${props => props.theme.font.button.weight};
+`
+
+const ConfirmButton = styled(NextButton)`
+  margin-top: ${props => props.theme.layout.mediumSpacing};
+  border-color: ${props => props.theme.colors.secondary};
+  opacity: ${props => props.active ? 1 : 0.5};
 `
 
 export default class NewGameNameSelection extends React.Component {
@@ -54,7 +74,7 @@ export default class NewGameNameSelection extends React.Component {
     return (
       <Container>
         <PageTitle text="Wähle deinen Namen!" />
-        <FramedIcon icon={ `${assetServerUri}/${content.avatars[avatar].icon.src}` } />
+        <StyledFramedIcon icon={ `${assetServerUri}/${content.avatars[avatar].icon.src}` } />
         <NameInputContainer>
           <NameInput
             type="text"
