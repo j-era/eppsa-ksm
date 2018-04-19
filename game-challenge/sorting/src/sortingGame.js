@@ -43,9 +43,16 @@ export default class SortingGame extends React.Component {
     autoBind(this)
 
     this.items = selectItems(this.props.data)
+    const itemsMap = new Map()
+    Object.keys(this.items).forEach((key, index) =>
+      itemsMap.set(index, this.items[key])
+    )
+
+    console.log(itemsMap)
 
     this.state = {
-      isCorrect: false
+      isCorrect: false,
+      itemsMap
     }
   }
 
@@ -54,7 +61,10 @@ export default class SortingGame extends React.Component {
       <Container>
         <div>
           <TopLabel>{ this.props.data.challenge.topLabel }</TopLabel>
-          <DragDropList items={ this.items } isCorrect={ this.state.isCorrect } />
+          <DragDropList
+            itemsMap={ this.state.itemsMap }
+            isCorrect={ this.state.isCorrect }
+            reorder={ this.reorder } />
           <BottomLabel>{ this.props.data.challenge.bottomLabel }</BottomLabel>
         </div>
         <Button onClick={ this.confirmSelection }>
@@ -64,8 +74,35 @@ export default class SortingGame extends React.Component {
     )
   }
 
+  reorder(dragItem, hoverItem) {
+    // Don't trigger reorder if it's to the same spot
+    if (dragItem.id === hoverItem.id) {
+      return
+    }
+
+    const steps = hoverItem.index - dragItem.index
+    console.log(steps)
+
+    const itemsMap = new Map(this.state.itemsMap)
+
+    if (steps > 0) {
+      itemsMap.set(dragItem.index + steps - 1, this.state.itemsMap.get(hoverItem.index))
+      itemsMap.set(hoverItem.index, this.state.itemsMap.get(dragItem.index + steps - 1))
+    } else {
+      itemsMap.set(dragItem.index + steps + 1, this.state.itemsMap.get(hoverItem.index))
+      itemsMap.set(hoverItem.index, this.state.itemsMap.get(dragItem.index + steps + 1))
+    }
+
+    console.log(`Moved ${dragItem.index} to ${hoverItem.index}`)
+    console.log("After")
+    console.log(itemsMap)
+
+    this.setState({ itemsMap })
+  }
+
   confirmSelection() {
     console.log("confirmSelection")
+
     this.setState({
       isCorrect: true
     })
