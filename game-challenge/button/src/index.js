@@ -1,13 +1,23 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import client from "socket.io-client"
 import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
 
 import "./index.css"
 import App from "./App"
 
+let socket
 let orientation
 
 bootstrap((config, { callbacks }) => {
+  if (config.room) {
+    socket = client(config.gameServerUri, { secure: true })
+    socket.on("clientsInRoom", (clientsInRoom) =>
+      console.log(`Clients in the room: ${JSON.stringify(clientsInRoom)}`)
+    )
+    socket.on("connect", () => socket.emit("joinRoom", config.room))
+  }
+
   render(config, callbacks)
 
   window.addEventListener("message", (event) => {
