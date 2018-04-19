@@ -20,9 +20,13 @@ const Container = styled.div `
   height: 100%;
 `
 
+const StyledFramedIcon = styled(FramedIcon)`
+  margin-top: ${props => props.theme.layout.smallSpacing};
+`
+
 const Description = styled.div`
-  padding-bottom: 0.25em;
-  max-height: 4.5em;
+  margin-top: ${props => props.theme.layout.smallSpacing};
+  height: calc(3em + ${props => props.theme.layout.smallSpacing} * 2);
   font-size: ${props => props.theme.font.text.size};
   font-weight: ${props => props.theme.font.text.weight};
   color: ${props => props.theme.font.text.color};
@@ -30,12 +34,12 @@ const Description = styled.div`
 `
 
 const ConfirmButton = styled(NextButton)`
+  margin-top: ${props => props.theme.layout.mediumSpacing};
   border-color: ${props => props.theme.colors.areaColor};
-  width: 100%;
 `
 
 const BackButton = styled(Button)`
-  width: 67%;
+  margin-top: ${props => props.theme.layout.smallSpacing};
   align-self: center;
   border-color: ${props => props.theme.colors.secondary};
 `
@@ -52,8 +56,8 @@ export default class NewGameAvatarConfirmation extends React.Component {
 
     return (
       <Container>
-        <PageTitle>{ avatar }</PageTitle>
-        <FramedIcon icon={ `${assetServerUri}/${content.avatars[avatar].icon.src}` } />
+        <PageTitle text={ avatar } />
+        <StyledFramedIcon icon={ `${assetServerUri}/${content.avatars[avatar].icon.src}` } />
         <Description>{ content.avatars[avatar].description }</Description>
         <ConfirmButton
           visible

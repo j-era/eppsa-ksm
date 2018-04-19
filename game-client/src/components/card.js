@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
-const maxWidth = 90 // maximal relative width
-const maxRatio = 0.5 // maximal expected display ratio (1:2)
+const maxWidth = 98 // maximal relative width
+const maxRatio = 0.46 // maximal expected display ratio (1:2)
 const cardRatio = 2 / 3
 
 export default styled.div`
