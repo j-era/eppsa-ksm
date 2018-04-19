@@ -20,18 +20,6 @@ const ButtonDiv = styled.div `
 `
 
 class Button extends Component {
-  constructor(props) {
-    super(props)
-
-    this.assetServerUri = props.assetServerUri
-    this.gameServerUri = props.gameServerUri
-
-    this.state = {
-      scanned: "nothing scanned yet",
-      onClick: props.onClick
-    }
-  }
-
   render() {
     return (
       <Container>
@@ -40,11 +28,11 @@ class Button extends Component {
           onError={ err => this.onError(err) }
           showViewFinder={ false }
           style={ { width: "50%" } } />
-        <div>{ this.state.scanned }</div>
-        <div>sessionLength: { this.props.sessionLength }</div>
-        <ButtonDiv className={ "button" } onClick={ this.state.onClick } />
-        <div>assetServerUri: { this.assetServerUri }</div>
-        <div>gameServerUri: { this.gameServerUri }</div>
+        <div>Nothing scanned yet</div>
+        <ButtonDiv className={ "button" } onClick={ this.props.onClick } />
+        <div>assetServerUri: { this.props.assetServerUri }</div>
+        <div>gameServerUri: { this.props.gameServerUri }</div>
+        <div>room: { this.props.room }</div>
         { this.props.orientation && this.renderOrientationValues() }
       </Container>
     )

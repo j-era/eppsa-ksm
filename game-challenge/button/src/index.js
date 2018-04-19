@@ -22,7 +22,7 @@ function render(config, callbacks) {
     onClick={ () => callbacks.finishChallenge(config.challenge.score.reward) }
     assetServerUri={ config.assetServerUri }
     gameServerUri={ config.gameServerUri }
-    sessionLength={ config.challenge.score.sessionLength }
+    room={ config.room }
     orientation={ orientation } />,
   document.getElementById("app"))
 }
