@@ -70,7 +70,8 @@ contentServer.getData().then(transform).then(async (content) => {
           maxChallenges={ maxChallenges }
           dispatch={ store.dispatch }
           gameServer={ gameServer }
-          onChallengeReady={ onChallengeReady } />
+          onChallengeReady={ onChallengeReady }
+          theme={ theme } />
       </ThemeProvider>
     </Provider>,
     document.getElementById("app")
