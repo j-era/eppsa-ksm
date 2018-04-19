@@ -78,7 +78,9 @@ function enhance(props) {
     color: props.content.challenges[props.challengeNumber].color,
     challenge: challengeTypes[challengeType],
     shared: props.content.shared,
-    staticServerUri: props.staticServerUri
+    staticServerUri: props.staticServerUri,
+    assetServerUri: props.assetServerUri,
+    gameServerUri: props.gameServerUri
   }
 
   return Object.assign({ challengeUri, challengeType, challengeData }, props)

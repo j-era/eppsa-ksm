@@ -21,10 +21,8 @@ bootstrap((config, { callbacks }) => {
 function render(config, callbacks) {
   ReactDOM.render(<App
     onClick={ () => callbacks.finishChallenge(config.challenge.score.reward) }
-    contentServerUri={ config.challenge.contentServerUri }
-    assetServerUri={ config.challenge.assetServerUri }
-    gameServerUri={ config.challenge.gameServerUri }
-    challengeNumber={ config.challenge.challengeNumber }
+    assetServerUri={ config.assetServerUri }
+    gameServerUri={ config.gameServerUri }
     sessionLength={ config.challenge.score.sessionLength }
     orientation={ orientation } />,
   document.getElementById("root"))

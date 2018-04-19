@@ -24,7 +24,6 @@ class Button extends Component {
   constructor(props) {
     super(props)
 
-    this.contentServerUri = props.contentServerUri
     this.assetServerUri = props.assetServerUri
     this.gameServerUri = props.gameServerUri
 
@@ -45,7 +44,6 @@ class Button extends Component {
         <div>{ this.state.scanned }</div>
         <div>sessionLength: { this.props.sessionLength }</div>
         <ButtonDiv className={ "button" } onClick={ this.state.onClick } />
-        <div>contentServerUri: { this.contentServerUri }</div>
         <div>assetServerUri: { this.assetServerUri }</div>
         <div>gameServerUri: { this.gameServerUri }</div>
         { this.props.orientation && this.renderOrientationValues() }
