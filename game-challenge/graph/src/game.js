@@ -587,7 +587,7 @@ let GraphGame = new Phaser.Class({
 	},
 
 	rotateImage: function(image, degree){
-		image.angle = degree == 90 ? 0 : 90;
+		image.angle = degree == 90 ? 0 : -90;
 
 		this.tweens.add({
 			targets: image,
