@@ -11,8 +11,8 @@ COPY lib /app/lib
 RUN npm install
 
 COPY src /app/src
-COPY public /app/public
-RUN npm run build
+COPY .babelrc /app/.babelrc
+COPY webpack.config.js /app/webpack.config.js
 
 # start app
-CMD ["npm", "run", "serve"]
+CMD ["npm", "start"]

@@ -2,7 +2,6 @@ import React from "react"
 import ReactDOM from "react-dom"
 import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
 
-import "./index.css"
 import App from "./App"
 
 let orientation
@@ -25,5 +24,5 @@ function render(config, callbacks) {
     gameServerUri={ config.gameServerUri }
     sessionLength={ config.challenge.score.sessionLength }
     orientation={ orientation } />,
-  document.getElementById("root"))
+  document.getElementById("app"))
 }

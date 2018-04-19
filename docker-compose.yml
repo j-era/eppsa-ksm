@@ -95,7 +95,7 @@ services:
     build:
       context: ./game-challenge/button
     environment:
-      PORT: 80
+      PORT: 443
 
   game-challenge-hunt-client:
     build:
