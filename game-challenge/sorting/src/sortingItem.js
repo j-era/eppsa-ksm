@@ -9,11 +9,11 @@ const Container = styled(ItemComponent)`
   flex-direction: column;
   justify-content: center;
 
-  background: ${props => props.isOver ? "green" : `url(${props.image.src})`};
+  background: ${props => `url(${props.image.src})`};
 
   width: 95%;
 
-  visibility: ${props => props.isDragging ? "hidden" : "visible"};
+  visibility: ${props => props.isOver  ? "hidden" : "visible"};
   margin-bottom: ${props => props.theme.layout.mediumSpacing};
 `
 
@@ -24,23 +24,22 @@ const ItemText = styled.div`
 
 const dragSource = {
   beginDrag(props) {
+    console.log(props)
     return {
       id: props.id,
       item: props.item,
+      index: props.index,
       onReorder: props.onReorder
     }
   }
 }
 
 const dropTarget = {
-  drop(props, monitor) {
-    const item = monitor.getItem()
+  hover(props, monitor) {
+    const dragItem = monitor.getItem()
+    const dropItem = props
 
-    // Don't trigger reorder if it's to the same spot
-    if (item.id === props.id) {
-      return
-    }
-    item.onReorder(item.id, props.id)
+    dragItem.onReorder(dragItem, dropItem)
   }
 }
 
@@ -48,7 +47,7 @@ class SortingItem extends React.Component {
   render() {
     let content =
       // `div` around a styled component is required by react-dnd
-      <div style={ { "display": "flex", "justify-content": "center" } }>
+      <div style={ { "display": "flex", "justifyContent": "center" } }>
         <Container image={ this.props.item.image } { ...this.props }>
           <ItemText>{ this.props.item.text }</ItemText>
         </Container>

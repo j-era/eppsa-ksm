@@ -20,8 +20,8 @@ class ItemListComponent extends React.Component {
     autoBind(this)
 
     const itemsMap = new Map()
-    Object.keys(this.props.items).forEach((key) =>
-      itemsMap.set(key, this.props.items[key])
+    Object.keys(this.props.items).forEach((key, index) =>
+      itemsMap.set(index, this.props.items[key])
     )
 
     console.log(itemsMap)
@@ -36,11 +36,12 @@ class ItemListComponent extends React.Component {
       <Container className={ this.props.className }>
         {
           Array.from(this.state.itemsMap.keys()).map(
-            (key) =>
-              <SortingItem
-                key={ key } id={ key }
+            (key) => {
+              return <SortingItem
+                key={ key } index={ key } id={ this.state.itemsMap.get(key).id }
                 item={ this.state.itemsMap.get(key) }
                 onReorder={ this.reorder } />
+            }
           )
         }
         <PreviewItem />
@@ -48,13 +49,28 @@ class ItemListComponent extends React.Component {
     )
   }
 
-  reorder(dragItemId, hoverItemId) {
-    console.log(`Dragged ${dragItemId} to ${hoverItemId}`)
+  reorder(dragItem, hoverItem) {
+    // Don't trigger reorder if it's to the same spot
+    if (dragItem.id === hoverItem.id) {
+      return
+    }
+
+    const steps = hoverItem.index - dragItem.index
+    console.log(steps)
 
     const itemsMap = new Map(this.state.itemsMap)
 
-    itemsMap.set(dragItemId, this.state.itemsMap.get(hoverItemId))
-    itemsMap.set(hoverItemId, this.state.itemsMap.get(dragItemId))
+    if (steps > 0) {
+      itemsMap.set(dragItem.index + steps - 1, this.state.itemsMap.get(hoverItem.index))
+      itemsMap.set(hoverItem.index, this.state.itemsMap.get(dragItem.index + steps - 1))
+    } else {
+      itemsMap.set(dragItem.index + steps + 1, this.state.itemsMap.get(hoverItem.index))
+      itemsMap.set(hoverItem.index, this.state.itemsMap.get(dragItem.index + steps + 1))
+    }
+
+    console.log(`Moved ${dragItem.index} to ${hoverItem.index}`)
+    console.log("After")
+    console.log(itemsMap)
 
     this.setState({ itemsMap })
   }

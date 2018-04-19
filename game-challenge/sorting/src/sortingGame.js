@@ -32,7 +32,8 @@ function selectItems(data) {
     Object.assign(item, {
       image: {
         src: `${data.assetServerUri}/${item.image.src}`
-      }
+      },
+      id: `item${item.correctPosition}`
     })
   )
 }
