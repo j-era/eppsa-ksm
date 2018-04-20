@@ -1,3 +1,5 @@
+import Phaser from "./phaser";
+
 class gameScene extends Phaser.Scene {
 	constructor () {
 		super({
@@ -11,7 +13,7 @@ class gameScene extends Phaser.Scene {
 			if(key == "template"){
 				continue;
 			}
-			this.load.image(scope.sys.game.gameData.assets[key].name, 'https://asset-server.ramona.eppsa.de/' + scope.sys.game.gameData.assets[key].image.src);
+			this.load.image(scope.sys.game.gameData.assets[key].name, process.env.ASSET_SERVER_URI + "/" + scope.sys.game.gameData.assets[key].image.src);
 		}
 	}
 
