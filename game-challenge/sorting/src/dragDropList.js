@@ -21,6 +21,7 @@ class DragDropList extends React.Component {
           Array.from(this.props.itemsMap.keys()).map(
             (key) =>
               <SortingItem
+                isConfirmed={ this.props.isConfirmed }
                 isCorrect={ this.props.isCorrect }
                 isWrong={ this.props.isWrong }
                 key={ key } index={ key }

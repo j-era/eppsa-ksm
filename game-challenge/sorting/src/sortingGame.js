@@ -76,6 +76,7 @@ export default class SortingGame extends React.Component {
           <TopLabel>{ this.props.data.challenge.topLabel }</TopLabel>
           <DragDropList
             itemsMap={ this.state.itemsMap }
+            isConfirmed={ this.state.isConfirmed }
             isCorrect={ this.state.isCorrect }
             isWrong={ this.state.isWrong }
             reorder={ this.reorder } />

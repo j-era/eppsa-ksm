@@ -45,6 +45,9 @@ const dragSource = {
       index: props.index,
       onReorder: props.onReorder
     }
+  },
+  canDrag(props) {
+    return !props.isConfirmed
   }
 }
 
