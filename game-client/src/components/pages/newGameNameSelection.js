@@ -73,13 +73,13 @@ export default class NewGameNameSelection extends React.Component {
 
     return (
       <Container>
-        <PageTitle text="Wähle deinen Namen!" />
+        <PageTitle text={ content.shared.texts.selectName } />
         <StyledFramedIcon icon={ `${assetServerUri}/${content.avatars[avatar].icon.src}` } />
         <NameInputContainer>
           <NameInput
             type="text"
             value={ name }
-            placeholder="Spielername eingeben"
+            placeholder={ content.shared.texts.selectNamePlaceholder }
             onChange={ this.onInput } />
         </NameInputContainer>
         <ConfirmButton
@@ -90,7 +90,7 @@ export default class NewGameNameSelection extends React.Component {
             : () => {}
           }
           clicked={ this.state.confirmed }
-          text="Bestätigen" />
+          text={ content.shared.texts.confirm } />
       </Container>
     )
   }
