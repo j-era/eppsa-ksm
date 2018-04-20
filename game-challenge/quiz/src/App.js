@@ -22,6 +22,10 @@ const Container = styled.div `
   padding-right: ${props => props.theme.layout.offsetX};
 `
 
+const StyledQuestionText = styled(QuestionText)`
+  margin-top: ${props => props.theme.layout.smallSpacing};
+  margin-bottom: ${props => props.theme.layout.mediumSpacing};
+`
 
 export default class App extends React.Component {
   constructor(props) {
@@ -68,13 +72,13 @@ export default class App extends React.Component {
               this.props.content.shared.texts.questionTitle
             }
           </QuestionTitle>
-          <QuestionText
+          <StyledQuestionText
             fadeIn={ this.questionFadeIn }
             visible={ this.state.visible }>
             {
               question
             }
-          </QuestionText>
+          </StyledQuestionText>
           { this.renderAnswers() }
           { this.renderNextButton() }
         </Container>
@@ -104,6 +108,7 @@ export default class App extends React.Component {
 
   renderNextButton() {
     return <NextButton
+      slideIn
       visible={ this.state.showNext }
       onClick={ async () => await this.nextChallenge() }
       clicked={ this.state.nextClicked }

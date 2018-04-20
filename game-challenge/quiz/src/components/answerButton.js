@@ -7,6 +7,7 @@ import pulse from "../../lib/eppsa-ksm-shared/styled-components/animations/pulse
 
 const StyledButton = styled(Button)`
   align-self: stretch;
+  margin-top: ${props => props.theme.layout.mediumSpacing};
   border-color: ${props => selectionColor(props.selection, props.theme)};
   ${props => props.visible ? css`
       transform: scale(1, 1);
