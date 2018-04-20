@@ -48,9 +48,8 @@ export default class SortingGame extends React.Component {
       itemsMap.set(index, items[key])
     )
 
-    console.log(itemsMap)
-
     this.state = {
+      isConfirmed: false,
       isCorrect: false,
       isWrong: false,
       itemsMap
@@ -69,11 +68,52 @@ export default class SortingGame extends React.Component {
             reorder={ this.reorder } />
           <BottomLabel>{ this.props.data.challenge.bottomLabel }</BottomLabel>
         </div>
-        <Button onClick={ this.confirmSelection }>
-          { this.props.data.shared.texts.confirmSelection }<NextIcon />
-        </Button>
+        { !this.state.isConfirmed && this.renderConfirmButton() }
+        { this.state.isConfirmed && this.renderProceedButton() }
       </Container>
     )
+  }
+
+  renderConfirmButton() {
+    return (
+      <Button onClick={ this.confirmSelection }>
+        { this.props.data.shared.texts.confirmSelection }<NextIcon />
+      </Button>
+    )
+  }
+
+  confirmSelection() {
+    console.log("confirmSelection")
+
+    for (const [index, item] of this.state.itemsMap) {
+      if (item.correctPosition - 1 !== index) {
+        this.setState({
+          isConfirmed: true,
+          isCorrect: false,
+          isWrong: true
+        })
+        return
+      }
+    }
+
+    this.setState({
+      isConfirmed: true,
+      isCorrect: true,
+      isWrong: false
+    })
+  }
+
+  renderProceedButton() {
+    return (
+      <Button onClick={ this.proceed }>
+        { this.props.data.shared.texts.next } <NextIcon />
+      </Button>
+    )
+  }
+
+  proceed() {
+    console.log("proceed")
+    this.props.callbacks.finishChallenge(this.props.data.challenge.score.reward)
   }
 
   reorder(dragItem, hoverItem) {
@@ -100,25 +140,6 @@ export default class SortingGame extends React.Component {
     console.log(itemsMap)
 
     this.setState({ itemsMap })
-  }
-
-  confirmSelection() {
-    console.log("confirmSelection")
-
-    for (const [index, item] of this.state.itemsMap) {
-      if (item.correctPosition - 1 !== index) {
-        this.setState({
-          isCorrect: false,
-          isWrong: true
-        })
-        return
-      }
-    }
-
-    this.setState({
-      isCorrect: true,
-      isWrong: false
-    })
   }
 }
 
