@@ -8,7 +8,17 @@ class Boot extends Phaser.Scene {
 	}
 
 	create () {
-		this.scene.start('GameScene')
+
+		var timedEvent = this.time.addEvent({
+			delay: 500,
+			callback: this.start,
+			callbackScope: this
+		});
+		
+	}
+
+	start() {
+		this.scene.start('GameScene');
 		console.log("I am the BootScene!");
 	}
 }
