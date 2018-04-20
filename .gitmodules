@@ -16,3 +16,6 @@
 [submodule "game-challenge/button/lib/eppsa-ksm-shared"]
 	path = game-challenge/button/lib/eppsa-ksm-shared
 	url = https://github.com/artcom/eppsa-ksm-shared
+[submodule "game-challenge/graph/lib/eppsa-ksm-shared"]
+	path = game-challenge/graph/lib/eppsa-ksm-shared
+	url = https://github.com/artcom/eppsa-ksm-shared

@@ -1,85 +1,15 @@
-class ContentServer {
-  constructor(uri) {
-	  console.log(uri);
-	this.api = axios.create({ baseURL: uri })
-	console.log(this.api);
-  }
+import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
+import Phaser from "./phaser"
 
-  getData(branch = "master", path = "") {
-	  console.log("getting Data");
-    return this.api.get(`/${branch}/content/${path}`).then((response) => response.data)
-  }
-}
-
-
-let gameClient;
 let gameData;
+let gameCallbacks;
 
-function transform(content) {
-	return Object.assign(_.mapValues(_.omit(content, "index"), transform), content.index)
-  }
-
-//window.addEventListener("message", receiveMessage, false)
-function receiveMessage(event)
-{
-  console.log(event)
-  gameData = event.data.data.challenge;
-  gameClient = { source: event.source, origin: event.origin }
-
-  init();
-}
-
-const contentServerUri = 'https://content-server.barbara.eppsa.de'
-const assetServerUri = 'https://asset-server.barbara.eppsa.de'
-const staticServerUri = 'https://static.barbara.eppsa.de'
-
-try {
-    console.assert(window.parent.origin)
-
-    // We are in the same window
-
-    const url = new URL(window.location)
-
-    const challengeNumber = url.searchParams.get("challengeNumber")
-    const challengeType = url.searchParams.get("challengeType")
-
-    if (!challengeNumber || !challengeType) {
-      console.error(`Missing query parameters: ${challengeNumber}, ${challengeType}`)
-    } else {
-      if (!contentServerUri || !assetServerUri || !staticServerUri) {
-        console.log(
-          `Missing config parameters: ${contentServerUri}, ${assetServerUri}, ${staticServerUri}`
-        )
-      } else {
-		  console.log("getting content");
-		const contentServer = new ContentServer(contentServerUri)
-		console.log(contentServer);
-        contentServer.getData()
-          .then((data) => {
-            const content = selectContent(transform(data), challengeType, challengeNumber)
-			console.log(content)
-			gameData = content.challenge;
-			init();
-		  })
-		  
-      }
-    }
-  } catch (e) {
-    // We are in another window (iframe)
-    window.addEventListener("message", receiveMessage, false)
-}
-
-function selectContent(data, challengeType, challengeNumber) {
-	const station = data.challenges[challengeNumber]
-	const challenge = data.challenges[challengeNumber].challengeTypes[challengeType]
-  
-	return {
-	  color: station.color,
-	  shared: data.shared,
-	  challenge,
-	  staticServerUri
-	}
-  }
+bootstrap((data, callbacks) => {
+	console.log(data, callbacks);
+	gameData = data.challenge;
+	gameCallbacks = callbacks.callbacks;
+	init();
+  })
 
 let GraphGame = new Phaser.Class({
 	Extends: Phaser.Scene,
@@ -169,7 +99,7 @@ let GraphGame = new Phaser.Class({
 			if(key == "template"){
 				continue;
 			}
-			this.load.image(gameData.assets[key].name, 'https://asset-server.barbara.eppsa.de/' + gameData.assets[key].image.src);
+			this.load.image(gameData.assets[key].name, process.env.ASSET_SERVER_URI + "/" + gameData.assets[key].image.src);
 		}
 	}, 
 
@@ -856,17 +786,10 @@ let GraphGame = new Phaser.Class({
 	onGameEnd: function(){
 		console.log('game over');
 		let score = this.calculateScore();
-		gameClient.source.postMessage(
-			{
-			  source: "challenge",
-			  score,
-			  id: "finish"
-			}, gameClient.origin)
+		gameCallbacks.finishChallenge(score)
 	}
 	
 });
-
-
 
 let game;
 
