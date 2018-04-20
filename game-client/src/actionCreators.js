@@ -174,6 +174,7 @@ export function acceptMateRequest(gameId, gameServer) {
   return async (dispatch) => {
     const room = uuid()
     gameServer.sendDirectMessage(messages.ACCEPTING_MATE, gameId, { room })
+    gameServer.leaveChallengeLobby()
     dispatch(startChallenge(gameServer, room))
   }
 }
@@ -206,6 +207,7 @@ export function handleIncomingCancelMateRequest(gameId) {
 export function handleIncomingMateAccept(gameId, { room }, gameServer) {
   return async (dispatch, getState) => {
     if (getState().requestedMate.gameId === gameId) {
+      gameServer.leaveChallengeLobby()
       dispatch(startChallenge(gameServer, room))
     }
   }
