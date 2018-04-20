@@ -1,7 +1,7 @@
-import Boot from "./Boot.js";
-import GameScene from "./GameScene.js";
-import Win from "./Win.js";
-import Lose from "./Lose.js";
+import boot from "./boot.js";
+import gameScene from "./gameScene.js";
+import win from "./win.js";
+import lose from "./lose.js";
 
 let gameClient
 
@@ -19,10 +19,10 @@ var config = {
 	height: window.innerHeight * window.devicePixelRatio,
 
 	scene: [
-		Boot,
-		GameScene,
-		Win,
-		Lose
+		boot,
+		gameScene,
+		win,
+		lose
 	]
 };
 
@@ -33,7 +33,8 @@ game.completeChallenge = (score) => {
 	  gameClient.source.postMessage(
 	    {
 	      source: "challenge",
-	      score
+		  score,
+		  id: "finish"
 	    }, gameClient.origin)
 	}, 1000)
 }
