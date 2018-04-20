@@ -7,6 +7,7 @@ import mapValues from "lodash.mapvalues"
 
 import DragDropList from "./dragDropList"
 
+import ScoreCalculation from "../node_modules/eppsa-ksm-shared/functions/score"
 import Button from "../node_modules/eppsa-ksm-shared/styled-components/components/button"
 import ButtonIcon from "../node_modules/eppsa-ksm-shared/svg/EPPSA_Assets_Button_Icon.svg"
 
@@ -39,8 +40,9 @@ const BottomLabel = styled.div`
 export default class SortingGame extends React.Component {
   constructor(props) {
     super(props)
-
     autoBind(this)
+
+    this.points = { bonus: 0, score: 0 }
 
     const items = selectItems(this.props.data)
     const itemsMap = new Map()
@@ -54,6 +56,17 @@ export default class SortingGame extends React.Component {
       isWrong: false,
       itemsMap
     }
+  }
+
+  componentDidMount() {
+    this.startTime = new Date()
+    const { sessionLength } = this.props.data.challenge.score
+    const { showTimeline, startTimelineClock } = this.props.callbacks
+    showTimeline(sessionLength)
+    startTimelineClock()
+    this.timeLineTimeout = setTimeout(() => {
+      this.confirm()
+    }, sessionLength * 1000)
   }
 
   render() {
@@ -76,14 +89,20 @@ export default class SortingGame extends React.Component {
 
   renderConfirmButton() {
     return (
-      <Button onClick={ this.confirmSelection }>
+      <Button onClick={ this.confirm }>
         { this.props.data.shared.texts.confirmSelection }<NextIcon />
       </Button>
     )
   }
 
-  confirmSelection() {
-    console.log("confirmSelection")
+  confirm() {
+    clearTimeout(this.timeLineTimeout)
+    this.props.callbacks.stopTimelineClock()
+
+    const { score } = this.props.data.challenge
+    const { shared } = this.props.data
+
+    this.timeNeeded = (new Date() - this.startTime) / 1000
 
     for (const [index, item] of this.state.itemsMap) {
       if (item.correctPosition - 1 !== index) {
@@ -95,6 +114,12 @@ export default class SortingGame extends React.Component {
         return
       }
     }
+
+    const scoreCalc = new ScoreCalculation(
+      this.timeNeeded,
+      { ...score, gameFactor: shared.config.sortingScoreFactor }
+    )
+    this.points = scoreCalc.getScore()
 
     this.setState({
       isConfirmed: true,
@@ -112,8 +137,12 @@ export default class SortingGame extends React.Component {
   }
 
   proceed() {
-    console.log("proceed")
-    this.props.callbacks.finishChallenge(this.props.data.challenge.score.reward)
+    const { hideTimeline } = this.props.callbacks
+    hideTimeline()
+
+    console.log(`${this.points.score}, ${this.points.bonus}`)
+
+    this.props.callbacks.finishChallenge(this.points.score + this.points.bonus)
   }
 
   reorder(dragItem, hoverItem) {
