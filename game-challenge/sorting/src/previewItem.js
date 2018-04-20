@@ -29,10 +29,8 @@ function getItemStyles(currentOffset) {
     }
   }
 
-  // http://www.paulirish.com/2012/why-moving-elements-with-translate-is-better-than-posabs-topleft/
-  const x = currentOffset.x
   const y = currentOffset.y
-  const transform = `translate(${x}px, ${y}px)`
+  const transform = `translate(0px, ${y}px)`
 
   return {
     pointerEvents: "none",
