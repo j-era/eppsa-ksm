@@ -1,11 +1,12 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled, { ThemeProvider } from "styled-components"
-import delay from "./delay"
+import delay from "../node_modules/eppsa-ksm-shared/functions/delay"
 import AnswerButton from "./components/answerButton"
-import NextButton from "./components/nextButton"
 import QuestionText from "./components/questionText"
 import QuestionTitle from "./components/questionTitle"
+
+import NextButton from "../node_modules/eppsa-ksm-shared/styled-components/components/nextButton"
 import ScoreCalculation from "../node_modules/eppsa-ksm-shared/functions/score"
 import theme from "../node_modules/eppsa-ksm-shared/styled-components/theme"
 
@@ -16,9 +17,9 @@ const Container = styled.div `
   display: flex;
   flex-direction: column;
   justify-content: center;
+  height: 100%;
   padding-left: ${props => props.theme.layout.offsetX};
   padding-right: ${props => props.theme.layout.offsetX};
-  height: 100vh;
 `
 
 

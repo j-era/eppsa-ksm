@@ -1,5 +1,4 @@
 import React, { Component } from "react"
-import "./App.css"
 import styled from "styled-components"
 import QrReader from "react-qr-reader"
 
@@ -24,10 +23,8 @@ class Button extends Component {
   constructor(props) {
     super(props)
 
-    this.contentServerUri = props.contentServerUri
     this.assetServerUri = props.assetServerUri
     this.gameServerUri = props.gameServerUri
-    this.challengeNumber = props.challengeNumber
 
     this.state = {
       scanned: "nothing scanned yet",
@@ -46,10 +43,8 @@ class Button extends Component {
         <div>{ this.state.scanned }</div>
         <div>sessionLength: { this.props.sessionLength }</div>
         <ButtonDiv className={ "button" } onClick={ this.state.onClick } />
-        <div>contentServerUri: { this.contentServerUri }</div>
         <div>assetServerUri: { this.assetServerUri }</div>
         <div>gameServerUri: { this.gameServerUri }</div>
-        <div>challengeNumber: { this.challengeNumber }</div>
         { this.props.orientation && this.renderOrientationValues() }
       </Container>
     )

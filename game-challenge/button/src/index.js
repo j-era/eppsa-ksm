@@ -1,47 +1,28 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import "./index.css"
-import App from "./App"
-import selectContent from "./selectContent"
+import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
 
-let gameClient
-let config
+import App from "./App"
+
 let orientation
 
+bootstrap((config, { callbacks }) => {
+  render(config, callbacks)
 
-const completeChallenge = () => {
-  gameClient.source.postMessage(
-    {
-      source: "challenge",
-      score: config.challenge.score.reward
-    }, gameClient.origin)
-}
+  window.addEventListener("message", (event) => {
+    if (event.data.type === "deviceOrientation") {
+      orientation = event.data.data
+      render(config, callbacks)
+    }
+  }, false)
+})
 
-// eslint-disable-next-line no-use-before-define
-const url = new URL(window.location)
-
-const contentServerUri = process.env.CONTENT_SERVER_URI || url.searchParams.get("contentServerUri")
-const assetServerUri = process.env.ASSET_SERVER_URI || url.searchParams.get("assetServerUri")
-const gameServerUri = process.env.GAME_SERVER_URI || url.searchParams.get("gameServerUri")
-const challengeNumber = url.searchParams.get("challengeNumber")
-
-window.addEventListener("message", receiveMessage, false)
-function receiveMessage(event) {
-  if (event.data.type === "challengeData") {
-    gameClient = { source: event.source, origin: event.origin }
-    config = selectContent(event.data.data)
-  }
-  if (event.data.type === "deviceOrientation") {
-    orientation = event.data.data
-  }
-
+function render(config, callbacks) {
   ReactDOM.render(<App
-    onClick={ completeChallenge }
-    contentServerUri={ contentServerUri }
-    assetServerUri={ assetServerUri }
-    gameServerUri={ gameServerUri }
-    challengeNumber={ challengeNumber }
-    sessionLength={ config.scoreCalculation.sessionLength }
+    onClick={ () => callbacks.finishChallenge(config.challenge.score.reward) }
+    assetServerUri={ config.assetServerUri }
+    gameServerUri={ config.gameServerUri }
+    sessionLength={ config.challenge.score.sessionLength }
     orientation={ orientation } />,
-  document.getElementById("root"))
+  document.getElementById("app"))
 }

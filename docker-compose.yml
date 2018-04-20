@@ -95,7 +95,7 @@ services:
     build:
       context: ./game-challenge/button
     environment:
-      PORT: 80
+      PORT: 443
 
   game-challenge-hunt-client:
     build:
@@ -119,7 +119,7 @@ services:
     build:
       context: ./game-challenge/quiz
     environment:
-      PORT: 80
+      PORT: 443
       ASSET_SERVER_URI: https://asset-server.${HOST}
       CONTENT_SERVER_URI: https://content-server.${HOST}
       GAME_SERVER_URI: https://game-server.${HOST}
