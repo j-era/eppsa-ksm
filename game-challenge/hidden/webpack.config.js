@@ -3,7 +3,7 @@ const path = require("path")
 const HtmlWebPackPlugin = require("html-webpack-plugin")
 
 module.exports = {
-  entry: "./src/game.js",
+  entry: "./src/main.js",
   plugins: [
     new HtmlWebPackPlugin({
       template: "./src/index.html",
