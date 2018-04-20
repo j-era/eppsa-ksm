@@ -9,24 +9,30 @@ import FramedIcon from "../../../node_modules/eppsa-ksm-shared/styled-components
 import NextButton from "../../../node_modules/eppsa-ksm-shared/styled-components/components/nextButton"
 import PageTitle from "../../../node_modules/eppsa-ksm-shared/styled-components/components/pageTitle"
 
-
 const Container = styled.div `
   font-family: ${props => props.theme.font.fontFamily};
   background-color: white;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  height: 100%;
+`
+
+const Content = styled.div `
+  font-family: ${props => props.theme.font.fontFamily};
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   height: 100%;
 `
 
 const StyledFramedIcon = styled(FramedIcon)`
-  margin-top: ${props => props.theme.layout.smallSpacing};
+  margin-top: ${props => props.theme.layout.mediumSpacing};
 `
 
 const NameInputContainer = styled.div `
   margin-top: ${props => props.theme.layout.largeSpacing};
-  padding-top: 0.25em;
-  padding-bottom: 0.25em;
+  padding-top: 0.8em;
+  padding-bottom: 0.8em;
   padding-left: 1em;
   padding-right: 1em;
   overflow: hidden;
@@ -34,7 +40,7 @@ const NameInputContainer = styled.div `
   border-radius: ${props => props.theme.layout.borderRadius};
   border-style: solid;
   border-width: ${props => props.theme.layout.buttonBorder};
-  border-color: ${props => props.theme.colors.areaColor};
+  border-color: ${props => props.theme.colors.primary};
   text-align: center;
   display: flex;
   align-self: center;
@@ -42,6 +48,17 @@ const NameInputContainer = styled.div `
 `
 
 const NameInput = styled.input`
+  ::placeholder {
+    color: ${props => props.theme.colors.primary};
+    opacity: 0.6;
+  }
+  :focus {
+    outline: none;
+  }
+  :focus::placeholder {
+    opacity: 0;
+  }
+  border-width: 0;
   width: 100%;
   text-align: center;
   font-size: ${props => props.theme.font.button.size};
@@ -74,31 +91,41 @@ export default class NewGameNameSelection extends React.Component {
     return (
       <Container>
         <PageTitle text={ content.shared.texts.selectName } />
-        <StyledFramedIcon icon={ `${assetServerUri}/${content.avatars[avatar].icon.src}` } />
-        <NameInputContainer>
-          <NameInput
-            type="text"
-            value={ name }
-            placeholder={ content.shared.texts.selectNamePlaceholder }
-            onChange={ this.onInput } />
-        </NameInputContainer>
-        <ConfirmButton
-          visible
-          active={ this.state.nameEntered }
-          onClick={ this.state.nameEntered
-            ? () => this.confirm(name, avatar, maxChallenges, gameServer)
-            : () => {}
-          }
-          clicked={ this.state.confirmed }
-          text={ content.shared.texts.confirm } />
+        <Content>
+          <StyledFramedIcon icon={ `${assetServerUri}/${content.avatars[avatar].icon.src}` } />
+          <NameInputContainer>
+            <NameInput
+              type="text"
+              maxLength="12"
+              value={ name }
+              placeholder={ content.shared.texts.selectNamePlaceholder }
+              onChange={ this.onInput } />
+          </NameInputContainer>
+          <ConfirmButton
+            visible
+            active={ this.state.nameEntered }
+            onClick={ this.state.nameEntered
+              ? () => this.confirm(name, avatar, maxChallenges, gameServer)
+              : () => {}
+            }
+            clicked={ this.state.confirmed }
+            text={ content.shared.texts.confirm } />
+        </Content>
       </Container>
     )
   }
 
   onInput(event) {
-    if (!this.state.nameEntered) {
-      this.setState({ nameEntered: true })
+    if (event.target.value.length > 2) {
+      if (!this.state.nameEntered) {
+        this.setState({ nameEntered: true })
+      }
+    } else {
+      if (this.state.nameEntered) {
+        this.setState({ nameEntered: false })
+      }
     }
+
     this.props.dispatch(updateName(event.target.value))
   }
 
