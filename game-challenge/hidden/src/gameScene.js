@@ -256,7 +256,13 @@ class gameScene extends Phaser.Scene {
 
 	spawn(waitrow, max, min) {
 		if(waitrow.length == 0){
-			this.spawn(waitrow,max,min)
+			//this.spawn(waitrow,max,min)
+			this.time.addEvent( {
+				delay: Math.floor(Math.random() * (max - min) + min),
+				callback:this.spawn,
+				callbackScope: this,
+				args: [waitrow, max, min]
+			});
 			return
 		}else{
 			var element = Math.floor(Math.random() * waitrow.length)
