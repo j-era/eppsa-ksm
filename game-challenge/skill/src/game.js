@@ -5,7 +5,7 @@ window.addEventListener("message", receiveMessage, false)
 function receiveMessage(event)
 {
   console.log(event)
-  gameData = event.data.challenge;
+  gameData = event.data.data.challenge;
   gameClient = { source: event.source, origin: event.origin }
 
   init();
