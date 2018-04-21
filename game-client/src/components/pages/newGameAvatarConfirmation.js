@@ -1,14 +1,10 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled from "styled-components"
+import { Button, FramedIcon, NextButton, PageTitle, delay } from "eppsa-ksm-shared"
 
 import { updateGameState } from "../../actionCreators"
 import { NEW_GAME_AVATAR_SELECTION, NEW_GAME_NAME_SELECTION } from "../../gameStates"
-import Button from "../../../node_modules/eppsa-ksm-shared/styled-components/components/button"
-import FramedIcon from "../../../node_modules/eppsa-ksm-shared/styled-components/components/framedIcon"
-import NextButton from "../../../node_modules/eppsa-ksm-shared/styled-components/components/nextButton"
-import PageTitle from "../../../node_modules/eppsa-ksm-shared/styled-components/components/pageTitle"
-import delay from "../../../node_modules/eppsa-ksm-shared/functions/delay"
 
 const Container = styled.div `
   font-family: ${props => props.theme.font.fontFamily};
