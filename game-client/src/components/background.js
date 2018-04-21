@@ -19,11 +19,11 @@ const Background = styled.div`
   align-items: center;
   justify-content: center;
   
-  background-color: ${props => props.fill};
+  background-color: ${props => props.fillColor};
 `
 
 const BackgroundArc = styled.div`
-  background-color: ${props => props.fill};
+  background-color: ${props => props.fillColor};
   
   position: absolute;
   
@@ -43,12 +43,12 @@ const Banner = styled(BannerComponent)`
 export default (props) =>
   <Container className={ props.className }>
     <BackgroundArc
-      fill={ props.fill } />
+      fillColor={ props.fillColor } />
     <Banner
       show={ props.inGameSetup }
       bannerText={ props.bannerText } />
     <Background
-      fill={ props.fill }>
+      fillColor={ props.fillColor }>
       { props.children }
     </Background>
   </Container>
