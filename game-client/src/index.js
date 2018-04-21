@@ -8,6 +8,7 @@ import thunk from "redux-thunk"
 import { applyMiddleware, createStore, combineReducers } from "redux"
 import { createLogger } from "redux-logger"
 import { ThemeProvider } from "styled-components"
+import { injectGlobalStyle, theme } from "eppsa-ksm-shared"
 
 import Application from "./components/application"
 import * as gameStates from "./gameStates"
@@ -17,10 +18,6 @@ import { getCookie } from "./cookie"
 import GameServer from "./api/gameServer"
 import * as actions from "./actionCreators"
 import * as messages from "./messages"
-
-import { injectGlobalStyle } from "../node_modules/eppsa-ksm-shared/styled-components/globalStyle"
-
-import theme from "../node_modules/eppsa-ksm-shared/styled-components/theme"
 
 const store = createStore(combineReducers(reducers), applyMiddleware(thunk, createLogger()))
 const contentServer = new ContentServer(process.env.CONTENT_SERVER_URI)
