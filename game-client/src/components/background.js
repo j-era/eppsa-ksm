@@ -38,8 +38,6 @@ const BackgroundArc = styled.div`
 const Banner = styled(BannerComponent)`
   top: -16vw;
 `
-
-
 export default (props) =>
   <Container className={ props.className }>
     <BackgroundArc
