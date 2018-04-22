@@ -1,7 +1,7 @@
 import React from "react"
 import { NextButton, PageTitle, StyledMarkdown } from "eppsa-ksm-shared"
 
-import { showGameManual } from "../actionCreators"
+import { showGameManual } from "../../actionCreators"
 
 export default function gameManual(props) {
   return (

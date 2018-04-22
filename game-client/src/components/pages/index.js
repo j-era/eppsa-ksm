@@ -25,6 +25,7 @@ import ChallengeLobby from "./challengeLobby"
 import ChallengeManual from "./challengeManual"
 import Challenge from "./challenge"
 import Finished from "./finished"
+import GameManual from "./gameManual"
 
 export default {
   [RESUME_OR_NEW_GAME_SELECTION]: { render: ResumeOrNewGameSelection, showHeader: false },
@@ -38,5 +39,6 @@ export default {
   [CHALLENGE_LOBBY]: { render: ChallengeLobby, showHeader: true },
   [CHALLENGE_MANUAL]: { render: ChallengeManual, showHeader: true },
   [CHALLENGE]: { render: Challenge, showHeader: false },
-  [FINISHED]: { render: Finished, showHeader: false }
+  [FINISHED]: { render: Finished, showHeader: false },
+  GAME_MANUAL: { render: GameManual, showHeader: true }
 }
