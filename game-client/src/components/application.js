@@ -25,6 +25,8 @@ const Background = styled(BackgroundComponent)`
   height: ${appRatio}%;
 `
 
+const innerRatio = window.innerWidth / window.innerHeight
+
 function Application(props) {
   const enhancedProps = enhance(props)
 
@@ -39,7 +41,7 @@ function Application(props) {
         bannerText={ props.content.name }
         inGameSetup={ inGameSetup(props.gameState) }
         fillColor={ enhancedProps.fillColor } >
-        <Card innerRatio={ window.innerWidth / window.innerHeight }>
+        <Card innerRatio={ innerRatio }>
           <Page>
             { React.createElement(render, enhancedProps) }
           </Page>
