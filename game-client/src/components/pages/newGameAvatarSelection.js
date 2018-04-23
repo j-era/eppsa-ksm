@@ -40,14 +40,16 @@ const Description = styled.div`
 
 const AvatarContainer = styled.div`
   display: flex;
+  justify-content: space-between;
   width: 100%;
 `
 
 const Avatar = styled.div`
-  width: 50px;
-  height: 50px;
+  width: 20%;
+  height: 23vw;
   background-image: url(${props => props.icon});
-  background-size: cover;
+  background-position-x: center;
+  background-size: auto 100%;
 `
 
 export default function NewGameAvatarSelection(props) {
