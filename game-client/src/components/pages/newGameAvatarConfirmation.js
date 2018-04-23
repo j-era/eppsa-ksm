@@ -1,10 +1,16 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled from "styled-components"
-import { Button, FramedIcon, NextButton, PageTitle, delay } from "eppsa-ksm-shared"
 
 import { updateGameState } from "../../actionCreators"
 import { NEW_GAME_AVATAR_SELECTION, NEW_GAME_NAME_SELECTION } from "../../gameStates"
+import {
+  Button,
+  delay,
+  FramedIcon,
+  NextButton,
+  PageTitle
+} from "../../../node_modules/eppsa-ksm-shared"
 
 const Container = styled.div `
   background-color: white;

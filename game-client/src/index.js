@@ -19,6 +19,8 @@ import GameServer from "./api/gameServer"
 import * as actions from "./actionCreators"
 import * as messages from "./messages"
 
+import { injectGlobalStyle, theme } from "../node_modules/eppsa-ksm-shared"
+
 const store = createStore(combineReducers(reducers), applyMiddleware(thunk, createLogger()))
 const contentServer = new ContentServer(process.env.CONTENT_SERVER_URI)
 const gameServer = new GameServer(process.env.GAME_SERVER_URI)
