@@ -4,6 +4,7 @@ import styled from "styled-components"
 export default styled.div`
   font-size: ${props => props.theme.font.headline.size};
   font-weight: ${props => props.theme.font.headline.weight};
+  color: white;
 
   background-color: ${props => props.theme.colors.primary};
   border-radius: ${props => props.theme.layout.borderRadius};
