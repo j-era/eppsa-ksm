@@ -3,11 +3,8 @@ import React from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
 
-import { FINISHED } from "../gameStates"
-
 import Card from "./card"
 import GameBoard from "./gameBoard"
-import GameManual from "./gameManual"
 import GameManualButton from "./gameManualButton"
 import { default as BackgroundComponent } from "./background"
 import pages from "./pages"
@@ -29,14 +26,14 @@ const Background = styled(BackgroundComponent)`
 `
 
 function Application(props) {
-  const pageData = pages[props.gameState]
-
   const enhancedProps = enhance(props)
+
+  const { render, showHeader } = getPageData(enhancedProps)
 
   return (
     <Container>
       <Header>
-        { pageData.showHeader && renderHeader(enhancedProps) }
+        { showHeader && renderHeader(enhancedProps) }
       </Header>
       <Background
         bannerText={ props.content.name }
@@ -44,10 +41,7 @@ function Application(props) {
         fillColor={ enhancedProps.fillColor } >
         <Card innerRatio={ window.innerWidth / window.innerHeight }>
           <Page>
-            { props.showGameManual
-              ? <GameManual { ...props } />
-              : React.createElement(pageData.render, enhancedProps)
-            }
+            { React.createElement(render, enhancedProps) }
           </Page>
         </Card>
       </Background>
@@ -75,7 +69,8 @@ function enhance(props) {
       shared: props.content.shared,
       staticServerUri: props.staticServerUri,
       assetServerUri: props.assetServerUri,
-      gameServerUri: props.gameServerUri
+      gameServerUri: props.gameServerUri,
+      room: props.challengeRoom
     }
 
     const fillColor = challengeData.color
@@ -83,6 +78,10 @@ function enhance(props) {
   }
 
   return Object.assign({ fillColor: props.theme.colors.secondary }, props)
+}
+
+function getPageData({ showGameManual, gameState }) {
+  return showGameManual ? pages.GAME_MANUAL : pages[gameState]
 }
 
 export default connect((state) => state)(Application)

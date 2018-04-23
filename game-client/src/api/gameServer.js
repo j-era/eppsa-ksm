@@ -45,6 +45,18 @@ export default class GameServer {
     return this.emit("finishChallenge", result)
   }
 
+  joinChallengeLobby() {
+    return this.emit("joinChallengeLobby")
+  }
+
+  leaveChallengeLobby() {
+    return this.emit("leaveChallengeLobby")
+  }
+
+  sendDirectMessage(message, gameId, payload = {}) {
+    this.emit("sendDirectMessage", message, gameId, payload)
+  }
+
   emit(eventName, ...param) {
     return new Promise((resolve) => {
       this.socket.emit(eventName, ...param, result => {
@@ -58,7 +70,6 @@ export default class GameServer {
   }
 
   setHandshakeQuery(params) {
-    console.log(`Set reconnect options: ${params}`)
     this.socket.io.opts.query = params
   }
 }

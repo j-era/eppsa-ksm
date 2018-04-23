@@ -2,13 +2,11 @@ import React from "react"
 import styled from "styled-components"
 import { NextButton, PageTitle, StyledMarkdown } from "eppsa-ksm-shared"
 
-import { updateGameState } from "../../actionCreators"
-import { NEW_GAME_AVATAR_SELECTION } from "../../gameStates"
+import { showGameManual } from "../../actionCreators"
 
 const Container = styled.div `
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   height: 100%;
 `
 
@@ -17,16 +15,16 @@ const ManualText = styled.div`
   flex-shrink: 0.2;
 `
 
-export default function NavigationToStart({ content, dispatch }) {
+export default function gameManual(props) {
   return (
     <Container>
-      <PageTitle text={ content.navigationToStartTitle } />
+      <PageTitle text={ props.content.gameManualTitle } />
       <ManualText>
-        <StyledMarkdown>{ content.navigationToStartText }</StyledMarkdown>
+        <StyledMarkdown>{ props.content.gameManualText }</StyledMarkdown>
       </ManualText>
       <NextButton
         visible
-        onClick={ () => dispatch(updateGameState(NEW_GAME_AVATAR_SELECTION)) }
+        onClick={ () => props.dispatch(showGameManual(false)) }
         text="Ok" />
     </Container>
   )

@@ -1,6 +1,8 @@
 import { setCookie } from "./cookie"
 import * as gameStates from "./gameStates"
 import * as types from "./actionTypes"
+import * as messages from "./messages"
+import uuid from "uuid/v4"
 
 export function resumeGame(gameId, gameServer) {
   return async (dispatch) => {
@@ -33,9 +35,10 @@ export function startNewGame(name, avatar, maxChallenges, gameServer) {
   }
 }
 
-export function startChallenge(gameServer) {
+export function startChallenge(gameServer, room = null) {
   return async (dispatch) => {
     await gameServer.startChallenge()
+    dispatch({ type: types.SET_CHALLENGE_ROOM, room })
     dispatch(updateGameState(gameStates.CHALLENGE))
   }
 }
@@ -129,6 +132,90 @@ export function hideTimeline() {
   console.log("hideTimeline")
   return {
     type: types.HIDE_TIMELINE
+  }
+}
+
+export function joinChallengeLobby(gameServer) {
+  return async (dispatch) => {
+    gameServer.joinChallengeLobby()
+    dispatch(updateGameState(gameStates.CHALLENGE_LOBBY))
+  }
+}
+
+export function leaveChallengeLobby(gameServer) {
+  return async (dispatch) => {
+    gameServer.leaveChallengeLobby()
+    dispatch(updateGameState(gameStates.CHALLENGE_MODE_SELECTION))
+  }
+}
+
+export function requestMate(gameId, gameServer) {
+  return async (dispatch) => {
+    gameServer.sendDirectMessage(messages.REQUESTING_MATE, gameId)
+
+    dispatch({
+      type: types.REQUEST_MATE,
+      gameId
+    })
+  }
+}
+
+export function cancelRequestMate(gameServer) {
+  return async (dispatch, getState) => {
+    gameServer.sendDirectMessage(messages.CANCEL_REQUESTING_MATE, getState().requestedMate.gameId)
+
+    dispatch({
+      type: types.CANCEL_REQUEST_MATE
+    })
+  }
+}
+
+export function acceptMateRequest(gameId, gameServer) {
+  return async (dispatch) => {
+    const room = uuid()
+    gameServer.sendDirectMessage(messages.ACCEPTING_MATE, gameId, { room })
+    gameServer.leaveChallengeLobby()
+    dispatch(startChallenge(gameServer, room))
+  }
+}
+
+export function rejectMateRequest(gameId, gameServer) {
+  return async (dispatch) => {
+    gameServer.sendDirectMessage(messages.REJECTING_MATE, gameId)
+
+    dispatch({
+      type: types.REJECT_MATE,
+      gameId
+    })
+  }
+}
+
+export function handleIncomingMateRequest(gameId) {
+  return {
+    type: types.INCOMING_MATE_REQUEST,
+    gameId
+  }
+}
+
+export function handleIncomingCancelMateRequest(gameId) {
+  return {
+    type: types.INCOMING_CANCEL_MATE_REQUEST,
+    gameId
+  }
+}
+
+export function handleIncomingMateAccept(gameId, { room }, gameServer) {
+  return async (dispatch, getState) => {
+    if (getState().requestedMate.gameId === gameId) {
+      gameServer.leaveChallengeLobby()
+      dispatch(startChallenge(gameServer, room))
+    }
+  }
+}
+
+export function handleIncomingMateReject() {
+  return {
+    type: types.INCOMING_MATE_REJECT
   }
 }
 

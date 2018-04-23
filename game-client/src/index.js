@@ -8,6 +8,7 @@ import thunk from "redux-thunk"
 import { applyMiddleware, createStore, combineReducers } from "redux"
 import { createLogger } from "redux-logger"
 import { ThemeProvider } from "styled-components"
+import { injectGlobalStyle, theme } from "eppsa-ksm-shared"
 
 import Application from "./components/application"
 import * as gameStates from "./gameStates"
@@ -16,10 +17,7 @@ import ContentServer from "./api/contentServer"
 import { getCookie } from "./cookie"
 import GameServer from "./api/gameServer"
 import * as actions from "./actionCreators"
-
-import { injectGlobalStyle } from "../node_modules/eppsa-ksm-shared/styled-components/globalStyle"
-
-import theme from "../node_modules/eppsa-ksm-shared/styled-components/theme"
+import * as messages from "./messages"
 
 const store = createStore(combineReducers(reducers), applyMiddleware(thunk, createLogger()))
 const contentServer = new ContentServer(process.env.CONTENT_SERVER_URI)
@@ -141,4 +139,18 @@ gameServer.on("connect", () => {
 
 gameServer.on("disconnect", () => {
   store.dispatch(actions.updateConnected(false))
+})
+
+gameServer.on("directMessage", (message, gameId, payload) => {
+  console.log(`Message received from ${gameId}: ${message}`)
+  switch (message) {
+    case messages.REQUESTING_MATE:
+      return store.dispatch(actions.handleIncomingMateRequest(gameId))
+    case messages.CANCEL_REQUESTING_MATE:
+      return store.dispatch(actions.handleIncomingCancelMateRequest(gameId))
+    case messages.ACCEPTING_MATE:
+      return store.dispatch(actions.handleIncomingMateAccept(gameId, payload, gameServer))
+    case messages.REJECTING_MATE:
+      return store.dispatch(actions.handleIncomingMateReject())
+  }
 })

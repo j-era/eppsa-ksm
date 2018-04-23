@@ -21,6 +21,10 @@ module.exports = class Client {
     this.socket.on("resumeGame", this.resumeGame.bind(this))
     this.socket.on("startChallenge", this.startChallenge.bind(this))
     this.socket.on("finishChallenge", this.finishChallenge.bind(this))
+    this.socket.on("joinChallengeLobby", this.joinChallengeLobby.bind(this))
+    this.socket.on("leaveChallengeLobby", this.leaveChallengeLobby.bind(this))
+    this.socket.on("sendDirectMessage", this.sendDirectMessage.bind(this))
+    this.socket.on("joinRoom", this.joinRoom.bind(this))
     this.socket.on("disconnect", this.onDisconnect.bind(this))
     this.socket.conn.on("packet", this.onPacket.bind(this))
   }
@@ -50,6 +54,7 @@ module.exports = class Client {
       score: 0,
       challengeNumber: 1,
       maxChallenges,
+      inLobby: false,
       finished: false
     }
 
@@ -66,7 +71,7 @@ module.exports = class Client {
     if (game && !game.finished) {
       this.log.info({ socketId: this.socket.id, gameId }, "Resuming game")
 
-      this.mongoDB.resumeGame(gameId, this.socket.id)
+      this.mongoDB.resumeGame(gameId, this.socket.id, { inLobby: false })
       this.game = game
     } else {
       this.log.error({ socketId: this.socket.id, gameId }, "Could not resume game ")
@@ -75,10 +80,62 @@ module.exports = class Client {
     toSocket(this.game)
   }
 
+  async joinChallengeLobby() {
+    if (this.game) {
+      this.log.info({
+        socketId: this.socket.id,
+        gameId: this.game.gameId,
+        challengeNumber: this.game.challengeNumber
+      },
+      "Joining challenge lobby")
+
+      this.mongoDB.updateGame(this.game.gameId, { inLobby: true })
+    } else {
+      this.log.error({ socketId: this.socket.id },
+        "Could not join challenge lobby without current game")
+    }
+  }
+
+  async leaveChallengeLobby() {
+    if (this.game) {
+      this.log.info({
+        socketId: this.socket.id,
+        gameId: this.game.gameId,
+        challengeNumber: this.game.challengeNumber
+      },
+      "Leaving challenge lobby")
+
+      this.mongoDB.updateGame(this.game.gameId, { inLobby: false })
+    } else {
+      this.log.error({ socketId: this.socket.id },
+        "Could not leave challenge lobby without current game")
+    }
+  }
+
+  async sendDirectMessage(message, gameId, payload) {
+    if (this.game) {
+      const socketId = await this.mongoDB.findSocketId(gameId)
+
+      this.log.info({
+        from: this.game.gameId,
+        to: gameId,
+        socketId,
+        message,
+        payload
+      }, "Delivering message")
+
+      this.socket.nsp.to(socketId).emit("directMessage", message, this.game.gameId, payload)
+    }
+  }
+
   async startChallenge() {
     if (this.game) {
-      this.log.info({ socketId: this.socket.id, gameId: this.game.gameId },
-        "Starting challenge")
+      this.log.info({
+        socketId: this.socket.id,
+        gameId: this.game.gameId,
+        challengeNumber: this.game.challengeNumber
+      },
+      "Starting challenge")
 
       this.mongoDB.startChallenge(this.game.gameId, this.game.challengeNumber)
     } else {
@@ -109,6 +166,25 @@ module.exports = class Client {
     }
 
     toSocket(this.game)
+  }
+
+  joinRoom(room) {
+    this.socket.join(room, (error) => {
+      if (error) {
+        this.log.error({ socketId: this.socket.id, room }, "Could not join room")
+      } else {
+        this.emitClientsInRoom(room)
+        this.socket.on("disconnect", () => this.emitClientsInRoom(room))
+        this.log.info({ socketId: this.socket.id, room }, "Client joined room")
+      }
+    })
+  }
+
+  emitClientsInRoom(room) {
+    const roomObj = this.socket.nsp.adapter.rooms[room]
+    if (roomObj) {
+      this.socket.nsp.to(room).emit("clientsInRoom", Object.keys(roomObj.sockets))
+    }
   }
 
   async findGame(gameId, toSocket) {

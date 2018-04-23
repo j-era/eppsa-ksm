@@ -1,12 +1,22 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import client from "socket.io-client"
 import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
 
 import App from "./App"
 
+let socket
 let orientation
 
 bootstrap((config, { callbacks }) => {
+  if (config.room) {
+    socket = client(config.gameServerUri, { secure: true })
+    socket.on("clientsInRoom", (clientsInRoom) =>
+      console.log(`Clients in the room: ${JSON.stringify(clientsInRoom)}`)
+    )
+    socket.on("connect", () => socket.emit("joinRoom", config.room))
+  }
+
   render(config, callbacks)
 
   window.addEventListener("message", (event) => {
@@ -22,7 +32,7 @@ function render(config, callbacks) {
     onClick={ () => callbacks.finishChallenge(config.challenge.score.reward) }
     assetServerUri={ config.assetServerUri }
     gameServerUri={ config.gameServerUri }
-    sessionLength={ config.challenge.score.sessionLength }
+    room={ config.room }
     orientation={ orientation } />,
   document.getElementById("app"))
 }

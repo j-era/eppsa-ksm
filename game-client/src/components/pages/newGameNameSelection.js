@@ -1,16 +1,11 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled from "styled-components"
+import { FramedIcon, NextButton, PageTitle, delay } from "eppsa-ksm-shared"
 
 import { updateName, startNewGame } from "../../actionCreators"
 
-import delay from "../../../node_modules/eppsa-ksm-shared/functions/delay"
-import FramedIcon from "../../../node_modules/eppsa-ksm-shared/styled-components/components/framedIcon"
-import NextButton from "../../../node_modules/eppsa-ksm-shared/styled-components/components/nextButton"
-import PageTitle from "../../../node_modules/eppsa-ksm-shared/styled-components/components/pageTitle"
-
 const Container = styled.div `
-  font-family: ${props => props.theme.font.fontFamily};
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -18,7 +13,6 @@ const Container = styled.div `
 `
 
 const Content = styled.div `
-  font-family: ${props => props.theme.font.fontFamily};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
