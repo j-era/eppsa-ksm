@@ -198,7 +198,7 @@ create(data) {
 	var SpawnTimerRow4 = this.time.addEvent( {
 		delay: 2000,
 		callback:this.spawn,
-		args: [this.waitrow4, 2000, 2000],
+		args: [this.waitrow4, this.syst.Row4Max, this.syst.Row4Min],
 		callbackScope: this,
 	})
 
@@ -246,7 +246,7 @@ create(data) {
 	this.PosY = this.syst.YPosRow1;
 	this.row1Dif = this.syst.YPosRow2;
 	this.row2Dif = this.syst.YPosRow3;
-	this.row3Dif = 350;
+	this.row3Dif = this.syst.YPosRow4;
 
 
 	for(var i = 1; i < 5; i++){
@@ -268,6 +268,7 @@ create(data) {
 		}
 
 		var Height = 'row' + i + 'Dif';
+		console.log(this[Height])
 		this.PosY = this[Height];
 	}
 	var timedEvent = this.time.addEvent({
