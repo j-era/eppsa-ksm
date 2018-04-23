@@ -1,27 +1,29 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled from "styled-components"
+import { Button, FramedIcon, NextButton, PageTitle, delay } from "eppsa-ksm-shared"
 
 import { updateGameState } from "../../actionCreators"
 import { NEW_GAME_AVATAR_SELECTION, NEW_GAME_NAME_SELECTION } from "../../gameStates"
-import Button from "../../../node_modules/eppsa-ksm-shared/styled-components/components/button"
-import FramedIcon from "../../../node_modules/eppsa-ksm-shared/styled-components/components/framedIcon"
-import NextButton from "../../../node_modules/eppsa-ksm-shared/styled-components/components/nextButton"
-import PageTitle from "../../../node_modules/eppsa-ksm-shared/styled-components/components/pageTitle"
-import delay from "../../../node_modules/eppsa-ksm-shared/functions/delay"
-
 
 const Container = styled.div `
   font-family: ${props => props.theme.font.fontFamily};
   background-color: white;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  height: 100%;
+`
+
+const Content = styled.div `
+  font-family: ${props => props.theme.font.fontFamily};
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   height: 100%;
 `
 
 const StyledFramedIcon = styled(FramedIcon)`
-  margin-top: ${props => props.theme.layout.smallSpacing};
+  margin-top: ${props => props.theme.layout.mediumSpacing};
 `
 
 const Description = styled.div`
@@ -57,18 +59,20 @@ export default class NewGameAvatarConfirmation extends React.Component {
     return (
       <Container>
         <PageTitle text={ avatar } />
-        <StyledFramedIcon icon={ `${assetServerUri}/${content.avatars[avatar].icon.src}` } />
-        <Description>{ content.avatars[avatar].description }</Description>
-        <ConfirmButton
-          visible
-          onClick={ this.confirm }
-          clicked={ this.state.nextClicked }
-          text={ content.shared.texts.toPlayerName } />
-        <BackButton
-          onClick={ this.back }
-          clicked={ this.state.backClicked }>
-          { content.shared.texts.back }
-        </BackButton>
+        <Content>
+          <StyledFramedIcon icon={ `${assetServerUri}/${content.avatars[avatar].icon.src}` } />
+          <Description>{ content.avatars[avatar].description }</Description>
+          <ConfirmButton
+            visible
+            onClick={ this.confirm }
+            clicked={ this.state.nextClicked }
+            text={ content.shared.texts.toPlayerName } />
+          <BackButton
+            onClick={ this.back }
+            clicked={ this.state.backClicked }>
+            { content.shared.texts.back }
+          </BackButton>
+        </Content>
       </Container>
     )
   }

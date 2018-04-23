@@ -3,11 +3,8 @@ import React from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
 
-import { FINISHED } from "../gameStates"
-
 import Card from "./card"
 import GameBoard from "./gameBoard"
-import GameManual from "./gameManual"
 import GameManualButton from "./gameManualButton"
 import { default as BackgroundComponent } from "./background"
 import pages from "./pages"
@@ -28,32 +25,22 @@ const Background = styled(BackgroundComponent)`
 `
 
 function Application(props) {
-  const pageData = pages[props.gameState]
-
   const enhancedProps = enhance(props)
-  const innerHeight = window.innerHeight
-  const innerWidth = window.innerWidth
-  const innerRatio = innerWidth / innerHeight
 
-  const fill = inGameSetup(props.gameState) === "true" ?
-    props.theme.colors.secondary
-    : enhancedProps.challengeData.color
+  const { render, showHeader } = getPageData(enhancedProps)
 
   return (
     <Container>
       <Header>
-        { pageData.showHeader && renderHeader(enhancedProps) }
+        { showHeader && renderHeader(enhancedProps) }
       </Header>
       <Background
-        fill={ fill }
         bannerText={ props.content.name }
-        inGameSetup={ inGameSetup(props.gameState) }>
-        <Card innerRatio={ innerRatio }>
+        inGameSetup={ inGameSetup(props.gameState) }
+        fillColor={ enhancedProps.fillColor } >
+        <Card innerRatio={ window.innerWidth / window.innerHeight }>
           <Page>
-            { props.showGameManual
-              ? <GameManual { ...props } />
-              : React.createElement(pageData.render, enhancedProps)
-            }
+            { React.createElement(render, enhancedProps) }
           </Page>
         </Card>
       </Background>
@@ -71,24 +58,28 @@ function renderHeader(props) {
 }
 
 function enhance(props) {
-  if (props.gameState === FINISHED) {
-    return props
+  if (props.content.challenges[props.challengeNumber]) {
+    const challengeTypes = props.content.challenges[props.challengeNumber].challengeTypes
+    const challengeType = Object.keys(omit(challengeTypes, "template"))[0]
+    const challengeUri = resolveChallengeWebAppUri(challengeType)
+    const challengeData = {
+      color: props.content.challenges[props.challengeNumber].color,
+      challenge: challengeTypes[challengeType],
+      shared: props.content.shared,
+      staticServerUri: props.staticServerUri,
+      assetServerUri: props.assetServerUri,
+      gameServerUri: props.gameServerUri
+    }
+
+    const fillColor = challengeData.color
+    return Object.assign({ challengeUri, challengeType, challengeData, fillColor }, props)
   }
 
-  const challengeTypes = props.content.challenges[props.challengeNumber].challengeTypes
-  const challengeType = Object.keys(omit(challengeTypes, "template"))[0]
-  const challengeUri = resolveChallengeWebAppUri(challengeType)
-  const challengeData = {
-    color: props.content.challenges[props.challengeNumber].color,
-    challenge: challengeTypes[challengeType],
-    shared: props.content.shared,
-    staticServerUri: props.staticServerUri,
-    assetServerUri: props.assetServerUri,
-    gameServerUri: props.gameServerUri,
-    room: props.challengeRoom
-  }
+  return Object.assign({ fillColor: props.theme.colors.secondary }, props)
+}
 
-  return Object.assign({ challengeUri, challengeType, challengeData }, props)
+function getPageData({ showGameManual, gameState }) {
+  return showGameManual ? pages.GAME_MANUAL : pages[gameState]
 }
 
 export default connect((state) => state)(Application)
