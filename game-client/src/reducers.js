@@ -32,7 +32,7 @@ export function avatar(state = null, action) {
   }
 }
 
-export function challengeNumber(state = 1, action) {
+export function challengeNumber(state = 0, action) {
   switch (action.type) {
     case types.UPDATE_GAME_DATA:
       return action.data.challengeNumber

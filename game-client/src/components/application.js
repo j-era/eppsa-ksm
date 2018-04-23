@@ -31,13 +31,6 @@ function Application(props) {
   const pageData = pages[props.gameState]
 
   const enhancedProps = enhance(props)
-  const innerHeight = window.innerHeight
-  const innerWidth = window.innerWidth
-  const innerRatio = innerWidth / innerHeight
-
-  const fill = inGameSetup(props.gameState) === "true" ?
-    props.theme.colors.secondary
-    : enhancedProps.challengeData.color
 
   return (
     <Container>
@@ -45,10 +38,10 @@ function Application(props) {
         { pageData.showHeader && renderHeader(enhancedProps) }
       </Header>
       <Background
-        fill={ fill }
         bannerText={ props.content.name }
-        inGameSetup={ inGameSetup(props.gameState) }>
-        <Card innerRatio={ innerRatio }>
+        inGameSetup={ inGameSetup(props.gameState) }
+        fillColor={ enhancedProps.fillColor } >
+        <Card innerRatio={ window.innerWidth / window.innerHeight }>
           <Page>
             { props.showGameManual
               ? <GameManual { ...props } />
@@ -71,23 +64,24 @@ function renderHeader(props) {
 }
 
 function enhance(props) {
-  if (props.gameState === FINISHED) {
-    return props
+  if (props.content.challenges[props.challengeNumber]) {
+    const challengeTypes = props.content.challenges[props.challengeNumber].challengeTypes
+    const challengeType = Object.keys(omit(challengeTypes, "template"))[0]
+    const challengeUri = resolveChallengeWebAppUri(challengeType)
+    const challengeData = {
+      color: props.content.challenges[props.challengeNumber].color,
+      challenge: challengeTypes[challengeType],
+      shared: props.content.shared,
+      staticServerUri: props.staticServerUri,
+      assetServerUri: props.assetServerUri,
+      gameServerUri: props.gameServerUri
+    }
+
+    const fillColor = challengeData.color
+    return Object.assign({ challengeUri, challengeType, challengeData, fillColor }, props)
   }
 
-  const challengeTypes = props.content.challenges[props.challengeNumber].challengeTypes
-  const challengeType = Object.keys(omit(challengeTypes, "template"))[0]
-  const challengeUri = resolveChallengeWebAppUri(challengeType)
-  const challengeData = {
-    color: props.content.challenges[props.challengeNumber].color,
-    challenge: challengeTypes[challengeType],
-    shared: props.content.shared,
-    staticServerUri: props.staticServerUri,
-    assetServerUri: props.assetServerUri,
-    gameServerUri: props.gameServerUri
-  }
-
-  return Object.assign({ challengeUri, challengeType, challengeData }, props)
+  return Object.assign({ fillColor: props.theme.colors.secondary }, props)
 }
 
 export default connect((state) => state)(Application)
