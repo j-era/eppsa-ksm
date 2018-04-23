@@ -1,55 +1,59 @@
 import React from "react"
+import styled from "styled-components"
 
 export default function GameBoard({ connectedGames, maxChallenges }) {
-  return (
-    <div style={ { height: "50px" } }>
-      { renderGames(connectedGames, maxChallenges) }
-      { renderStations(maxChallenges) }
-    </div>
-  )
-}
-
-function renderGames(connectedGames, maxChallenges) {
-  const stepPercent = 100 / maxChallenges
-
-  return (
-    <div style={ { height: "25px" } }>
-      { connectedGames.map((game) => renderGame(game, stepPercent)) }
-    </div>
-  )
-}
-
-function renderGame(game, stepPercent) {
-  return (
-    <div
-      key={ game.gameId }
-      style={ { position: "absolute", left: `${(game.challengeNumber - 1) * stepPercent}%` } }>
-      { game.name }
-    </div>
-  )
-}
-
-function renderStations(maxChallenges) {
-  const stepPercent = 100 / maxChallenges
-
   const stations = []
-  for (let i = 1; i <= maxChallenges; i++) {
-    stations.push(i)
+
+  // fill stations
+  for (let i = 0; i < maxChallenges; i++) {
+    stations[i] = []
   }
 
+  // sort games into stations
+  connectedGames.forEach(game => {
+    stations[game.challengeNumber - 1].push(game)
+  })
+
+
+  const Board = styled.div`
+    height: 100%;
+    width: 220vw;
+    
+    overflow: scroll;
+    
+    display: flex;
+    
+    flex-direction: row;
+  `
+
+  const Station = styled.div`
+    width: 17.5vw;
+    margin-left: 1.25vw;
+    margin-right: 1.25vw;
+  `
+
+
+  const Game = styled.div`
+    
+  `
+
   return (
-    <div style={ { height: "25px" } }>
-      { stations.map((station) => renderStation(station, stepPercent)) }
-    </div>
+    <Board>
+      {
+        stations.map((station, index) =>
+          <Station key={ index.toString() }>
+            {
+              station.map(game =>
+                <Game key={ game.gameId }>
+                  { game.name }
+                </Game>
+              )
+            }
+            { index.toString() }
+          </Station>
+        )
+      }
+    </Board>
   )
 }
 
-function renderStation(station, stepPercent) {
-  return (
-    <div
-      key={ station }
-      style={ { position: "absolute", left: `${(station - 1) * stepPercent}%` } }>
-      { station }
-    </div>
-  )
-}
