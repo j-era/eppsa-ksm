@@ -203,7 +203,9 @@ create(data) {
 	})
 
 	this.input.on('gameobjectdown', function(pointer, gameObject){
+
 		if(gameObject.eppsaInactive != undefined && gameObject.eppsaInactive == true){
+			console.log(gameObject.name)
 			return;
 		}
 
@@ -230,11 +232,11 @@ create(data) {
 
 			that.tweens.add( {
 				targets: gameObject,
-				scaleX: 0.5,
-				scaleY: 0.5,
-				ease: 'Sine.easeOut',
+				scaleX: 0.3,
+				scaleY: 0.3,
+				ease: 'Linear',
 				duration: 500,
-				repeat: 0,
+				repeat: 1,
 				yoyo: true,
 				//onComplete: function() {gameObject.input.enabled = true}
 			})
