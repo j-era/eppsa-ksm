@@ -6,7 +6,6 @@ import { FramedIcon, NextButton, PageTitle, delay } from "eppsa-ksm-shared"
 import { updateName, startNewGame } from "../../actionCreators"
 
 const Container = styled.div `
-  font-family: ${props => props.theme.font.fontFamily};
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -14,7 +13,6 @@ const Container = styled.div `
 `
 
 const Content = styled.div `
-  font-family: ${props => props.theme.font.fontFamily};
   display: flex;
   flex-direction: column;
   justify-content: space-between;

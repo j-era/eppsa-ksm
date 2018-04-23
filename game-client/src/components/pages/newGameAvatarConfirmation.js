@@ -7,7 +7,6 @@ import { updateGameState } from "../../actionCreators"
 import { NEW_GAME_AVATAR_SELECTION, NEW_GAME_NAME_SELECTION } from "../../gameStates"
 
 const Container = styled.div `
-  font-family: ${props => props.theme.font.fontFamily};
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -15,7 +14,6 @@ const Container = styled.div `
 `
 
 const Content = styled.div `
-  font-family: ${props => props.theme.font.fontFamily};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
