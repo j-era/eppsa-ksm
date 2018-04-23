@@ -8,7 +8,7 @@ let gameData;
 let gameCallbacks;
 
 bootstrap((data, callbacks) => {
-	console.log(data, callbacks);
+	//console.log(data, callbacks);
 	gameData = data.challenge;
 	gameCallbacks = callbacks.callbacks;
 	init();

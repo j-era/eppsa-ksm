@@ -45,13 +45,7 @@ class gameScene extends Phaser.Scene {
 				this.blockImages[key] = this.sys.game.gameData.pictures[key];
 				if(this.blockImages[key].direction != ""){
 					var temp = 'row' + this.blockImages[key].depth;
-					//this[temp].push(this.blockImages[key]);
 					this.imageArray[key] = this.sys.game.gameData.pictures[key]
-					//this['wait' + temp].push(key);
-					//console.log("this.waitrow4", this.waitrow4);
-					//console.log("this.row3", this.row3);
-					//console.log("temp", temp)
-					//console.log("this[temp]", this[temp])
 				}
 			}
 		}
@@ -81,8 +75,6 @@ class gameScene extends Phaser.Scene {
 
 
 		for(var blockElements in this.blockImages){
-			console.log(this.blockImages)
-			console.log(blockElements)
 			if(this.blockImages[blockElements].direction == ""){
 				var blocking = this.add.image(this.blockImages[blockElements].positionX,this.blockImages[blockElements].positionY, this.blockImages[blockElements].img).setOrigin(0,0).setName(imageKey).setInteractive();
 				if(blocking.displayWidth > this.blockMaxWidth){
@@ -121,6 +113,20 @@ class gameScene extends Phaser.Scene {
 			this.loadedImages[imageKey] = image;
 		}
 
+		var that = this;
+
+		for(var element in this.imageArray){
+			var i = 0;
+			console.log(that.loadedImages[element].type)
+			if(that.loadedImages[element].type == 1){
+
+				that.loadedImages[element].displayHeight = that.picMaxHeight * (that.imageArray[element].depth/2);
+			}
+			var temp = 'row' + that.imageArray[element].depth;
+			that[temp].push(that.loadedImages[element]);
+			this['wait' + temp].push(element);	
+		}
+
 		//this.random = Math.floor(Math.random() * this.questions.length);
 
 		/*this.TempTags = this.questions[this.random].tag.split(',');
@@ -131,18 +137,7 @@ class gameScene extends Phaser.Scene {
 
 		this.ques.setText(this.QuesText);*/
 
-		var that = this;
 
-
-
-		for(var element in this.imageArray){
-			//console.log(element);
-			var i = 0;
-			that.loadedImages[element].displayHeight = that.picMaxHeight * (that.imageArray[element].depth/2);
-			var temp = 'row' + that.imageArray[element].depth;
-			that[temp].push(that.loadedImages[element]);
-			this['wait' + temp].push(element);	
-		}
 
 		this.syst = this.sys.game.gameData;
 

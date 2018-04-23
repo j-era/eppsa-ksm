@@ -4,6 +4,10 @@ const HtmlWebPackPlugin = require("html-webpack-plugin")
 
 module.exports = {
   entry: "./src/main.js",
+  watchOptions: {
+    poll: 1000,
+    aggregateTimeout: 1000
+  },
   plugins: [
     new HtmlWebPackPlugin({
       template: "./src/index.html",
