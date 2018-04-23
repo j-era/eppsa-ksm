@@ -3,11 +3,13 @@ import Phaser from "./phaser"
 
 let gameData;
 let gameCallbacks;
+let shared;
 
 bootstrap((data, callbacks) => {
 	console.log(data, callbacks);
 	gameData = data.challenge;
 	gameCallbacks = callbacks.callbacks;
+	shared = data.shared;
 	init();
   })
 
@@ -479,7 +481,7 @@ let GraphGame = new Phaser.Class({
 	},
 
 	calculateScore: function(){
-		return gameData.rewardValue * this.countedWinEvents * gameData.gameTypeFactor;
+		return gameData.rewardValue * this.countedWinEvents * shared.config.graphFactor;
 	},
 
 	checkWaitTime: function(current, next){
