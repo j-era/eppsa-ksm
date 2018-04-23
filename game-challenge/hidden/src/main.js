@@ -32,6 +32,7 @@ var init = function(){
 	var game = new Phaser.Game(config);
 
 	game.gameData = gameData;
+	game.gameCallbacks = gameCallbacks;
 
 	game.completeChallenge = (score) => {
 		setTimeout(() => {

@@ -36,15 +36,11 @@ var init = function(){
 	//console.log(gameData);
 
 	game.gameData = gameData;
+	game.gameCallbacks = gameCallbacks;
 
 	game.completeChallenge = (score) => {
 		setTimeout(() => {
-		  gameClient.source.postMessage(
-		    {
-		      source: "challenge",
-					score,
-					id: "finish"
-		    }, gameClient.origin)
+			gameCallbacks.finishChallenge(score);
 		}, 1000)
 	}
 }

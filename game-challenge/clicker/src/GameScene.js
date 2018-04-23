@@ -69,6 +69,8 @@ class GameScene extends Phaser.Scene {
 
 		this.boatPic.setScale(boatPicScaleWidthBy, boatPicScaleHeightBy);
 
+		this.sys.game.gameCallbacks.showTimeline(this.sys.game.gameData.timer);
+		this.sys.game.gameCallbacks.startTimelineClock();
 		var timedEvent = this.time.addEvent({
 			delay: this.sys.game.gameData.timer * 1000,
 			callback: this.gameLose,
@@ -77,6 +79,7 @@ class GameScene extends Phaser.Scene {
 
 		var scope = this;
 		waterPic.on('pointerup', function(pointer){
+			scope.boatPic.x = parseInt(scope.boatPic.x);
 			scope.boatPic.x += scope.sys.game.gameData.MovementX;
 			//if(bla.boatPic.x > window.innerHeight-(window.innerHeight*0.35)){
 				if(scope.boatPic.x > scope.sys.game.gameData.EndPointX){
