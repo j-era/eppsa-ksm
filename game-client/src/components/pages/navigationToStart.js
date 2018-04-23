@@ -1,11 +1,33 @@
 import React from "react"
-import { PageTitle, StyledMarkdown } from "eppsa-ksm-shared"
+import styled from "styled-components"
+import { NextButton, PageTitle, StyledMarkdown } from "eppsa-ksm-shared"
 
-export default function NavigationToStart(props) {
+import { updateGameState } from "../../actionCreators"
+import { NEW_GAME_AVATAR_SELECTION } from "../../gameStates"
+
+const Container = styled.div `
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+`
+
+const ManualText = styled.div`
+  display: flex;
+  flex-shrink: 0.2;
+`
+
+export default function NavigationToStart({ content, dispatch }) {
   return (
-    <div>
-      <PageTitle text={ props.content.navigationToStartTitle } />
-      <StyledMarkdown>{ props.content.navigationToStartText }</StyledMarkdown>
-    </div>
+    <Container>
+      <PageTitle text={ content.navigationToStartTitle } />
+      <ManualText>
+        <StyledMarkdown>{ content.navigationToStartText }</StyledMarkdown>
+      </ManualText>
+      <NextButton
+        visible
+        onClick={ () => dispatch(updateGameState(NEW_GAME_AVATAR_SELECTION)) }
+        text="Ok" />
+    </Container>
   )
 }
