@@ -16,7 +16,7 @@ let GraphGame = new Phaser.Class({
 
 	initialize:
 
-	function SkillGameAirship(){
+	function GraphGame(){
 		Phaser.Scene.call(this, { key: 'graphGame' });
 
 		//global attributes
@@ -221,6 +221,8 @@ let GraphGame = new Phaser.Class({
 			
 		});
 		
+		gameCallbacks.showTimeline(this.timer);
+		gameCallbacks.startTimelineClock();
 		this.gameTimer = this.time.addEvent({delay: 1000 * this.timer, callback: this.onGameEnd, callbackScope: this, startAt: 0 });
 
 	},
