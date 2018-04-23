@@ -64,7 +64,7 @@ class gameScene extends Phaser.Scene {
 		this.blockMinHeight = this.picMinWidth * 0.75;
 
 		this.picMaxWidth = window.innerWidth/3;
-		this.picMaxHeight = this.picMaxWidth*0.75;
+		this.picMaxHeight = 200;
 		this.picMinWidth = window.innerWidth/4;
 		this.picMinHeight = this.picMinWidth * 0.75;
 
@@ -116,11 +116,28 @@ class gameScene extends Phaser.Scene {
 		var that = this;
 
 		for(var element in this.imageArray){
-			var i = 0;
-			console.log(that.loadedImages[element].type)
-			if(that.loadedImages[element].type == 1){
+			//var i = 0;
+			this.scale;
+			if(that.imageArray[element].type == 1){
+				if(that.loadedImages[element].displayWidth > that.picMaxWidth){
+					this.scale = (this.picMaxWidth / that.loadedImages[element].displayWidth) * that.imageArray[element].depth/2;
+					that.loadedImages[element].setScale(this.scale,this.scale);
 
-				that.loadedImages[element].displayHeight = that.picMaxHeight * (that.imageArray[element].depth/2);
+				}else if(that.loadedImages[element].displayWidth < that.PicMinWidth){
+					this.scale = (this.picMinWidth / that.loadedImages[element].displayWidth) * that.imageArray[element].depth/2
+					that.loadedImages[element].setScale(this.scale,this.scale);
+				}else {
+					if(that.loadedImages[element].displayHeight > this.PicMaxHeight){
+						this.scale = (this.picMinHeight / that.loadedImages[element].displayHeight) * that.imageArray[element].depth/2
+						that.loadedImages[element].setScale(this.scale,this.scale);
+					}else if(that.loadedImages[element].displayHeight < this.PicMinHeight){
+						this.scale = (this.picMinHeight / that.loadedImages[element].displayHeight) * that.imageArray[element].depth/2
+						that.loadedImages[element].setScale(this.scale,this.scale);
+					}else {
+					}
+				}
+
+				//that.loadedImages[element].displayHeight = that.picMaxHeight * (that.imageArray[element].depth/2);
 			}
 			var temp = 'row' + that.imageArray[element].depth;
 			that[temp].push(that.loadedImages[element]);
@@ -218,14 +235,14 @@ class gameScene extends Phaser.Scene {
 			var temp = 'row' + i;
 
 			for(var j = 0; j < that[temp].length; j++){
-				that[temp][j].displayWidth = that.picMaxWidth * (that.imageArray[that[temp][j].name].depth / 2);
+				//that[temp][j].displayWidth = that.picMaxWidth * (that.imageArray[that[temp][j].name].depth / 2);
 				that[temp][j].depth = that.imageArray[that[temp][j].name].depth;
 				if(that.imageArray[that[temp][j].name].direction == "Left"){
 					that[temp][j].x = window.innerWidth
 				}else{
 					that[temp][j].x = 0 - that[temp][j].displayWidth;
 				}
-				console.log(this.imageArray[that[temp][j].name].positionY)
+				//console.log(this.imageArray[that[temp][j].name].positionY)
 				if(this.imageArray[that[temp][j].name].positionY == ""){
 					that[temp][j].y = this.PosY;
 				}else{
