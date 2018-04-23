@@ -31,12 +31,12 @@ const Background = styled.div`
   justify-content: center;
   flex-grow: 1;
 
-  background-color: ${props => props.theme.colors.area};
+  background-color: #${props => props.fillColor};
 `
 
-const BannerContainer = styled.div`
-  visibility: ${props => props.visible === "true" ? "visible" : "hidden"};
-  display: flex;
+const BackgroundArc = styled.div`
+  background-color: #${props => props.fillColor};
+
   position: absolute;
   transform: translateY(-3vw);
   width: 100%;
