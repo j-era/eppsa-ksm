@@ -77,9 +77,7 @@ export default class NewGameNameSelection extends React.Component {
       assetServerUri,
       avatar,
       content,
-      gameServer,
-      name,
-      maxChallenges
+      name
     } = this.props
 
     return (
@@ -95,7 +93,7 @@ export default class NewGameNameSelection extends React.Component {
                 maxLength="12"
                 value={ name }
                 placeholder={ content.shared.texts.selectNamePlaceholder }
-                onChange={ this.onInput } onKeyPress={ this.onKeyPress } />
+                onChange={ this.onInput } />
             </form>
           </NameInputContainer>
           <ConfirmButton
