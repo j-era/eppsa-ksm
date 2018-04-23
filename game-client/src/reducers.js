@@ -183,7 +183,7 @@ export function mateRequests(state = new Set(), action) {
 }
 
 function includesGame(gameId, games) {
-  return games.find((game) => game.gameId === gameId)
+  return games.find((game) => game.gameId === gameId && game.inLobby)
 }
 
 export function wrongQrCodeScanned(state = false, action) {
