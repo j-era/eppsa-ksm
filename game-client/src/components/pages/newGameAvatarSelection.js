@@ -5,6 +5,7 @@ import styled from "styled-components"
 import { handleQrReaderError, updateAvatar, updateGameState } from "../../actionCreators"
 import { NEW_GAME_AVATAR_CONFIRMATION } from "../../gameStates"
 import { PageTitle } from "../../../node_modules/eppsa-ksm-shared"
+import QrReaderSeeker from "../../../node_modules/eppsa-ksm-shared/assets/EPPSA_Assets_QR-Code_Scanner.svg"
 
 
 const Container = styled.div `
@@ -23,15 +24,34 @@ const Content = styled.div `
   height: 100%;
 `
 
-const StyledQrReader = styled(ReactQrReader)`
-  width: 100px;
-  height: 100px;
+const QrReaderContainer = styled.div`
+  width: 40vw;
+  height: 40vw;
+  padding: ${props => props.theme.layout.largeSpacing};
   align-self: center;
+  background-color: ${props => props.theme.colors.secondary};
+  border-radius: ${props => props.theme.layout.cardBorderRadius};
+`
+
+const StyledQrReaderSeeker = styled(QrReaderSeeker)`
+  position: absolute;
+  z-index: 2;
+  width: 40vw;
+  height: 40vw;
+  fill: ${props => props.theme.colors.primary};
+`
+
+const StyledQrReader = styled(ReactQrReader)`
+  position: absolute;
+  transform: translate(
+    -${props => props.theme.layout.mediumSpacing},
+    -${props => props.theme.layout.mediumSpacing}
+  );
+  width: calc(40vw + ${props => props.theme.layout.mediumSpacing} * 2);
+  height: calc(40vw + ${props => props.theme.layout.mediumSpacing} * 2);
 `
 
 const Description = styled.div`
-  margin-top: ${props => props.theme.layout.smallSpacing};
-  height: calc(3em + ${props => props.theme.layout.smallSpacing} * 2);
   font-size: ${props => props.theme.font.text.size};
   font-weight: ${props => props.theme.font.text.weight};
   color: ${props => props.theme.font.text.color};
@@ -39,6 +59,7 @@ const Description = styled.div`
 `
 
 const AvatarContainer = styled.div`
+  margin-top: ${props => props.theme.layout.smallSpacing};
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -66,10 +87,13 @@ export default function NewGameAvatarSelection(props) {
               .map(avatar => renderAvatarSelector(avatar, content, dispatch, assetServerUri))
           }
         </AvatarContainer>
-        <StyledQrReader
-          onScan={ () => {} }
-          onError={ (error) => dispatch(handleQrReaderError(error)) }
-          showViewFinder={ false } />
+        <QrReaderContainer>
+          <StyledQrReaderSeeker />
+          <StyledQrReader
+            onScan={ () => {} }
+            onError={ (error) => dispatch(handleQrReaderError(error)) }
+            showViewFinder={ false } />
+        </QrReaderContainer>
         <Description>{ content.shared.texts.selectAvatarInstructions }</Description>
       </Content>
     </Container>
