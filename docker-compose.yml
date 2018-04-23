@@ -145,7 +145,7 @@ services:
     build:
       context: ./game-challenge/hidden
     environment:
-      PORT: 80
+      PORT: 443
       ASSET_SERVER_URI: https://asset-server.${HOST}
       CONTENT_SERVER_URI: https://content-server.${HOST}
       GAME_SERVER_URI: https://game-server.${HOST}
