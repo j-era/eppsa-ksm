@@ -1,17 +1,31 @@
 import React from "react"
+import styled from "styled-components"
 import { NextButton, PageTitle, StyledMarkdown } from "eppsa-ksm-shared"
 
 import { showGameManual } from "../../actionCreators"
 
+const Container = styled.div `
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`
+
+const ManualText = styled.div`
+  display: flex;
+  flex-shrink: 0.2;
+`
+
 export default function gameManual(props) {
   return (
-    <div>
+    <Container>
       <PageTitle text={ props.content.gameManualTitle } />
-      <StyledMarkdown>{ props.content.gameManualText }</StyledMarkdown>
+      <ManualText>
+        <StyledMarkdown>{ props.content.gameManualText }</StyledMarkdown>
+      </ManualText>
       <NextButton
         visible
         onClick={ () => props.dispatch(showGameManual(false)) }
         text="Ok" />
-    </div>
+    </Container>
   )
 }
