@@ -65,7 +65,7 @@ class GameScene extends Phaser.Scene {
 		});
 
 		//this.boatPic = this.add.sprite(window.innerWidth - window.innerWidth*0.85, window.innerHeight - (tempImg.source[0].width * boatPicScaleHeightBy * 5), 'boat').play('boatAnim');
-		this.boatPic = this.add.sprite(window.innerWidth - window.innerWidth*0.85, window.innerHeight/2 , 'boat').play('boatAnim').setOrigin(0,0).setDepth(5).setScale(5,5);
+		this.boatPic = this.add.sprite(this.sys.game.gameData.StartPointX, this.sys.game.gameData.StartPointY , 'boat').play('boatAnim').setOrigin(0,0).setDepth(5).setScale(5,5);
 
 		this.boatPic.setScale(boatPicScaleWidthBy, boatPicScaleHeightBy);
 
@@ -79,7 +79,7 @@ class GameScene extends Phaser.Scene {
 		waterPic.on('pointerup', function(pointer){
 			scope.boatPic.x += scope.sys.game.gameData.MovementX;
 			//if(bla.boatPic.x > window.innerHeight-(window.innerHeight*0.35)){
-				if(scope.boatPic.x > Ziel.x/* + scope.boatPic.displayWidth*/){
+				if(scope.boatPic.x > scope.sys.game.gameData.EndPointX){
 					timedEvent.paused = true;
 					var Timeleft = timedEvent.getProgress().toString().substr(0,4) * 10;
 					Timeleft = Timeleft.toFixed(1);
