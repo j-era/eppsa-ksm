@@ -42,12 +42,13 @@ function requestedMateText(state) {
   }
 }
 
-function renderMateRequest({ mateRequests, gameServer, dispatch }) {
+function renderMateRequest({ connectedGames, dispatch, gameServer, mateRequests }) {
   const mateRequest = mateRequests.values().next().value
+  const { name } = connectedGames.find(({ gameId }) => mateRequest === gameId)
 
   return (
     <div>
-      { "Jemand möchte mit dir spielen." }
+      { `${name} möchte mit dir spielen.` }
       <button onClick={ () => dispatch(rejectMateRequest(mateRequest, gameServer)) }>
         Ablehnen
       </button>
@@ -88,3 +89,4 @@ function findGamesInLobby(challengeNumber, connectedGames, gameId) {
     gameId !== game.gameId && challengeNumber === game.challengeNumber && game.inLobby
   )
 }
+
