@@ -1,15 +1,35 @@
-let gameClient;
+import client from "socket.io-client"
+import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
+import Phaser from "./phaser"
+
+let socket;
+let orientation;
 let gameData;
+let gameCallbacks;
 
-window.addEventListener("message", receiveMessage, false)
-function receiveMessage(event)
-{
-  console.log(event)
-  gameData = event.data.data.challenge;
-  gameClient = { source: event.source, origin: event.origin }
+bootstrap((config, { callbacks }) => {
+	console.log(config);
+	gameData = config.challenge;
+	gameCallbacks = callbacks;
 
-  init();
-}
+	config.room = 1;
+
+	socket = client(config.gameServerUri, { secure: true })
+    socket.on("clientsInRoom", (clientsInRoom) =>
+      console.log(`Clients in the room: ${JSON.stringify(clientsInRoom)}`)
+    )
+	socket.on("connect", () => socket.emit("joinRoom", config.room))
+
+	/*window.addEventListener("message", (event) => {
+		console.log("message received");
+		if (event.data.type === "deviceOrientation") {
+		  orientation = event.data.data
+		  console.log("orientation", orientation)
+		}
+	  }, false)*/
+	
+	init();
+  })
 
 let MatchmakingLobby = new Phaser.Class({
 	Extends: Phaser.Scene,
@@ -21,7 +41,7 @@ let MatchmakingLobby = new Phaser.Class({
 	},
 
 	preload: function(){
-		this.load.image('singleplayer', 'assets/singleplayer.jpg');
+		this.load.image('singleplayer', '/assets/singleplayer.jpg');
 	},
 
 	create: function(){
@@ -37,7 +57,7 @@ let MatchmakingLobby = new Phaser.Class({
 		//server code
 		this.connectedPlayers = {};
 		this.ownID = 0;
-		Client.askNewPlayer();
+		//Client.askNewPlayer();
 
 
 	},
@@ -124,7 +144,14 @@ let SkillGameAirship = new Phaser.Class({
 	},
 
 	preload: function(){
-		this.load.image('vehicleArrowLarge', 'assets/EPPSA_Airship_VehicleHUDlarge.png');
+		for(var key in gameData.assets){
+			if(key == "template"){
+				continue;
+			}
+			this.load.image(gameData.assets[key].name, process.env.ASSET_SERVER_URI + "/" + gameData.assets[key].image.src);
+		}
+
+		/*this.load.image('vehicleArrowLarge', './assets/EPPSA_Airship_VehicleHUDlarge.png');
 		this.load.image('vehicleArrowSmall', 'assets/EPPSA_Airship_VehicleHUDsmall.png');
 		this.load.image('windArrowLarge', 'assets/EPPSA_Airship_WindHUDlarge.png');
 		this.load.image('windArrowSmall', 'assets/EPPSA_Airship_WindHUDsmall.png');
@@ -138,7 +165,7 @@ let SkillGameAirship = new Phaser.Class({
 
 		this.load.image('cloud1', 'assets/EPPSA_Airship_Cloud1.png');
 		this.load.image('cloud2', 'assets/EPPSA_Airship_Cloud2.png');
-		this.load.image('cloud3', 'assets/EPPSA_Airship_Cloud3.png');
+		this.load.image('cloud3', 'assets/EPPSA_Airship_Cloud3.png');*/
 	}, 
 
 	create: function(data){
@@ -290,10 +317,15 @@ let SkillGameAirship = new Phaser.Class({
 			//start listening for device Orientation
 			var currentGameScene = this;
 			this.listenerFunc = function(){
-				console.log('movement detected');
-				currentGameScene.handleOrientation(event);
+				//console.log(event);
+				if (event.data.type === "deviceOrientation") {
+					orientation = event.data.data
+					console.log('movement detected');
+					currentGameScene.handleOrientation(orientation);
+				}
 			}
-			window.addEventListener("deviceorientation", this.listenerFunc, true);
+			//window.addEventListener("deviceorientation", this.listenerFunc, true);
+			window.addEventListener("message", this.listenerFunc, true);
 
 			if(this.singleplayer){
 				this.timedEvent = this.time.addEvent({ delay: 300, callback: this.onEventRotateSingleplayer, callbackScope: this, loop: true });
@@ -303,7 +335,7 @@ let SkillGameAirship = new Phaser.Class({
 	},
 
 	onGameEnd: function(){
-		window.removeEventListener("deviceorientation", this.listenerFunc, true);
+		window.removeEventListener("message", this.listenerFunc, true);
 		this.winStateCounter.remove(false);
 		this.gameStarted = false;
 
@@ -318,12 +350,13 @@ let SkillGameAirship = new Phaser.Class({
 	},
 
 	sendScore: function(score){
-		gameClient.source.postMessage(
+		gameCallbacks.finishChallenge(score)
+		/*gameClient.source.postMessage(
 			{
 			  source: "challenge",
 			  score,
 			  id: "finish"
-			}, gameClient.origin)
+			}, gameClient.origin)*/
 	},
 
 	rand: function(min, max){
@@ -350,13 +383,13 @@ let SkillGameAirship = new Phaser.Class({
 	},
 
 	onEventRotateSingleplayer: function(){
-		let mewState;
+		let newState;
 		if(this.NPCState == 'horizontal'){
 			newState = this.getRandomItem(this.npcStates, this.npcHorizontalWeight);
 		}else{
 			newState = this.getRandomItem(this.npcStates, this.npcTiltWeight);
 		}
-		console.log('newState ', newState);
+		//console.log('newState ', newState);
 		if(newState == 'horizontal'){
 			this.streamArrow.angle = 0;
 		}else{
@@ -378,7 +411,8 @@ let SkillGameAirship = new Phaser.Class({
 		let that = this;
 		//this.rotationText.setText("Rotated by " + event.gamma);
 
-		let orientationGamma = event.gamma;
+		let orientationGamma = e.gamma;
+		console.log(orientationGamma);
 	
 		//clamp value of tilt input to minTilt and maxTilt as defined in backend
 		orientationGamma = orientationGamma <= that.minTilt ? that.minTilt : orientationGamma >= that.maxTilt ? that.maxTilt : orientationGamma;
@@ -387,12 +421,10 @@ let SkillGameAirship = new Phaser.Class({
 		if(this.playingShip){
 			//clamp value of newRotation to vehicleAngle and negative vehicleAngle
 			newRotation = newRotation <= -that.vehicleAngle ? -that.vehicleAngle : newRotation >= that.vehicleAngle ? that.vehicleAngle : newRotation;
-			//TODO only inertia if player is controlling Airship
 			let orientatationEvent = that.time.addEvent({delay: that.inertia * 1000, callback: that.rotateArrow, args: [that.vehicleArrow, newRotation], callbackScope: that});
 		}else{
 			//clamp value of newRotation to streamRange and negative streamRange
 			newRotation = newRotation <= -that.streamRange ? -that.streamRange : newRotation >= that.streamRange ? that.streamRange : newRotation;
-			//TODO only inertia if player is controlling Airship
 			let orientatationEvent = that.time.addEvent({delay: 0, callback: that.rotateArrow, args: [that.streamArrow, newRotation], callbackScope: that});
 		}
 		
@@ -400,8 +432,8 @@ let SkillGameAirship = new Phaser.Class({
 
 	rotateArrow: function(arrow, newRotation){
 		arrow.angle = newRotation;
-		console.log('rotating arrow');
-		Client.ArrowChange({'rotation': newRotation, 'sender': this.ownID, 'listener': this.opponentID});
+		console.log('rotating arrow', arrow, newRotation);
+		//Client.ArrowChange({'rotation': newRotation, 'sender': this.ownID, 'listener': this.opponentID});
 	},
 
 	checkIfWinState: function(){
