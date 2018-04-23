@@ -49,6 +49,8 @@ const StyledQrReader = styled(ReactQrReader)`
   );
   width: calc(40vw + ${props => props.theme.layout.mediumSpacing} * 2);
   height: calc(40vw + ${props => props.theme.layout.mediumSpacing} * 2);
+  border-radius: ${props => props.theme.layout.cardBorderRadius};
+  overflow: hidden;
 `
 
 const Description = styled.div`
