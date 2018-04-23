@@ -273,6 +273,9 @@ create(data) {
 		console.log(this[Height])
 		this.PosY = this[Height];
 	}
+
+	this.sys.game.gameCallbacks.showTimeline(this.sys.game.gameData.timer);
+	this.sys.game.gameCallbacks.startTimelineClock();
 	var timedEvent = this.time.addEvent({
 		delay: this.sys.game.gameData.timer * 1000,
 		callback: this.gameWin,
@@ -282,8 +285,6 @@ create(data) {
 gameWin() {
 	this.scene.start('WinScene', { t: this.correct})
 }
-
-
 
 spawn(waitrow, max, min) {
 	if(waitrow.length == 0){
