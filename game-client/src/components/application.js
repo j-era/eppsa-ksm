@@ -17,14 +17,15 @@ const appRatio = 80
 
 const Container = styled.div`
   background-color: white;
+  height: 100%;
 `
 
 const Header = styled.div`
-  height: ${100 - appRatio}vh;
+  height: ${100 - appRatio}%;
 `
 
 const Background = styled(BackgroundComponent)`
-  height: ${appRatio}vh;
+  height: ${appRatio}%;
 `
 
 function Application(props) {

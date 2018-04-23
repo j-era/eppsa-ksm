@@ -47,6 +47,7 @@
     "webpack-cli": "^2.0.10"
   },
   "devDependencies": {
+    "babel-plugin-styled-components": "^1.5.1",
     "webpack-dev-server": "^3.1.0"
   }
 }
