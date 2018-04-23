@@ -24,6 +24,7 @@ module.exports = class Client {
     this.socket.on("joinChallengeLobby", this.joinChallengeLobby.bind(this))
     this.socket.on("leaveChallengeLobby", this.leaveChallengeLobby.bind(this))
     this.socket.on("sendDirectMessage", this.sendDirectMessage.bind(this))
+    this.socket.on("joinRoom", this.joinRoom.bind(this))
     this.socket.on("disconnect", this.onDisconnect.bind(this))
     this.socket.conn.on("packet", this.onPacket.bind(this))
   }
@@ -165,6 +166,25 @@ module.exports = class Client {
     }
 
     toSocket(this.game)
+  }
+
+  joinRoom(room) {
+    this.socket.join(room, (error) => {
+      if (error) {
+        this.log.error({ socketId: this.socket.id, room }, "Could not join room")
+      } else {
+        this.emitClientsInRoom(room)
+        this.socket.on("disconnect", () => this.emitClientsInRoom(room))
+        this.log.info({ socketId: this.socket.id, room }, "Client joined room")
+      }
+    })
+  }
+
+  emitClientsInRoom(room) {
+    const roomObj = this.socket.nsp.adapter.rooms[room]
+    if (roomObj) {
+      this.socket.nsp.to(room).emit("clientsInRoom", Object.keys(roomObj.sockets))
+    }
   }
 
   async findGame(gameId, toSocket) {

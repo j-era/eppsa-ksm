@@ -17,18 +17,6 @@ mongoDB.connect().then(async () => {
   server.on("connect", socket => {
     const client = new Client(socket, mongoDB, LOG)
     client.subscribe()
-
-    socket.on("joinRoom", room => {
-      socket.join(room, (error) => {
-        if (error) {
-          LOG.error({ socketId: socket.id, room }, "Could not join room")
-        } else {
-          emitClientsInRoom(server, room)
-          socket.on("disconnect", () => emitClientsInRoom(server, room))
-          LOG.info({ socketId: socket.id, room }, "Client joined room")
-        }
-      })
-    })
   })
 
   // forward database update event to all clients
@@ -42,10 +30,3 @@ mongoDB.connect().then(async () => {
     server.emit("highscoreGames", highscoreGames)
   )
 }).catch((error) => LOG.error(error))
-
-function emitClientsInRoom(server, room) {
-  const roomObj = server.nsps["/"].adapter.rooms[room]
-  if (roomObj) {
-    server.to(room).emit("clientsInRoom", Object.keys(roomObj.sockets))
-  }
-}
