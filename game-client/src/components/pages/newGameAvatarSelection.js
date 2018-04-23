@@ -8,8 +8,9 @@ export default function NewGameAvatarSelection(props) {
 
   return (
     <div>
-      <div>Wähle einen Avatar</div>
+      <div>{ content.shared.texts.selectAvatar }</div>
       { Object.keys(content.avatars).map(avatar => renderAvatarSelector(avatar, dispatch)) }
+      <div>{ content.shared.texts.selectAvatarInstructions }</div>
     </div>
   )
 }
