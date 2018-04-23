@@ -88,18 +88,21 @@ export default class NewGameNameSelection extends React.Component {
         <Content>
           <StyledFramedIcon icon={ `${assetServerUri}/${content.avatars[avatar].icon.src}` } />
           <NameInputContainer>
-            <NameInput
-              type="text"
-              maxLength="12"
-              value={ name }
-              placeholder={ content.shared.texts.selectNamePlaceholder }
-              onChange={ this.onInput } />
+            <form onSubmit={ this.onSubmit }>
+              <NameInput
+                required
+                type="text"
+                maxLength="12"
+                value={ name }
+                placeholder={ content.shared.texts.selectNamePlaceholder }
+                onChange={ this.onInput } onKeyPress={ this.onKeyPress } />
+            </form>
           </NameInputContainer>
           <ConfirmButton
             visible
             active={ this.state.nameEntered }
             onClick={ this.state.nameEntered
-              ? () => this.confirm(name, avatar, maxChallenges, gameServer)
+              ? () => this.confirm()
               : () => {}
             }
             clicked={ this.state.confirmed }
@@ -123,7 +126,19 @@ export default class NewGameNameSelection extends React.Component {
     this.props.dispatch(updateName(event.target.value))
   }
 
-  async confirm(name, avatar, maxChallenges, gameServer) {
+  onSubmit(event) {
+    event.preventDefault()
+    this.confirm()
+  }
+
+  async confirm() {
+    const {
+      name,
+      avatar,
+      gameServer,
+      maxChallenges
+    } = this.props
+
     this.setState({ confirmed: true })
     await delay(100)
     this.props.dispatch(startNewGame(name, avatar, maxChallenges, gameServer))
