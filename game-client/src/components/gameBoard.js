@@ -1,7 +1,15 @@
 import React from "react"
 import styled from "styled-components"
 
-export default function GameBoard({ connectedGames, maxChallenges }) {
+export default function GameBoard(
+  {
+    connectedGames,
+    maxChallenges,
+    resumableGame,
+    challengeNumber,
+    assetServerUri,
+    content
+  }) {
   const stations = []
 
   // fill stations
@@ -16,7 +24,7 @@ export default function GameBoard({ connectedGames, maxChallenges }) {
 
 
   const Board = styled.div`
-    height: 100%;
+    height: 40%;
     width: 220vw;
     
     overflow: scroll;
@@ -24,33 +32,70 @@ export default function GameBoard({ connectedGames, maxChallenges }) {
     display: flex;
     
     flex-direction: row;
+    
+    ${() => {
+    if (resumableGame) {
+      return `transform: translate(${40 - 20 * (challengeNumber - 1)}vw);`
+    }
+  }}}
   `
 
-  const Station = styled.div`
+  const Area = styled.div`
     width: 17.5vw;
     margin-left: 1.25vw;
     margin-right: 1.25vw;
   `
 
-
-  const Game = styled.div`
+  const Avatars = styled.div`
+    width: 100%;
+    height: 100%;
     
+    display: flex;
+    
+    flex-direction: row;
+    justify-content: space-evenly;
+  `
+
+  const Avatar = styled.img`
+    max-width: 10vw;
+    width: auto;
+  `
+
+  const OwnAvatar = styled.img`
+    max-width: 10vw;
+    width: auto;
+  `
+
+  const Field = styled.div`
+    position: relative;
+    z-index: -1;
+    bottom: 50%;
+    background-color: #${props => props.fill};
+    width: 100%;
+    height: 50%;
+    border-radius: 50%;
   `
 
   return (
     <Board>
       {
         stations.map((station, index) =>
-          <Station key={ index.toString() }>
-            {
-              station.map(game =>
-                <Game key={ game.gameId }>
-                  { game.name }
-                </Game>
-              )
-            }
-            { index.toString() }
-          </Station>
+          <Area key={ index.toString() }>
+            <Avatars>
+              {
+                station.map(game => game.gameId === resumableGame.gameId ?
+                  <OwnAvatar
+                    key={ game.gameId }
+                    src={ `${assetServerUri}/${content.avatars[game.avatar].icon.src}` } />
+                  :
+                  <Avatar
+                    key={ game.gameId }
+                    src={ `${assetServerUri}/${content.avatars[game.avatar].icon.src}` } />
+                )
+              }
+            </Avatars>
+            <Field fill={ content.challenges[index + 1].color } />
+          </Area>
         )
       }
     </Board>
