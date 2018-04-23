@@ -6,11 +6,13 @@ import Phaser from "./phaser";
 
 let gameData;
 let gameCallbacks;
+let shared;
 
 bootstrap((data, callbacks) => {
 	//console.log(data, callbacks);
 	gameData = data.challenge;
 	gameCallbacks = callbacks.callbacks;
+	shared = data.shared;
 	init();
   })
 
@@ -33,6 +35,7 @@ var init = function(){
 
 	game.gameData = gameData;
 	game.gameCallbacks = gameCallbacks;
+	game.shared = shared;
 
 	game.completeChallenge = (score) => {
 		setTimeout(() => {

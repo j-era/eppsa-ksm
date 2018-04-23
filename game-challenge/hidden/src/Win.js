@@ -21,7 +21,9 @@ class Win extends Phaser.Scene {
 
 		var text1 = this.add.text(x, y, 'You earn ' + data.t + ' point(s)', { font: fontSize + 'px Arial', fill: 'green'});
 
-		this.sys.game.completeChallenge(400)
+		this.points = data.t * this.sys.game.gameData.rewardValue * this.sys.game.shared.config.hiddenFactor;
+
+		this.sys.game.completeChallenge(this.points);
 	}
 }
 
