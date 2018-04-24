@@ -1,9 +1,6 @@
 import React from "react"
 import styled, { css, withTheme } from "styled-components"
-import Button from "../../lib/eppsa-ksm-shared/styled-components/components/button"
-import clickEffect from "../../lib/eppsa-ksm-shared/styled-components/animations/clickEffect"
-import pulse from "../../lib/eppsa-ksm-shared/styled-components/animations/pulse"
-
+import { Button, clickEffect, pulse } from "eppsa-ksm-shared"
 
 const StyledButton = styled(Button)`
   align-self: stretch;

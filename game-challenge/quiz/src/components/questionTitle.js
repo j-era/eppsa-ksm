@@ -1,6 +1,5 @@
 import styled from "styled-components"
 
-
 export default styled.div`
   font-size: ${props => props.theme.font.text.size};
   font-weight: ${props => props.theme.font.text.weight};
