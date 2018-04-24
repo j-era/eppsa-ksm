@@ -51,10 +51,21 @@ export function challengeNumber(state = 0, action) {
   }
 }
 
-export function challengeRoom(state = null, action) {
+export function challengeData(state = null, action) {
   switch (action.type) {
+    case types.SET_CHALLENGE_TYPE:
+      return action.challengeData
     case types.SET_CHALLENGE_ROOM:
-      return action.room
+      return Object.assign({ room: action.room }, state)
+    default:
+      return state
+  }
+}
+
+export function challengeUri(state = null, action) {
+  switch (action.type) {
+    case types.SET_CHALLENGE_TYPE:
+      return action.challengeUri
     default:
       return state
   }
