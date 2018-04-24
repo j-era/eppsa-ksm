@@ -4,9 +4,9 @@ import styled, { ThemeProvider, withTheme } from "styled-components"
 import cloneDeep from "lodash.clonedeep"
 
 import Card from "./card"
-import GameBoard from "./gameBoard"
 import GameManualButton from "./gameManualButton"
 import { default as Background } from "./background"
+import Header from "./header"
 import pages from "./pages"
 
 const Container = styled.div`
@@ -21,6 +21,12 @@ const Header = styled.div`
   overflow: scroll;
 `
 
+const Background = styled(BackgroundComponent)`
+  height: ${appRatio}%;
+`
+
+const innerRatio = window.innerWidth / window.innerHeight
+
 function Application(props) {
   const { content, gameState, winWidth, winHeight } = props
   const { render, showHeader } = getPageData(props)
@@ -30,7 +36,8 @@ function Application(props) {
     <ThemeProvider
       theme={ (theme) => updateTheme(theme, winWidth, winHeight, challenge, showHeader) }>
       <Container>
-        { showHeader && renderHeader(props) }
+      { showHeader && <Header
+        props={ props } /> }
         <Background
           bannerText={ content.name }
           inGameSetup={ inGameSetup(gameState) } >
@@ -41,36 +48,6 @@ function Application(props) {
       </Container>
     </ThemeProvider>
   )
-}
-
-function renderHeader(props) {
-  return (
-    <Header
-      onScroll={ handleScroll } >
-      <GameBoard { ...props } />
-      { !props.showGameManual && <GameManualButton { ...props } /> }
-    </Header>
-  )
-}
-
-let scrollbackTimout
-
-function handleScroll(event) {
-  event.persist()
-  const persistedEvent = event
-
-  if (scrollbackTimout) {
-    clearInterval(scrollbackTimout)
-  }
-
-  scrollbackTimout = setTimeout(() => {
-    const scrollIntervall = setInterval(() => {
-      persistedEvent.target.scrollLeft > 0 ?
-        persistedEvent.target.scrollLeft -= 10
-        :
-        clearInterval(scrollIntervall)
-    }, 10)
-  }, 2000)
 }
 
 function enhance(props) {
