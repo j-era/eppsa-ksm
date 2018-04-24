@@ -47,29 +47,6 @@ services:
       - ./game-challenge/button:/app
       - /app/node_modules
 
-  game-challenge-hunt-client:
-    build:
-      dockerfile: Dockerfile.development
-    volumes:
-      - ./game-challenge/hunt/eppsa-mobile-game-client:/app
-      - /app/node_modules
-    environment:
-      WS_SERVER_PATH: /server
-
-  game-challenge-hunt-server:
-    build:
-      dockerfile: Dockerfile.development
-    volumes:
-      - ./game-challenge/hunt/eppsa-mobile-game-server:/app
-      - /app/node_modules
-
-  game-challenge-phaser-demo:
-    build:
-      dockerfile: Dockerfile.development
-    volumes:
-      - ./game-challenge/phaser-demo:/app
-      - /app/node_modules
-
   game-challenge-quiz:
     build:
       dockerfile: Dockerfile.development

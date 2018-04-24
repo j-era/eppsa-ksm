@@ -77,11 +77,11 @@ services:
       - asset-server
       - game-server
       - game-challenge-button
-      - game-challenge-hunt-client
-      - game-challenge-hunt-server
-      - game-challenge-phaser-demo
       - game-challenge-quiz
       - game-challenge-clicker
+      - game-challenge-hidden
+      - game-challenge-skill
+      - game-challenge-graph
 
   game-server:
     build:
@@ -96,24 +96,6 @@ services:
       context: ./game-challenge/button
     environment:
       PORT: 443
-
-  game-challenge-hunt-client:
-    build:
-      context: ./game-challenge/hunt/eppsa-mobile-game-client
-    environment:
-      PORT: 80
-
-  game-challenge-hunt-server:
-    build:
-      context: ./game-challenge/hunt/eppsa-mobile-game-server
-    environment:
-      PORT: 80
-
-  game-challenge-phaser-demo:
-    build:
-      context: ./game-challenge/phaser-demo
-    environment:
-      PORT: 80
 
   game-challenge-quiz:
     build:
