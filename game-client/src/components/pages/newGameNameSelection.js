@@ -84,7 +84,10 @@ export default class NewGameNameSelection extends React.Component {
       <Container>
         <PageTitle text={ content.shared.texts.selectName } />
         <Content>
-          <StyledFramedIcon icon={ `${assetServerUri}/${content.avatars[avatar].medium.src}` } />
+          <StyledFramedIcon
+            iconSrc={ `${assetServerUri}/${content.avatars[avatar].small.src}` }
+            iconSrcSet={ `${assetServerUri}/${content.avatars[avatar].medium.src} 500w,
+                          ${assetServerUri}/${content.avatars[avatar].large.src} 1000w` } />
           <NameInputContainer>
             <form onSubmit={ this.onSubmit }>
               <NameInput

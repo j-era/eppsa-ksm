@@ -36,9 +36,6 @@ const AvatarContainer = styled.div`
 const Avatar = styled.div`
   width: 20%;
   height: 23vw;
-  background-image: url(${props => props.icon});
-  background-position-x: center;
-  background-size: auto 100%;
 `
 
 export default function NewGameAvatarSelection(props) {
@@ -72,6 +69,11 @@ function renderAvatarSelector(avatar, content, dispatch, assetServerUri) {
       onClick={ () => {
         dispatch(updateAvatar(avatar))
         dispatch(updateGameState(NEW_GAME_AVATAR_CONFIRMATION))
-      } } />
+      } }>
+      <img
+        height="100%" src={ `${assetServerUri}/${content.avatars[avatar].small.src}` }
+        srcSet={ `${assetServerUri}/${content.avatars[avatar].medium.src} 500w,
+                  ${assetServerUri}/${content.avatars[avatar].large.src} 1000w` } />
+    </Avatar>
   )
 }
