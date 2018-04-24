@@ -8,6 +8,14 @@ let gameData;
 let gameCallbacks;
 let shared;
 
+let room;
+let ownID;
+let otherID;
+let playing;
+let readyCount = 0;
+let score = 0;
+let scoreCount = 0;
+
 let singleplayer = false;
 
 bootstrap((config, { callbacks }) => {
@@ -15,19 +23,52 @@ bootstrap((config, { callbacks }) => {
 	gameData = config.challenge;
 	gameCallbacks = callbacks;
 	shared = config.shared;
+	room = config.room;
 
-	//config.room = 1;
 	if(config.room && config.room != null){
 		socket = client(config.gameServerUri, { secure: true })
 		socket.on("clientsInRoom", (clientsInRoom) =>
-		  console.log(`Clients in the room: ${JSON.stringify(clientsInRoom)}`)
+		  {
+			console.log(`Clients in the room: ${JSON.stringify(clientsInRoom)}`);
+			clientsInRoom.forEach(function(element){
+				if(element != ownID){
+					otherID = element;
+				}
+			});
+			otherID < ownID ? playing = "ship" : "wind";
+			if(otherID != undefined && ownID != undefined){
+				init();
+			}
+		  }
 		)
-		socket.on("connect", () => socket.emit("joinRoom", config.room))
+		socket.on("connect", () => {
+			socket.emit("joinRoom", config.room);
+			ownID = socket.id;
+		});
+
+		socket.on("sendToRoom", (sender, params) =>{
+			console.log(params);
+			if(params == "ready"){
+				readyCount ++;
+				if(readyCount == 2){
+					game.scene.scenes[0].startMultiplayerGame();
+				}
+			}
+			if(sender != ownID && params.rotation){
+				game.scene.scenes[0].moveOpponentArrow(params.rotation);
+			}
+			if(params.score){
+				scoreCount ++;
+				params.score > score ? score = params.score : score = score;
+				if(scoreCount == 2){
+					game.scene.scenes[0].sendScore(score);
+				}
+			}
+		})
 	}else{
 		singleplayer = true;
+		init();
 	}
-
-	init();
   });
 
 
@@ -45,6 +86,7 @@ let SkillGameAirship = new Phaser.Class({
 		this.minTilt = gameData.minTilt;		//Define the threshold of the range in which the tilt input will have effect on the game controls.
 		this.maxTilt = gameData.maxTilt;			//Define the threshold of the range in which the tilt input will have effect on the game controls.
 		this.sensitivity = gameData.sensitivity;		//Value to influence the ratio which translates tilt angle of mobile device to rotation angle of game object.
+		this.baseSensitivity = this.sensitivity;
 
 		this.vehicleAngle = gameData.vehicleAngle;	//Defines the max. angle in which Player A can steer the ship left or right.
 		this.inertia = gameData.inertia;		//0.x Factor that delays the execution of the vehicle's controls, to simulate its inertia.
@@ -157,13 +199,13 @@ let SkillGameAirship = new Phaser.Class({
 			this.countdownTimer = this.time.addEvent({delay: 1000, callback: this.countdownFunc, callbackScope: this, repeat: this.countdown});
 		}else{
 			//server code
-			console.log('starting a new game with ', data);
-			this.ownID = data.own;
-			this.opponentID = data.match;
+			console.log('starting a new game with ', otherID);
+			this.ownID = ownID;
+			this.opponentID = otherID;
 
-			console.log("This player is playing as " + data.playing);
+			console.log("This player is playing as " + playing);
 
-			if(data.playing == 'ship'){
+			if(playing == 'ship'){
 				this.playingShip = true;
 				this.windImage = this.add.image(this.width, this.height/2, 'wind').setOrigin(1,1);
 				this.windImage.setScale(this.width/this.windImage.width, this.width/this.windImage.width);
@@ -190,12 +232,16 @@ let SkillGameAirship = new Phaser.Class({
 				this.windDirectionLeft = this.add.image(this.width/4, this.height-this.height/6, 'windDirection').setScale(0.2);
 				this.windDirectionRight = this.add.image(3 * this.width/4, this.height-this.height/3, 'windDirection').setScale(0.2);
 			}
-
-			Client.readyToPlay({'own' : this.ownID, 'other': this.opponentID});
+			/*if(ownID != undefined && otherID != undefined){
+				this.startMultiplayerGame();
+			}*/
+			socket.emit("sendToRoom", "sendToRoom", room, "ready");
 		}
 
 		this.pointHUD = this.add.image(this.width/2, this.height, 'pointHUD').setOrigin(0.5, 1).setScale(0.2);
 		this.scoreText = this.add.text(this.width/2, this.height, "0 Punkte", {font: '16px Cabin', fill: '#ffffff'}).setOrigin(0.5, 1);
+
+		
 		
 	},
 
@@ -215,15 +261,14 @@ let SkillGameAirship = new Phaser.Class({
 
 			if(!this.lastTimeInWinState && this.currentlyInWinState ){
 				console.log("starting Winning counter");
-				//this.rotationText.setStyle({color: '#ff00ff', fontSize: '50px'});
 				this.winStateCounter = this.time.addEvent({delay: 1000, callback: this.increaseWinStateTime, callbackScope: this, loop: true});
 			}
 
 			if(this.lastTimeInWinState && !this.currentlyInWinState){
 				console.log("stopping Winning counter");
-				//this.rotationText.setStyle({color: '#ff0000', fontSize: '20px'});
 				this.winStateCounter.remove(false);
 				this.currentTimeInWinState = 0;
+				this.sensitivity = this.baseSensitivity;
 			}		
 		}
 	},
@@ -234,7 +279,6 @@ let SkillGameAirship = new Phaser.Class({
 
 	increaseWinStateTime: function(){
 		console.log('increasing win state time');
-		console.log("Hey");
 		this.scoreText.setText(this.calculateScore() + " Punkte");
 		this.timeInWinState ++;
 		this.currentTimeInWinState ++;
@@ -248,20 +292,19 @@ let SkillGameAirship = new Phaser.Class({
 		}
 		else{
 			this.countdownText.destroy();
+			gameCallbacks.showTimeline(this.timer);
+			gameCallbacks.startTimelineClock();
 			this.gameTimer = this.time.addEvent({delay: 1000 * this.timer, callback: this.onGameEnd, callbackScope: this, startAt: 0 });
 			this.gameStarted = true;
 
 			//start listening for device Orientation
 			var currentGameScene = this;
 			this.listenerFunc = function(){
-				//console.log(event);
 				if (event.data.type === "deviceOrientation") {
 					orientation = event.data.data
-					console.log('movement detected');
 					currentGameScene.handleOrientation(orientation);
 				}
 			}
-			//window.addEventListener("deviceorientation", this.listenerFunc, true);
 			window.addEventListener("message", this.listenerFunc, true);
 
 			if(this.singleplayer){
@@ -276,24 +319,17 @@ let SkillGameAirship = new Phaser.Class({
 		this.winStateCounter.remove(false);
 		this.gameStarted = false;
 
-		//this.rotationText.setText("Game Ended, \n time in winning State " + this.timeInWinState);
-		let score = this.timeInWinState * 100;
+		let score = this.calculateScore();
 
 		if(this.singleplayer){
 			this.sendScore(this.calculateScore());
 		}else{
-			Client.FinalScore({'own' : this.ownID, 'other': this.opponentID, 'score': score});
+			socket.emit("sendToRoom", "sendToRoom",room, {'score': score});
 		}
 	},
 
 	sendScore: function(score){
 		gameCallbacks.finishChallenge(score)
-		/*gameClient.source.postMessage(
-			{
-			  source: "challenge",
-			  score,
-			  id: "finish"
-			}, gameClient.origin)*/
 	},
 
 	rand: function(min, max){
@@ -307,7 +343,6 @@ let SkillGameAirship = new Phaser.Class({
 		 
 		var random_num = this.rand(0, total_weight);
 		var weight_sum = 0;
-		//console.log(random_num)
 		 
 		for (var i = 0; i < list.length; i++) {
 			weight_sum += weight[i];
@@ -326,14 +361,11 @@ let SkillGameAirship = new Phaser.Class({
 		}else{
 			newState = this.getRandomItem(this.npcStates, this.npcTiltWeight);
 		}
-		//console.log('newState ', newState);
 		if(newState == 'horizontal'){
 			this.streamArrow.angle = 0;
 		}else{
 			this.streamArrow.angle = this.rand(-this.streamRange, this.streamRange);
 		}
-
-		//this.streamArrow.angle = Math.random() * (15 - (-14)) + (-15);
 	},
 
 	moveOpponentArrow: function(data){
@@ -369,12 +401,11 @@ let SkillGameAirship = new Phaser.Class({
 
 	rotateArrow: function(arrow, newRotation){
 		arrow.angle = newRotation;
-		console.log('rotating arrow', arrow, newRotation);
-		//Client.ArrowChange({'rotation': newRotation, 'sender': this.ownID, 'listener': this.opponentID});
+		//console.log('rotating arrow', arrow, newRotation);
+		socket.emit("sendToRoom", "sendToRoom",room, {'rotation': newRotation});
 	},
 
 	checkIfWinState: function(){
-		//if gameScene.vehicleArrow.angle within VehicleWinAngle && gameScene.streamArrow.angle within StreamWinAngle 
 		if(this.checkIfWithinAngle(this.vehicleArrow.angle, this.vehicleWinAngle) && this.checkIfWithinAngle (this.streamArrow.angle, this.streamWinAngle) ){
 			return true;
 		}
@@ -416,7 +447,6 @@ let config = {
 let game;  
 
   let init = function(){
-	// create the game, and pass it the configuration
 	game = new Phaser.Game(config);
   }
   
