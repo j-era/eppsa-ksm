@@ -2,7 +2,7 @@ import React from "react"
 import ReactQrReader from "react-qr-reader"
 import styled from "styled-components"
 
-import { handleQrReaderError, updateAvatar, updateGameState } from "../../actionCreators"
+import { handleQrReaderError, handleAvatarQrCode, updateAvatar, updateGameState } from "../../actionCreators"
 import { NEW_GAME_AVATAR_CONFIRMATION } from "../../gameStates"
 import { PageTitle } from "../../../node_modules/eppsa-ksm-shared"
 import QrReaderSeeker from "../../../node_modules/eppsa-ksm-shared/assets/EPPSA_Assets_QR-Code_Scanner.svg"
@@ -92,7 +92,7 @@ export default function NewGameAvatarSelection(props) {
         <QrReaderContainer>
           <StyledQrReaderSeeker />
           <StyledQrReader
-            onScan={ () => {} }
+            onScan={ data => dispatch(handleAvatarQrCode(data)) }
             onError={ (error) => dispatch(handleQrReaderError(error)) }
             showViewFinder={ false } />
         </QrReaderContainer>

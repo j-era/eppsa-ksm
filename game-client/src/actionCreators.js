@@ -1,3 +1,5 @@
+import querystring from "querystring"
+
 import { setCookie } from "./cookie"
 import * as gameStates from "./gameStates"
 import * as types from "./actionTypes"
@@ -274,6 +276,23 @@ export function handleChallengeQrCode(data, challenge) {
         dispatch({ type: types.WRONG_QR_CODE_SCANNED })
         dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_AREA))
       }
+    }
+  }
+}
+
+export function handleAvatarQrCode(data) {
+  return dispatch => {
+    if (data != null) {
+      const url = new URL(data)
+      const params = querystring.parse(url.search.substring(1))
+      if (params.avatar != null) {
+        dispatch(updateAvatar(params.avatar))
+        dispatch(updateGameState(gameStates.NEW_GAME_NAME_SELECTION))
+      } else {
+        dispatch({ type: types.WRONG_QR_CODE_SCANNED })
+      }
+    } else {
+      dispatch({ type: types.HANDLE_QR_READER_ERROR })
     }
   }
 }
