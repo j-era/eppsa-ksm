@@ -4,7 +4,7 @@ import {
   NEW_GAME_AVATAR_CONFIRMATION,
   NEW_GAME_NAME_SELECTION,
   NAVIGATION_TO_START,
-  NAVIGATION_TO_NEXT_CHALLENGE,
+  NAVIGATION_TO_NEXT_AREA,
   QR_READER,
   CHALLENGE_MODE_SELECTION,
   CHALLENGE_LOBBY,
@@ -18,7 +18,7 @@ import NewGameAvatarSelection from "./newGameAvatarSelection"
 import NewGameAvatarConfirmation from "./newGameAvatarConfirmation"
 import NewGameNameSelection from "./newGameNameSelection"
 import NavigationToStart from "./navigationToStart"
-import NavigationToNextChallenge from "./navigationToNextChallenge"
+import NavigationToNextArea from "./navigationToNextArea"
 import QrReader from "./qrReader"
 import ChallengeModeSelection from "./challengeModeSelection"
 import ChallengeLobby from "./challengeLobby"
@@ -33,7 +33,7 @@ export default {
   [NEW_GAME_AVATAR_CONFIRMATION]: { render: NewGameAvatarConfirmation, showHeader: false },
   [NEW_GAME_NAME_SELECTION]: { render: NewGameNameSelection, showHeader: false },
   [NAVIGATION_TO_START]: { render: NavigationToStart, showHeader: false },
-  [NAVIGATION_TO_NEXT_CHALLENGE]: { render: NavigationToNextChallenge, showHeader: true },
+  [NAVIGATION_TO_NEXT_AREA]: { render: NavigationToNextArea, showHeader: true },
   [QR_READER]: { render: QrReader, showHeader: true },
   [CHALLENGE_MODE_SELECTION]: { render: ChallengeModeSelection, showHeader: true },
   [CHALLENGE_LOBBY]: { render: ChallengeLobby, showHeader: true },

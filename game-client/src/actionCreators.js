@@ -8,7 +8,7 @@ export function resumeGame(gameId, gameServer) {
   return async (dispatch) => {
     const data = await gameServer.resumeGame(gameId)
     dispatch(updateGameData(data))
-    dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_CHALLENGE))
+    dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_AREA))
     gameServer.setHandshakeQuery({ gameId })
   }
 }
@@ -27,7 +27,7 @@ export function startNewGame(name, avatar, maxChallenges, gameServer) {
   return async (dispatch) => {
     const data = await gameServer.startGame(name, avatar, maxChallenges)
     dispatch(updateGameData(data))
-    dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_CHALLENGE))
+    dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_AREA))
     dispatch(showGameManual(true))
 
     setCookie("gameId", data.gameId)
@@ -50,7 +50,7 @@ export function finishChallenge(challengeData, gameServer) {
     if (data.finished) {
       dispatch(updateGameState(gameStates.FINISHED))
     } else {
-      dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_CHALLENGE))
+      dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_AREA))
     }
 
     dispatch(updateGameData(data))
@@ -232,7 +232,7 @@ export function handleChallengeQrCode(data, challenge) {
         }
       } else {
         dispatch({ type: types.WRONG_QR_CODE_SCANNED })
-        dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_CHALLENGE))
+        dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_AREA))
       }
     }
   }
