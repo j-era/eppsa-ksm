@@ -31,11 +31,11 @@ const Background = styled.div`
   justify-content: center;
   flex-grow: 1;
 
-  background-color: #${props => props.fillColor};
+  background-color: ${props => props.fillColor};
 `
 
 const BackgroundArc = styled.div`
-  background-color: #${props => props.fillColor};
+  background-color: ${props => props.fillColor};
 
   position: absolute;
   transform: translateY(-3vw);

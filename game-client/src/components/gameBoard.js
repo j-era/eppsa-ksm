@@ -59,7 +59,7 @@ export default function GameBoard(
     position: absolute;
     bottom: 42%;
     z-index: -1;
-    background-color: #${props => props.fill};
+    background-color: ${props => props.fill};
     width: 100%;
     height: 15%;
     border-radius: 50%;
@@ -118,7 +118,7 @@ export default function GameBoard(
                     gameIndex={ gameIndex }
                     array={ array }
                     key={ game.gameId }
-                    src={ `${assetServerUri}/${content.avatars[game.avatar].icon.src}` } />
+                    src={ `${assetServerUri}/${content.avatars[game.avatar].small.src}` } />
                 )
               }
             </Avatars>
@@ -127,7 +127,7 @@ export default function GameBoard(
                 station.map((game) => game.gameId === resumableGame.gameId ?
                   <Self
                     key={ game.gameId }
-                    src={ `${assetServerUri}/${content.avatars[game.avatar].icon.src}` } />
+                    src={ `${assetServerUri}/${content.avatars[game.avatar].small.src}` } />
                   :
                   null
                 )
