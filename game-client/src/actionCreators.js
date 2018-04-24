@@ -151,7 +151,7 @@ export function leaveChallengeLobby(gameServer) {
 
 export function requestMate(gameId, gameServer) {
   return async (dispatch) => {
-    gameServer.sendDirectMessage(messages.REQUESTING_MATE, gameId)
+    gameServer.sendToPeer(messages.REQUESTING_MATE, gameId)
 
     dispatch({
       type: types.REQUEST_MATE,
@@ -162,7 +162,7 @@ export function requestMate(gameId, gameServer) {
 
 export function cancelRequestMate(gameServer) {
   return async (dispatch, getState) => {
-    gameServer.sendDirectMessage(messages.CANCEL_REQUESTING_MATE, getState().requestedMate.gameId)
+    gameServer.sendToPeer(messages.CANCEL_REQUESTING_MATE, getState().requestedMate.gameId)
 
     dispatch({
       type: types.CANCEL_REQUEST_MATE
@@ -173,7 +173,7 @@ export function cancelRequestMate(gameServer) {
 export function acceptMateRequest(gameId, gameServer) {
   return async (dispatch) => {
     const room = uuid()
-    gameServer.sendDirectMessage(messages.ACCEPTING_MATE, gameId, { room })
+    gameServer.sendToPeer(messages.ACCEPTING_MATE, gameId, room)
     gameServer.leaveChallengeLobby()
     dispatch(startChallenge(gameServer, room))
   }
@@ -181,7 +181,7 @@ export function acceptMateRequest(gameId, gameServer) {
 
 export function rejectMateRequest(gameId, gameServer) {
   return async (dispatch) => {
-    gameServer.sendDirectMessage(messages.REJECTING_MATE, gameId)
+    gameServer.sendToPeer(messages.REJECTING_MATE, gameId)
 
     dispatch({
       type: types.REJECT_MATE,

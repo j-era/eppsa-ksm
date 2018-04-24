@@ -22,42 +22,42 @@ export default class GameServer {
   }
 
   findGame(gameId) {
-    return this.emit("findGame", gameId)
+    return this.emitWithRepsonse("findGame", gameId)
   }
 
   findConnectedGames() {
-    return this.emit("findConnectedGames")
+    return this.emitWithRepsonse("findConnectedGames")
   }
 
   startGame(name, avatar, maxChallenges) {
-    return this.emit("startGame", name, avatar, maxChallenges)
+    return this.emitWithRepsonse("startGame", name, avatar, maxChallenges)
   }
 
   resumeGame(gameId) {
-    return this.emit("resumeGame", gameId)
+    return this.emitWithRepsonse("resumeGame", gameId)
   }
 
   startChallenge() {
-    this.emit("startChallenge")
+    this.socket.emit("startChallenge")
   }
 
   finishChallenge(result) {
-    return this.emit("finishChallenge", result)
+    return this.emitWithRepsonse("finishChallenge", result)
   }
 
   joinChallengeLobby() {
-    return this.emit("joinChallengeLobby")
+    this.socket.emit("joinChallengeLobby")
   }
 
   leaveChallengeLobby() {
-    return this.emit("leaveChallengeLobby")
+    this.socket.emit("leaveChallengeLobby")
   }
 
-  sendDirectMessage(message, gameId, payload = {}) {
-    this.emit("sendDirectMessage", message, gameId, payload)
+  sendToPeer(eventName, gameId, ...param) {
+    this.socket.emit("sendToPeer", eventName, gameId, ...param)
   }
 
-  emit(eventName, ...param) {
+  emitWithRepsonse(eventName, ...param) {
     return new Promise((resolve) => {
       this.socket.emit(eventName, ...param, result => {
         resolve(result)

@@ -11,10 +11,21 @@ let orientation
 bootstrap((config, { callbacks }) => {
   if (config.room) {
     socket = client(config.gameServerUri, { secure: true })
-    socket.on("clientsInRoom", (clientsInRoom) =>
+    socket.on("clientsInRoom", (clientsInRoom) => {
       console.log(`Clients in the room: ${JSON.stringify(clientsInRoom)}`)
+  
+      if (clientsInRoom.length > 1) {
+        socket.emit("sendToRoom", "HELLO", config.room, "foo", "bar", "baz")
+      }
+    })
+
+    socket.on("HELLO", (socketId, foo, bar, baz) =>
+      console.log(`HELLO in the room: ${foo} ${bar} ${baz}`)
     )
-    socket.on("connect", () => socket.emit("joinRoom", config.room))
+    
+    socket.on("connect", () => {
+      socket.emit("joinRoom", config.room)
+    })
   }
 
   render(config, callbacks)
