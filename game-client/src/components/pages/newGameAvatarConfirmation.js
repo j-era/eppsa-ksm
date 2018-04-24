@@ -2,15 +2,10 @@ import React from "react"
 import autoBind from "react-autobind"
 import styled from "styled-components"
 
+import { Button, delay, Description, FramedIcon, NextButton, PageTitle } from "eppsa-ksm-shared"
+
 import { updateGameState } from "../../actionCreators"
 import { NEW_GAME_AVATAR_SELECTION, NEW_GAME_NAME_SELECTION } from "../../gameStates"
-import {
-  Button,
-  delay,
-  FramedIcon,
-  NextButton,
-  PageTitle
-} from "../../../node_modules/eppsa-ksm-shared"
 
 const Container = styled.div `
   background-color: white;
@@ -30,13 +25,9 @@ const StyledFramedIcon = styled(FramedIcon)`
   margin-top: ${props => props.theme.layout.mediumSpacing};
 `
 
-const Description = styled.div`
+const StyledDescription = styled(Description)`
   margin-top: ${props => props.theme.layout.smallSpacing};
   height: calc(3em + ${props => props.theme.layout.smallSpacing} * 2);
-  font-size: ${props => props.theme.font.text.size};
-  font-weight: ${props => props.theme.font.text.weight};
-  color: ${props => props.theme.font.text.color};
-  text-align: center;
 `
 
 const ConfirmButton = styled(NextButton)`
@@ -65,7 +56,7 @@ export default class NewGameAvatarConfirmation extends React.Component {
         <PageTitle text={ content.avatars[avatar].name } />
         <Content>
           <StyledFramedIcon icon={ `${assetServerUri}/${content.avatars[avatar].medium.src}` } />
-          <Description>{ content.avatars[avatar].description }</Description>
+          <StyledDescription>{ content.avatars[avatar].description }</StyledDescription>
           <ConfirmButton
             visible
             onClick={ this.confirm }

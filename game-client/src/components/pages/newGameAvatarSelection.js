@@ -1,15 +1,18 @@
 import React from "react"
-import ReactQrReader from "react-qr-reader"
 import styled from "styled-components"
 
-import { handleQrReaderError, handleAvatarQrCode, updateAvatar, updateGameState } from "../../actionCreators"
+import { Description, PageTitle, QrReader } from "eppsa-ksm-shared"
+
+import {
+  handleQrReaderError,
+  handleAvatarQrCode,
+  updateAvatar,
+  updateGameState
+} from "../../actionCreators"
 import { NEW_GAME_AVATAR_CONFIRMATION } from "../../gameStates"
-import { PageTitle } from "../../../node_modules/eppsa-ksm-shared"
-import QrReaderSeeker from "../../../node_modules/eppsa-ksm-shared/assets/EPPSA_Assets_QR-Code_Scanner.svg"
 
 
 const Container = styled.div `
-  font-family: ${props => props.theme.font.fontFamily};
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -17,47 +20,10 @@ const Container = styled.div `
 `
 
 const Content = styled.div `
-  font-family: ${props => props.theme.font.fontFamily};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-`
-
-const QrReaderContainer = styled.div`
-  width: 40vw;
-  height: 40vw;
-  padding: ${props => props.theme.layout.largeSpacing};
-  align-self: center;
-  background-color: ${props => props.theme.colors.secondary};
-  border-radius: ${props => props.theme.layout.cardBorderRadius};
-`
-
-const StyledQrReaderSeeker = styled(QrReaderSeeker)`
-  position: absolute;
-  z-index: 2;
-  width: 40vw;
-  height: 40vw;
-  fill: ${props => props.theme.colors.primary};
-`
-
-const StyledQrReader = styled(ReactQrReader)`
-  position: absolute;
-  transform: translate(
-    -${props => props.theme.layout.mediumSpacing},
-    -${props => props.theme.layout.mediumSpacing}
-  );
-  width: calc(40vw + ${props => props.theme.layout.mediumSpacing} * 2);
-  height: calc(40vw + ${props => props.theme.layout.mediumSpacing} * 2);
-  border-radius: ${props => props.theme.layout.cardBorderRadius};
-  overflow: hidden;
-`
-
-const Description = styled.div`
-  font-size: ${props => props.theme.font.text.size};
-  font-weight: ${props => props.theme.font.text.weight};
-  color: ${props => props.theme.font.text.color};
-  text-align: center;
 `
 
 const AvatarContainer = styled.div`
@@ -89,13 +55,9 @@ export default function NewGameAvatarSelection(props) {
               .map(avatar => renderAvatarSelector(avatar, content, dispatch, assetServerUri))
           }
         </AvatarContainer>
-        <QrReaderContainer>
-          <StyledQrReaderSeeker />
-          <StyledQrReader
-            onScan={ data => dispatch(handleAvatarQrCode(data)) }
-            onError={ (error) => dispatch(handleQrReaderError(error)) }
-            showViewFinder={ false } />
-        </QrReaderContainer>
+        <QrReader
+          onScan={ data => dispatch(handleAvatarQrCode(data)) }
+          onError={ (error) => dispatch(handleQrReaderError(error)) } />
         <Description>{ content.shared.texts.selectAvatarInstructions }</Description>
       </Content>
     </Container>
