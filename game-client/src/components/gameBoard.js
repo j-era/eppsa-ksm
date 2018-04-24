@@ -34,8 +34,6 @@ export default function GameBoard(
     height: 100%;
     width: 220vw;
     
-    overflow: scroll;
-    
     display: flex;
     
     flex-direction: row;

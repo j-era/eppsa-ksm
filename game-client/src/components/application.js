@@ -17,7 +17,8 @@ const Container = styled.div`
 `
 
 const Header = styled.div`
-  height: 10%;
+  height: ${100 - appRatio}%;
+  overflow: scroll;
 `
 
 function Application(props) {
@@ -44,11 +45,54 @@ function Application(props) {
 
 function renderHeader(props) {
   return (
-    <Header>
-      { !props.showGameManual && <GameManualButton { ...props } /> }
+    <Header
+      onScroll={ handleScroll } >
       <GameBoard { ...props } />
+      { !props.showGameManual && <GameManualButton { ...props } /> }
     </Header>
   )
+}
+
+let scrollbackTimout
+
+function handleScroll(event) {
+  event.persist()
+  const persistedEvent = event
+
+  if (scrollbackTimout) {
+    clearInterval(scrollbackTimout)
+  }
+
+  scrollbackTimout = setTimeout(() => {
+    const scrollIntervall = setInterval(() => {
+      persistedEvent.target.scrollLeft > 0 ?
+        persistedEvent.target.scrollLeft -= 10
+        :
+        clearInterval(scrollIntervall)
+    }, 10)
+  }, 2000)
+}
+
+function enhance(props) {
+  if (props.content.challenges[props.challengeNumber]) {
+    const challengeTypes = props.content.challenges[props.challengeNumber].challengeTypes
+    const challengeType = Object.keys(omit(challengeTypes, "template"))[0]
+    const challengeUri = resolveChallengeWebAppUri(challengeType)
+    const challengeData = {
+      color: props.content.challenges[props.challengeNumber].color,
+      challenge: challengeTypes[challengeType],
+      shared: props.content.shared,
+      staticServerUri: props.staticServerUri,
+      assetServerUri: props.assetServerUri,
+      gameServerUri: props.gameServerUri,
+      room: props.challengeRoom
+    }
+
+    const fillColor = challengeData.color
+    return Object.assign({ challengeUri, challengeType, challengeData, fillColor }, props)
+  }
+
+  return Object.assign({ fillColor: props.theme.colors.secondary }, props)
 }
 
 function getPageData({ showGameManual, gameState }) {
