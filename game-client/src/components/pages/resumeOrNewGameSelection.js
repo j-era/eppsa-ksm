@@ -7,7 +7,7 @@ export default function ResumeOrNewGameSelection(props) {
 
   return (
     <div>
-      <img src={ `${assetServerUri}/${content.avatars[resumableGame.avatar].icon.src}` } />
+      <img src={ `${assetServerUri}/${content.avatars[resumableGame.avatar].medium.src}` } />
       <div>{ resumableGame.name }</div>
       <button onClick={ () => dispatch(resumeGame(resumableGame.gameId, gameServer)) }>
         Resume
