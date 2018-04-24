@@ -159,7 +159,11 @@ services:
     build:
       context: ./game-challenge/skill
     environment:
-      PORT: 80
+      PORT: 443
+      ASSET_SERVER_URI: https://asset-server.${HOST}
+      CONTENT_SERVER_URI: https://content-server.${HOST}
+      GAME_SERVER_URI: https://game-server.${HOST}
+      STATIC_SERVER_URI: https://static.${HOST}
 
   mongo:
     image: "mongo:3.6.3-jessie"
