@@ -30,7 +30,7 @@ class Win extends Phaser.Scene {
 
 		const scoreCalc = new ScoreCalculation(
 			data.t,
-			{ ...this.sys.game.gameData.score, gameFactor: 1.3 }
+			{ ...this.sys.game.gameData.score, gameFactor: this.sys.game.shared.config.clickerScoreFactor }
 		  )
 		  this.points = scoreCalc.getScore();
 

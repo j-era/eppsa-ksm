@@ -229,12 +229,13 @@ let SkillGameAirship = new Phaser.Class({
 	},
 
 	calculateScore: function(){
-		return gameData.rewardValue * this.timeInWinState * shared.config.skillFactor;
+		return gameData.rewardValue * this.timeInWinState * shared.config.skillScoreFactor;
 	},
 
 	increaseWinStateTime: function(){
 		console.log('increasing win state time');
-		this.scoreText.setText(calculateScore() + " Punkte");
+		console.log("Hey");
+		this.scoreText.setText(this.calculateScore() + " Punkte");
 		this.timeInWinState ++;
 		this.currentTimeInWinState ++;
 		this.sensitivity += 1 - this.destabiliser * this.currentTimeInWinState
