@@ -23,7 +23,8 @@ module.exports = class Client {
     this.socket.on("finishChallenge", this.finishChallenge.bind(this))
     this.socket.on("joinChallengeLobby", this.joinChallengeLobby.bind(this))
     this.socket.on("leaveChallengeLobby", this.leaveChallengeLobby.bind(this))
-    this.socket.on("sendDirectMessage", this.sendDirectMessage.bind(this))
+    this.socket.on("sendToPeer", this.sendToPeer.bind(this))
+    this.socket.on("sendToRoom", this.sendToRoom.bind(this))
     this.socket.on("joinRoom", this.joinRoom.bind(this))
     this.socket.on("disconnect", this.onDisconnect.bind(this))
     this.socket.conn.on("packet", this.onPacket.bind(this))
@@ -112,7 +113,7 @@ module.exports = class Client {
     }
   }
 
-  async sendDirectMessage(message, gameId, payload) {
+  async sendToPeer(eventName, gameId, ...param) {
     if (this.game) {
       const socketId = await this.mongoDB.findSocketId(gameId)
 
@@ -120,12 +121,23 @@ module.exports = class Client {
         from: this.game.gameId,
         to: gameId,
         socketId,
-        message,
-        payload
-      }, "Delivering message")
+        eventName,
+        param
+      }, "Sending to peer FOOOOOOOOOOO")
 
-      this.socket.nsp.to(socketId).emit("directMessage", message, this.game.gameId, payload)
+      this.socket.nsp.to(socketId).emit(eventName, this.game.gameId, ...param)
     }
+  }
+
+  async sendToRoom(eventName, room, ...param) {
+    this.log.info({
+      from: this.socket.id,
+      room,
+      eventName,
+      param
+    }, "Sending to room")
+
+    this.socket.nsp.to(room).emit(eventName, this.socket.id, ...param)
   }
 
   async startChallenge() {
