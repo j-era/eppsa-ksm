@@ -6,6 +6,8 @@ import {
   NAVIGATION_TO_START,
   NAVIGATION_TO_NEXT_AREA,
   QR_READER,
+  AREA_CONFIRMATION,
+  CHALLENGE_SELECTION,
   CHALLENGE_MODE_SELECTION,
   CHALLENGE_LOBBY,
   CHALLENGE_MANUAL,
@@ -20,6 +22,8 @@ import NewGameNameSelection from "./newGameNameSelection"
 import NavigationToStart from "./navigationToStart"
 import NavigationToNextArea from "./navigationToNextArea"
 import QrReader from "./qrReader"
+import AreaConfirmation from "./areaConfirmation"
+import ChallengeSelection from "./challengeSelection"
 import ChallengeModeSelection from "./challengeModeSelection"
 import ChallengeLobby from "./challengeLobby"
 import ChallengeManual from "./challengeManual"
@@ -35,6 +39,8 @@ export default {
   [NAVIGATION_TO_START]: { render: NavigationToStart, showHeader: false },
   [NAVIGATION_TO_NEXT_AREA]: { render: NavigationToNextArea, showHeader: true },
   [QR_READER]: { render: QrReader, showHeader: true },
+  [AREA_CONFIRMATION]: { render: AreaConfirmation, showHeader: true },
+  [CHALLENGE_SELECTION]: { render: ChallengeSelection, showHeader: true },
   [CHALLENGE_MODE_SELECTION]: { render: ChallengeModeSelection, showHeader: true },
   [CHALLENGE_LOBBY]: { render: ChallengeLobby, showHeader: true },
   [CHALLENGE_MANUAL]: { render: ChallengeManual, showHeader: true },
