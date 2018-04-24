@@ -7,7 +7,7 @@ const StyledButton = styled(Button)`
   margin-top: ${props => props.theme.layout.mediumSpacing};
   border-color: ${props => selectionColor(props.selection, props.theme)};
   ${props => props.visible ? css`
-      transform: scale(1, 1);
+      transform: scale(0.9, 1);
       transition:
         transform 150ms cubic-bezier(0.2, 0.7, 0.55, 1.2)
           ${props => props.initialDelay + props.index * 150}ms,
@@ -24,7 +24,7 @@ const StyledButton = styled(Button)`
       "border-color",
       props.theme
     )}
-  ${props => props.clicked ? css`, ${clickEffect()};` : ";"}
+  ${props => props.clicked ? css`, ${clickEffect(0.9)};` : ";"}
   ${props => props.selection === "greyed" ? css`
     opacity: 0.8;
     transition: opacity ${props.greyOutDuration}ms ease;

@@ -1,10 +1,13 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled, { ThemeProvider } from "styled-components"
+
+import { delay, NextButton, ScoreCalculation, theme } from "eppsa-ksm-shared"
+
 import AnswerButton from "./components/answerButton"
 import QuestionText from "./components/questionText"
 import QuestionTitle from "./components/questionTitle"
-import { delay, NextButton, ScoreCalculation, theme } from "eppsa-ksm-shared"
+
 
 const Container = styled.div `
   font-family: ${props => props.theme.font.fontFamily};
@@ -13,8 +16,6 @@ const Container = styled.div `
   flex-direction: column;
   justify-content: center;
   height: 100%;
-  padding-left: ${props => props.theme.layout.offsetX};
-  padding-right: ${props => props.theme.layout.offsetX};
 `
 
 const StyledQuestionText = styled(QuestionText)`
@@ -53,6 +54,7 @@ export default class App extends React.Component {
     }, sessionLength * 1000)
     setTimeout(() => this.setState({ visible: true }), 0)
   }
+
 
   render() {
     const { question } = this.props.content.challenge
