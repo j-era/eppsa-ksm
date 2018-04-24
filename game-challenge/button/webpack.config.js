@@ -23,20 +23,8 @@ module.exports = {
         ]
       },
       {
-        oneOf: [
-          {
-            test: /\.svg$/,
-            use: "svg-react-loader"
-          },
-          {
-            test: /\.(js|jsx|mjs)$/,
-            include: ["./src", "./lib"],
-            loader: require.resolve("babel-loader"),
-            options: {
-              cacheDirectory: true,
-            },
-          },
-        ],
+        test: /\.svg$/,
+        use: "svg-react-loader"
       }
     ]
   },

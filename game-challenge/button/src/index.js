@@ -1,7 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import client from "socket.io-client"
-import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
+import { bootstrap } from "eppsa-ksm-shared"
 
 import App from "./App"
 

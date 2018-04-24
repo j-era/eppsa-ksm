@@ -58,7 +58,7 @@ export default class NewGameAvatarConfirmation extends React.Component {
       <Container>
         <PageTitle text={ avatar } />
         <Content>
-          <StyledFramedIcon icon={ `${assetServerUri}/${content.avatars[avatar].icon.src}` } />
+          <StyledFramedIcon icon={ `${assetServerUri}/${content.avatars[avatar].medium.src}` } />
           <Description>{ content.avatars[avatar].description }</Description>
           <ConfirmButton
             visible

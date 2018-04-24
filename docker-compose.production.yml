@@ -32,20 +32,6 @@ services:
     build:
       dockerfile: Dockerfile.production
 
-  game-challenge-hunt-client:
-    build:
-      dockerfile: Dockerfile.production
-      args:
-        WS_SERVER_PATH: "/server"
-
-  game-challenge-hunt-server:
-    build:
-      dockerfile: Dockerfile.production
-
-  game-challenge-phaser-demo:
-    build:
-      dockerfile: Dockerfile.production
-
   game-challenge-quiz:
     build:
       dockerfile: Dockerfile.production

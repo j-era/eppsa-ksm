@@ -6,81 +6,29 @@ let socket;
 let orientation;
 let gameData;
 let gameCallbacks;
+let shared;
+
+let singleplayer = false;
 
 bootstrap((config, { callbacks }) => {
 	console.log(config);
 	gameData = config.challenge;
 	gameCallbacks = callbacks;
+	shared = config.shared;
 
-	config.room = 1;
+	//config.room = 1;
+	if(config.room && config.room != null){
+		socket = client(config.gameServerUri, { secure: true })
+		socket.on("clientsInRoom", (clientsInRoom) =>
+		  console.log(`Clients in the room: ${JSON.stringify(clientsInRoom)}`)
+		)
+		socket.on("connect", () => socket.emit("joinRoom", config.room))
+	}else{
+		singleplayer = true;
+	}
 
-	socket = client(config.gameServerUri, { secure: true })
-    socket.on("clientsInRoom", (clientsInRoom) =>
-      console.log(`Clients in the room: ${JSON.stringify(clientsInRoom)}`)
-    )
-	socket.on("connect", () => socket.emit("joinRoom", config.room))
-
-	/*window.addEventListener("message", (event) => {
-		console.log("message received");
-		if (event.data.type === "deviceOrientation") {
-		  orientation = event.data.data
-		  console.log("orientation", orientation)
-		}
-	  }, false)*/
-	
 	init();
-  })
-
-let MatchmakingLobby = new Phaser.Class({
-	Extends: Phaser.Scene,
-
-	initialize:
-
-	function MatchmakingLobby(){
-		Phaser.Scene.call(this, { key: 'matchmakingLobby' });
-	},
-
-	preload: function(){
-		this.load.image('singleplayer', '/assets/singleplayer.jpg');
-	},
-
-	create: function(){
-		var gameScene = this;
-		this.welcomeText = this.add.text(10, 10, 'waiting for a second player', {font: '12px Arial', fill: '#000000'});
-
-		this.add.image(250, 50, 'singleplayer').setInteractive().on('pointerdown', function (pointer) {
-
-			gameScene.scene.start('skillGameAirship', {'type' : 'singleplayer'});
-	
-		});;
-
-		//server code
-		this.connectedPlayers = {};
-		this.ownID = 0;
-		//Client.askNewPlayer();
-
-
-	},
-
-	showMatchingStatus: function(info){
-		this.welcomeText.setText(info);
-	},
-
-	startGameWithMatchedPartner: function(match){
-		this.scene.start('skillGameAirship', {'type': 'multiplayer', 'match': match.other, 'own': match.own, 'playing': match.playing});
-	},
-
-	addNewPlayer: function(id, x, y){
-		this.ownID = id;
-		this.connectedPlayers[id] = 'player' + id;
-	},
-
-	removePlayer: function(id){
-		console.log("Player with id " + id + " removed");
-		delete this.connectedPlayers[id];
-	},
-
-});
+  });
 
 
 let SkillGameAirship = new Phaser.Class({
@@ -91,8 +39,6 @@ let SkillGameAirship = new Phaser.Class({
 	function SkillGameAirship(){
 		Phaser.Scene.call(this, { key: 'skillGameAirship' });
 
-		this.gameType = "Luftfahrt";
-		this.areaID = 34;
 		this.timer = gameData.timer;
 		this.score = 0;
 		this.countdown = gameData.countdown;		//Sets the time (usually 3 s) in which the player can prepare before the game starts.
@@ -140,6 +86,8 @@ let SkillGameAirship = new Phaser.Class({
 		this.npcStates = ['horizontal', 'tilt']; 
 		this.npcHorizontalWeight = [this.NPCHorizontalStay, this.NPCHorizontalExit];
 		this.npcTiltWeight = [this.NPCTiltExit, this.NPCTiltStay];
+
+		this.singleplayer = singleplayer;
 		
 	},
 
@@ -150,22 +98,6 @@ let SkillGameAirship = new Phaser.Class({
 			}
 			this.load.image(gameData.assets[key].name, process.env.ASSET_SERVER_URI + "/" + gameData.assets[key].image.src);
 		}
-
-		/*this.load.image('vehicleArrowLarge', './assets/EPPSA_Airship_VehicleHUDlarge.png');
-		this.load.image('vehicleArrowSmall', 'assets/EPPSA_Airship_VehicleHUDsmall.png');
-		this.load.image('windArrowLarge', 'assets/EPPSA_Airship_WindHUDlarge.png');
-		this.load.image('windArrowSmall', 'assets/EPPSA_Airship_WindHUDsmall.png');
-
-		this.load.image('wind', 'assets/EPPSA_Airship_Wind.png');
-		this.load.image('windDirection', 'assets/EPPSA_Airship_WindDirection.png');
-
-		this.load.image('vehicle', 'assets/EPPSA_Airship_Vehicle.png');
-
-		this.load.image('pointHUD', 'assets/EPPSA_Airship_PointCountHUD.png');
-
-		this.load.image('cloud1', 'assets/EPPSA_Airship_Cloud1.png');
-		this.load.image('cloud2', 'assets/EPPSA_Airship_Cloud2.png');
-		this.load.image('cloud3', 'assets/EPPSA_Airship_Cloud3.png');*/
 	}, 
 
 	create: function(data){
@@ -206,7 +138,7 @@ let SkillGameAirship = new Phaser.Class({
 		//this.rotationText = this.add.text(10, 10, 'phaser', {fill: '#000000'});
 		
 
-		if(data.type == 'singleplayer'){
+		if(this.singleplayer){
 			this.singleplayer = true;
 			this.playingShip = true;
 
@@ -296,9 +228,13 @@ let SkillGameAirship = new Phaser.Class({
 		}
 	},
 
+	calculateScore: function(){
+		return gameData.rewardValue * this.timeInWinState * shared.config.skillFactor;
+	},
+
 	increaseWinStateTime: function(){
 		console.log('increasing win state time');
-		this.scoreText.setText(this.timeInWinState * 100 + " Punkte");
+		this.scoreText.setText(calculateScore() + " Punkte");
 		this.timeInWinState ++;
 		this.currentTimeInWinState ++;
 		this.sensitivity += 1 - this.destabiliser * this.currentTimeInWinState
@@ -343,7 +279,7 @@ let SkillGameAirship = new Phaser.Class({
 		let score = this.timeInWinState * 100;
 
 		if(this.singleplayer){
-			this.sendScore(score);
+			this.sendScore(this.calculateScore());
 		}else{
 			Client.FinalScore({'own' : this.ownID, 'other': this.opponentID, 'score': score});
 		}
@@ -454,16 +390,13 @@ let SkillGameAirship = new Phaser.Class({
 
  
 var wfconfig = {
- 
     active: function() { 
         console.log("font loaded");
        
     },
- 
     google: {
         families: ['Cabin', 'Sniglet']
     }
- 
 };
  
 WebFont.load(wfconfig);
@@ -476,10 +409,9 @@ let config = {
 	backgroundColor: "#F2FCFF",
 	parent: 'game',
 	displayVisibilityChange: true,
-	scene: [ MatchmakingLobby, SkillGameAirship ] // our newly created scene
+	scene: [ SkillGameAirship ] // our newly created scene
   };
 
-console.log(window.devicePixelRatio);
 let game;  
 
   let init = function(){
