@@ -1,5 +1,6 @@
 import React from "react"
 import styled from "styled-components"
+import { getCookie } from "../cookie"
 
 export default function GameBoard(
   {
@@ -10,6 +11,68 @@ export default function GameBoard(
     assetServerUri,
     content
   }) {
+  /*
+  const connectedGames = [
+    {
+      challengeNumber: 2,
+      avatar: "mrsblue",
+      gameId: resumableGame.gameId
+    }, {
+      challengeNumber: 2,
+      avatar: "policeman",
+      gameId: Math.random()
+    }, {
+      challengeNumber: 2,
+      avatar: "policeman",
+      gameId: Math.random()
+    }, {
+      challengeNumber: 2,
+      avatar: "policeman",
+      gameId: Math.random()
+    }, {
+      challengeNumber: 3,
+      avatar: "mrsblue",
+      gameId: resumableGame.gameId
+    }, {
+      challengeNumber: 3,
+      avatar: "policeman",
+      gameId: Math.random()
+    }, {
+      challengeNumber: 3,
+      avatar: "policeman",
+      gameId: Math.random()
+    }, {
+      challengeNumber: 3,
+      avatar: "policeman",
+      gameId: Math.random()
+    },{
+      challengeNumber: 1,
+      avatar: "mrsblue",
+      gameId: resumableGame.gameId
+    }, {
+      challengeNumber: 1,
+      avatar: "policeman",
+      gameId: Math.random()
+    }, {
+      challengeNumber: 1,
+      avatar: "policeman",
+      gameId: Math.random()
+    }, {
+      challengeNumber: 1,
+      avatar: "policeman",
+      gameId: Math.random()
+    },
+  ]
+
+  for (let i = 0; i < 100; i++) {
+    connectedGames.push({
+      challengeNumber: Math.round(Math.random() * 10 + 1),
+      avatar: "policeman",
+      gameId: Math.random()
+    })
+  }
+  */
+
   const stations = []
 
   // fill stations
@@ -21,7 +84,7 @@ export default function GameBoard(
   connectedGames.forEach(game => {
     const station = stations[game.challengeNumber - 1]
 
-    if (station.length < 3 || game.gameId === resumableGame.gameId) {
+    if (station.length < 3 || game.gameId === getCookie("gameId")) {
       station.push(game)
     }
 
@@ -66,21 +129,19 @@ export default function GameBoard(
   const Avatars = styled.div`
     position: absolute;
     left: 0%;
-    bottom: 45%;
+    bottom: 30%;
     width: 100%;
-    height: 42%;
     
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: ${props => props.count > 2 ? "center" : "start"};
   `
 
   const OwnAvatar = styled.div`
     position: absolute;
     left: 0%;
-    bottom: 42%;
+    bottom: 10%;
     width: 100%;
-    height: 42%;
     
     display: flex;
     flex-direction: row;
@@ -93,12 +154,12 @@ export default function GameBoard(
     margin-left: -20%;
     margin-right: -20%;
     width: ${avatarWith}vw;
+    height: ${avatarWith * 1.111111}vw;
   `
-
-  // left: ${props => props.gameIndex > 0 ? 66 : 33}%;
 
   const Self = styled.img`
     width: ${avatarWith}vw;
+    height: ${avatarWith * 1.111111}vw;
   `
 
   return (
@@ -106,32 +167,33 @@ export default function GameBoard(
       {
         stations.map((station, index) =>
           <Area key={ index.toString() }>
-            <Avatars>
-              {
-                station.map((game, gameIndex, array) => game.gameId === resumableGame.gameId ?
-                  null
-                  :
-                  <Avatar
-                    offset={ index.toString() }
-                    gameIndex={ gameIndex }
-                    array={ array }
-                    key={ game.gameId }
-                    src={ `${assetServerUri}/${content.avatars[game.avatar].small.src}` } />
-                )
-              }
-            </Avatars>
-            <OwnAvatar>
-              {
-                station.map((game) => game.gameId === resumableGame.gameId ?
-                  <Self
-                    key={ game.gameId }
-                    src={ `${assetServerUri}/${content.avatars[game.avatar].small.src}` } />
-                  :
-                  null
-                )
-              }
-            </OwnAvatar>
-            <Field fill={ content.challenges[index + 1].color } />
+            <Field fill={ content.challenges[index + 1].color }>
+              <Avatars count={ station.length }>
+                {
+                  station.map((game, gameIndex, array) => game.gameId === getCookie("gameId") ?
+                    null
+                    :
+                    <Avatar
+                      offset={ index.toString() }
+                      gameIndex={ gameIndex }
+                      array={ array }
+                      key={ game.gameId }
+                      src={ `${assetServerUri}/${content.avatars[game.avatar].small.src}` } />
+                  )
+                }
+              </Avatars>
+              <OwnAvatar>
+                {
+                  station.map((game) => game.gameId === getCookie("gameId") ?
+                    <Self
+                      key={ game.gameId }
+                      src={ `${assetServerUri}/${content.avatars[game.avatar].small.src}` } />
+                    :
+                    null
+                  )
+                }
+              </OwnAvatar>
+            </Field>
           </Area>
         )
       }
