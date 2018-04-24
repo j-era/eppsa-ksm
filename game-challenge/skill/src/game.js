@@ -1,66 +1,75 @@
-let gameClient;
+import client from "socket.io-client"
+import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
+import Phaser from "./phaser"
+
+let socket;
+let orientation;
 let gameData;
+let gameCallbacks;
+let shared;
 
-window.addEventListener("message", receiveMessage, false)
-function receiveMessage(event)
-{
-  console.log(event)
-  gameData = event.data.data.challenge;
-  gameClient = { source: event.source, origin: event.origin }
+let room;
+let ownID;
+let otherID;
+let playing;
+let readyCount = 0;
+let score = 0;
+let scoreCount = 0;
 
-  init();
-}
+let singleplayer = false;
 
-let MatchmakingLobby = new Phaser.Class({
-	Extends: Phaser.Scene,
+bootstrap((config, { callbacks }) => {
+	console.log(config);
+	gameData = config.challenge;
+	gameCallbacks = callbacks;
+	shared = config.shared;
+	room = config.room;
 
-	initialize:
+	if(config.room && config.room != null){
+		socket = client(config.gameServerUri, { secure: true })
+		socket.on("clientsInRoom", (clientsInRoom) =>
+		  {
+			console.log(`Clients in the room: ${JSON.stringify(clientsInRoom)}`);
+			clientsInRoom.forEach(function(element){
+				if(element != ownID){
+					otherID = element;
+				}
+			});
+			otherID < ownID ? playing = "ship" : "wind";
+			if(otherID != undefined && ownID != undefined){
+				init();
+			}
+		  }
+		)
+		socket.on("connect", () => {
+			socket.emit("joinRoom", config.room);
+			ownID = socket.id;
+		});
 
-	function MatchmakingLobby(){
-		Phaser.Scene.call(this, { key: 'matchmakingLobby' });
-	},
-
-	preload: function(){
-		this.load.image('singleplayer', 'assets/singleplayer.jpg');
-	},
-
-	create: function(){
-		var gameScene = this;
-		this.welcomeText = this.add.text(10, 10, 'waiting for a second player', {font: '12px Arial', fill: '#000000'});
-
-		this.add.image(250, 50, 'singleplayer').setInteractive().on('pointerdown', function (pointer) {
-
-			gameScene.scene.start('skillGameAirship', {'type' : 'singleplayer'});
-	
-		});;
-
-		//server code
-		this.connectedPlayers = {};
-		this.ownID = 0;
-		Client.askNewPlayer();
-
-
-	},
-
-	showMatchingStatus: function(info){
-		this.welcomeText.setText(info);
-	},
-
-	startGameWithMatchedPartner: function(match){
-		this.scene.start('skillGameAirship', {'type': 'multiplayer', 'match': match.other, 'own': match.own, 'playing': match.playing});
-	},
-
-	addNewPlayer: function(id, x, y){
-		this.ownID = id;
-		this.connectedPlayers[id] = 'player' + id;
-	},
-
-	removePlayer: function(id){
-		console.log("Player with id " + id + " removed");
-		delete this.connectedPlayers[id];
-	},
-
-});
+		socket.on("sendToRoom", (sender, params) =>{
+			console.log(params);
+			if(params == "ready"){
+				readyCount ++;
+				if(readyCount == 2){
+					game.scene.scenes[0].startMultiplayerGame();
+				}
+			}
+			if(sender != ownID && params.rotation){
+				game.scene.scenes[0].moveOpponentArrow(params.rotation);
+			}
+			if(params.score){
+				scoreCount ++;
+				params.score > score ? score = params.score : score = score;
+				if(scoreCount == 2){
+					game.scene.scenes[0].sendScore(score);
+				}
+			}
+		})
+	}else{
+		singleplayer = true;
+		init();
+	}
+  });
 
 
 let SkillGameAirship = new Phaser.Class({
@@ -71,14 +80,13 @@ let SkillGameAirship = new Phaser.Class({
 	function SkillGameAirship(){
 		Phaser.Scene.call(this, { key: 'skillGameAirship' });
 
-		this.gameType = "Luftfahrt";
-		this.areaID = 34;
 		this.timer = gameData.timer;
 		this.score = 0;
 		this.countdown = gameData.countdown;		//Sets the time (usually 3 s) in which the player can prepare before the game starts.
 		this.minTilt = gameData.minTilt;		//Define the threshold of the range in which the tilt input will have effect on the game controls.
 		this.maxTilt = gameData.maxTilt;			//Define the threshold of the range in which the tilt input will have effect on the game controls.
 		this.sensitivity = gameData.sensitivity;		//Value to influence the ratio which translates tilt angle of mobile device to rotation angle of game object.
+		this.baseSensitivity = this.sensitivity;
 
 		this.vehicleAngle = gameData.vehicleAngle;	//Defines the max. angle in which Player A can steer the ship left or right.
 		this.inertia = gameData.inertia;		//0.x Factor that delays the execution of the vehicle's controls, to simulate its inertia.
@@ -120,25 +128,18 @@ let SkillGameAirship = new Phaser.Class({
 		this.npcStates = ['horizontal', 'tilt']; 
 		this.npcHorizontalWeight = [this.NPCHorizontalStay, this.NPCHorizontalExit];
 		this.npcTiltWeight = [this.NPCTiltExit, this.NPCTiltStay];
+
+		this.singleplayer = singleplayer;
 		
 	},
 
 	preload: function(){
-		this.load.image('vehicleArrowLarge', 'assets/EPPSA_Airship_VehicleHUDlarge.png');
-		this.load.image('vehicleArrowSmall', 'assets/EPPSA_Airship_VehicleHUDsmall.png');
-		this.load.image('windArrowLarge', 'assets/EPPSA_Airship_WindHUDlarge.png');
-		this.load.image('windArrowSmall', 'assets/EPPSA_Airship_WindHUDsmall.png');
-
-		this.load.image('wind', 'assets/EPPSA_Airship_Wind.png');
-		this.load.image('windDirection', 'assets/EPPSA_Airship_WindDirection.png');
-
-		this.load.image('vehicle', 'assets/EPPSA_Airship_Vehicle.png');
-
-		this.load.image('pointHUD', 'assets/EPPSA_Airship_PointCountHUD.png');
-
-		this.load.image('cloud1', 'assets/EPPSA_Airship_Cloud1.png');
-		this.load.image('cloud2', 'assets/EPPSA_Airship_Cloud2.png');
-		this.load.image('cloud3', 'assets/EPPSA_Airship_Cloud3.png');
+		for(var key in gameData.assets){
+			if(key == "template"){
+				continue;
+			}
+			this.load.image(gameData.assets[key].name, process.env.ASSET_SERVER_URI + "/" + gameData.assets[key].image.src);
+		}
 	}, 
 
 	create: function(data){
@@ -179,7 +180,7 @@ let SkillGameAirship = new Phaser.Class({
 		//this.rotationText = this.add.text(10, 10, 'phaser', {fill: '#000000'});
 		
 
-		if(data.type == 'singleplayer'){
+		if(this.singleplayer){
 			this.singleplayer = true;
 			this.playingShip = true;
 
@@ -198,13 +199,13 @@ let SkillGameAirship = new Phaser.Class({
 			this.countdownTimer = this.time.addEvent({delay: 1000, callback: this.countdownFunc, callbackScope: this, repeat: this.countdown});
 		}else{
 			//server code
-			console.log('starting a new game with ', data);
-			this.ownID = data.own;
-			this.opponentID = data.match;
+			console.log('starting a new game with ', otherID);
+			this.ownID = ownID;
+			this.opponentID = otherID;
 
-			console.log("This player is playing as " + data.playing);
+			console.log("This player is playing as " + playing);
 
-			if(data.playing == 'ship'){
+			if(playing == 'ship'){
 				this.playingShip = true;
 				this.windImage = this.add.image(this.width, this.height/2, 'wind').setOrigin(1,1);
 				this.windImage.setScale(this.width/this.windImage.width, this.width/this.windImage.width);
@@ -231,12 +232,16 @@ let SkillGameAirship = new Phaser.Class({
 				this.windDirectionLeft = this.add.image(this.width/4, this.height-this.height/6, 'windDirection').setScale(0.2);
 				this.windDirectionRight = this.add.image(3 * this.width/4, this.height-this.height/3, 'windDirection').setScale(0.2);
 			}
-
-			Client.readyToPlay({'own' : this.ownID, 'other': this.opponentID});
+			/*if(ownID != undefined && otherID != undefined){
+				this.startMultiplayerGame();
+			}*/
+			socket.emit("sendToRoom", "sendToRoom", room, "ready");
 		}
 
 		this.pointHUD = this.add.image(this.width/2, this.height, 'pointHUD').setOrigin(0.5, 1).setScale(0.2);
 		this.scoreText = this.add.text(this.width/2, this.height, "0 Punkte", {font: '16px Cabin', fill: '#ffffff'}).setOrigin(0.5, 1);
+
+		
 		
 	},
 
@@ -256,22 +261,25 @@ let SkillGameAirship = new Phaser.Class({
 
 			if(!this.lastTimeInWinState && this.currentlyInWinState ){
 				console.log("starting Winning counter");
-				//this.rotationText.setStyle({color: '#ff00ff', fontSize: '50px'});
 				this.winStateCounter = this.time.addEvent({delay: 1000, callback: this.increaseWinStateTime, callbackScope: this, loop: true});
 			}
 
 			if(this.lastTimeInWinState && !this.currentlyInWinState){
 				console.log("stopping Winning counter");
-				//this.rotationText.setStyle({color: '#ff0000', fontSize: '20px'});
 				this.winStateCounter.remove(false);
 				this.currentTimeInWinState = 0;
+				this.sensitivity = this.baseSensitivity;
 			}		
 		}
 	},
 
+	calculateScore: function(){
+		return gameData.rewardValue * this.timeInWinState * shared.config.skillScoreFactor;
+	},
+
 	increaseWinStateTime: function(){
 		console.log('increasing win state time');
-		this.scoreText.setText(this.timeInWinState * 100 + " Punkte");
+		this.scoreText.setText(this.calculateScore() + " Punkte");
 		this.timeInWinState ++;
 		this.currentTimeInWinState ++;
 		this.sensitivity += 1 - this.destabiliser * this.currentTimeInWinState
@@ -284,16 +292,20 @@ let SkillGameAirship = new Phaser.Class({
 		}
 		else{
 			this.countdownText.destroy();
+			gameCallbacks.showTimeline(this.timer);
+			gameCallbacks.startTimelineClock();
 			this.gameTimer = this.time.addEvent({delay: 1000 * this.timer, callback: this.onGameEnd, callbackScope: this, startAt: 0 });
 			this.gameStarted = true;
 
 			//start listening for device Orientation
 			var currentGameScene = this;
 			this.listenerFunc = function(){
-				console.log('movement detected');
-				currentGameScene.handleOrientation(event);
+				if (event.data.type === "deviceOrientation") {
+					orientation = event.data.data
+					currentGameScene.handleOrientation(orientation);
+				}
 			}
-			window.addEventListener("deviceorientation", this.listenerFunc, true);
+			window.addEventListener("message", this.listenerFunc, true);
 
 			if(this.singleplayer){
 				this.timedEvent = this.time.addEvent({ delay: 300, callback: this.onEventRotateSingleplayer, callbackScope: this, loop: true });
@@ -303,27 +315,21 @@ let SkillGameAirship = new Phaser.Class({
 	},
 
 	onGameEnd: function(){
-		window.removeEventListener("deviceorientation", this.listenerFunc, true);
+		window.removeEventListener("message", this.listenerFunc, true);
 		this.winStateCounter.remove(false);
 		this.gameStarted = false;
 
-		//this.rotationText.setText("Game Ended, \n time in winning State " + this.timeInWinState);
-		let score = this.timeInWinState * 100;
+		let score = this.calculateScore();
 
 		if(this.singleplayer){
-			this.sendScore(score);
+			this.sendScore(this.calculateScore());
 		}else{
-			Client.FinalScore({'own' : this.ownID, 'other': this.opponentID, 'score': score});
+			socket.emit("sendToRoom", "sendToRoom",room, {'score': score});
 		}
 	},
 
 	sendScore: function(score){
-		gameClient.source.postMessage(
-			{
-			  source: "challenge",
-			  score,
-			  id: "finish"
-			}, gameClient.origin)
+		gameCallbacks.finishChallenge(score)
 	},
 
 	rand: function(min, max){
@@ -337,7 +343,6 @@ let SkillGameAirship = new Phaser.Class({
 		 
 		var random_num = this.rand(0, total_weight);
 		var weight_sum = 0;
-		//console.log(random_num)
 		 
 		for (var i = 0; i < list.length; i++) {
 			weight_sum += weight[i];
@@ -350,20 +355,17 @@ let SkillGameAirship = new Phaser.Class({
 	},
 
 	onEventRotateSingleplayer: function(){
-		let mewState;
+		let newState;
 		if(this.NPCState == 'horizontal'){
 			newState = this.getRandomItem(this.npcStates, this.npcHorizontalWeight);
 		}else{
 			newState = this.getRandomItem(this.npcStates, this.npcTiltWeight);
 		}
-		console.log('newState ', newState);
 		if(newState == 'horizontal'){
 			this.streamArrow.angle = 0;
 		}else{
 			this.streamArrow.angle = this.rand(-this.streamRange, this.streamRange);
 		}
-
-		//this.streamArrow.angle = Math.random() * (15 - (-14)) + (-15);
 	},
 
 	moveOpponentArrow: function(data){
@@ -378,7 +380,8 @@ let SkillGameAirship = new Phaser.Class({
 		let that = this;
 		//this.rotationText.setText("Rotated by " + event.gamma);
 
-		let orientationGamma = event.gamma;
+		let orientationGamma = e.gamma;
+		console.log(orientationGamma);
 	
 		//clamp value of tilt input to minTilt and maxTilt as defined in backend
 		orientationGamma = orientationGamma <= that.minTilt ? that.minTilt : orientationGamma >= that.maxTilt ? that.maxTilt : orientationGamma;
@@ -387,12 +390,10 @@ let SkillGameAirship = new Phaser.Class({
 		if(this.playingShip){
 			//clamp value of newRotation to vehicleAngle and negative vehicleAngle
 			newRotation = newRotation <= -that.vehicleAngle ? -that.vehicleAngle : newRotation >= that.vehicleAngle ? that.vehicleAngle : newRotation;
-			//TODO only inertia if player is controlling Airship
 			let orientatationEvent = that.time.addEvent({delay: that.inertia * 1000, callback: that.rotateArrow, args: [that.vehicleArrow, newRotation], callbackScope: that});
 		}else{
 			//clamp value of newRotation to streamRange and negative streamRange
 			newRotation = newRotation <= -that.streamRange ? -that.streamRange : newRotation >= that.streamRange ? that.streamRange : newRotation;
-			//TODO only inertia if player is controlling Airship
 			let orientatationEvent = that.time.addEvent({delay: 0, callback: that.rotateArrow, args: [that.streamArrow, newRotation], callbackScope: that});
 		}
 		
@@ -400,12 +401,11 @@ let SkillGameAirship = new Phaser.Class({
 
 	rotateArrow: function(arrow, newRotation){
 		arrow.angle = newRotation;
-		console.log('rotating arrow');
-		Client.ArrowChange({'rotation': newRotation, 'sender': this.ownID, 'listener': this.opponentID});
+		//console.log('rotating arrow', arrow, newRotation);
+		socket.emit("sendToRoom", "sendToRoom",room, {'rotation': newRotation});
 	},
 
 	checkIfWinState: function(){
-		//if gameScene.vehicleArrow.angle within VehicleWinAngle && gameScene.streamArrow.angle within StreamWinAngle 
 		if(this.checkIfWithinAngle(this.vehicleArrow.angle, this.vehicleWinAngle) && this.checkIfWithinAngle (this.streamArrow.angle, this.streamWinAngle) ){
 			return true;
 		}
@@ -422,16 +422,13 @@ let SkillGameAirship = new Phaser.Class({
 
  
 var wfconfig = {
- 
     active: function() { 
         console.log("font loaded");
        
     },
- 
     google: {
         families: ['Cabin', 'Sniglet']
     }
- 
 };
  
 WebFont.load(wfconfig);
@@ -444,14 +441,12 @@ let config = {
 	backgroundColor: "#F2FCFF",
 	parent: 'game',
 	displayVisibilityChange: true,
-	scene: [ MatchmakingLobby, SkillGameAirship ] // our newly created scene
+	scene: [ SkillGameAirship ] // our newly created scene
   };
 
-console.log(window.devicePixelRatio);
 let game;  
 
   let init = function(){
-	// create the game, and pass it the configuration
 	game = new Phaser.Game(config);
   }
   

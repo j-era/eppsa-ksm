@@ -481,7 +481,7 @@ let GraphGame = new Phaser.Class({
 	},
 
 	calculateScore: function(){
-		return gameData.rewardValue * this.countedWinEvents * shared.config.graphFactor;
+		return gameData.rewardValue * this.countedWinEvents * shared.config.graphScoreFactor;
 	},
 
 	checkWaitTime: function(current, next){

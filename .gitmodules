@@ -25,3 +25,6 @@
 [submodule "game-challenge/clicker/lib/eppsa-ksm-shared"]
 	path = game-challenge/clicker/lib/eppsa-ksm-shared
 	url = https://github.com/artcom/eppsa-ksm-shared
+[submodule "game-challenge/skill/lib/eppsa-ksm-shared"]
+	path = game-challenge/skill/lib/eppsa-ksm-shared
+	url = https://github.com/artcom/eppsa-ksm-shared
