@@ -204,7 +204,7 @@ export function handleIncomingCancelMateRequest(gameId) {
   }
 }
 
-export function handleIncomingMateAccept(gameId, { room }, gameServer) {
+export function handleIncomingMateAccept(gameId, room, gameServer) {
   return async (dispatch, getState) => {
     if (getState().requestedMate.gameId === gameId) {
       gameServer.leaveChallengeLobby()

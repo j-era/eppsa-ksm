@@ -1,3 +1,6 @@
+import Phaser from "./phaser";
+import ScoreCalculation from "../node_modules/eppsa-ksm-shared/functions/score";
+
 class Win extends Phaser.Scene {
 	constructor () {
 		super({
@@ -25,7 +28,13 @@ class Win extends Phaser.Scene {
 
 		var text2 = this.add.text(x2, y2, 'It took you ' + data.t + ' seconds', {font: fontSize2 + 'px Arial', fill: 'green'});
 
-		this.sys.game.completeChallenge(400)
+		const scoreCalc = new ScoreCalculation(
+			data.t,
+			{ ...this.sys.game.gameData.score, gameFactor: 1.3 }
+		  )
+		  this.points = scoreCalc.getScore();
+
+		this.sys.game.completeChallenge(this.points.score + this.points.bonus);
 	}
 }
 

@@ -1,16 +1,20 @@
-import Boot from "./Boot.js";
-import GameScene from "./GameScene.js";
-import Win from "./Win.js";
-import Lose from "./Lose.js";
+import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
+import boot from "./boot.js";
+import gameScene from "./gameScene.js";
+import win from "./win.js";
+import lose from "./lose.js";
+import Phaser from "./phaser";
 
-let gameClient
 
-window.addEventListener("message", receiveMessage, false)
-function receiveMessage(event)
-{
-  console.log(event)
-  gameClient = { source: event.source, origin: event.origin }
-}
+let gameData;
+let gameCallbacks;
+
+bootstrap((data, callbacks) => {
+	//console.log(data, callbacks);
+	gameData = data.challenge;
+	gameCallbacks = callbacks.callbacks;
+	init();
+  })
 
 var config = {
 	type: Phaser.AUTO,
@@ -19,43 +23,24 @@ var config = {
 	height: window.innerHeight * window.devicePixelRatio,
 
 	scene: [
-		Boot,
-		GameScene,
-		Win,
-		Lose
+	boot,
+	gameScene,
+	win,
+	lose
 	]
 };
 
-var game = new Phaser.Game(config);
+var init = function(){
+	var game = new Phaser.Game(config);
 
-game.completeChallenge = (score) => {
-	setTimeout(() => {
-	  gameClient.source.postMessage(
-	    {
-	      source: "challenge",
-	      score
-	    }, gameClient.origin)
-	}, 1000)
-}
+	//console.log(gameData);
 
-function firstStatePreload (){
+	game.gameData = gameData;
+	game.gameCallbacks = gameCallbacks;
 
-}
-
-
-function firstStateCreate () {
-
-}
-
-function firstStateUpdate (){
-
-}
-
-function checkTap (){
-	pic2.y -= 5;
-	console.log("WupWup");
-}
-
-function SecondStateCreate () {
-	//text =
+	game.completeChallenge = (score) => {
+		setTimeout(() => {
+			gameCallbacks.finishChallenge(score);
+		}, 1000)
+	}
 }

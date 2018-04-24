@@ -1,16 +1,20 @@
-//import Boot from "./Boot.js";
+import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
+import Boot from "./boot.js";
 import GameScene from "./gameScene.js";
 import Win from "./Win.js";
-//import Lose from "./Lose.js";
+import Phaser from "./phaser";
 
-let gameClient
+let gameData;
+let gameCallbacks;
+let shared;
 
-window.addEventListener("message", receiveMessage, false)
-function receiveMessage(event)
-{
-  console.log(event)
-  gameClient = { source: event.source, origin: event.origin }
-}
+bootstrap((data, callbacks) => {
+	//console.log(data, callbacks);
+	gameData = data.challenge;
+	gameCallbacks = callbacks.callbacks;
+	shared = data.shared;
+	init();
+  })
 
 
 var config = {
@@ -20,19 +24,25 @@ var config = {
 	height: window.innerHeight,
 
 	scene: [
-		GameScene,
-		Win,
+	Boot,
+	GameScene,
+	Win,
 	]
 };
 
-var game = new Phaser.Game(config);
+var init = function(){
+	var game = new Phaser.Game(config);
 
-game.completeChallenge = (score) => {
-	setTimeout(() => {
-	  gameClient.source.postMessage(
-	    {
-	      source: "challenge",
-	      score
-	    }, gameClient.origin)
-	}, 1000)
+	game.gameData = gameData;
+	game.gameCallbacks = gameCallbacks;
+	game.shared = shared;
+
+	game.completeChallenge = (score) => {
+		setTimeout(() => {
+			gameCallbacks.finishChallenge(score);
+		}, 1000)
+	}
 }
+
+
+
