@@ -29,7 +29,7 @@ export default ({ challengeNumber, content, dispatch }) => {
 
   return (
     <Container>
-      <PageTitle text={ challenge.areaName } />
+      <PageTitle text={ challenge.description } />
       <Content>
         <QrReader
           background={ challenge.color }

@@ -68,7 +68,7 @@ function renderAvatarSelector(avatar, content, dispatch, assetServerUri) {
   return (
     <Avatar
       key={ avatar }
-      icon={ `${assetServerUri}/${content.avatars[avatar].icon.src}` }
+      icon={ `${assetServerUri}/${content.avatars[avatar].medium.src}` }
       onClick={ () => {
         dispatch(updateAvatar(avatar))
         dispatch(updateGameState(NEW_GAME_AVATAR_CONFIRMATION))
