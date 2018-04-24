@@ -427,6 +427,7 @@ let GraphGame = new Phaser.Class({
 		gameClient.source.postMessage(
 			{
 			  source: "challenge",
+        id: "finish",
 			  score
 			}, gameClient.origin)
 	}
