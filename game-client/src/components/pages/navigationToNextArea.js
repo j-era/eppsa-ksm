@@ -3,7 +3,7 @@ import React from "react"
 import { updateGameState } from "../../actionCreators"
 import { QR_READER } from "../../gameStates"
 
-export default function NavigationToNextChallenge(props) {
+export default function NavigationToNextArea(props) {
   const text = props.content.challenges[props.challengeNumber].navigation
 
   return (

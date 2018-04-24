@@ -28,22 +28,24 @@ const Background = styled(BackgroundComponent)`
 const innerRatio = window.innerWidth / window.innerHeight
 
 function Application(props) {
-  const enhancedProps = enhance(props)
+  const fillColor = props.content.challenges[props.challengeNumber]
+    ? props.content.challenges[props.challengeNumber].color
+    : props.theme.colors.secondary  
 
-  const { render, showHeader } = getPageData(enhancedProps)
+  const { render, showHeader } = getPageData(props)
 
   return (
     <Container>
       <Header>
-        { showHeader && renderHeader(enhancedProps) }
+        { showHeader && renderHeader(props) }
       </Header>
       <Background
         bannerText={ props.content.name }
         inGameSetup={ inGameSetup(props.gameState) }
-        fillColor={ enhancedProps.fillColor } >
+        fillColor={ fillColor } >
         <Card innerRatio={ innerRatio }>
           <Page>
-            { React.createElement(render, enhancedProps) }
+            { React.createElement(render, props) }
           </Page>
         </Card>
       </Background>
@@ -60,41 +62,11 @@ function renderHeader(props) {
   )
 }
 
-function enhance(props) {
-  if (props.content.challenges[props.challengeNumber]) {
-    const challengeTypes = props.content.challenges[props.challengeNumber].challengeTypes
-    const challengeType = Object.keys(omit(challengeTypes, "template"))[0]
-    const challengeUri = resolveChallengeWebAppUri(challengeType)
-    const challengeData = {
-      color: props.content.challenges[props.challengeNumber].color,
-      challenge: challengeTypes[challengeType],
-      shared: props.content.shared,
-      staticServerUri: props.staticServerUri,
-      assetServerUri: props.assetServerUri,
-      gameServerUri: props.gameServerUri,
-      room: props.challengeRoom
-    }
-
-    const fillColor = challengeData.color
-    return Object.assign({ challengeUri, challengeType, challengeData, fillColor }, props)
-  }
-
-  return Object.assign({ fillColor: props.theme.colors.secondary }, props)
-}
-
 function getPageData({ showGameManual, gameState }) {
   return showGameManual ? pages.GAME_MANUAL : pages[gameState]
 }
 
 export default connect((state) => state)(Application)
-
-function resolveChallengeWebAppUri(webApp) {
-  const protocol = document.location.protocol
-  const environment = document.location.hostname.split(".").slice(1).join(".")
-  const challengeUri = new URL(`${protocol}//${webApp}.${environment}`)
-
-  return challengeUri.toString()
-}
 
 function inGameSetup(gamestate) {
   switch (gamestate) {

@@ -60,6 +60,24 @@ export function challengeRoom(state = null, action) {
   }
 }
 
+export function challengeData(state = null, action) {
+  switch (action.type) {
+    case types.SET_CHALLENGE_TYPE:
+      return action.challengeData
+    default:
+      return state
+  }
+}
+
+export function challengeUri(state = null, action) {
+  switch (action.type) {
+    case types.SET_CHALLENGE_TYPE:
+      return action.challengeUri
+    default:
+      return state
+  }
+}
+
 export function score(state = 0, action) {
   switch (action.type) {
     case types.UPDATE_GAME_DATA:
