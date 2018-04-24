@@ -19,12 +19,19 @@ export default function GameBoard(
 
   // sort games into stations
   connectedGames.forEach(game => {
-    stations[game.challengeNumber - 1].push(game)
+    const station = stations[game.challengeNumber - 1]
+
+    if (station.length < 3 || game.gameId === resumableGame.gameId) {
+      station.push(game)
+    }
+
+    if (station.length > 3) {
+      station.shift()
+    }
   })
 
-
   const Board = styled.div`
-    height: 40%;
+    height: 100%;
     width: 220vw;
     
     overflow: scroll;
@@ -41,6 +48,7 @@ export default function GameBoard(
   `
 
   const Area = styled.div`
+    height: 97.5%;
     width: 17.5vw;
     margin-left: 1.25vw;
     margin-right: 1.25vw;
@@ -52,27 +60,43 @@ export default function GameBoard(
     
     display: flex;
     
-    flex-direction: row;
-    justify-content: space-evenly;
+    flex-flow: row nowrap;
+    justify-content: center;
   `
 
+  const avatarWith = 13
+
   const Avatar = styled.img`
-    max-width: 10vw;
+    position: relative;
+    bottom: 60%;
+    
+    margin-left: -${props => 100 / (props.count - 2) / 2}%;
+    margin-right: -${props => 100 / (props.count - 2) / 2}%;
+    
+    max-width: ${avatarWith}vw;
+    max-height: ${avatarWith * 1.111111111}vw;
     width: auto;
+    height: auto;
   `
 
   const OwnAvatar = styled.img`
-    max-width: 10vw;
+    position: absolute;
+    bottom: 60%;
+    z-index: +1;
+    
+    max-width: ${avatarWith}vw;
+    max-height: ${avatarWith * 1.111111111}vw;
     width: auto;
+    height: auto;
   `
 
   const Field = styled.div`
     position: relative;
     z-index: -1;
-    bottom: 50%;
+    bottom: 60%;
     background-color: #${props => props.fill};
     width: 100%;
-    height: 50%;
+    height: 15%;
     border-radius: 50%;
   `
 
@@ -89,6 +113,7 @@ export default function GameBoard(
                     src={ `${assetServerUri}/${content.avatars[game.avatar].icon.src}` } />
                   :
                   <Avatar
+                    count={ station.length }
                     key={ game.gameId }
                     src={ `${assetServerUri}/${content.avatars[game.avatar].icon.src}` } />
                 )
