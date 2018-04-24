@@ -129,28 +129,30 @@ function receiveMessage(event) {
   }
 }
 
-gameServer.on("connectedGames", (connectedGames) => {
+gameServer.on("connectedGames", (connectedGames) =>
   store.dispatch(actions.updateConnectedGames(connectedGames))
-})
+)
 
-gameServer.on("connect", () => {
+gameServer.on("connect", () =>
   store.dispatch(actions.updateConnected(true))
-})
+)
 
-gameServer.on("disconnect", () => {
+gameServer.on("disconnect", () =>
   store.dispatch(actions.updateConnected(false))
-})
+)
 
-gameServer.on("directMessage", (message, gameId, payload) => {
-  console.log(`Message received from ${gameId}: ${message}`)
-  switch (message) {
-    case messages.REQUESTING_MATE:
-      return store.dispatch(actions.handleIncomingMateRequest(gameId))
-    case messages.CANCEL_REQUESTING_MATE:
-      return store.dispatch(actions.handleIncomingCancelMateRequest(gameId))
-    case messages.ACCEPTING_MATE:
-      return store.dispatch(actions.handleIncomingMateAccept(gameId, payload, gameServer))
-    case messages.REJECTING_MATE:
-      return store.dispatch(actions.handleIncomingMateReject())
-  }
-})
+gameServer.on(messages.REQUESTING_MATE, (gameId) =>
+  store.dispatch(actions.handleIncomingMateRequest(gameId))
+)
+
+gameServer.on(messages.CANCEL_REQUESTING_MATE, (gameId) =>
+  store.dispatch(actions.handleIncomingCancelMateRequest(gameId))
+)
+
+gameServer.on(messages.ACCEPTING_MATE, (gameId, room) =>
+  store.dispatch(actions.handleIncomingMateAccept(gameId, room, gameServer))
+)
+
+gameServer.on(messages.REJECTING_MATE, () =>
+  store.dispatch(actions.handleIncomingMateReject())
+)
