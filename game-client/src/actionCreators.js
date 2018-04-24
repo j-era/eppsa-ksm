@@ -219,17 +219,57 @@ export function handleIncomingMateReject() {
   }
 }
 
+export function selectChallengeType(
+  name,
+  content,
+  assetServerUri,
+  gameServerUri,
+  staticServerUri
+  ) {
+  return async (dispatch, getState) => {
+    const { challengeNumber } = getState()
+
+    const challengeTypeData = content.challenges[challengeNumber].challengeTypes[name]
+    const challengeUri = resolveChallengeWebAppUri(challengeTypeData.template)
+    const challengeData = {
+      color: content.challenges[challengeNumber].color,
+      challenge: challengeTypeData,
+      shared: content.shared,
+      staticServerUri: staticServerUri,
+      assetServerUri: assetServerUri,
+      gameServerUri: gameServerUri
+    }
+
+    dispatch({ type: types.SET_CHALLENGE_TYPE, challengeData, challengeUri })
+    dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
+  }
+}
+
+function resolveChallengeWebAppUri(webApp) {
+  const protocol = document.location.protocol
+  const environment = document.location.hostname.split(".").slice(1).join(".")
+  const challengeUri = new URL(`${protocol}//${webApp}.${environment}`)
+
+  return challengeUri.toString()
+}
+
+export function selectChallengeMode(content, gameServer) {
+  return async (dispatch, getState) => {
+    const { challengeData } = getState()
+    if (challengeData.challenge.multiplayer) {
+      dispatch(updateGameState(gameStates.CHALLENGE_MODE_SELECTION))
+    } else {
+      dispatch(startChallenge(gameServer))
+    }
+  }
+}
+
 export function handleChallengeQrCode(data, challenge) {
   return (dispatch) => {
     if (data != null) {
       if (data === challenge.token) {
         dispatch({ type: types.CORRECT_QR_CODE_SCANNED })
-
-        if (challenge.multiplayer) {
-          dispatch(updateGameState(gameStates.CHALLENGE_MODE_SELECTION))
-        } else {
-          dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
-        }
+        dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
       } else {
         dispatch({ type: types.WRONG_QR_CODE_SCANNED })
         dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_AREA))

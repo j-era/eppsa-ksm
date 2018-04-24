@@ -1,15 +1,15 @@
 import React from "react"
 
-import { startChallenge } from "../../actionCreators"
+import { selectChallengeMode } from "../../actionCreators"
 
 export default function ChallengeManual(props) {
-  const challenge = props.content.challenges[props.challengeNumber]
-  const text = challenge.challengeTypes[props.challengeType].manualText
+  const { challengeData, content, dispatch, gameServer } = props
+  const text = challengeData.challenge.manualText
 
   return (
     <div>
       <div>{ text }</div>
-      <button onClick={ () => props.dispatch(startChallenge(props.gameServer)) }>
+      <button onClick={ () => dispatch(selectChallengeMode(content, gameServer)) }>
         Weiter
       </button>
     </div>
