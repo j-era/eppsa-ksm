@@ -21,6 +21,10 @@ class GameScene extends Phaser.Scene {
 	}
 
 	create() {
+		this.countdownTimer;
+		this.countdownText;
+		this.currentCountdownValue = 3;
+		this.gameStarted = false;
 
 
 		this.anims.create( {
@@ -69,28 +73,44 @@ class GameScene extends Phaser.Scene {
 
 		this.boatPic.setScale(boatPicScaleWidthBy, boatPicScaleHeightBy);
 
-		this.sys.game.gameCallbacks.showTimeline(this.sys.game.gameData.timer);
-		this.sys.game.gameCallbacks.startTimelineClock();
-		var timedEvent = this.time.addEvent({
-			delay: this.sys.game.gameData.timer * 1000,
-			callback: this.gameLose,
-			callbackScope: this
-		});
+		this.countdownText = this.add.text(this.width/2, this.height/2, "3", {font: '60px Arial', fill: '#000000'});
+		this.countdownTimer = this.time.addEvent({delay: 1000, callback: this.countdownFunc, callbackScope: this, repeat: 3});
 
 		var scope = this;
 		waterPic.on('pointerup', function(pointer){
-			scope.boatPic.x = parseInt(scope.boatPic.x);
-			scope.boatPic.x += scope.sys.game.gameData.MovementX;
-			//if(bla.boatPic.x > window.innerHeight-(window.innerHeight*0.35)){
+			if(scope.gameStarted){
+				scope.boatPic.x = parseInt(scope.boatPic.x);
+				scope.boatPic.x += scope.sys.game.gameData.MovementX;
+				//if(bla.boatPic.x > window.innerHeight-(window.innerHeight*0.35)){
 				if(scope.boatPic.x > scope.sys.game.gameData.EndPointX){
-					timedEvent.paused = true;
-					var Timeleft = timedEvent.getProgress().toString().substr(0,4) * 10;
+					scope.timedEvent.paused = true;
+					var Timeleft = scope.timedEvent.getProgress().toString().substr(0,4) * 10;
 					Timeleft = Timeleft.toFixed(1);
 					scope.gameWin(Timeleft);
 				}
+			}
+	
+		})
+			
+	}
 
-			})
-
+	countdownFunc(){
+		console.log(this.currentCountdownValue);
+		if(this.currentCountdownValue >= 1){
+			this.currentCountdownValue --;
+			this.countdownText.setText(this.currentCountdownValue);
+		}
+		else{
+			this.countdownText.destroy();
+			this.sys.game.gameCallbacks.showTimeline(this.sys.game.gameData.timer);
+			this.sys.game.gameCallbacks.startTimelineClock();
+			this.timedEvent = this.time.addEvent({
+				delay: this.sys.game.gameData.timer * 1000,
+				callback: this.gameLose,
+				callbackScope: this
+			});
+			this.gameStarted = true;
+		}
 	}
 
 	update() {
