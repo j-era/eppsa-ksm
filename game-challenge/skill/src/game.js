@@ -69,6 +69,7 @@ bootstrap((config, { callbacks }) => {
 		singleplayer = true;
 		init();
 	}
+
   });
 
 
@@ -300,6 +301,7 @@ let SkillGameAirship = new Phaser.Class({
 			//start listening for device Orientation
 			var currentGameScene = this;
 			this.listenerFunc = function(){
+				console.log("receive message");
 				if (event.data.type === "deviceOrientation") {
 					orientation = event.data.data
 					currentGameScene.handleOrientation(orientation);
@@ -402,7 +404,10 @@ let SkillGameAirship = new Phaser.Class({
 	rotateArrow: function(arrow, newRotation){
 		arrow.angle = newRotation;
 		//console.log('rotating arrow', arrow, newRotation);
-		socket.emit("sendToRoom", "sendToRoom",room, {'rotation': newRotation});
+		if(!this.singleplayer){
+			socket.emit("sendToRoom", "sendToRoom",room, {'rotation': newRotation});
+		}
+		
 	},
 
 	checkIfWinState: function(){
