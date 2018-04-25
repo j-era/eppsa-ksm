@@ -1,5 +1,5 @@
-import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
-import Phaser from "./phaser"
+import {bootstrap} from "eppsa-ksm-shared"
+import Phaser from "./phaser.min"
 
 let gameData;
 let gameCallbacks;

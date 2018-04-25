@@ -1,4 +1,3 @@
-//import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
 import { bootstrap } from "eppsa-ksm-shared"
 
 import boot from "./boot.js";
