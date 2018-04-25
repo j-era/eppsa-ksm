@@ -65,14 +65,15 @@ function renderAvatarSelector(avatar, content, dispatch, assetServerUri) {
   return (
     <Avatar
       key={ avatar }
-      icon={ `${assetServerUri}/${content.avatars[avatar].medium.src}` }
       onClick={ () => {
         dispatch(updateAvatar(avatar))
         dispatch(updateGameState(NEW_GAME_AVATAR_CONFIRMATION))
       } }>
       <img
-        height="100%" src={ `${assetServerUri}/${content.avatars[avatar].small.src}` }
-        srcSet={ `${assetServerUri}/${content.avatars[avatar].medium.src} 500w,
+        height="100%"
+        src={ `${assetServerUri}/${content.avatars[avatar].medium.src}` }
+        srcSet={ `${assetServerUri}/${content.avatars[avatar].small.src} 250w,
+                  ${assetServerUri}/${content.avatars[avatar].medium.src} 500w,
                   ${assetServerUri}/${content.avatars[avatar].large.src} 1000w` } />
     </Avatar>
   )

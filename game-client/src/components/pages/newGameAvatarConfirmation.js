@@ -56,8 +56,9 @@ export default class NewGameAvatarConfirmation extends React.Component {
         <PageTitle text={ content.avatars[avatar].name } />
         <Content>
           <StyledFramedIcon
-            iconSrc={ `${assetServerUri}/${content.avatars[avatar].small.src}` }
-            iconSrcSet={ `${assetServerUri}/${content.avatars[avatar].medium.src} 500w,
+            iconSrc={ `${assetServerUri}/${content.avatars[avatar].medium.src}` }
+            iconSrcSet={ `${assetServerUri}/${content.avatars[avatar].small.src} 250w,
+                          ${assetServerUri}/${content.avatars[avatar].medium.src} 500w,
                           ${assetServerUri}/${content.avatars[avatar].large.src} 1000w` } />
           <StyledDescription>{ content.avatars[avatar].description }</StyledDescription>
           <ConfirmButton
