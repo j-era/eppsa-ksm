@@ -1,6 +1,6 @@
 import client from "socket.io-client"
-import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
-import Phaser from "./phaser"
+import {bootstrap} from "eppsa-ksm-shared"
+import Phaser from "./phaser.min"
 
 let socket;
 let orientation;
@@ -420,18 +420,6 @@ let SkillGameAirship = new Phaser.Class({
 
 });
 
- 
-var wfconfig = {
-    active: function() { 
-        console.log("font loaded");
-       
-    },
-    google: {
-        families: ['Cabin', 'Sniglet']
-    }
-};
- 
-WebFont.load(wfconfig);
 
 // our game's configuration
 let config = {

@@ -3,10 +3,46 @@ const path = require("path")
 const HtmlWebPackPlugin = require("html-webpack-plugin")
 
 module.exports = {
-  entry: "./src/game.js",
+  entry: ["babel-polyfill", "./src/game.js"],
   watchOptions: {
     poll: 1000,
     aggregateTimeout: 1000
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader"
+        }
+      },
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: "html-loader",
+            options: { minimize: true }
+          }
+        ]
+      },
+      {
+        oneOf: [
+          {
+            test: /\.svg$/,
+            use: "svg-react-loader"
+          },
+          {
+            test: /\.(js|jsx|mjs)$/,
+            include: ["./src", "./lib"],
+            loader: require.resolve("babel-loader"),
+            options: {
+              cacheDirectory: true,
+            },
+          },
+        ],
+      }
+    ]
   },
   plugins: [
     new HtmlWebPackPlugin({
