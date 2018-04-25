@@ -1,4 +1,5 @@
 import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
+
 import boot from "./boot.js";
 import gameScene from "./gameScene.js";
 import win from "./win.js";
