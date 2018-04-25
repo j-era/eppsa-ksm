@@ -55,7 +55,7 @@ const NameInput = styled.input`
   border-width: 0;
   width: 100%;
   text-align: center;
-  font-size: ${props => props.theme.font.button.size};
+  font-size: ${props => props.theme.font.button.size}vw;
   font-weight: ${props => props.theme.font.button.weight};
 `
 

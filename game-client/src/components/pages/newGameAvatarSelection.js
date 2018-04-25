@@ -1,5 +1,5 @@
 import React from "react"
-import styled from "styled-components"
+import styled, { withTheme } from "styled-components"
 
 import { Description, PageTitle, QrReader } from "eppsa-ksm-shared"
 
@@ -35,10 +35,12 @@ const AvatarContainer = styled.div`
 
 const Avatar = styled.div`
   width: 20%;
-  height: 23vw;
+  height: ${props => props.theme.layout.cardwidth * 0.2}vw;
 `
 
-export default function NewGameAvatarSelection(props) {
+export default withTheme(NewGameAvatarSelection)
+
+function NewGameAvatarSelection(props) {
   const { assetServerUri, content, dispatch } = props
   console.log(process.env.NODE_ENV)
 
@@ -54,6 +56,7 @@ export default function NewGameAvatarSelection(props) {
           }
         </AvatarContainer>
         <QrReader
+          seekerColor={ props.theme.colors.primary }
           onScan={ data => dispatch(handleAvatarQrCode(data)) }
           onError={ (error) => dispatch(handleQrReaderError(error)) } />
         <Description>{ content.shared.texts.selectAvatarInstructions }</Description>

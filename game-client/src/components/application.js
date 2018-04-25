@@ -1,64 +1,54 @@
-import omit from "lodash.omit"
 import React from "react"
 import { connect } from "react-redux"
-import styled from "styled-components"
+import styled, { ThemeProvider, withTheme } from "styled-components"
+import cloneDeep from "lodash.clonedeep"
 
 import Card from "./card"
 import GameBoard from "./gameBoard"
 import GameManualButton from "./gameManualButton"
-import { default as BackgroundComponent } from "./background"
+import { default as Background } from "./background"
 import pages from "./pages"
 import Page from "./page"
-
-const appRatio = 80
 
 const Container = styled.div`
   background-color: white;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 `
 
 const Header = styled.div`
-  height: ${100 - appRatio}%;
+  height: 10%;
 `
-
-const Background = styled(BackgroundComponent)`
-  height: ${appRatio}%;
-`
-
-const innerRatio = window.innerWidth / window.innerHeight
 
 function Application(props) {
-  const fillColor = props.content.challenges[props.challengeNumber]
-    ? props.content.challenges[props.challengeNumber].color
-    : props.theme.colors.secondary  
-
   const { render, showHeader } = getPageData(props)
+  const challenge = props.content.challenges[props.challengeNumber]
 
   return (
-    <Container>
-      <Header>
+    <ThemeProvider theme={ (theme) => updateTheme(theme, challenge, showHeader) }>
+      <Container>
         { showHeader && renderHeader(props) }
-      </Header>
-      <Background
-        bannerText={ props.content.name }
-        inGameSetup={ inGameSetup(props.gameState) }
-        fillColor={ fillColor } >
-        <Card innerRatio={ innerRatio }>
-          <Page>
-            { React.createElement(render, props) }
-          </Page>
-        </Card>
-      </Background>
-    </Container>
+        <Background
+          bannerText={ props.content.name }
+          inGameSetup={ inGameSetup(props.gameState) } >
+          <Card>
+            <Page>
+              { React.createElement(render, props) }
+            </Page>
+          </Card>
+        </Background>
+      </Container>
+    </ThemeProvider>
   )
 }
 
 function renderHeader(props) {
   return (
-    <div>
+    <Header>
       { !props.showGameManual && <GameManualButton { ...props } /> }
       <GameBoard { ...props } />
-    </div>
+    </Header>
   )
 }
 
@@ -66,7 +56,31 @@ function getPageData({ showGameManual, gameState }) {
   return showGameManual ? pages.GAME_MANUAL : pages[gameState]
 }
 
-export default connect((state) => state)(Application)
+function updateTheme(theme, challenge, showHeader) {
+  const [cardWidth, cardHeight] = calculateCardSize(showHeader)
+  const cardWidthRatio = cardWidth / 100
+
+  const newTheme = cloneDeep(theme)
+  newTheme.font.headline.size *= cardWidthRatio
+  newTheme.font.button.size *= cardWidthRatio
+  newTheme.font.text.size *= cardWidthRatio
+  newTheme.colors.area = challenge ? challenge.color : theme.colors.secondary
+  newTheme.layout.cardWidth = cardWidth
+  newTheme.layout.cardHeight = cardHeight
+  return newTheme
+}
+
+function calculateCardSize(showHeader) {
+  const innerHeight = showHeader ? window.innerHeight * 0.9 : window.innerHeight
+  const winRatio = window.innerWidth / innerHeight
+  const maxWidth = 98 // maximal relative width
+  const maxRatio = 0.46 // maximal expected display ratio (1:2)
+  const cardRatio = 2 / 3
+
+  return [(1 + maxRatio - winRatio) * maxWidth, (1 + maxRatio - winRatio) * maxWidth / cardRatio]
+}
+
+export default withTheme(connect((state) => state)(Application))
 
 function inGameSetup(gamestate) {
   switch (gamestate) {
