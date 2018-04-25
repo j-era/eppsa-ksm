@@ -1,10 +1,11 @@
-import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
+//import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
+import { bootstrap } from "eppsa-ksm-shared"
 
 import boot from "./boot.js";
 import gameScene from "./gameScene.js";
 import win from "./win.js";
 import lose from "./lose.js";
-import Phaser from "./phaser";
+import Phaser from "./phaser.min";
 
 
 let gameData;
