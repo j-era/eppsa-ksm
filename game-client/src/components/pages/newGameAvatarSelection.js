@@ -40,6 +40,7 @@ const Avatar = styled.div`
 
 export default function NewGameAvatarSelection(props) {
   const { assetServerUri, content, dispatch } = props
+  console.log(process.env.NODE_ENV)
 
   return (
     <Container>
@@ -65,10 +66,12 @@ function renderAvatarSelector(avatar, content, dispatch, assetServerUri) {
   return (
     <Avatar
       key={ avatar }
-      onClick={ () => {
-        dispatch(updateAvatar(avatar))
-        dispatch(updateGameState(NEW_GAME_AVATAR_CONFIRMATION))
-      } }>
+      onClick={ process.env.NODE_ENV === "development"
+        ? () => {
+          dispatch(updateAvatar(avatar))
+          dispatch(updateGameState(NEW_GAME_AVATAR_CONFIRMATION))
+        }
+        : () => {} }>
       <img
         height="100%"
         src={ `${assetServerUri}/${content.avatars[avatar].medium.src}` }

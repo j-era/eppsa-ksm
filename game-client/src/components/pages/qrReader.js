@@ -38,7 +38,9 @@ export default ({ challengeNumber, content, dispatch }) => {
           onScan={ (data) => dispatch(handleChallengeQrCode(data, challenge)) }
           onError={ (error) => dispatch(handleQrReaderError(error)) } />
         <StyledDescription
-          onClick={ () => dispatch(handleChallengeQrCode(challenge.token, challenge)) }>
+          onClick={ process.env.NODE_ENV === "development"
+            ? () => dispatch(handleChallengeQrCode(challenge.token, challenge))
+            : () => {} }>
           { content.shared.texts.scanQrInstructions }
         </StyledDescription>
       </Content>
