@@ -1,4 +1,4 @@
-import { bootstrap } from "eppsa-ksm-shared"
+import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
 
 import boot from "./boot.js";
 import gameScene from "./gameScene.js";
