@@ -274,7 +274,7 @@ let SkillGameAirship = new Phaser.Class({
 	},
 
 	calculateScore: function(){
-		return gameData.rewardValue * this.timeInWinState * shared.config.skillScoreFactor;
+		return gameData.score.reward * this.timeInWinState * shared.config.skillScoreFactor;
 	},
 
 	increaseWinStateTime: function(){
