@@ -118,7 +118,7 @@ export default function GameBoard(
 
   const Field = styled.div`
     position: absolute;
-    bottom: 42%;
+    bottom: 35%;
     z-index: -1;
     background-color: ${props => props.fill};
     width: 100%;
@@ -200,4 +200,3 @@ export default function GameBoard(
     </Board>
   )
 }
-

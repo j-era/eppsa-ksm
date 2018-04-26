@@ -52,4 +52,5 @@ export default props =>
     <Background>
       { props.children }
     </Background>
+    <Banner visible={ props.inGameSetup }>{ props.bannerText }</Banner>
   </Container>
