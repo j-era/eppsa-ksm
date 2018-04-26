@@ -27,7 +27,6 @@ const Content = styled.div `
 `
 
 const Avatars = styled.img`
-  margin-top: ${props => props.theme.layout.smallSpacing}vw;
   width: 100%;
 `
 

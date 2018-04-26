@@ -68,6 +68,8 @@ function updateTheme(theme, challenge, showHeader) {
   newTheme.layout.smallSpacing *= cardWidthRatio
   newTheme.layout.mediumSpacing *= cardWidthRatio
   newTheme.layout.largeSpacing *= cardWidthRatio
+  newTheme.layout.buttonBorder *= cardWidthRatio
+  newTheme.layout.iconBorder *= cardWidthRatio
   newTheme.layout.cardWidth = cardWidth
   newTheme.layout.cardHeight = cardHeight
   return newTheme

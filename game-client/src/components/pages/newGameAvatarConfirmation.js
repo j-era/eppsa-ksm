@@ -1,6 +1,6 @@
 import React from "react"
 import autoBind from "react-autobind"
-import styled from "styled-components"
+import styled, { withTheme } from "styled-components"
 
 import { Button, delay, Description, FramedIcon, NextButton, PageTitle } from "eppsa-ksm-shared"
 
@@ -21,27 +21,27 @@ const Content = styled.div `
   height: 100%;
 `
 
-const StyledFramedIcon = styled(FramedIcon)`
-  margin-top: ${props => props.theme.layout.mediumSpacing};
-`
-
 const StyledDescription = styled(Description)`
-  margin-top: ${props => props.theme.layout.smallSpacing};
-  height: calc(3em + ${props => props.theme.layout.smallSpacing} * 2);
+  margin-top: ${props => props.theme.layout.smallSpacing}vw;
+  max-height: calc(3em + ${props => props.theme.layout.smallSpacing}vw);
 `
 
+const Buttons = styled.div`
+  display: flex;
+  flex-direction: column;
+`
 const ConfirmButton = styled(NextButton)`
-  margin-top: ${props => props.theme.layout.mediumSpacing};
-  border-color: ${props => props.theme.colors.areaColor};
+  margin-top: ${props => props.theme.layout.mediumSpacing}vw;
+  border-color: ${props => props.theme.colors.primary};
 `
 
 const BackButton = styled(Button)`
-  margin-top: ${props => props.theme.layout.smallSpacing};
+  margin-top: ${props => props.theme.layout.smallSpacing}vw;
   align-self: center;
   border-color: ${props => props.theme.colors.secondary};
 `
 
-export default class NewGameAvatarConfirmation extends React.Component {
+class NewGameAvatarConfirmation extends React.Component {
   constructor(props) {
     super(props)
     autoBind(this)
@@ -55,22 +55,25 @@ export default class NewGameAvatarConfirmation extends React.Component {
       <Container>
         <PageTitle text={ content.avatars[avatar].name } />
         <Content>
-          <StyledFramedIcon
+          <FramedIcon
+            color={ this.props.theme.colors.primary }
             iconSrc={ `${assetServerUri}/${content.avatars[avatar].medium.src}` }
             iconSrcSet={ `${assetServerUri}/${content.avatars[avatar].small.src} 250w,
                           ${assetServerUri}/${content.avatars[avatar].medium.src} 500w,
                           ${assetServerUri}/${content.avatars[avatar].large.src} 1000w` } />
           <StyledDescription>{ content.avatars[avatar].description }</StyledDescription>
-          <ConfirmButton
-            visible
-            onClick={ this.confirm }
-            clicked={ this.state.nextClicked }
-            text={ content.shared.texts.toPlayerName } />
-          <BackButton
-            onClick={ this.back }
-            clicked={ this.state.backClicked }>
-            { content.shared.texts.back }
-          </BackButton>
+          <Buttons>
+            <ConfirmButton
+              visible
+              onClick={ this.confirm }
+              clicked={ this.state.nextClicked }
+              text={ content.shared.texts.toPlayerName } />
+            <BackButton
+              onClick={ this.back }
+              clicked={ this.state.backClicked }>
+              { content.shared.texts.back }
+            </BackButton>
+          </Buttons>
         </Content>
       </Container>
     )
@@ -88,3 +91,5 @@ export default class NewGameAvatarConfirmation extends React.Component {
     this.props.dispatch(updateGameState(NEW_GAME_AVATAR_SELECTION))
   }
 }
+
+export default withTheme(NewGameAvatarConfirmation)
