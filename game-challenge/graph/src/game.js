@@ -90,7 +90,6 @@ let GraphGame = new Phaser.Class({
 		this.scrolled = false;
 
 		this.countedWinEvents = 0;
-		this.displayPointsText;
 
 		this.lineColor = gameData.lineColor;
 		this.pathColor = gameData.pathColor;
@@ -117,11 +116,11 @@ let GraphGame = new Phaser.Class({
 		this.setupAgentSpawnRates();
 		this.spawnAgent();
 
-		this.displayPointsText = this.add.text(that.xPosToScreen(10), that.yPosToScreen(10), this.calculateScore().toString(), {color: '#ff00ff', fontSize: '20px'});
-
 		if(gameData.showScrollButton == "true"){
-			this.moveRight = this.add.image(this.width - this.width/2, this.height - this.height/20, 'button').setScale(0.2, 0.2).setName("right").setInteractive();
+			this.moveRight = this.add.image(this.width - this.width/2, this.height - this.height/20, 'button').setName("right").setInteractive();
+			this.moveRight.setScale(this.width/this.moveRight.width * 0.15);
 			this.moveLeft = this.add.image(2 * this.width - this.width/2, this.height - this.height/20, 'button').setScale(0.2, 0.2).setName("left").setInteractive();
+			this.moveLeft.setScale(this.width/this.moveLeft.width * 0.15);
 			this.moveLeft.flipX = !this.moveLeft.flipX;
 		}
 		
@@ -150,7 +149,7 @@ let GraphGame = new Phaser.Class({
 				
 
 			}else if(gameObject.name == 'right'){
-				that.cameras.main.scrollX = that.width;
+				that.cameras.main.scrollX = that.width - that.width/10;
 				this.scrolled = true;
 			}else if(gameObject.name == 'left'){
 				this.cameras.main.scrollX = 0;
@@ -168,7 +167,7 @@ let GraphGame = new Phaser.Class({
 
 				//console.log("Checking nodes");
 				that.spawnedNodes.forEach(function(element){
-					let radius = element.edgeThreshold * devicePixelRatio;
+					let radius = gameData.edgeThreshold;
 					console.log(radius);
 					if( x - radius <= element.img.x && element.img.x <= x + radius && y - radius  <= element.img.y &&  element.img.y <= y + radius){
 						//console.log("found node " + element.id);
@@ -278,11 +277,14 @@ let GraphGame = new Phaser.Class({
 
 		if(gameData.rotateAgents == "true"){
 			if(Math.floor(agent.x) != Math.floor(nextNode.x)){
-				Math.floor(agent.x) > Math.floor(nextNode.x) ? that.changeToLeft(agent) : that.changeToRight(agent);
+				//Math.floor(agent.x) > Math.floor(nextNode.x) ? that.changeToLeft(agent) : that.changeToRight(agent);
+				Math.floor(agent.x) > Math.floor(nextNode.x) ? agent.nextDirection = "left" : agent.nextDirection = "right";
 			}
 			if(Math.floor(agent.y) != Math.floor(nextNode.y)){
-				Math.floor(agent.y) > Math.floor(nextNode.y) ? that.changeToStraight(agent) : that.changeToBackwards(agent);
+				//Math.floor(agent.y) > Math.floor(nextNode.y) ? that.changeToStraight(agent) : that.changeToBackwards(agent);
+				Math.floor(agent.y) > Math.floor(nextNode.y) ? agent.nextDirection = "up" : agent.nextDirection = "down";
 			}
+			that.changeDirection(agent);
 		}
 		
 		let check = that.checkControlPoint(agent.lastNode.id, node.id, nextNode.id);
@@ -294,12 +296,13 @@ let GraphGame = new Phaser.Class({
 				targets: agent,
 				x: nextNode.x,
 				y: nextNode.y,
-				duration: 1000,
+				duration: 2000,
 				yoyo: false,
 				repeat: 0,
 			});
+			that.animateCrash(agent, nextNode);
 			//delete after half of duration
-			that.time.addEvent({delay: 500, callback: that.destroyAgent, args: [currentlyMovingAgent.id], callbackScope: that});
+			//that.time.addEvent({delay: 500, callback: that.destroyAgent, args: [currentlyMovingAgent.id], callbackScope: that});
 			//that.destroyAgent(currentlyMovingAgent.id);
 			return;
 		}
@@ -324,7 +327,7 @@ let GraphGame = new Phaser.Class({
 				currentlyMovingAgent.nodeID = nextNode.id;
 
 				//check if there is an agent on the destination node
-				if(that.spawnedNodes[nextNode.id].agentOnNode != undefined){
+				if(gameData.collisionOnNode == "true" && that.spawnedNodes[nextNode.id].agentOnNode != undefined){
 					//console.log('Trying to move onto node that already has agent ' + that.spawnedNodes[node.id].agentOnNode);
 					if(currentlyMovingAgent.isHostile == "true"){
 						console.log('destroying agent because of hostile agent');
@@ -376,8 +379,6 @@ let GraphGame = new Phaser.Class({
 					that.spawnedNodes[nextNode.id].agentOnNode = undefined;
 					console.log('agent at exit');
 					that.countedWinEvents ++;
-					that.displayPointsText.setText(that.calculateScore().toString());
-
 					that.destroyAgent(currentlyMovingAgent.id);
 					return null;
 				}
@@ -426,58 +427,151 @@ let GraphGame = new Phaser.Class({
 			
 	},
 
-	changeToStraight: function(agent){
-		agent.angle = 0;
-		console.log("driving up");
-		/*this.tweens.add({
-			targets: agent,
-				//angle: newAngle,
-				y: agent.y - agent.height,
-				duration: 100,
-				yoyo: false,
-				repeat: 0,
-		})*/
+	changeDirection: function(agent){
+		if(!agent.currentDirection){
+			agent.currentDirection = agent.nextDirection;
+			switch(agent.nextDirection){
+				case "up":
+					agent.angle = 0;
+					break
+				case "down":
+					agent.angle = 180;
+					break;
+				case "left":
+					agent.angle = 270;
+					break;
+				case "right":
+					agent.angle = 90;
+					break;
+				default:
+					changeToStraigt(agent);
+			}
+		}
+		else{
+			if(agent.currentDirection == "up"){
+				switch(agent.nextDirection){
+					case "up":
+						break
+					case "down":
+						this.makeUTurn(agent);
+						break;
+					case "left":
+						this.turnLeft(agent);
+						break;
+					case "right":
+						this.turnRight(agent);
+						break;
+				}
+			}else if(agent.currentDirection == "down"){
+				switch(agent.nextDirection){
+					case "up":
+						this.makeUTurn(agent);
+						break
+					case "down":	
+						break;
+					case "left":
+						this.turnRight(agent);
+						break;
+					case "right":
+						this.turnLeft(agent);
+						break;
+				}
+			}else if(agent.currentDirection == "right"){
+				switch(agent.nextDirection){
+					case "up":
+						this.turnLeft(agent);
+						break
+					case "down":
+						this.turnRight(agent);	
+						break;
+					case "left":
+						this.makeUTurn(agent);
+						break;
+					case "right":
+						break;
+				}
+			}else if(agent.currentDirection == "left"){
+				switch(agent.nextDirection){
+					case "up":
+						this.turnRight(agent);
+						break
+					case "down":
+						this.turnLeft(agent);	
+						break;
+					case "left":
+						break;
+					case "right":
+						this.makeUTurn(agent);
+						break;
+				}
+			}
+		}
+		agent.currentDirection = agent.nextDirection;
 	},
-	changeToBackwards: function(agent){
-		let group = this.add.group();
-		group.add(agent);
-		let oldRot = agent.rotation;
-		agent.angle = 180;
-		/*let newRot = agent.rotation;
-		console.log("driving down");
-		p = new Phaser.Geom.Point(agent.x -10, agent.y - 10);
-		Phaser.Actions.RotateAroundDistance(group.getChildren(), p, oldRot-newRot, 100);
-		/*this.tweens.add({
+
+	makeUTurn: function(agent){
+		this.tweens.add({
 			targets: agent,
-				//angle: newAngle,
-				y: agent.y + agent.height,
+				angle: agent.angle - 180,
+				duration: 300,
+				yoyo: false,
+				repeat: 0,
+		})
+	},
+
+	turnLeft: function(agent){
+		this.tweens.add({
+			targets: agent,
+				angle: agent.angle - 90,
 				duration: 100,
 				yoyo: false,
 				repeat: 0,
+		})
+	},
+
+	turnRight: function(agent){
+		this.tweens.add({
+			targets: agent,
+				angle: agent.angle + 90,
+				duration: 100,
+				yoyo: false,
+				repeat: 0,
+		})
+	},
+
+	animateCrash: function(agent, node){
+		var ccDestX = agent.x;
+		var ccDestY = agent.y;
+		//delete after half of duration
+		/*switch (agent.currentDirection){
+			case "up":
+				crashCarY = - 100
+		}*/
+		var crashCar = this.add.image(node.x, node.y, "crashCar");
+		crashCar.setScale(this.height/crashCar.height * 0.2);
+
+		var that = this;
+
+		this.tweens.add({
+			targets: crashCar,
+			x: ccDestX,
+			y: ccDestY,
+			duration: 1000,
+			yoyo: false,
+			repeat: 0,
+			onComplete: function(){
+				var originalTexture = that.textures.get('crashCar').getSourceImage();
+				var newTexture = that.textures.createCanvas('crashCarCrash', originalTexture.width, originalTexture.height);
 				
-		})*/
-	},
-	changeToLeft: function(agent){
-		agent.angle = 270;
-		/*this.tweens.add({
-			targets: agent,
-				//angle: newAngle,
-				x: agent.x - agent.width,
-				duration: 100,
-				yoyo: false,
-				repeat: 0,
-			})*/
-	},
-	changeToRight: function(agent){
-		agent.angle = 90;
-		/*this.tweens.add({
-			targets: agent,
-				//angle: newAngle,
-				x: agent.x + agent.width,
-				duration: 100,
-				yoyo: false,
-				repeat: 0,
-		})*/
+				crashCar.setTexture('crashCarCrash');
+
+				console.log(crashCar);
+				//crashCar.drestroy();
+				crashCar = null;
+			}
+		})
+
+		this.time.addEvent({delay: 1800, callback: this.destroyAgent, args: [agent.id], callbackScope: this});
 	},
 
 	calculateScore: function(){
@@ -491,7 +585,8 @@ let GraphGame = new Phaser.Class({
 				if(point.skin != ""){
 					let xPos = this.nodes[next].xPosition + (this.nodes[next].xPosition - this.nodes[current].xPosition >= 0 ? -5 : 5);
 					let yPos = this.nodes[next].yPosition + (this.nodes[next].yPosition - this.nodes[current].yPosition >= 0 ? -5 : 5);
-					let pointImage = this.add.image(this.xPosToScreen(xPos), this.yPosToScreen(yPos), point.skin).setOrigin(0.5).setScale(0.2);
+					let pointImage = this.add.image(this.xPosToScreen(xPos), this.yPosToScreen(yPos), point.skin).setOrigin(0.5);
+					pointImage.setScale(this.height/pointImage.height * 0.1);
 					pointImage.angle = point.rotationWaiting;
 					return {'waitTime': point.waitTime, 'image': pointImage, 'degree': point.rotationWaiting};
 				}
@@ -509,14 +604,11 @@ let GraphGame = new Phaser.Class({
 				}
 				if(point.pointsIf.indexOf(next) != -1){
 					this.countedWinEvents ++;
-					this.displayPointsText.setText(this.calculateScore().toString());
 					console.log("points");
 					return "points";
 				}
 			}
 		}
-		
-
 		return "";
 	},
 
@@ -544,10 +636,10 @@ let GraphGame = new Phaser.Class({
 			
 			if(currentNode.skin != ''){
 				this.node.img = that.add.sprite(this.xPosToScreen(currentNode.xPosition),this.yPosToScreen(currentNode.yPosition), currentNode.skin).setInteractive();
-				this.node.img.setScale(this.height * window.devicePixelRatio/this.node.img.height * 0.1)
+				this.node.img.setScale(this.height/this.node.img.height * 0.3)
 			}else{
 				this.node.img = that.add.sprite(this.xPosToScreen(currentNode.xPosition),this.yPosToScreen(currentNode.yPosition), currentNode.nodeState).setInteractive();
-				this.node.img.setScale(this.height * window.devicePixelRatio/this.node.img.height * 0.01)
+				this.node.img.setScale(this.height/this.node.img.height * 0.03)
 			}
 			this.node.connectedTo = currentNode.connectedTo;
 			this.node.pauseTime = currentNode.nodePauseTime;
@@ -801,8 +893,8 @@ let init = function(){
 	// our game's configuration
 	let config = {
 		type: Phaser.CANVAS,  //using Canvas because performance is better
-		width: window.innerWidth * window.devicePixelRatio,
-		height:  window.innerHeight * window.devicePixelRatio,
+		width: window.innerWidth,
+		height:  window.innerHeight,
 		backgroundColor: gameData.backgroundColor,
 		parent: 'game',
 		displayVisibilityChange: true,
