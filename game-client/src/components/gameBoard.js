@@ -11,68 +11,6 @@ export default function GameBoard(
     assetServerUri,
     content
   }) {
-  /*
-  const connectedGames = [
-    {
-      challengeNumber: 2,
-      avatar: "mrsblue",
-      gameId: resumableGame.gameId
-    }, {
-      challengeNumber: 2,
-      avatar: "policeman",
-      gameId: Math.random()
-    }, {
-      challengeNumber: 2,
-      avatar: "policeman",
-      gameId: Math.random()
-    }, {
-      challengeNumber: 2,
-      avatar: "policeman",
-      gameId: Math.random()
-    }, {
-      challengeNumber: 3,
-      avatar: "mrsblue",
-      gameId: resumableGame.gameId
-    }, {
-      challengeNumber: 3,
-      avatar: "policeman",
-      gameId: Math.random()
-    }, {
-      challengeNumber: 3,
-      avatar: "policeman",
-      gameId: Math.random()
-    }, {
-      challengeNumber: 3,
-      avatar: "policeman",
-      gameId: Math.random()
-    },{
-      challengeNumber: 1,
-      avatar: "mrsblue",
-      gameId: resumableGame.gameId
-    }, {
-      challengeNumber: 1,
-      avatar: "policeman",
-      gameId: Math.random()
-    }, {
-      challengeNumber: 1,
-      avatar: "policeman",
-      gameId: Math.random()
-    }, {
-      challengeNumber: 1,
-      avatar: "policeman",
-      gameId: Math.random()
-    },
-  ]
-
-  for (let i = 0; i < 100; i++) {
-    connectedGames.push({
-      challengeNumber: Math.round(Math.random() * 10 + 1),
-      avatar: "policeman",
-      gameId: Math.random()
-    })
-  }
-  */
-
   const stations = []
 
   // fill stations
