@@ -52,6 +52,7 @@ function NewGameAvatarSelection(props) {
                     ${assetServerUri}/${content.avatarsMedium.src} 500w,
                     ${assetServerUri}/${content.avatarsLarge.src} 1000w` } />
         <QrReader
+          size={ 0.7 }
           seekerColor={ props.theme.colors.primary }
           onScan={ data => dispatch(handleAvatarQrCode(data)) }
           onError={ (error) => dispatch(handleQrReaderError(error)) } />

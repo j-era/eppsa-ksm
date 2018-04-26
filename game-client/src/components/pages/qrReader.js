@@ -5,7 +5,6 @@ import { Description, PageTitle, QrReader } from "eppsa-ksm-shared"
 
 import { handleChallengeQrCode, handleQrReaderError } from "../../actionCreators"
 
-
 const Container = styled.div `
   background-color: white;
   display: flex;
@@ -14,14 +13,16 @@ const Container = styled.div `
 `
 
 const Content = styled.div `
-  margin-top: ${props => props.theme.layout.mediumSpacing};
+  margin-top: ${props => props.theme.layout.mediumSpacing}vw;
   display: flex;
   flex-direction: column;
   height: 100%;
 `
 
 const StyledDescription = styled(Description)`
-  margin-top: ${props => props.theme.layout.largeSpacing};
+  margin-top: ${props => props.theme.layout.largeSpacing}vw;
+  padding-left: ${props => props.theme.layout.cardWidth * 0.15}vw;
+  padding-right: ${props => props.theme.layout.cardWidth * 0.15}vw;
 `
 
 export default ({ challengeNumber, content, dispatch }) => {
@@ -32,9 +33,10 @@ export default ({ challengeNumber, content, dispatch }) => {
       <PageTitle text={ challenge.description } />
       <Content>
         <QrReader
+          size={ 0.8 }
           background={ challenge.color }
           transparency
-          seeker="white"
+          seekerColor="white"
           onScan={ (data) => dispatch(handleChallengeQrCode(data, challenge)) }
           onError={ (error) => dispatch(handleQrReaderError(error)) } />
         <StyledDescription
