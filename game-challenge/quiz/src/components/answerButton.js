@@ -4,10 +4,10 @@ import { Button, clickEffect, pulse } from "eppsa-ksm-shared"
 
 const StyledButton = styled(Button)`
   align-self: stretch;
-  margin-top: ${props => props.theme.layout.mediumSpacing};
+  margin-top: ${props => props.theme.layout.mediumSpacing}vw;
   border-color: ${props => selectionColor(props.selection, props.theme)};
   ${props => props.visible ? css`
-      transform: scale(0.9, 1);
+      transform: scale(1, 1);
       transition:
         transform 150ms cubic-bezier(0.2, 0.7, 0.55, 1.2)
           ${props => props.initialDelay + props.index * 150}ms,
@@ -20,11 +20,11 @@ const StyledButton = styled(Button)`
     selectionAnimation(
       props.selection,
       props.blinking,
-      props.theme.colors.areaColor,
+      props.theme.colors.area,
       "border-color",
       props.theme
     )}
-  ${props => props.clicked ? css`, ${clickEffect(0.9)};` : ";"}
+  ${props => props.clicked ? css`, ${clickEffect()};` : ";"}
   ${props => props.selection === "greyed" ? css`
     opacity: 0.8;
     transition: opacity ${props.greyOutDuration}ms ease;
@@ -50,6 +50,7 @@ const Title = styled.div`
 
 const Answer = styled.div`
   flex-basis: 90%;
+  align-self: center;
   padding-right: 10%;
   color: ${props => selectionColor(props.selection, props.theme, "text")};
   animation: ${props =>
@@ -77,14 +78,14 @@ function selectionColor(selection, theme, colorType = "area") {
     rightAnswer,
     wrongAnswer,
     secondary,
-    areaColor,
+    area,
     primaryFont
   } = theme.colors
   switch (selection) {
     case "right": return rightAnswer
     case "wrong": return wrongAnswer
     case "greyed": return secondary
-    default: return colorType === "area" ? areaColor : primaryFont
+    default: return colorType === "area" ? area : primaryFont
   }
 }
 

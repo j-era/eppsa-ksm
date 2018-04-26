@@ -2,16 +2,22 @@ import React from "react"
 import autoBind from "react-autobind"
 import styled, { withTheme } from "styled-components"
 
-import { Button, delay, Description, FramedIcon, NextButton, PageTitle } from "eppsa-ksm-shared"
+import {
+  Button,
+  delay,
+  Description,
+  FramedIcon,
+  NextButton,
+  Page,
+  PageTitle
+} from "eppsa-ksm-shared"
 
 import { updateGameState } from "../../actionCreators"
 import { NEW_GAME_AVATAR_SELECTION, NEW_GAME_NAME_SELECTION } from "../../gameStates"
 
-const Container = styled.div `
-  background-color: white;
+const Container = styled(Page)`
   display: flex;
   flex-direction: column;
-  height: 100%;
 `
 
 const Content = styled.div `

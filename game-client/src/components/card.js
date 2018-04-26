@@ -5,4 +5,5 @@ export default styled.div`
   height: ${props => props.theme.layout.cardHeight}vw;
   border-radius: ${props => props.theme.layout.cardBorderRadius};
   background-color: white;
+  overflow: hidden;
 `

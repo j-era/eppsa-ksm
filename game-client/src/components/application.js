@@ -8,7 +8,6 @@ import GameBoard from "./gameBoard"
 import GameManualButton from "./gameManualButton"
 import { default as Background } from "./background"
 import pages from "./pages"
-import Page from "./page"
 
 const Container = styled.div`
   background-color: white;
@@ -35,9 +34,7 @@ function Application(props) {
           bannerText={ content.name }
           inGameSetup={ inGameSetup(gameState) } >
           <Card>
-            <Page>
-              { React.createElement(render, props) }
-            </Page>
+            { React.createElement(render, props) }
           </Card>
         </Background>
       </Container>
@@ -72,6 +69,7 @@ function updateTheme(theme, winWidth, winHeight, challenge, showHeader) {
   newTheme.layout.largeSpacing *= cardWidthRatio
   newTheme.layout.buttonBorder *= cardWidthRatio
   newTheme.layout.iconBorder *= cardWidthRatio
+  newTheme.layout.cardPadding *= cardWidthRatio
   newTheme.layout.cardWidth = cardWidth
   newTheme.layout.cardHeight = cardHeight
   return newTheme

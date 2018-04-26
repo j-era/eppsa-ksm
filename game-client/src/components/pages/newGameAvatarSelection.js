@@ -1,7 +1,7 @@
 import React from "react"
 import styled, { withTheme } from "styled-components"
 
-import { Description, ErrorMessage, PageTitle, QrReader } from "eppsa-ksm-shared"
+import { Description, ErrorMessage, Page, PageTitle, QrReader } from "eppsa-ksm-shared"
 
 import {
   handleQrReaderError,
@@ -12,11 +12,9 @@ import {
 import { NEW_GAME_AVATAR_CONFIRMATION } from "../../gameStates"
 
 
-const Container = styled.div `
-  background-color: white;
+const Container = styled(Page)`
   display: flex;
   flex-direction: column;
-  height: 100%;
 `
 
 const Content = styled.div `

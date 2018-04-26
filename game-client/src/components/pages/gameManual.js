@@ -1,15 +1,14 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled, { css } from "styled-components"
-import { delay, NextButton, PageTitle, StyledMarkdown } from "eppsa-ksm-shared"
+import { delay, NextButton, Page, PageTitle, StyledMarkdown } from "eppsa-ksm-shared"
 
 import { showGameManual, startNewGame } from "../../actionCreators"
 import * as gameStates from "../../gameStates"
 
-const Container = styled.div `
+const Container = styled(Page)`
   display: flex;
   flex-direction: column;
-  height: 100%;
 `
 
 const ManualText = styled.div`

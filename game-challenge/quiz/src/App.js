@@ -2,25 +2,24 @@ import React from "react"
 import autoBind from "react-autobind"
 import styled, { ThemeProvider } from "styled-components"
 
-import { delay, NextButton, ScoreCalculation, theme } from "eppsa-ksm-shared"
+import { delay, AnimNextButton, Page, ScoreCalculation, theme } from "eppsa-ksm-shared"
 
 import AnswerButton from "./components/answerButton"
 import QuestionText from "./components/questionText"
 import QuestionTitle from "./components/questionTitle"
 
 
-const Container = styled.div `
+const Container = styled(Page)`
   font-family: ${props => props.theme.font.fontFamily};
   background-color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100%;
 `
 
 const StyledQuestionText = styled(QuestionText)`
-  margin-top: ${props => props.theme.layout.smallSpacing};
-  margin-bottom: ${props => props.theme.layout.mediumSpacing};
+  margin-top: ${props => props.theme.layout.smallSpacing}vw;
+  margin-bottom: ${props => props.theme.layout.mediumSpacing}vw;
 `
 
 export default class App extends React.Component {
@@ -58,7 +57,7 @@ export default class App extends React.Component {
 
   render() {
     const { question } = this.props.content.challenge
-    theme.colors.areaColor = this.props.content.color
+    theme.colors.area = this.props.content.color
     return (
       <ThemeProvider theme={ theme }>
         <Container>
@@ -104,7 +103,7 @@ export default class App extends React.Component {
   }
 
   renderNextButton() {
-    return <NextButton
+    return <AnimNextButton
       slideIn
       visible={ this.state.showNext }
       onClick={ async () => await this.nextChallenge() }
