@@ -68,6 +68,8 @@ contentServer.getData().then(transform).then(async (content) => {
           maxChallenges={ maxChallenges }
           dispatch={ store.dispatch }
           gameServer={ gameServer }
+          winWidth={ window.innerWidth }
+          winHeight={ window.innerHeight }
           onChallengeReady={ onChallengeReady } />
       </ThemeProvider>
     </Provider>,

@@ -22,16 +22,18 @@ const Header = styled.div`
 `
 
 function Application(props) {
+  const { content, gameState, winWidth, winHeight } = props
   const { render, showHeader } = getPageData(props)
   const challenge = props.content.challenges[props.challengeNumber]
 
   return (
-    <ThemeProvider theme={ (theme) => updateTheme(theme, challenge, showHeader) }>
+    <ThemeProvider
+      theme={ (theme) => updateTheme(theme, winWidth, winHeight, challenge, showHeader) }>
       <Container>
         { showHeader && renderHeader(props) }
         <Background
-          bannerText={ props.content.name }
-          inGameSetup={ inGameSetup(props.gameState) } >
+          bannerText={ content.name }
+          inGameSetup={ inGameSetup(gameState) } >
           <Card>
             <Page>
               { React.createElement(render, props) }
@@ -56,8 +58,8 @@ function getPageData({ showGameManual, gameState }) {
   return showGameManual ? pages.GAME_MANUAL : pages[gameState]
 }
 
-function updateTheme(theme, challenge, showHeader) {
-  const [cardWidth, cardHeight] = calculateCardSize(showHeader)
+function updateTheme(theme, winWidth, winHeight, challenge, showHeader) {
+  const [cardWidth, cardHeight] = calculateCardSize(winWidth, winHeight, showHeader)
   const cardWidthRatio = cardWidth / 100
 
   const newTheme = cloneDeep(theme)
@@ -75,9 +77,9 @@ function updateTheme(theme, challenge, showHeader) {
   return newTheme
 }
 
-function calculateCardSize(showHeader) {
-  const innerHeight = showHeader ? window.innerHeight * 0.9 : window.innerHeight
-  const winRatio = window.innerWidth / innerHeight
+function calculateCardSize(winWidth, winHeight, showHeader) {
+  const innerHeight = showHeader ? winHeight * 0.9 : winHeight
+  const winRatio = winWidth / innerHeight
   const maxWidth = 98 // maximal relative width
   const maxRatio = 0.46 // maximal expected display ratio (1:2)
   const cardRatio = 2 / 3
