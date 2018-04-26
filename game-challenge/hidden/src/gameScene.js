@@ -81,7 +81,7 @@ class gameScene extends Phaser.Scene {
 
 	for(var blockElements in this.blockImages){
 		if(this.blockImages[blockElements].direction == ""){
-			var blocking = this.add.image(this.blockImages[blockElements].positionX,this.blockImages[blockElements].positionY, this.blockImages[blockElements].img).setOrigin(0,1).setName(imageKey).setInteractive();
+			var blocking = this.add.image(this.blockImages[blockElements].positionX,this.blockImages[blockElements].positionY, this.blockImages[blockElements].img).setOrigin(0.5,1).setName(imageKey).setInteractive();
 			if(blocking.displayWidth > this.blockMaxWidth){
 				var scale = (this.blockMaxWidth / blocking.displayWidth)
 				blocking.setScale(scale,scale);
@@ -114,7 +114,7 @@ class gameScene extends Phaser.Scene {
 	this.loadedImages = {};
 
 	for(var imageKey in this.imageArray){
-		var image = this.add.image(0,0, this.imageArray[imageKey].img).setOrigin(0,1).setInteractive().setName(imageKey);
+		var image = this.add.image(0,0, this.imageArray[imageKey].img).setOrigin(0.5,1).setInteractive().setName(imageKey);
 		this.loadedImages[imageKey] = image;
 	}
 
@@ -125,18 +125,18 @@ class gameScene extends Phaser.Scene {
 		this.scale;
 		if(that.imageArray[element].type == 1){
 			if(that.loadedImages[element].displayWidth > that.picMaxWidth){
-				this.scale = (this.picMaxWidth / that.loadedImages[element].displayWidth) * that.imageArray[element].depth/2;
+				this.scale = (this.picMaxWidth / that.loadedImages[element].displayWidth) * that.sys.game.gameData.ScalingImages;
 				that.loadedImages[element].setScale(this.scale,this.scale);
 
 			}else if(that.loadedImages[element].displayWidth < that.PicMinWidth){
-				this.scale = (this.picMinWidth / that.loadedImages[element].displayWidth) * that.imageArray[element].depth/2
+				this.scale = (this.picMinWidth / that.loadedImages[element].displayWidth) * that.sys.game.gameData.ScalingImages;
 				that.loadedImages[element].setScale(this.scale,this.scale);
 			}else {
 				if(that.loadedImages[element].displayHeight > this.PicMaxHeight){
-					this.scale = (this.picMinHeight / that.loadedImages[element].displayHeight) * that.imageArray[element].depth/2
+					this.scale = (this.picMinHeight / that.loadedImages[element].displayHeight) * that.sys.game.gameData.ScalingImages;
 					that.loadedImages[element].setScale(this.scale,this.scale);
 				}else if(that.loadedImages[element].displayHeight < this.PicMinHeight){
-					this.scale = (this.picMinHeight / that.loadedImages[element].displayHeight) * that.imageArray[element].depth/2
+					this.scale = (this.picMinHeight / that.loadedImages[element].displayHeight) * that.sys.game.gameData.ScalingImages;
 					that.loadedImages[element].setScale(this.scale,this.scale);
 				}else {
 				}
@@ -145,18 +145,18 @@ class gameScene extends Phaser.Scene {
 			//that.loadedImages[element].displayHeight = that.picMaxHeight * (that.imageArray[element].depth/2);
 		}else{
 			if(that.loadedImages[element].displayWidth > that.restPicMaxWidth){
-				this.scale = (this.restPicMaxWidth / that.loadedImages[element].displayWidth) * that.imageArray[element].depth/2;
+				this.scale = (this.restPicMaxWidth / that.loadedImages[element].displayWidth) * that.sys.game.gameData.ScalingImages;
 				that.loadedImages[element].setScale(this.scale,this.scale);
 
 			}else if(that.loadedImages[element].displayWidth < that.restPicMinWidth){
-				this.scale = (this.restPicMinWidth / that.loadedImages[element].displayWidth) * that.imageArray[element].depth/2
+				this.scale = (this.restPicMinWidth / that.loadedImages[element].displayWidth) * that.sys.game.gameData.ScalingImages;
 				that.loadedImages[element].setScale(this.scale,this.scale);
 			}else {
 				if(that.loadedImages[element].displayHeight > this.restPicMaxHeight){
-					this.scale = (this.restPicMinHeight / that.loadedImages[element].displayHeight) * that.imageArray[element].depth/2
+					this.scale = (this.restPicMinHeight / that.loadedImages[element].displayHeight) * that.sys.game.gameData.ScalingImages;
 					that.loadedImages[element].setScale(this.scale,this.scale);
 				}else if(that.loadedImages[element].displayHeight < this.restPicMinHeight){
-					this.scale = (this.restPicMinHeight / that.loadedImages[element].displayHeight) * that.imageArray[element].depth/2
+					this.scale = (this.restPicMinHeight / that.loadedImages[element].displayHeight) * that.sys.game.gameData.ScalingImages;
 					that.loadedImages[element].setScale(this.scale,this.scale);
 				}else {
 				}
@@ -237,8 +237,8 @@ class gameScene extends Phaser.Scene {
 
 			that.tweens.add( {
 				targets: gameObject,
-				scaleX: 0.3,
-				scaleY: 0.3,
+				scaleX: that.sys.game.gameData.ClickScaleX,
+				scaleY: that.sys.game.gameData.ClickScaleY,
 				ease: 'Linear',
 				duration: 500,
 				repeat: 1,
