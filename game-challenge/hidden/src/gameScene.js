@@ -124,19 +124,19 @@ class gameScene extends Phaser.Scene {
 		//var i = 0;
 		this.scale;
 		if(that.imageArray[element].type == 1){
-			if(that.loadedImages[element].displayWidth > that.picMaxWidth){
-				this.scale = (this.picMaxWidth / that.loadedImages[element].displayWidth) * that.sys.game.gameData.ScalingImages;
+			if(that.imageArray[element].depth == 1){
+				this.scale = /*(this.picMaxWidth / that.loadedImages[element].displayWidth) * */that.sys.game.gameData.ScalingImages1;
 				that.loadedImages[element].setScale(this.scale,this.scale);
 
-			}else if(that.loadedImages[element].displayWidth < that.PicMinWidth){
-				this.scale = (this.picMinWidth / that.loadedImages[element].displayWidth) * that.sys.game.gameData.ScalingImages;
+			}else if(that.imageArray[element].depth == 2){
+				this.scale = /*(this.picMinWidth / that.loadedImages[element].displayWidth) * */that.sys.game.gameData.ScalingImages2;
 				that.loadedImages[element].setScale(this.scale,this.scale);
 			}else {
-				if(that.loadedImages[element].displayHeight > this.PicMaxHeight){
-					this.scale = (this.picMinHeight / that.loadedImages[element].displayHeight) * that.sys.game.gameData.ScalingImages;
+				if(that.imageArray[element].depth == 3){
+					this.scale = /*(this.picMinHeight / that.loadedImages[element].displayHeight) * */that.sys.game.gameData.ScalingImages3;
 					that.loadedImages[element].setScale(this.scale,this.scale);
-				}else if(that.loadedImages[element].displayHeight < this.PicMinHeight){
-					this.scale = (this.picMinHeight / that.loadedImages[element].displayHeight) * that.sys.game.gameData.ScalingImages;
+				}else if(that.imageArray[element].depth == 4){
+					this.scale = /*(this.picMinHeight / that.loadedImages[element].displayHeight) * */that.sys.game.gameData.ScalingImages4;
 					that.loadedImages[element].setScale(this.scale,this.scale);
 				}else {
 				}
@@ -144,7 +144,7 @@ class gameScene extends Phaser.Scene {
 
 			//that.loadedImages[element].displayHeight = that.picMaxHeight * (that.imageArray[element].depth/2);
 		}else{
-			if(that.loadedImages[element].displayWidth > that.restPicMaxWidth){
+			/*if(that.loadedImages[element].displayWidth > that.restPicMaxWidth){
 				this.scale = (this.restPicMaxWidth / that.loadedImages[element].displayWidth) * that.sys.game.gameData.ScalingImages;
 				that.loadedImages[element].setScale(this.scale,this.scale);
 
@@ -160,7 +160,7 @@ class gameScene extends Phaser.Scene {
 					that.loadedImages[element].setScale(this.scale,this.scale);
 				}else {
 				}
-			}
+			}*/
 		}
 		var temp = 'row' + that.imageArray[element].depth;
 		that[temp].push(that.loadedImages[element]);
