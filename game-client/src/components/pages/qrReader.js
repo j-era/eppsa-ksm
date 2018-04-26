@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 
-import { Description, PageTitle, QrReader } from "eppsa-ksm-shared"
+import { Description, ErrorMessage, PageTitle, QrReader } from "eppsa-ksm-shared"
 
 import { handleChallengeQrCode, handleQrReaderError } from "../../actionCreators"
 
@@ -25,7 +25,13 @@ const StyledDescription = styled(Description)`
   padding-right: ${props => props.theme.layout.cardWidth * 0.15}vw;
 `
 
-export default ({ challengeNumber, content, dispatch }) => {
+const StyledErrorMessage = styled(ErrorMessage)`
+  margin-top: ${props => props.theme.layout.largeSpacing}vw;
+  padding-left: ${props => props.theme.layout.cardWidth * 0.15}vw;
+  padding-right: ${props => props.theme.layout.cardWidth * 0.15}vw;
+`
+
+export default ({ challengeNumber, content, dispatch, wrongQrCodeScanned }) => {
   const challenge = content.challenges[challengeNumber]
 
   return (
@@ -39,12 +45,18 @@ export default ({ challengeNumber, content, dispatch }) => {
           seekerColor="white"
           onScan={ (data) => dispatch(handleChallengeQrCode(data, challenge)) }
           onError={ (error) => dispatch(handleQrReaderError(error)) } />
-        <StyledDescription
-          onClick={ process.env.NODE_ENV === "development"
-            ? () => dispatch(handleChallengeQrCode(challenge.token, challenge))
-            : () => {} }>
-          { content.shared.texts.scanQrInstructions }
-        </StyledDescription>
+        {
+          wrongQrCodeScanned ?
+            <StyledErrorMessage>
+              { content.shared.texts.scanQrErrorInstructions }
+            </StyledErrorMessage> :
+            <StyledDescription
+              onClick={ process.env.NODE_ENV === "development"
+                ? () => dispatch(handleChallengeQrCode(challenge.token, challenge))
+                : () => {} }>
+              { content.shared.texts.scanQrInstructions }
+            </StyledDescription>
+        }
       </Content>
     </Container>
   )

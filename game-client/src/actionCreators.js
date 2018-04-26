@@ -273,7 +273,6 @@ export function handleChallengeQrCode(data, challenge) {
         dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
       } else {
         dispatch({ type: types.WRONG_QR_CODE_SCANNED })
-        dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_AREA))
       }
     }
   }
