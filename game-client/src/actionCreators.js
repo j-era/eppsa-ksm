@@ -1,4 +1,3 @@
-import querystring from "querystring"
 import uuid from "uuid/v4"
 
 import { setCookie } from "./cookie"
@@ -268,7 +267,9 @@ export function selectChallengeMode(content, gameServer) {
 export function handleChallengeQrCode(data, challenge) {
   return (dispatch) => {
     if (data != null) {
-      if (data === challenge.token) {
+      const url = new URL(data)
+      const token = url.searchParams.get("token")
+      if (token === challenge.token) {
         dispatch({ type: types.CORRECT_QR_CODE_SCANNED })
         dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
       } else {
@@ -282,9 +283,9 @@ export function handleAvatarQrCode(data) {
   return dispatch => {
     if (data != null) {
       const url = new URL(data)
-      const params = querystring.parse(url.search.substring(1))
-      if (params.avatar != null) {
-        dispatch(updateAvatar(params.avatar))
+      const token = url.searchParams.get("avatar")
+      if (token != null) {
+        dispatch(updateAvatar(token))
         dispatch(updateGameState(gameStates.NEW_GAME_NAME_SELECTION))
       } else {
         dispatch({ type: types.WRONG_QR_CODE_SCANNED })
