@@ -6,9 +6,9 @@ import Banner from "./banner"
 
 const Container = styled.div`
   position: relative;
-  
-  ${props => props.inGameSetup === "true" ? null : "padding-top: 5vw;"};
-  
+
+  ${props => props.addTopPadding === "true" ? null : "padding-top: 5vw;"};
+
   box-sizing: border-box;
 
   width: 100%;
@@ -35,9 +35,9 @@ const Background = styled.div`
   background-color: ${props => props.theme.colors.area};
 `
 
-const BannerContainer = styled.div` 
-  visibility: ${props => props.visible === "true" ? "visible" : "hidden"}; 
-  display: flex; 
+const BannerContainer = styled.div`
+  visibility: ${props => props.visible === "true" ? "visible" : "hidden"};
+  display: flex;
   position: absolute;
   transform: translateY(-3vw);
   width: 100%;

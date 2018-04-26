@@ -1,17 +1,18 @@
 import React from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import { getCookie } from "../cookie"
 
-export default function GameBoard(
-  {
+export default function GameBoard(props) {
+  const {
     connectedGames,
     maxChallenges,
-    resumableGame,
     challengeNumber,
     assetServerUri,
     content
-  }) {
+  } = props
+
   const stations = []
+  let ownGame
 
   // fill stations
   for (let i = 0; i < maxChallenges; i++) {
@@ -21,6 +22,10 @@ export default function GameBoard(
   // sort games into stations
   connectedGames.forEach(game => {
     const station = stations[game.challengeNumber - 1]
+
+    if (game.gameId === getCookie("gameId") ) {
+      ownGame = game
+    }
 
     if (station.length < 3 || game.gameId === getCookie("gameId")) {
       station.push(game)
@@ -34,21 +39,16 @@ export default function GameBoard(
   const Board = styled.div`
     height: 100%;
     width: 220vw;
-    
+
     display: flex;
-    
+
     flex-direction: row;
-    
-    ${() => {
-    if (resumableGame) {
-      return `transform: translate(${40 - 20 * (challengeNumber - 1)}vw);`
-    }
-  }}}
+
+    transform: translate(${40 - 20 * (challengeNumber - 1)}vw);
   `
 
   const Area = styled.div`
     position: relative;
-    height: 97.5%;
     width: 17.5vw;
     margin-left: 1.25vw;
     margin-right: 1.25vw;
@@ -64,40 +64,66 @@ export default function GameBoard(
     border-radius: 50%;
   `
 
-  const Avatars = styled.div`
+  const Avatar = styled.div`
     position: absolute;
-    left: 0%;
-    bottom: 30%;
-    width: 100%;
-    
-    display: flex;
-    flex-direction: row;
-    justify-content: ${props => props.count > 2 ? "center" : "start"};
-  `
-
-  const OwnAvatar = styled.div`
-    position: absolute;
-    left: 0%;
     bottom: 10%;
     width: 100%;
-    
+
     display: flex;
     flex-direction: row;
+  `
+
+  const OtherAvatars = styled(Avatar)`
+    ${props => positionAvatars(props)}
+  `
+
+  function positionAvatars(props) {
+    if (props.isSelfOnField) {
+      if (props.count === 2) {
+        return css`
+          justify-content: start;
+          bottom: 25%;
+        `
+      } else if (props.count === 3) {
+        return css`
+          justify-content: space-between;
+          bottom: 25%;
+        `
+      }
+    } else {
+      return css`
+        justify-content: center;
+        bottom: 10%;
+      `
+    }
+  }
+
+  const MyAvatar = styled(Avatar)`
     justify-content: center;
   `
 
   const avatarWith = 13
 
-  const Avatar = styled.img`
+  const AvatarImage = styled.div`
+    background: url(${props => props.src});
+    background-size: contain;
+
     margin-left: -20%;
     margin-right: -20%;
+
     width: ${avatarWith}vw;
-    height: ${avatarWith * 1.111111}vw;
+    height: ${avatarWith}vw;
   `
 
-  const Self = styled.img`
+  const MyAvatarImage = styled.div`
+    background: url(${props => props.src});
+    background-size: contain;
+
     width: ${avatarWith}vw;
-    height: ${avatarWith * 1.111111}vw;
+    height: ${avatarWith}vw;
+
+    transform-origin: bottom;
+    transform: scale(1.2);
   `
 
   return (
@@ -106,31 +132,29 @@ export default function GameBoard(
         stations.map((station, index) =>
           <Area key={ index.toString() }>
             <Field fill={ content.challenges[index + 1].color }>
-              <Avatars count={ station.length }>
-                {
-                  station.map((game, gameIndex, array) => game.gameId === getCookie("gameId") ?
-                    null
-                    :
-                    <Avatar
-                      offset={ index.toString() }
-                      gameIndex={ gameIndex }
-                      array={ array }
-                      key={ game.gameId }
-                      src={ `${assetServerUri}/${content.avatars[game.avatar].small.src}` } />
-                  )
-                }
-              </Avatars>
-              <OwnAvatar>
+              <OtherAvatars
+                count={ station.length } isSelfOnField={ station.includes(ownGame) }>
                 {
                   station.map((game) => game.gameId === getCookie("gameId") ?
-                    <Self
+                    null
+                    :
+                    <AvatarImage
+                      key={ game.gameId }
+                      src={ `${assetServerUri}/${content.avatars[game.avatar].small.src}` } />
+                  )
+                }
+              </OtherAvatars>
+              <MyAvatar>
+                {
+                  station.map((game) => game.gameId === getCookie("gameId") ?
+                    <MyAvatarImage
                       key={ game.gameId }
                       src={ `${assetServerUri}/${content.avatars[game.avatar].small.src}` } />
                     :
                     null
                   )
                 }
-              </OwnAvatar>
+              </MyAvatar>
             </Field>
           </Area>
         )
