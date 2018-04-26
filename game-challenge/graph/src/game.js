@@ -1,4 +1,4 @@
-import bootstrap from "eppsa-ksm-shared"
+import {bootstrap} from "eppsa-ksm-shared"
 import Phaser from "./phaser.min"
 
 let gameData;
@@ -560,18 +560,37 @@ let GraphGame = new Phaser.Class({
 			yoyo: false,
 			repeat: 0,
 			onComplete: function(){
-				var originalTexture = that.textures.get('crashCar').getSourceImage();
-				var newTexture = that.textures.createCanvas('crashCarCrash', originalTexture.width, originalTexture.height);
 				
-				crashCar.setTexture('crashCarCrash');
+				var crashedCar1 = that.add.image(crashCar.x, crashCar.y, "redCarCrashed");
+				crashedCar1.setScale(that.height/crashedCar1.height * 0.2);
+				crashedCar1.angle = crashCar.angle;
+				that.fadeAndDestroy(crashedCar1);
+				var crashedCar2 = that.add.image(agent.x, agent.y, "blueCarCrashed");
+				crashedCar2.setScale(that.height/crashedCar1.height * 0.2);
+				crashedCar2.angle = agent.angle;
+				that.fadeAndDestroy(crashedCar2);
 
-				console.log(crashCar);
-				//crashCar.drestroy();
+				crashCar.destroy();
 				crashCar = null;
+				that.destroyAgent(agent.id);
 			}
 		})
 
-		this.time.addEvent({delay: 1800, callback: this.destroyAgent, args: [agent.id], callbackScope: this});
+		//this.time.addEvent({delay: 1800, callback: this.destroyAgent, args: [agent.id], callbackScope: this});
+	},
+
+	fadeAndDestroy: function(image){
+		this.tweens.add({
+			targets: image,
+			a: 0,
+			duration: 200,
+			yoyo: false,
+			repeat: 0,
+			onComplete: function(){
+				image.destroy();
+				image = null;
+			}
+		})	
 	},
 
 	calculateScore: function(){
