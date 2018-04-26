@@ -1,38 +1,43 @@
 import Phaser from "./phaser.min";
 
 class gameScene extends Phaser.Scene {
-constructor () {
-	super({
-		key: 'gameScene',
-	});
-}
-
-preload() {
-	var scope = this;
-	for(var key in this.sys.game.gameData.assets){
-		if(key == "template"){
-			continue;
-		}
-		this.load.image(scope.sys.game.gameData.assets[key].name, process.env.ASSET_SERVER_URI + "/" + scope.sys.game.gameData.assets[key].image.src);
+	constructor () {
+		super({
+			key: 'gameScene',
+		});
 	}
-}
 
-create(data) {
-	this.row1 = [];
-	this.row2 = [];
-	this.row3 = [];
-	this.row4 = [];
-	this.moveLeft = [];
-	this.moveRight = [];
+	preload() {
+		var scope = this;
+		for(var key in this.sys.game.gameData.assets){
+			if(key == "template"){
+				continue;
+			}
+			this.load.image(scope.sys.game.gameData.assets[key].name, process.env.ASSET_SERVER_URI + "/" + scope.sys.game.gameData.assets[key].image.src);
+		}
+	}
 
-	this.waitrow1 = [];
-	this.waitrow2 = [];
-	this.waitrow3 = [];
-	this.waitrow4 = [];
-	this.correct = 0;
+	create(data) {
+		this.row1 = [];
+		this.row2 = [];
+		this.row3 = [];
+		this.row4 = [];
+		this.moveLeft = [];
+		this.moveRight = [];
 
-	this.imageArray = {};
-	this.blockImages = {};
+		this.waitrow1 = [];
+		this.waitrow2 = [];
+		this.waitrow3 = [];
+		this.waitrow4 = [];
+		this.correct = 0;
+
+		this.imageArray = {};
+		this.blockImages = {};
+
+		this.speed1 = this.sys.game.gameData.SpeedRow1;
+		this.speed2 = this.sys.game.gameData.SpeedRow2;
+		this.speed3 = this.sys.game.gameData.SpeedRow3;
+		this.speed4 = this.sys.game.gameData.SpeedRow4;
 	//this.questions = [];
 
 	for(var key in this.sys.game.gameData.pictures){
@@ -68,10 +73,10 @@ create(data) {
 	this.picMinWidth = window.innerWidth/4;
 	this.picMinHeight = this.picMinWidth * 0.75;
 
-	this.restPicMaxWidth = 200;
-	this.restPicMaxHeight = 200;
-	this.restPicMinWidth = 200;
-	this.restPicMinHeight = 200;
+	this.restPicMaxWidth = window.innerWidth/3;
+	this.restPicMaxHeight = this.restPMaxWidth * 0.75;
+	this.restPicMinWidth = window.innerWidth/4;
+	this.restPicMinHeight = this.restPicMinWidth * 0.75;
 
 
 	for(var blockElements in this.blockImages){
@@ -155,10 +160,10 @@ create(data) {
 					that.loadedImages[element].setScale(this.scale,this.scale);
 				}else {
 				}
-				}
+			}
 		}
 		var temp = 'row' + that.imageArray[element].depth;
-	that[temp].push(that.loadedImages[element]);
+		that[temp].push(that.loadedImages[element]);
 		this['wait' + temp].push(element);	
 	}
 
@@ -312,9 +317,15 @@ spawn(waitrow, max, min) {
 }
 
 
+
+
 update(){
 	for(var i = 0; i < this.moveRight.length; i++){
-		this.moveRight[i].x += 5;
+		var temp = 'speed' + this.moveRight[i].depth
+
+		this.moveRight[i].x += this[temp];
+
+
 		if(this.moveRight[i].x > window.innerWidth + this.moveRight[i].displayWidth){
 			if(this.moveRight[i].input.enabled == false){
 				this.moveRight[i].input.enabled = true
@@ -328,7 +339,10 @@ update(){
 	}
 
 	for(var i = 0; i < this.moveLeft.length; i++){
-		this.moveLeft[i].x -= 5;
+		var temp = 'speed' + this.moveLeft[i].depth
+
+		this.moveLeft[i].x -= this[temp];
+
 		if(this.moveLeft[i].x < (0 - this.moveLeft[i].displayWidth - this.moveLeft[i].displayWidth)){
 			this.moveLeft[i].x = window.innerWidth;
 			var temp = 'waitrow' + this.imageArray[this.moveLeft[i].name].depth
