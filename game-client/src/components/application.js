@@ -28,7 +28,7 @@ function Application(props) {
         { showHeader && <Header props={ props } /> }
         <Background
           bannerText={ content.name }
-          inGameSetup={ inGameSetup(gameState) } >
+          gameState={ gameState } >
           <Card>
             { React.createElement(render, props) }
           </Card>
@@ -73,16 +73,3 @@ function calculateCardSize(winWidth, winHeight, showHeader) {
 }
 
 export default withTheme(connect((state) => state)(Application))
-
-function inGameSetup(gamestate) {
-  switch (gamestate) {
-    case "NEW_GAME_AVATAR_SELECTION":
-      return "true"
-    case "NEW_GAME_AVATAR_CONFIRMATION":
-      return "true"
-    case "NEW_GAME_NAME_SELECTION":
-      return "true"
-    default:
-      return "false"
-  }
-}

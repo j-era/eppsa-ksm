@@ -7,7 +7,7 @@ import Banner from "./banner"
 const Container = styled.div`
   position: relative;
 
-  ${props => props.addTopPadding === "true" ? null : "padding-top: 5vw;"};
+  padding-top: ${props => props.isBannerVisible ? "5vw" : "0vw"};
 
   box-sizing: border-box;
 
@@ -36,7 +36,7 @@ const Background = styled.div`
 `
 
 const BannerContainer = styled.div`
-  visibility: ${props => props.visible === "true" ? "visible" : "hidden"};
+  visibility: ${props => props.visible ? "visible" : "hidden"};
   display: flex;
   position: absolute;
   transform: translateY(-3vw);
@@ -45,8 +45,8 @@ const BannerContainer = styled.div`
   `
 
 export default props =>
-  <Container className={ props.className } addTopPadding={ props.inGameSetup }>
-    <BannerContainer visible={ props.inGameSetup }>
+  <Container className={ props.className } isBannerVisible={ isBannerVisible(props.gameState) }>
+    <BannerContainer visible={ isBannerVisible(props.gameState) }>
       <Banner>{ props.bannerText }</Banner>
     </BannerContainer>
     <StyledBackgroundArc />
@@ -54,3 +54,15 @@ export default props =>
       { props.children }
     </Background>
   </Container>
+
+
+function isBannerVisible(gamestate) {
+  switch (gamestate) {
+    case "NEW_GAME_AVATAR_SELECTION":
+    case "NEW_GAME_AVATAR_CONFIRMATION":
+    case "NEW_GAME_NAME_SELECTION":
+      return true
+    default:
+      return false
+  }
+}

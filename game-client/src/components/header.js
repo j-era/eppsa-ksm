@@ -5,9 +5,7 @@ import GameManualButton from "./gameManualButton"
 
 const Header = styled.div`
   height: 20%;
-  overflow: scroll;
-
-  margin-bottom: -13%;
+  overflow: hidden;
 `
 export default function renderHeader({ props }) {
   return (

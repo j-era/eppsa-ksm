@@ -44,24 +44,35 @@ export default function GameBoard(props) {
 
     flex-direction: row;
 
+
     transform: translate(${40 - 20 * (challengeNumber - 1)}vw);
   `
 
   const Area = styled.div`
+    display: flex;
+
+    align-items: flex-end;
+
     position: relative;
-    width: 17.5vw;
-    margin-left: 1.25vw;
-    margin-right: 1.25vw;
+    width: 20%;
+
+    padding-bottom: 1%;
   `
 
   const Field = styled.div`
-    position: absolute;
-    bottom: 35%;
+    position: relative;
+
     z-index: -1;
-    background-color: ${props => props.fill};
+
+    background-color: ${props => props.color};
+
     width: 100%;
-    height: 15%;
+    padding-bottom: 35%;
+
     border-radius: 50%;
+
+    margin-left: 1.25vw;
+    margin-right: 1.25vw;
   `
 
   const Avatar = styled.div`
@@ -107,6 +118,7 @@ export default function GameBoard(props) {
   const AvatarImage = styled.div`
     background: url(${props => props.src});
     background-size: contain;
+    background-repeat: no-repeat;
 
     margin-left: -20%;
     margin-right: -20%;
@@ -118,6 +130,7 @@ export default function GameBoard(props) {
   const MyAvatarImage = styled.div`
     background: url(${props => props.src});
     background-size: contain;
+    background-repeat: no-repeat;
 
     width: ${avatarWith}vw;
     height: ${avatarWith}vw;
@@ -131,7 +144,7 @@ export default function GameBoard(props) {
       {
         stations.map((station, index) =>
           <Area key={ index.toString() }>
-            <Field fill={ content.challenges[index + 1].color }>
+            <Field color={ content.challenges[index + 1].color }>
               <OtherAvatars
                 count={ station.length } isSelfOnField={ station.includes(ownGame) }>
                 {
