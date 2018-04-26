@@ -7,7 +7,6 @@ import { updateName, updateGameState } from "../../actionCreators"
 import * as gameStates from "../../gameStates"
 
 const Container = styled(Page)`
-  background-color: white;
   display: flex;
   flex-direction: column;
 `
