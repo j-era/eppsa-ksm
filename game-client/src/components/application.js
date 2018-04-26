@@ -4,7 +4,6 @@ import styled, { ThemeProvider, withTheme } from "styled-components"
 import cloneDeep from "lodash.clonedeep"
 
 import Card from "./card"
-import GameManualButton from "./gameManualButton"
 import { default as Background } from "./background"
 import Header from "./header"
 import pages from "./pages"
@@ -16,16 +15,6 @@ const Container = styled.div`
   flex-direction: column;
 `
 
-const Header = styled.div`
-  height: ${100 - appRatio}%;
-  overflow: scroll;
-`
-
-const Background = styled(BackgroundComponent)`
-  height: ${appRatio}%;
-`
-
-const innerRatio = window.innerWidth / window.innerHeight
 
 function Application(props) {
   const { content, gameState, winWidth, winHeight } = props
@@ -36,8 +25,8 @@ function Application(props) {
     <ThemeProvider
       theme={ (theme) => updateTheme(theme, winWidth, winHeight, challenge, showHeader) }>
       <Container>
-      { showHeader && <Header
-        props={ props } /> }
+        { showHeader && <Header
+          props={ props } /> }
         <Background
           bannerText={ content.name }
           inGameSetup={ inGameSetup(gameState) } >

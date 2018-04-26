@@ -4,8 +4,10 @@ import GameBoard from "./gameBoard"
 import GameManualButton from "./gameManualButton"
 
 const Header = styled.div`
-  height: ${props => 100 - props.appRatio}%;
+  height: 20%;
   overflow: scroll;
+  
+  margin-bottom: -13%;
 `
 export default function renderHeader({ props, appRatio }) {
   return (

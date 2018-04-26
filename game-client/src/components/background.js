@@ -6,15 +6,15 @@ import Banner from "./banner"
 
 const Container = styled.div`
   position: relative;
-  padding-top: 5vw;
+  
+  ${props => props.inGameSetup === "true" ? null : "padding-top: 5vw;"};
+  
   box-sizing: border-box;
 
   width: 100%;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-
-  background-color: white;
 `
 
 const StyledBackgroundArc = styled(BackgroundArc)`
@@ -31,20 +31,20 @@ const Background = styled.div`
   justify-content: center;
   flex-grow: 1;
 
-  background-color: ${props => props.fillColor};
+  background-color: ${props => props.theme.colors.area};
 `
 
-const BackgroundArc = styled.div`
-  background-color: ${props => props.fillColor};
-
+const BannerContainer = styled.div` 
+  visibility: ${props => props.visible === "true" ? "visible" : "hidden"}; 
+  display: flex; 
   position: absolute;
   transform: translateY(-3vw);
   width: 100%;
   justify-content: center;
-`
+  `
 
 export default props =>
-  <Container className={ props.className }>
+  <Container className={ props.className } addTopPadding={ props.inGameSetup }>
     <BannerContainer visible={ props.inGameSetup }>
       <Banner>{ props.bannerText }</Banner>
     </BannerContainer>
@@ -52,5 +52,4 @@ export default props =>
     <Background>
       { props.children }
     </Background>
-    <Banner visible={ props.inGameSetup }>{ props.bannerText }</Banner>
   </Container>
