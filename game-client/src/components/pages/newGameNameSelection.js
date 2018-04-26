@@ -3,7 +3,8 @@ import autoBind from "react-autobind"
 import styled, { withTheme } from "styled-components"
 import { FramedIcon, NextButton, PageTitle, delay } from "eppsa-ksm-shared"
 
-import { updateName, startNewGame } from "../../actionCreators"
+import { updateName, updateGameState } from "../../actionCreators"
+import * as gameStates from "../../gameStates"
 
 const Container = styled.div `
   background-color: white;
@@ -131,16 +132,9 @@ class NewGameNameSelection extends React.Component {
   }
 
   async confirm() {
-    const {
-      name,
-      avatar,
-      gameServer,
-      maxChallenges
-    } = this.props
-
     this.setState({ confirmed: true })
     await delay(100)
-    this.props.dispatch(startNewGame(name, avatar, maxChallenges, gameServer))
+    this.props.dispatch(updateGameState(gameStates.INITIAL_GAME_MANUAL))
   }
 }
 

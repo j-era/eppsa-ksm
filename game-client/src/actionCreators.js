@@ -1,10 +1,10 @@
 import querystring from "querystring"
+import uuid from "uuid/v4"
 
 import { setCookie } from "./cookie"
 import * as gameStates from "./gameStates"
 import * as types from "./actionTypes"
 import * as messages from "./messages"
-import uuid from "uuid/v4"
 
 export function resumeGame(gameId, gameServer) {
   return async (dispatch) => {
@@ -30,7 +30,6 @@ export function startNewGame(name, avatar, maxChallenges, gameServer) {
     const data = await gameServer.startGame(name, avatar, maxChallenges)
     dispatch(updateGameData(data))
     dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_AREA))
-    dispatch(showGameManual(true))
 
     setCookie("gameId", data.gameId)
     gameServer.setHandshakeQuery({ gameId: data.gameId })
@@ -227,7 +226,7 @@ export function selectChallengeType(
   assetServerUri,
   gameServerUri,
   staticServerUri
-  ) {
+) {
   return async (dispatch, getState) => {
     const { challengeNumber } = getState()
 
@@ -237,9 +236,9 @@ export function selectChallengeType(
       color: content.challenges[challengeNumber].color,
       challenge: challengeTypeData,
       shared: content.shared,
-      staticServerUri: staticServerUri,
-      assetServerUri: assetServerUri,
-      gameServerUri: gameServerUri
+      staticServerUri,
+      assetServerUri,
+      gameServerUri
     }
 
     dispatch({ type: types.SET_CHALLENGE_TYPE, challengeData, challengeUri })
