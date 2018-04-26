@@ -76,7 +76,7 @@ create(data) {
 
 	for(var blockElements in this.blockImages){
 		if(this.blockImages[blockElements].direction == ""){
-			var blocking = this.add.image(this.blockImages[blockElements].positionX,this.blockImages[blockElements].positionY, this.blockImages[blockElements].img).setOrigin(0,0).setName(imageKey).setInteractive();
+			var blocking = this.add.image(this.blockImages[blockElements].positionX,this.blockImages[blockElements].positionY, this.blockImages[blockElements].img).setOrigin(0,this.blockImages[blockElements].displayHeight).setName(imageKey).setInteractive();
 			if(blocking.displayWidth > this.blockMaxWidth){
 				var scale = (this.blockMaxWidth / blocking.displayWidth)
 				blocking.setScale(scale,scale);
@@ -109,7 +109,7 @@ create(data) {
 	this.loadedImages = {};
 
 	for(var imageKey in this.imageArray){
-		var image = this.add.image(0,0, this.imageArray[imageKey].img).setOrigin(0,0).setInteractive().setName(imageKey);
+		var image = this.add.image(0,0, this.imageArray[imageKey].img).setOrigin(0,this.imageArray[imageKey].displayHeight).setInteractive().setName(imageKey);
 		this.loadedImages[imageKey] = image;
 	}
 

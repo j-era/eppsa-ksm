@@ -1,4 +1,4 @@
-import {bootstrap} from "eppsa-ksm-shared"
+import bootstrap from "eppsa-ksm-shared"
 import Phaser from "./phaser.min"
 
 let gameData;

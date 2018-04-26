@@ -1,5 +1,5 @@
 import Phaser from "./phaser.min";
-import { ScoreCalculation } from "eppsa-ksm-shared"
+import ScoreCalculation from "eppsa-ksm-shared"
 
 class Win extends Phaser.Scene {
 	constructor () {

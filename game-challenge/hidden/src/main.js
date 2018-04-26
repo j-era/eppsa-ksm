@@ -1,4 +1,4 @@
-import {bootstrap} from "eppsa-ksm-shared"
+import { bootstrap } from "eppsa-ksm-shared"
 import Boot from "./boot.js";
 import GameScene from "./gameScene.js";
 import Win from "./Win.js";
