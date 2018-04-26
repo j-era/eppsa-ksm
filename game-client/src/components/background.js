@@ -21,6 +21,7 @@ const StyledBackgroundArc = styled(BackgroundArc)`
   fill: ${props => props.theme.colors.area};
   margin-bottom: -1px;
   width: 100%;
+  background-color: white;
 `
 
 const Background = styled.div`
