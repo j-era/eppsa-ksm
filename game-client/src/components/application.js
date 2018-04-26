@@ -15,7 +15,6 @@ const Container = styled.div`
   flex-direction: column;
 `
 
-
 function Application(props) {
   const { content, gameState, winWidth, winHeight } = props
   const { render, showHeader } = getPageData(props)

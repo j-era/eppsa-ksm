@@ -42,7 +42,7 @@ const BannerContainer = styled.div`
   transform: translateY(-3vw);
   width: 100%;
   justify-content: center;
-  `
+`
 
 export default props =>
   <Container className={ props.className } isBannerVisible={ isBannerVisible(props.gameState) }>

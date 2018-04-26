@@ -23,7 +23,7 @@ export default function GameBoard(props) {
   connectedGames.forEach(game => {
     const station = stations[game.challengeNumber - 1]
 
-    if (game.gameId === getCookie("gameId") ) {
+    if (game.gameId === getCookie("gameId")) {
       ownGame = game
     }
 
@@ -38,12 +38,9 @@ export default function GameBoard(props) {
 
   const Board = styled.div`
     height: 100%;
-    width: 220vw;
+    width: ${maxChallenges * 20}%;
 
     display: flex;
-
-    flex-direction: row;
-
 
     transform: translate(${40 - 20 * (challengeNumber - 1)}vw);
   `
@@ -145,8 +142,7 @@ export default function GameBoard(props) {
         stations.map((station, index) =>
           <Area key={ index.toString() }>
             <Field color={ content.challenges[index + 1].color }>
-              <OtherAvatars
-                count={ station.length } isSelfOnField={ station.includes(ownGame) }>
+              <OtherAvatars count={ station.length } isSelfOnField={ station.includes(ownGame) }>
                 {
                   station.map((game) => game.gameId === getCookie("gameId") ?
                     null
