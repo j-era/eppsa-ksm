@@ -290,8 +290,6 @@ export function handleAvatarQrCode(data) {
       } else {
         dispatch({ type: types.WRONG_QR_CODE_SCANNED })
       }
-    } else {
-      dispatch({ type: types.HANDLE_QR_READER_ERROR })
     }
   }
 }

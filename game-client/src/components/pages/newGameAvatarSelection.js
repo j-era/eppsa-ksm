@@ -1,7 +1,7 @@
 import React from "react"
 import styled, { withTheme } from "styled-components"
 
-import { Description, PageTitle, QrReader } from "eppsa-ksm-shared"
+import { Description, ErrorMessage, PageTitle, QrReader } from "eppsa-ksm-shared"
 
 import {
   handleQrReaderError,
@@ -56,7 +56,11 @@ function NewGameAvatarSelection(props) {
           seekerColor={ props.theme.colors.primary }
           onScan={ data => dispatch(handleAvatarQrCode(data)) }
           onError={ (error) => dispatch(handleQrReaderError(error)) } />
-        <Description>{ content.shared.texts.selectAvatarInstructions }</Description>
+        {
+          props.wrongQrCodeScanned
+            ? <ErrorMessage>{ content.shared.texts.selectAvatarErrorInstructions }</ErrorMessage>
+            : <Description>{ content.shared.texts.selectAvatarInstructions }</Description>
+        }
       </Content>
     </Container>
   )
