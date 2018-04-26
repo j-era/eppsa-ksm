@@ -25,8 +25,7 @@ function Application(props) {
     <ThemeProvider
       theme={ (theme) => updateTheme(theme, winWidth, winHeight, challenge, showHeader) }>
       <Container>
-        { showHeader && <Header
-          props={ props } /> }
+        { showHeader && <Header props={ props } /> }
         <Background
           bannerText={ content.name }
           inGameSetup={ inGameSetup(gameState) } >
@@ -37,28 +36,6 @@ function Application(props) {
       </Container>
     </ThemeProvider>
   )
-}
-
-function enhance(props) {
-  if (props.content.challenges[props.challengeNumber]) {
-    const challengeTypes = props.content.challenges[props.challengeNumber].challengeTypes
-    const challengeType = Object.keys(omit(challengeTypes, "template"))[0]
-    const challengeUri = resolveChallengeWebAppUri(challengeType)
-    const challengeData = {
-      color: props.content.challenges[props.challengeNumber].color,
-      challenge: challengeTypes[challengeType],
-      shared: props.content.shared,
-      staticServerUri: props.staticServerUri,
-      assetServerUri: props.assetServerUri,
-      gameServerUri: props.gameServerUri,
-      room: props.challengeRoom
-    }
-
-    const fillColor = challengeData.color
-    return Object.assign({ challengeUri, challengeType, challengeData, fillColor }, props)
-  }
-
-  return Object.assign({ fillColor: props.theme.colors.secondary }, props)
 }
 
 function getPageData({ showGameManual, gameState }) {

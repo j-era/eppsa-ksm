@@ -6,14 +6,12 @@ import GameManualButton from "./gameManualButton"
 const Header = styled.div`
   height: 20%;
   overflow: scroll;
-  
+
   margin-bottom: -13%;
 `
-export default function renderHeader({ props, appRatio }) {
+export default function renderHeader({ props }) {
   return (
-    <Header
-      onScroll={ handleScroll }
-      appRatio={ appRatio }>
+    <Header onScroll={ handleScroll } >
       <GameBoard { ...props } />
       { !props.showGameManual && <GameManualButton { ...props } /> }
     </Header>
