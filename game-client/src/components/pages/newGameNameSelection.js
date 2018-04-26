@@ -1,6 +1,6 @@
 import React from "react"
 import autoBind from "react-autobind"
-import styled from "styled-components"
+import styled, { withTheme } from "styled-components"
 import { FramedIcon, NextButton, PageTitle, delay } from "eppsa-ksm-shared"
 
 import { updateName, startNewGame } from "../../actionCreators"
@@ -19,21 +19,17 @@ const Content = styled.div `
   height: 100%;
 `
 
-const StyledFramedIcon = styled(FramedIcon)`
-  margin-top: ${props => props.theme.layout.mediumSpacing};
-`
-
 const NameInputContainer = styled.div `
-  margin-top: ${props => props.theme.layout.largeSpacing};
-  padding-top: 0.8em;
-  padding-bottom: 0.8em;
+  margin-top: ${props => props.theme.layout.largeSpacing}vw;
+  padding-top: 1em;
+  padding-bottom: 1em;
   padding-left: 1em;
   padding-right: 1em;
   overflow: hidden;
   box-sizing: border-box;
   border-radius: ${props => props.theme.layout.borderRadius};
   border-style: solid;
-  border-width: ${props => props.theme.layout.buttonBorder};
+  border-width: ${props => props.theme.layout.buttonBorder}vw;
   border-color: ${props => props.theme.colors.primary};
   text-align: center;
   display: flex;
@@ -65,7 +61,7 @@ const ConfirmButton = styled(NextButton)`
   opacity: ${props => props.active ? 1 : 0.5};
 `
 
-export default class NewGameNameSelection extends React.Component {
+class NewGameNameSelection extends React.Component {
   constructor(props) {
     super(props)
     autoBind(this)
@@ -84,7 +80,8 @@ export default class NewGameNameSelection extends React.Component {
       <Container>
         <PageTitle text={ content.shared.texts.selectName } />
         <Content>
-          <StyledFramedIcon
+          <FramedIcon
+            color={ this.props.theme.colors.primary }
             iconSrc={ `${assetServerUri}/${content.avatars[avatar].medium.src}` }
             iconSrcSet={ `${assetServerUri}/${content.avatars[avatar].small.src} 250w,
                           ${assetServerUri}/${content.avatars[avatar].medium.src} 500w,
@@ -146,3 +143,5 @@ export default class NewGameNameSelection extends React.Component {
     this.props.dispatch(startNewGame(name, avatar, maxChallenges, gameServer))
   }
 }
+
+export default withTheme(NewGameNameSelection)
