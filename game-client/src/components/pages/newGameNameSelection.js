@@ -21,9 +21,10 @@ const Content = styled.div `
 `
 
 const NameInputContainer = styled.div `
+  font-size: ${props => props.theme.font.button.size}vw;
   margin-top: ${props => props.theme.layout.largeSpacing}vw;
-  padding-top: 1em;
-  padding-bottom: 1em;
+  padding-top: 0.6em;
+  padding-bottom: 0.6em;
   padding-left: 1em;
   padding-right: 1em;
   overflow: hidden;
