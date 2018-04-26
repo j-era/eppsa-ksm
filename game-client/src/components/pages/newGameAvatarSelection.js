@@ -26,16 +26,9 @@ const Content = styled.div `
   height: 100%;
 `
 
-const AvatarContainer = styled.div`
-  margin-top: ${props => props.theme.layout.smallSpacing};
-  display: flex;
-  justify-content: space-between;
+const Avatars = styled.img`
+  margin-top: ${props => props.theme.layout.smallSpacing}vw;
   width: 100%;
-`
-
-const Avatar = styled.div`
-  width: 20%;
-  height: ${props => props.theme.layout.cardwidth * 0.2}vw;
 `
 
 export default withTheme(NewGameAvatarSelection)
@@ -48,13 +41,17 @@ function NewGameAvatarSelection(props) {
     <Container>
       <PageTitle text={ content.shared.texts.selectAvatar } />
       <Content>
-        <AvatarContainer>
-          {
-            Object.keys(content.avatars)
-              .slice(0, 5)
-              .map(avatar => renderAvatarSelector(avatar, content, dispatch, assetServerUri))
-          }
-        </AvatarContainer>
+        <Avatars
+          onClick={ process.env.NODE_ENV === "development"
+            ? () => {
+              dispatch(updateAvatar("airplane"))
+              dispatch(updateGameState(NEW_GAME_AVATAR_CONFIRMATION))
+            }
+            : () => {} }
+          src={ `${assetServerUri}/${content.avatarsMedium.src}` }
+          srcSet={ `${assetServerUri}/${content.avatarsSmall.src} 250w,
+                    ${assetServerUri}/${content.avatarsMedium.src} 500w,
+                    ${assetServerUri}/${content.avatarsLarge.src} 1000w` } />
         <QrReader
           seekerColor={ props.theme.colors.primary }
           onScan={ data => dispatch(handleAvatarQrCode(data)) }
@@ -62,25 +59,5 @@ function NewGameAvatarSelection(props) {
         <Description>{ content.shared.texts.selectAvatarInstructions }</Description>
       </Content>
     </Container>
-  )
-}
-
-function renderAvatarSelector(avatar, content, dispatch, assetServerUri) {
-  return (
-    <Avatar
-      key={ avatar }
-      onClick={ process.env.NODE_ENV === "development"
-        ? () => {
-          dispatch(updateAvatar(avatar))
-          dispatch(updateGameState(NEW_GAME_AVATAR_CONFIRMATION))
-        }
-        : () => {} }>
-      <img
-        height="100%"
-        src={ `${assetServerUri}/${content.avatars[avatar].medium.src}` }
-        srcSet={ `${assetServerUri}/${content.avatars[avatar].small.src} 250w,
-                  ${assetServerUri}/${content.avatars[avatar].medium.src} 500w,
-                  ${assetServerUri}/${content.avatars[avatar].large.src} 1000w` } />
-    </Avatar>
   )
 }

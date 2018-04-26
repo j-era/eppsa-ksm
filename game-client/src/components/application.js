@@ -65,6 +65,9 @@ function updateTheme(theme, challenge, showHeader) {
   newTheme.font.button.size *= cardWidthRatio
   newTheme.font.text.size *= cardWidthRatio
   newTheme.colors.area = challenge ? challenge.color : theme.colors.secondary
+  newTheme.layout.smallSpacing *= cardWidthRatio
+  newTheme.layout.mediumSpacing *= cardWidthRatio
+  newTheme.layout.largeSpacing *= cardWidthRatio
   newTheme.layout.cardWidth = cardWidth
   newTheme.layout.cardHeight = cardHeight
   return newTheme
