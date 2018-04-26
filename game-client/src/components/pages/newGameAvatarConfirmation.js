@@ -30,6 +30,7 @@ const Buttons = styled.div`
   display: flex;
   flex-direction: column;
 `
+
 const ConfirmButton = styled(NextButton)`
   margin-top: ${props => props.theme.layout.mediumSpacing}vw;
   border-color: ${props => props.theme.colors.primary};
