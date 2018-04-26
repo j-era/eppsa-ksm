@@ -63,7 +63,7 @@ class gameScene extends Phaser.Scene {
 		}
 	}*/
 
-	this.blockMaxWidth = window.innerWidth/3;
+	/*this.blockMaxWidth = window.innerWidth/3;
 	this.blockMaxHeight = this.picMaxWidth*0.75;
 	this.blockMinWidth = window.innerWidth/4;
 	this.blockMinHeight = this.picMinWidth * 0.75;
@@ -76,7 +76,7 @@ class gameScene extends Phaser.Scene {
 	this.restPicMaxWidth = window.innerWidth/3;
 	this.restPicMaxHeight = this.restPMaxWidth * 0.75;
 	this.restPicMinWidth = window.innerWidth/4;
-	this.restPicMinHeight = this.restPicMinWidth * 0.75;
+	this.restPicMinHeight = this.restPicMinWidth * 0.75;*/  //Beeinflusst Scaling der Bilder - Referenz Diddi
 
 
 	for(var blockElements in this.blockImages){
