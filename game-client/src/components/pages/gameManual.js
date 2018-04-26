@@ -1,6 +1,7 @@
 import React from "react"
+import autoBind from "react-autobind"
 import styled from "styled-components"
-import { NextButton, PageTitle, StyledMarkdown } from "eppsa-ksm-shared"
+import { delay, NextButton, PageTitle, StyledMarkdown } from "eppsa-ksm-shared"
 
 import { showGameManual } from "../../actionCreators"
 
@@ -15,17 +16,32 @@ const ManualText = styled.div`
   flex-shrink: 0.2;
 `
 
-export default function gameManual(props) {
-  return (
-    <Container>
-      <PageTitle text={ props.content.gameManualTitle } />
-      <ManualText>
-        <StyledMarkdown>{ props.content.gameManualText }</StyledMarkdown>
-      </ManualText>
-      <NextButton
-        visible
-        onClick={ () => props.dispatch(showGameManual(false)) }
-        text="Ok" />
-    </Container>
-  )
+export default class GameManual extends React.Component {
+  constructor(props) {
+    super(props)
+    autoBind(this)
+    this.state = { nextClicked: false }
+  }
+
+  render() {
+    return (
+      <Container>
+        <PageTitle text={ this.props.content.gameManualTitle } />
+        <ManualText>
+          <StyledMarkdown>{ this.props.content.gameManualText }</StyledMarkdown>
+        </ManualText>
+        <NextButton
+          visible
+          onClick={ this.onNext }
+          clicked={ this.state.nextClicked }
+          text="Ok" />
+      </Container>
+    )
+  }
+
+  async onNext() {
+    this.setState({ nextClicked: true })
+    await delay(100)
+    this.props.dispatch(showGameManual(false))
+  }
 }
