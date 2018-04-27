@@ -28,9 +28,7 @@ export function startNewGame(name, avatar, maxChallenges, gameServer) {
   return async (dispatch) => {
     const data = await gameServer.startGame(name, avatar, maxChallenges)
     dispatch(updateGameData(data))
-    dispatch(updateGameState(gameStates.CHALLENGE_SELECTION))
-
-    // dispatch(updateGameState(gameStates.CHALLENGE))
+    dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_AREA))
 
     setCookie("gameId", data.gameId)
     gameServer.setHandshakeQuery({ gameId: data.gameId })
