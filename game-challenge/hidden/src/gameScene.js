@@ -40,6 +40,9 @@ class gameScene extends Phaser.Scene {
 		this.speed4 = this.sys.game.gameData.SpeedRow4;
 	//this.questions = [];
 
+	let background = this.add.image(0, 0, 'background').setOrigin(0,0);
+	background.setScale(window.innerWidth / background.width, window.innerHeight / background.height);
+
 	for(var key in this.sys.game.gameData.pictures){
 		if(key == "template"){
 			continue;
@@ -78,8 +81,6 @@ class gameScene extends Phaser.Scene {
 	this.restPicMinWidth = window.innerWidth/4;
 	this.restPicMinHeight = this.restPicMinWidth * 0.75;*/  //Beeinflusst Scaling der Bilder - Referenz Diddi
 
-	let background = this.add.image(0, 0, 'background').setOrigin(0,0);
-	background.setScale(this.width / background.width, this.height / background.height);
 
 
 	for(var blockElements in this.blockImages){
@@ -294,7 +295,9 @@ class gameScene extends Phaser.Scene {
 			}
 		}
 
+
 		var Height = 'row' + i + 'Dif';
+		console.log(Height);
 		console.log(this[Height])
 		this.PosY = this[Height];
 	}
