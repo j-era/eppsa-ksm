@@ -4,7 +4,7 @@ import GameBoard from "./gameBoard"
 import GameManualButton from "./gameManualButton"
 
 const Header = styled.div`
-  height: 20%;
+  height: 15%;
   overflow: hidden;
 `
 export default function renderHeader({ props }) {

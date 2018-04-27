@@ -8,7 +8,7 @@ import { default as TimerBarComponent } from "./timerBar"
 const Container = styled.div`
   position: relative;
 
-  padding-top: ${props => props.isBannerVisible ? "5vw" : "0vw"};
+  padding-top: 5vw;
 
   box-sizing: border-box;
 
@@ -56,7 +56,7 @@ const TimerBarContainer = styled.div`
 const TimerBar = styled(TimerBarComponent)`
   position: absolute;
 
-  top: 20px;
+  top: 5vw;
 
   z-index: 9999;
 
