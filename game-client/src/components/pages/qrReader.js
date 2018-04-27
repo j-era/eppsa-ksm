@@ -19,14 +19,14 @@ const Content = styled.div `
 
 const StyledDescription = styled(Description)`
   margin-top: ${props => props.theme.layout.largeSpacing}vw;
-  padding-left: ${props => props.theme.layout.cardWidth * 0.15}vw;
-  padding-right: ${props => props.theme.layout.cardWidth * 0.15}vw;
+  padding-left: ${props => props.theme.layout.cardViewWidth * 0.12}vw;
+  padding-right: ${props => props.theme.layout.cardViewWidth * 0.12}vw;
 `
 
 const StyledErrorMessage = styled(ErrorMessage)`
   margin-top: ${props => props.theme.layout.largeSpacing}vw;
-  padding-left: ${props => props.theme.layout.cardWidth * 0.15}vw;
-  padding-right: ${props => props.theme.layout.cardWidth * 0.15}vw;
+  padding-left: ${props => props.theme.layout.cardViewWidth * 0.12}vw;
+  padding-right: ${props => props.theme.layout.cardViewWidth * 0.12}vw;
 `
 
 export default ({ challengeNumber, content, dispatch, wrongQrCodeScanned }) => {
@@ -34,10 +34,10 @@ export default ({ challengeNumber, content, dispatch, wrongQrCodeScanned }) => {
 
   return (
     <Container>
-      <PageTitle text={ challenge.description } />
+      <PageTitle text={ challenge.name } />
       <Content>
         <QrReader
-          size={ 0.8 }
+          size={ 0.7 }
           background={ challenge.color }
           transparency
           seekerColor="white"

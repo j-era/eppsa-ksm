@@ -8,7 +8,7 @@ import thunk from "redux-thunk"
 import { applyMiddleware, createStore, combineReducers } from "redux"
 import { createLogger } from "redux-logger"
 import { ThemeProvider } from "styled-components"
-import { injectGlobalStyle, theme } from "eppsa-ksm-shared"
+import { injectGlobalStyle, calculateTheme } from "eppsa-ksm-shared"
 
 import Application from "./components/application"
 import * as gameStates from "./gameStates"
@@ -55,6 +55,9 @@ contentServer.getData().then(transform).then(async (content) => {
 
   window.addEventListener("message", receiveMessage, false)
 
+  const { cardViewWidth, cardViewHeight, cardViewRatio } = calculateCardSize()
+  const theme = calculateTheme(cardViewWidth, cardViewHeight, cardViewRatio)
+
   render(
     <Provider store={ store }>
       <ThemeProvider theme={ theme }>
@@ -68,8 +71,6 @@ contentServer.getData().then(transform).then(async (content) => {
           maxChallenges={ maxChallenges }
           dispatch={ store.dispatch }
           gameServer={ gameServer }
-          winWidth={ window.innerWidth }
-          winHeight={ window.innerHeight }
           onChallengeReady={ onChallengeReady } />
       </ThemeProvider>
     </Provider>,
@@ -91,6 +92,18 @@ async function findResumableGame() {
     }
   }
   return null
+}
+
+function calculateCardSize() {
+  const winWidthHeightRatio = window.innerWidth / window.innerHeight
+  const maxWidth = 98 // maximal relative width
+  const maxRatio = 0.46 // maximal expected display ratio (1:2)
+  const cardWidthHeightRatio = 2 / 3
+
+  const cardViewWidth = (1 + maxRatio - winWidthHeightRatio) * maxWidth
+  const cardViewHeight = cardViewWidth / cardWidthHeightRatio
+  const cardViewRatio = cardViewWidth / 100
+  return { cardViewWidth, cardViewHeight, cardViewRatio }
 }
 
 async function onChallengeReady(challengeWindow, data, uri) {

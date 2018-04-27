@@ -21,25 +21,35 @@ const Header = styled.div`
 `
 
 function Application(props) {
-  const { content, gameState, winWidth, winHeight } = props
+  const { content, gameState } = props
   const { render, showHeader } = getPageData(props)
   const challenge = props.content.challenges[props.challengeNumber]
 
   return (
     <ThemeProvider
-      theme={ (theme) => updateTheme(theme, winWidth, winHeight, challenge, showHeader) }>
+      theme={ (theme) => updateTheme(theme, challenge) }>
       <Container>
         { showHeader && renderHeader(props) }
         <Background
           bannerText={ content.name }
           inGameSetup={ inGameSetup(gameState) } >
-          <Card>
+          <Card ratio={ showHeader ? 0.9 : 1 }>
             { React.createElement(render, props) }
           </Card>
         </Background>
       </Container>
     </ThemeProvider>
   )
+}
+
+function getPageData({ showGameManual, gameState }) {
+  return showGameManual ? pages.GAME_MANUAL : pages[gameState]
+}
+
+function updateTheme(theme, challenge) {
+  const newTheme = cloneDeep(theme)
+  newTheme.colors.area = challenge ? challenge.color : theme.colors.secondary
+  return newTheme
 }
 
 function renderHeader(props) {
@@ -50,42 +60,6 @@ function renderHeader(props) {
     </Header>
   )
 }
-
-function getPageData({ showGameManual, gameState }) {
-  return showGameManual ? pages.GAME_MANUAL : pages[gameState]
-}
-
-function updateTheme(theme, winWidth, winHeight, challenge, showHeader) {
-  const [cardWidth, cardHeight] = calculateCardSize(winWidth, winHeight, showHeader)
-  const cardWidthRatio = cardWidth / 100
-
-  const newTheme = cloneDeep(theme)
-  newTheme.font.headline.size *= cardWidthRatio
-  newTheme.font.button.size *= cardWidthRatio
-  newTheme.font.text.size *= cardWidthRatio
-  newTheme.colors.area = challenge ? challenge.color : theme.colors.secondary
-  newTheme.layout.smallSpacing *= cardWidthRatio
-  newTheme.layout.mediumSpacing *= cardWidthRatio
-  newTheme.layout.largeSpacing *= cardWidthRatio
-  newTheme.layout.buttonBorder *= cardWidthRatio
-  newTheme.layout.iconBorder *= cardWidthRatio
-  newTheme.layout.cardPadding *= cardWidthRatio
-  newTheme.layout.cardWidth = cardWidth
-  newTheme.layout.cardHeight = cardHeight
-  return newTheme
-}
-
-function calculateCardSize(winWidth, winHeight, showHeader) {
-  const innerHeight = showHeader ? winHeight * 0.9 : winHeight
-  const winRatio = winWidth / innerHeight
-  const maxWidth = 98 // maximal relative width
-  const maxRatio = 0.46 // maximal expected display ratio (1:2)
-  const cardRatio = 2 / 3
-
-  return [(1 + maxRatio - winRatio) * maxWidth, (1 + maxRatio - winRatio) * maxWidth / cardRatio]
-}
-
-export default connect((state) => state)(Application)
 
 function inGameSetup(gamestate) {
   switch (gamestate) {
@@ -99,3 +73,5 @@ function inGameSetup(gamestate) {
       return "false"
   }
 }
+
+export default connect((state) => state)(Application)

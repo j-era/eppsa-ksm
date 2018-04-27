@@ -1,6 +1,7 @@
 import React from "react"
+import autoBind from "react-autobind"
 import styled, { withTheme } from "styled-components"
-import { Description, FramedIcon, NextButton, Page, PageTitle } from "eppsa-ksm-shared"
+import { delay, Description, FramedIcon, NextButton, Page, PageTitle } from "eppsa-ksm-shared"
 
 import { updateGameState } from "../../actionCreators"
 import { QR_READER } from "../../gameStates"
@@ -17,24 +18,42 @@ const Content = styled.div `
   height: 100%;
 `
 
-function NavigationToNextArea(props) {
-  const title = props.content.challenges[props.challengeNumber].description
+class NavigationToNextArea extends React.Component {
+  constructor(props) {
+    super(props)
+    autoBind(this)
+    this.state = { nextClicked: false }
+  }
+  
+  render() {
+    const { assetServerUri, challengeNumber, content, theme, dispatch } = this.props
+    const challenge = content.challenges[challengeNumber]
 
-  return (
-    <Container>
-      <PageTitle text={ title } />
-      <Content>
-        <FramedIcon color={ props.theme.colors.area } />
-        <Description>
-        Gehe zum nächsten Bereich und scanne den QR-Code
-        </Description>
-        <NextButton
-          visible
-          onClick={ () => props.dispatch(updateGameState(QR_READER)) }
-          text="QR-Code Scannen" />
-      </Content>
-    </Container>
-  )
+    return (
+      <Container>
+        <PageTitle text={ challenge.name } />
+        <Content>
+          <FramedIcon
+            color={ theme.colors.area }
+            iconSrc={ `${assetServerUri}/${challenge.icon.src}` } />
+          <Description>
+            { content.shared.texts.navigationToNextArea }
+          </Description>
+          <NextButton
+            visible
+            clicked={ this.state.nextClicked }
+            onClick={ this.onNext }
+            text={ content.shared.texts.navigationToNextAreaButton } />
+        </Content>
+      </Container>
+    )
+  }
+
+  async onNext() {
+    this.setState({ nextClicked: true })
+    await delay(100)
+    this.props.dispatch(updateGameState(QR_READER))
+  }
 }
 
 export default withTheme(NavigationToNextArea)
