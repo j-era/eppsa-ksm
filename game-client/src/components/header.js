@@ -9,29 +9,9 @@ const Header = styled.div`
 `
 export default function renderHeader({ props }) {
   return (
-    <Header onScroll={ handleScroll } >
+    <Header>
       <GameBoard { ...props } />
       { !props.showGameManual && <GameManualButton { ...props } /> }
     </Header>
   )
-}
-
-let scrollbackTimout
-
-function handleScroll(event) {
-  event.persist()
-  const persistedEvent = event
-
-  if (scrollbackTimout) {
-    clearInterval(scrollbackTimout)
-  }
-
-  scrollbackTimout = setTimeout(() => {
-    const scrollIntervall = setInterval(() => {
-      persistedEvent.target.scrollLeft > 0 ?
-        persistedEvent.target.scrollLeft -= 10
-        :
-        clearInterval(scrollIntervall)
-    }, 10)
-  }, 2000)
 }
