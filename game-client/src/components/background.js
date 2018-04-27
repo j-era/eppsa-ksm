@@ -22,7 +22,6 @@ const BackgroundArcSVG = styled(BackgroundArcSvg)`
   fill: ${props => props.theme.colors.area};
   margin-bottom: -1px;
   width: 100%;
-  height: 37px;
   background-color: white;
 `
 
