@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
-import styled, { ThemeProvider, withTheme } from "styled-components"
+import styled, { ThemeProvider } from "styled-components"
 import cloneDeep from "lodash.clonedeep"
 
 import Card from "./card"
@@ -85,7 +85,7 @@ function calculateCardSize(winWidth, winHeight, showHeader) {
   return [(1 + maxRatio - winRatio) * maxWidth, (1 + maxRatio - winRatio) * maxWidth / cardRatio]
 }
 
-export default withTheme(connect((state) => state)(Application))
+export default connect((state) => state)(Application)
 
 function inGameSetup(gamestate) {
   switch (gamestate) {
