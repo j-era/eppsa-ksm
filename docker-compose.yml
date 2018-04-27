@@ -28,6 +28,7 @@ services:
     image: "artcom/git-json-api:latest"
     environment:
       REPO_URI: http://content-repo/
+      BODY_SIZE_LIMIT: "1mb"
       PORT: 80
     depends_on:
       - content-repo
