@@ -8,12 +8,35 @@ const Container = styled.div`
   display: flex;
   align-items: center;
 
-  background: ${props => props.theme.colors.primary};
+  background: none;
+`
+
+const TimeBall = styled.div`
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  width: 30px;
+  height: 30px;
+
+  border-radius: 50px;
+
+  background: ${props => props.theme.colors.background};
+
+  color: ${props => props.theme.colors.area};
+
+  font-size: ${props => props.theme.font.text.size};
+
+  z-index: 1;
 `
 
 const ProgressBar = styled.div`
-  width: 50%;
-  height: 10px;
+  margin-left: -15px;
+
+  width: 100%;
+
+  height: 12px;
 
   border-radius: ${props => props.theme.layout.borderRadius};
   border-top-left-radius: 0;
@@ -39,6 +62,8 @@ const Progress = styled.div`
 `
 
 const Fuse = styled.div`
+  margin-left: -5px;
+
   display: flex;
 
   align-items: center;
@@ -92,23 +117,6 @@ const FuseSVG3 = styled(FuseIcon2)`
   animation: ${blinkIn()} 1.5s steps(1, start) 1s infinite;
 `
 
-const TimeBall = styled.div`
-  display: flex;
-
-  justify-content: center;
-  align-items: center;
-
-  width: 30px;
-  height: 30px;
-
-  border-radius: 50px;
-
-  background: ${props => props.theme.colors.background};
-
-  color: ${props => props.theme.colors.primary};
-`
-
-
 function blinkOut() {
   return keyframes`
     33.33% {
@@ -147,15 +155,15 @@ function decreaseFuse() {
   `
 }
 
-export default ({ seconds, running }) =>
-  <Container>
-    <TimeBall>{ seconds }</TimeBall>
+export default (props) =>
+  <Container { ...props }>
+    <TimeBall>{ props.seconds }</TimeBall>
     <ProgressBar>
-      <Progress seconds={ seconds } playState={ running ? "running" : "paused" } />
-      <Fuse seconds={ seconds } playState={ running ? "running" : "paused" } >
-        <FuseSVG1 seconds={ seconds } />
-        <FuseSVG2 seconds={ seconds } />
-        <FuseSVG3 seconds={ seconds } />
+      <Progress seconds={ props.seconds } playState={ props.running ? "running" : "paused" } />
+      <Fuse seconds={ props.seconds } playState={ props.running ? "running" : "paused" } >
+        <FuseSVG1 seconds={ props.seconds } />
+        <FuseSVG2 seconds={ props.seconds } />
+        <FuseSVG3 seconds={ props.seconds } />
       </Fuse>
     </ProgressBar>
   </Container>

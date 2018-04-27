@@ -1,8 +1,9 @@
 import React from "react"
 import styled from "styled-components"
-import BackgroundArc from "../assets/Background_Arc.svg"
+import BackgroundArcSvg from "../assets/Background_Arc.svg"
 
 import Banner from "./banner"
+import { default as TimerBarComponent } from "./timerBar"
 
 const Container = styled.div`
   position: relative;
@@ -17,10 +18,11 @@ const Container = styled.div`
   flex-grow: 1;
 `
 
-const StyledBackgroundArc = styled(BackgroundArc)`
+const BackgroundArcSVG = styled(BackgroundArcSvg)`
   fill: ${props => props.theme.colors.area};
   margin-bottom: -1px;
   width: 100%;
+  height: 37px;
   background-color: white;
 `
 
@@ -44,17 +46,46 @@ const BannerContainer = styled.div`
   justify-content: center;
 `
 
+const TimerBarContainer = styled.div`
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 37px;
+`
+
+const TimerBar = styled(TimerBarComponent)`
+  position: absolute;
+
+  top: 20px;
+
+  z-index: 9999;
+
+  width: 50%;
+`
+
 export default props =>
   <Container className={ props.className } isBannerVisible={ isBannerVisible(props.gameState) }>
     <BannerContainer visible={ isBannerVisible(props.gameState) }>
       <Banner>{ props.bannerText }</Banner>
     </BannerContainer>
-    <StyledBackgroundArc />
+    <BackgroundArcSVG />
+    { props.gameState === "CHALLENGE" && renderTimerBar(props) }
     <Background>
       { props.children }
     </Background>
   </Container>
 
+
+function renderTimerBar(props) {
+  return (
+    <TimerBarContainer>
+      <TimerBar seconds={ props.timelineClockTime } running={ props.timelineClockRunning } />
+    </TimerBarContainer>
+  )
+}
 
 function isBannerVisible(gamestate) {
   switch (gamestate) {
