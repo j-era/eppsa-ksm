@@ -4,6 +4,7 @@ import { getCookie } from "../cookie"
 
 export default function GameBoard(props) {
   const {
+    avatar,
     connectedGames,
     maxChallenges,
     challengeNumber,
@@ -38,11 +39,11 @@ export default function GameBoard(props) {
 
   const Board = styled.div`
     height: 100%;
-    width: ${maxChallenges * 20}%;
+    width: ${(maxChallenges + 1) * 20}%;
 
     display: flex;
 
-    transform: translate(${40 - 20 * (challengeNumber - 1)}vw);
+    transform: translate(${40 - 20 * challengeNumber}vw);
   `
 
   const Area = styled.div`
@@ -81,7 +82,11 @@ export default function GameBoard(props) {
     flex-direction: row;
   `
 
-  const OtherAvatars = styled(Avatar)`
+  const MyAvatarContainer = styled(Avatar)`
+    justify-content: center;
+  `
+
+  const OtherAvatarsContainer = styled(Avatar)`
     ${props => positionAvatars(props)}
   `
 
@@ -105,10 +110,6 @@ export default function GameBoard(props) {
       `
     }
   }
-
-  const MyAvatar = styled(Avatar)`
-    justify-content: center;
-  `
 
   const avatarWith = 13
 
@@ -138,36 +139,43 @@ export default function GameBoard(props) {
 
   return (
     <Board>
+      <Area>
+        <Field color={ props.theme.colors.secondary }>
+          { challengeNumber === 0 && renderMyAvatar() }
+        </Field>
+      </Area>
       {
         stations.map((station, index) =>
           <Area key={ index.toString() }>
             <Field color={ content.challenges[index + 1].color }>
-              <OtherAvatars count={ station.length } isSelfOnField={ station.includes(ownGame) }>
-                {
-                  station.map((game) => game.gameId === getCookie("gameId") ?
-                    null
-                    :
-                    <AvatarImage
-                      key={ game.gameId }
-                      src={ `${assetServerUri}/${content.avatars[game.avatar].small.src}` } />
-                  )
-                }
-              </OtherAvatars>
-              <MyAvatar>
-                {
-                  station.map((game) => game.gameId === getCookie("gameId") ?
-                    <MyAvatarImage
-                      key={ game.gameId }
-                      src={ `${assetServerUri}/${content.avatars[game.avatar].small.src}` } />
-                    :
-                    null
-                  )
-                }
-              </MyAvatar>
+              { renderOtherAvatars(station) }
+              { station.includes(ownGame) && renderMyAvatar() }
             </Field>
           </Area>
         )
       }
     </Board>
   )
+
+  function renderOtherAvatars(station) {
+    return (
+      <OtherAvatarsContainer count={ station.length } isSelfOnField={ station.includes(ownGame) }>
+        {
+          station.filter((game) => game.gameId !== getCookie("gameId")).map((game) =>
+            <AvatarImage
+              key={ game.gameId }
+              src={ `${assetServerUri}/${content.avatars[game.avatar].small.src}` } />
+          )
+        }
+      </OtherAvatarsContainer>
+    )
+  }
+
+  function renderMyAvatar() {
+    return (
+      <MyAvatarContainer>
+        <MyAvatarImage src={ `${assetServerUri}/${content.avatars[avatar].small.src}` } />
+      </MyAvatarContainer>
+    )
+  }
 }
