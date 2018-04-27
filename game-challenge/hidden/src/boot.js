@@ -6,7 +6,8 @@ class Boot extends Phaser.Scene {
 	}
 
 	preload () {
-
+		var scope = this;
+		this.load.image("icon", process.env.ASSET_SERVER_URI + "/" + scope.sys.game.gameData.assets["icon"].image.src);
 	}
 
 	create () {
@@ -28,17 +29,27 @@ class Boot extends Phaser.Scene {
 			}
 		}
 		this.random = Math.floor(Math.random() * this.questions.length);
-
 		this.tempTags = this.questions[this.random].tag.split(',');
-
 		this.QuesText = this.questions[this.random].question;
 
-		this.ques = this.add.text(window.innerWidth - (window.innerWidth/1.5), window.innerHeight/2, 'Hey',{ font: window.innerHeight/35 + 'px Arial', fill: 'blue'});
-
+		this.ques = this.add.text(window.innerWidth/2, window.innerHeight/1.5, 'Hey',{ font: window.innerHeight/35 + 'px Arial', fill: 'grey'});
 		this.ques.setText(this.QuesText);
+		this.ques.setOrigin(0.5,0,5);
 
+		let circleColor = this.sys.game.color.replace("#", "0x");
+		var graphics = this.add.graphics({ lineStyle: { width: 6, color: circleColor} });
+		var circle = new Phaser.Geom.Circle(window.innerWidth/2, window.innerHeight/3, window.innerWidth/4);
 
-
+		function drawCircle ()
+		{
+			var area = Phaser.Geom.Circle.Area(circle);
+			graphics.strokeCircleShape(circle);
+		}
+		drawCircle(graphics, circle);
+		this.icon = this.add.image(window.innerWidth/2, window.innerHeight/3, "icon").setScale(0.3);
+		this.icon.setScale(window.innerWidth/this.icon.width * 0.4);
+		
+		graphics.setDepth(1);
 		
 	}
 

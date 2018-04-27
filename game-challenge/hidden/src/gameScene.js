@@ -78,6 +78,9 @@ class gameScene extends Phaser.Scene {
 	this.restPicMinWidth = window.innerWidth/4;
 	this.restPicMinHeight = this.restPicMinWidth * 0.75;*/  //Beeinflusst Scaling der Bilder - Referenz Diddi
 
+	let background = this.add.image(0, 0, 'background').setOrigin(0,0);
+	background.setScale(this.width / background.width, this.height / background.height);
+
 
 	for(var blockElements in this.blockImages){
 		if(this.blockImages[blockElements].direction == ""){
@@ -305,7 +308,9 @@ class gameScene extends Phaser.Scene {
 	});
 }
 gameWin() {
-	this.scene.start('WinScene', { t: this.correct})
+	this.points = this.correct * this.sys.game.gameData.score.reward * this.sys.game.shared.config.hiddenScoreFactor;
+	this.sys.game.completeChallenge(this.points);
+	//this.scene.start('WinScene', { t: this.correct})
 }
 
 spawn(waitrow, max, min) {

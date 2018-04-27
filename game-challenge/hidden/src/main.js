@@ -7,12 +7,14 @@ import Phaser from "./phaser.min";
 let gameData;
 let gameCallbacks;
 let shared;
+let color;
 
 bootstrap((data, callbacks) => {
 	//console.log(data, callbacks);
 	gameData = data.challenge;
 	gameCallbacks = callbacks.callbacks;
 	shared = data.shared;
+	color = data.color;
 	init();
   })
 
@@ -22,6 +24,7 @@ var config = {
 	parent: 'gameHere',
 	width: window.innerWidth,
 	height: window.innerHeight,
+	backgroundColor: "#ffffff", 
 
 	scene: [
 	Boot,
@@ -36,6 +39,7 @@ var init = function(){
 	game.gameData = gameData;
 	game.gameCallbacks = gameCallbacks;
 	game.shared = shared;
+	game.color = color;
 
 	game.completeChallenge = (score) => {
 		setTimeout(() => {
