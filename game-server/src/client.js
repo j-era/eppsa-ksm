@@ -53,7 +53,7 @@ module.exports = class Client {
       name,
       avatar,
       score: 0,
-      challengeNumber: 1,
+      challengeNumber: 5,
       maxChallenges,
       inLobby: false,
       finished: false

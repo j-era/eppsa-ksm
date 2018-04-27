@@ -35,23 +35,24 @@ contentServer.getData().then(transform).then(async (content) => {
   }
 
   const resumableGame = await findResumableGame()
-  if (resumableGame) {
-    if (config.token) {
-      store.dispatch(actions.resumeGame(resumableGame.gameId, gameServer))
-    } else {
-      store.dispatch(actions.updateGameState(gameStates.RESUME_OR_NEW_GAME_SELECTION))
-    }
-  } else {
-    if (config.token) {
-      store.dispatch(actions.updateGameState(gameStates.NAVIGATION_TO_START))
-    } else {
-      if (config.avatar) {
-        store.dispatch(actions.updateGameState(gameStates.NEW_GAME_NAME_SELECTION))
-      } else {
-        store.dispatch(actions.updateGameState(gameStates.NEW_GAME_AVATAR_SELECTION))
-      }
-    }
-  }
+  // if (resumableGame) {
+  //   if (config.token) {
+  //     store.dispatch(actions.resumeGame(resumableGame.gameId, gameServer))
+  //   } else {
+  //     store.dispatch(actions.updateGameState(gameStates.RESUME_OR_NEW_GAME_SELECTION))
+  //   }
+  // } else {
+  //   if (config.token) {
+  //     store.dispatch(actions.updateGameState(gameStates.NAVIGATION_TO_START))
+  //   } else {
+  //     if (config.avatar) {
+  //       store.dispatch(actions.updateGameState(gameStates.NEW_GAME_NAME_SELECTION))
+  //     } else {
+  //       store.dispatch(actions.updateGameState(gameStates.NEW_GAME_AVATAR_SELECTION))
+  //     }
+  //   }
+  // }
+  store.dispatch(actions.startNewGame("Jens", "airplane", 11, gameServer))
 
   window.addEventListener("message", receiveMessage, false)
 
