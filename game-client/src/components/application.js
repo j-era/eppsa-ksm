@@ -4,9 +4,8 @@ import styled, { ThemeProvider, withTheme } from "styled-components"
 import cloneDeep from "lodash.clonedeep"
 
 import Card from "./card"
-import GameBoard from "./gameBoard"
-import GameManualButton from "./gameManualButton"
 import { default as Background } from "./background"
+import Header from "./header"
 import pages from "./pages"
 
 const Container = styled.div`
@@ -14,10 +13,6 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-`
-
-const Header = styled.div`
-  height: 10%;
 `
 
 function Application(props) {
@@ -29,25 +24,16 @@ function Application(props) {
     <ThemeProvider
       theme={ (theme) => updateTheme(theme, winWidth, winHeight, challenge, showHeader) }>
       <Container>
-        { showHeader && renderHeader(props) }
+        { showHeader && <Header props={ props } /> }
         <Background
           bannerText={ content.name }
-          inGameSetup={ inGameSetup(gameState) } >
+          gameState={ gameState } >
           <Card>
             { React.createElement(render, props) }
           </Card>
         </Background>
       </Container>
     </ThemeProvider>
-  )
-}
-
-function renderHeader(props) {
-  return (
-    <Header>
-      { !props.showGameManual && <GameManualButton { ...props } /> }
-      <GameBoard { ...props } />
-    </Header>
   )
 }
 
@@ -86,16 +72,3 @@ function calculateCardSize(winWidth, winHeight, showHeader) {
 }
 
 export default withTheme(connect((state) => state)(Application))
-
-function inGameSetup(gamestate) {
-  switch (gamestate) {
-    case "NEW_GAME_AVATAR_SELECTION":
-      return "true"
-    case "NEW_GAME_AVATAR_CONFIRMATION":
-      return "true"
-    case "NEW_GAME_NAME_SELECTION":
-      return "true"
-    default:
-      return "false"
-  }
-}
