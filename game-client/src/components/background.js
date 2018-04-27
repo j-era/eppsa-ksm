@@ -51,8 +51,6 @@ const TimerBarContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
-  height: 37px;
 `
 
 const TimerBar = styled(TimerBarComponent)`

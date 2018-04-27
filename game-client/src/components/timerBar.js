@@ -7,7 +7,7 @@ import FuseIcon2 from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_3.svg"
 const Container = styled.div`
   display: flex;
   align-items: center;
-
+  position: relative;
   background: none;
 `
 
@@ -17,8 +17,8 @@ const TimeBall = styled.div`
   justify-content: center;
   align-items: center;
 
-  width: 30px;
-  height: 30px;
+  width: 10vw;
+  height: 10vw;
 
   border-radius: 50px;
 
@@ -32,8 +32,10 @@ const TimeBall = styled.div`
 `
 
 const ProgressBar = styled.div`
+  position: absolute;
 
-  width: 100%;
+  width: 95%;
+  margin-left: 5%;
 
   height: 12px;
 
@@ -44,8 +46,6 @@ const ProgressBar = styled.div`
   background: ${props => props.theme.colors.secondary};
 
   display: flex;
-
-  position: relative;
 `
 
 const Progress = styled.div`
