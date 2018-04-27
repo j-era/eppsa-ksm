@@ -1,12 +1,12 @@
 import React from "react"
 
-import { joinChallengeLobby, updateGameState } from "../../actionCreators"
+import { joinChallengeLobby, startChallenge } from "../../actionCreators"
 import { CHALLENGE_MANUAL } from "../../gameStates"
 
 export default function ChallengeModeSelection(props) {
   return (
     <div>
-      <button onClick={ () => props.dispatch(updateGameState(CHALLENGE_MANUAL)) }>
+      <button onClick={ () => props.dispatch(startChallenge(props.gameServer)) }>
         Alleine spielen
       </button>
       <button onClick={ () => props.dispatch(joinChallengeLobby(props.gameServer)) }>
