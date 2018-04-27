@@ -160,10 +160,16 @@ export default (props) =>
     <TimeBall>{ props.seconds }</TimeBall>
     <ProgressBar>
       <Progress seconds={ props.seconds } playState={ props.running ? "running" : "paused" } />
-      <Fuse seconds={ props.seconds } playState={ props.running ? "running" : "paused" } >
-        <FuseSVG1 seconds={ props.seconds } />
-        <FuseSVG2 seconds={ props.seconds } />
-        <FuseSVG3 seconds={ props.seconds } />
-      </Fuse>
+      { props.running && renderFuse(props) }
     </ProgressBar>
   </Container>
+
+function renderFuse(props) {
+  return (
+    <Fuse seconds={ props.seconds } >
+      <FuseSVG1 seconds={ props.seconds } />
+      <FuseSVG2 seconds={ props.seconds } />
+      <FuseSVG3 seconds={ props.seconds } />
+    </Fuse>
+  )
+}
