@@ -26,13 +26,12 @@ const TimeBall = styled.div`
 
   color: ${props => props.theme.colors.area};
 
-  font-size: ${props => props.theme.font.text.size};
+  font-size: ${props => props.theme.font.text.size}vw;
 
   z-index: 1;
 `
 
 const ProgressBar = styled.div`
-  margin-left: -15px;
 
   width: 100%;
 
