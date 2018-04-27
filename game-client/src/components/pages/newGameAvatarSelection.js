@@ -45,10 +45,10 @@ function NewGameAvatarSelection(props) {
               dispatch(updateGameState(NEW_GAME_AVATAR_CONFIRMATION))
             }
             : () => {} }
-          src={ `${assetServerUri}/${content.avatarsMedium.src}` }
-          srcSet={ `${assetServerUri}/${content.avatarsSmall.src} 250w,
-                    ${assetServerUri}/${content.avatarsMedium.src} 500w,
-                    ${assetServerUri}/${content.avatarsLarge.src} 1000w` } />
+          src={ `${assetServerUri}/${content.shared.assets.avatarsMedium.src}` }
+          srcSet={ `${assetServerUri}/${content.shared.assets.avatarsSmall.src} 250w,
+                    ${assetServerUri}/${content.shared.assets.avatarsMedium.src} 500w,
+                    ${assetServerUri}/${content.shared.assets.avatarsLarge.src} 1000w` } />
         <QrReader
           size={ 0.7 }
           seekerColor={ props.theme.colors.primary }
