@@ -32,7 +32,6 @@ export default withTheme(NewGameAvatarSelection)
 
 function NewGameAvatarSelection(props) {
   const { assetServerUri, content, dispatch } = props
-  console.log(process.env.NODE_ENV)
 
   return (
     <Container>
@@ -50,7 +49,7 @@ function NewGameAvatarSelection(props) {
                     ${assetServerUri}/${content.shared.assets.avatarsMedium.src} 500w,
                     ${assetServerUri}/${content.shared.assets.avatarsLarge.src} 1000w` } />
         <QrReader
-          size={ 0.7 }
+          scale={ 0.78 }
           seekerColor={ props.theme.colors.primary }
           onScan={ data => dispatch(handleAvatarQrCode(data)) }
           onError={ (error) => dispatch(handleQrReaderError(error)) } />

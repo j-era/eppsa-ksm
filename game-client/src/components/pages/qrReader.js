@@ -37,7 +37,7 @@ export default ({ challengeNumber, content, dispatch, wrongQrCodeScanned }) => {
       <PageTitle text={ challenge.name } />
       <Content>
         <QrReader
-          size={ 0.7 }
+          scale={ 1 }
           background={ challenge.color }
           transparency
           seekerColor="white"

@@ -26,7 +26,7 @@ class NavigationToNextArea extends React.Component {
   }
   
   render() {
-    const { assetServerUri, challengeNumber, content, theme, dispatch } = this.props
+    const { assetServerUri, challengeNumber, content, theme } = this.props
     const challenge = content.challenges[challengeNumber]
 
     return (
@@ -34,6 +34,7 @@ class NavigationToNextArea extends React.Component {
         <PageTitle text={ challenge.name } />
         <Content>
           <FramedIcon
+            scale={0.8}
             color={ theme.colors.area }
             iconSrc={ `${assetServerUri}/${challenge.icon.src}` } />
           <Description>

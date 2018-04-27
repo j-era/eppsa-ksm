@@ -21,15 +21,12 @@ const Content = styled.div `
 const NameInputContainer = styled.div `
   font-size: ${props => props.theme.font.button.size}vw;
   margin-top: ${props => props.theme.layout.largeSpacing}vw;
-  padding-top: 0.6em;
-  padding-bottom: 0.6em;
-  padding-left: 1em;
-  padding-right: 1em;
+  padding: 0.7em 1em;
   overflow: hidden;
   box-sizing: border-box;
   border-radius: ${props => props.theme.layout.borderRadius};
   border-style: solid;
-  border-width: ${props => props.theme.layout.buttonBorder}vw;
+  border-width: ${props => props.theme.layout.buttonBorder};
   border-color: ${props => props.theme.colors.primary};
   text-align: center;
   display: flex;
@@ -58,7 +55,7 @@ const NameInput = styled.input`
 const ConfirmButton = styled(NextButton)`
   margin-top: ${props => props.theme.layout.mediumSpacing};
   border-color: ${props => props.theme.colors.secondary};
-  opacity: ${props => props.active ? 1 : 0.5};
+  opacity: ${props => props.active ? 1 : 0.3};
 `
 
 class NewGameNameSelection extends React.Component {
@@ -81,6 +78,7 @@ class NewGameNameSelection extends React.Component {
         <PageTitle text={ content.shared.texts.selectName } />
         <Content>
           <FramedIcon
+            scale={0.75}
             color={ this.props.theme.colors.primary }
             iconSrc={ `${assetServerUri}/${content.avatars[avatar].medium.src}` }
             iconSrcSet={ `${assetServerUri}/${content.avatars[avatar].small.src} 250w,
