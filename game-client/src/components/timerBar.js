@@ -11,16 +11,20 @@ const Container = styled.div`
   background: none;
 `
 
+const TimeBallContainer = styled.div`
+  position: relative;
+
+  width: 20%;
+`
+
 const TimeBall = styled.div`
-  display: flex;
+  position: relative;
 
-  justify-content: center;
-  align-items: center;
+  border-radius: 50%;
 
-  width: 10vw;
-  height: 10vw;
-
-  border-radius: 50px;
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
 
   background: ${props => props.theme.colors.background};
 
@@ -31,11 +35,23 @@ const TimeBall = styled.div`
   z-index: 1;
 `
 
+const Text = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+`
+
 const ProgressBar = styled.div`
   position: absolute;
 
-  width: 95%;
-  margin-left: 5%;
+  width: 85%;
+  margin-left: 15%;
 
   height: 12px;
 
@@ -61,8 +77,6 @@ const Progress = styled.div`
 `
 
 const Fuse = styled.div`
-  margin-left: -5px;
-
   display: flex;
 
   align-items: center;
@@ -71,7 +85,9 @@ const Fuse = styled.div`
   height: 100%;
 
   position: absolute;
-  left: 100%;
+  left: 98%;
+
+  transform: translateX(-100%);
 
   animation: ${decreaseFuse()} ${props => props.seconds}s linear forwards;
   animation-play-state: ${props => props.playState};
@@ -156,7 +172,7 @@ function decreaseFuse() {
 
 export default (props) =>
   <Container { ...props }>
-    <TimeBall>{ props.seconds }</TimeBall>
+    <TimeBallContainer><TimeBall><Text>{ props.seconds }</Text></TimeBall></TimeBallContainer>
     <ProgressBar>
       <Progress seconds={ props.seconds } playState={ props.running ? "running" : "paused" } />
       { props.running && renderFuse(props) }
@@ -166,9 +182,9 @@ export default (props) =>
 function renderFuse(props) {
   return (
     <Fuse seconds={ props.seconds } >
-      <FuseSVG1 seconds={ props.seconds } />
-      <FuseSVG2 seconds={ props.seconds } />
-      <FuseSVG3 seconds={ props.seconds } />
+      <FuseSVG1 />
+      <FuseSVG2 />
+      <FuseSVG3 />
     </Fuse>
   )
 }
