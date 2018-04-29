@@ -138,26 +138,30 @@ export function showGameManual(state = false, action) {
   }
 }
 
-const noRequestedMate = { gameId: null, requestState: requestedMateStates.NONE }
+const noRequestedMate = { gameId: null, name: null, requestState: requestedMateStates.NONE }
 
 export function requestedMate(state = noRequestedMate, action) {
   switch (action.type) {
     case types.REQUEST_MATE:
-      return { gameId: action.gameId, requestState: requestedMateStates.PENDING }
-    case types.INCOMING_MATE_REJECT:
+      return {
+        gameId: action.gameId,
+        name: action.name,
+        requestState: requestedMateStates.PENDING
+      }
+    case types.INCOMING_DECLINE_MATE:
       return state.requestState === requestedMateStates.PENDING
-        ? { gameId: state.gameId, requestState: requestedMateStates.REJECTED }
+        ? { ...state, requestState: requestedMateStates.DECLINED }
         : state
     case types.CANCEL_REQUEST_MATE:
       return noRequestedMate
     case types.UPDATE_CONNECTED:
       return state.requestState === requestedMateStates.PENDING
-        ? { gameId: state.gameId, requestState: requestedMateStates.NOT_AVAILABLE }
+        ? { ...state, requestState: requestedMateStates.NOT_AVAILABLE }
         : state
     case types.UPDATE_CONNECTED_GAMES:
       return state.requestState === requestedMateStates.PENDING
         && !includesGame(state.gameId, action.games)
-        ? { gameId: state.gameId, requestState: requestedMateStates.NOT_AVAILABLE }
+        ? { ...state, requestState: requestedMateStates.NOT_AVAILABLE }
         : state
     default:
       return state
@@ -166,19 +170,19 @@ export function requestedMate(state = noRequestedMate, action) {
 
 export function mateRequests(state = new Set(), action) {
   switch (action.type) {
-    case types.INCOMING_MATE_REQUEST:
+    case types.INCOMING_REQUEST_MATE:
     {
       const newState = new Set(state)
       newState.add(action.gameId)
       return newState
     }
-    case types.REJECT_MATE:
+    case types.DECLINE_MATE:
     {
       const newState = new Set(state)
       newState.delete(action.gameId)
       return newState
     }
-    case types.INCOMING_CANCEL_MATE_REQUEST:
+    case types.INCOMING_CANCEL_REQUEST_MATE:
     {
       const newState = new Set(state)
       newState.delete(action.gameId)

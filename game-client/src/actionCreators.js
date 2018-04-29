@@ -150,20 +150,21 @@ export function leaveChallengeLobby(gameServer) {
   }
 }
 
-export function requestMate(gameId, gameServer) {
+export function requestMate(gameId, name, gameServer) {
   return async (dispatch) => {
-    gameServer.sendToPeer(messages.REQUESTING_MATE, gameId)
+    gameServer.sendToPeer(messages.REQUEST_MATE, gameId)
 
     dispatch({
       type: types.REQUEST_MATE,
-      gameId
+      gameId,
+      name
     })
   }
 }
 
 export function cancelRequestMate(gameServer) {
   return async (dispatch, getState) => {
-    gameServer.sendToPeer(messages.CANCEL_REQUESTING_MATE, getState().requestedMate.gameId)
+    gameServer.sendToPeer(messages.CANCEL_REQUEST_MATE, getState().requestedMate.gameId)
 
     dispatch({
       type: types.CANCEL_REQUEST_MATE
@@ -171,21 +172,21 @@ export function cancelRequestMate(gameServer) {
   }
 }
 
-export function acceptMateRequest(gameId, gameServer) {
+export function acceptMate(gameId, gameServer) {
   return async (dispatch) => {
     const room = uuid()
-    gameServer.sendToPeer(messages.ACCEPTING_MATE, gameId, room)
+    gameServer.sendToPeer(messages.ACCEPT_MATE, gameId, room)
     gameServer.leaveChallengeLobby()
     dispatch(startChallenge(gameServer, room))
   }
 }
 
-export function rejectMateRequest(gameId, gameServer) {
+export function declineMate(gameId, gameServer) {
   return async (dispatch) => {
-    gameServer.sendToPeer(messages.REJECTING_MATE, gameId)
+    gameServer.sendToPeer(messages.DECLINE_MATE, gameId)
 
     dispatch({
-      type: types.REJECT_MATE,
+      type: types.DECLINE_MATE,
       gameId
     })
   }
@@ -193,19 +194,19 @@ export function rejectMateRequest(gameId, gameServer) {
 
 export function handleIncomingMateRequest(gameId) {
   return {
-    type: types.INCOMING_MATE_REQUEST,
+    type: types.INCOMING_REQUEST_MATE,
     gameId
   }
 }
 
 export function handleIncomingCancelMateRequest(gameId) {
   return {
-    type: types.INCOMING_CANCEL_MATE_REQUEST,
+    type: types.INCOMING_CANCEL_REQUEST_MATE,
     gameId
   }
 }
 
-export function handleIncomingMateAccept(gameId, room, gameServer) {
+export function handleIncomingAcceptMate(gameId, room, gameServer) {
   return async (dispatch, getState) => {
     if (getState().requestedMate.gameId === gameId) {
       gameServer.leaveChallengeLobby()
@@ -214,9 +215,9 @@ export function handleIncomingMateAccept(gameId, room, gameServer) {
   }
 }
 
-export function handleIncomingMateReject() {
+export function handleIncomingDeclineMate() {
   return {
-    type: types.INCOMING_MATE_REJECT
+    type: types.INCOMING_DECLINE_MATE
   }
 }
 

@@ -30,28 +30,42 @@ injectGlobalStyle(process.env.STATIC_SERVER_URI)
 contentServer.getData().then(transform).then(async (content) => {
   const maxChallenges = Object.keys(content.challenges).length - 1
 
-  if (config.avatar) {
-    store.dispatch(actions.updateAvatar(config.avatar))
-  }
+  // if (config.avatar) {
+  //   store.dispatch(actions.updateAvatar(config.avatar))
+  // }
 
   const resumableGame = await findResumableGame()
-  if (resumableGame) {
-    if (config.token) {
-      store.dispatch(actions.resumeGame(resumableGame.gameId, gameServer))
-    } else {
-      store.dispatch(actions.updateGameState(gameStates.RESUME_OR_NEW_GAME_SELECTION))
-    }
-  } else {
-    if (config.token) {
-      store.dispatch(actions.updateGameState(gameStates.NAVIGATION_TO_START))
-    } else {
-      if (config.avatar) {
-        store.dispatch(actions.updateGameState(gameStates.NEW_GAME_NAME_SELECTION))
-      } else {
-        store.dispatch(actions.updateGameState(gameStates.NEW_GAME_AVATAR_SELECTION))
-      }
-    }
-  }
+  const name = `Client${Math.floor((new Date().getTime() / 1000) % 1000)}`
+  const avatar = Object.keys(content.avatars)[Math.floor(Math.random() * Object.keys(content.avatars).length)]
+  store.dispatch(actions.startNewGame(name, avatar, 11, gameServer))
+  setTimeout(() => {
+    store.dispatch(actions.selectChallengeType(
+      "skill",
+      content,
+      process.env.ASSET_SERVER_URI,
+      process.env.GAME_SERVER_URI,
+      process.env.STATIC_SERVER_URI
+    ))
+
+    store.dispatch(actions.joinChallengeLobby(gameServer))
+  }, 200)
+  // if (resumableGame) {
+  //   if (config.token) {
+  //     store.dispatch(actions.resumeGame(resumableGame.gameId, gameServer))
+  //   } else {
+  //     store.dispatch(actions.updateGameState(gameStates.RESUME_OR_NEW_GAME_SELECTION))
+  //   }
+  // } else {
+  //   if (config.token) {
+  //     store.dispatch(actions.updateGameState(gameStates.NAVIGATION_TO_START))
+  //   } else {
+  //     if (config.avatar) {
+  //       store.dispatch(actions.updateGameState(gameStates.NEW_GAME_NAME_SELECTION))
+  //     } else {
+  //       store.dispatch(actions.updateGameState(gameStates.NEW_GAME_AVATAR_SELECTION))
+  //     }
+  //   }
+  // }
 
   window.addEventListener("message", receiveMessage, false)
 
@@ -155,18 +169,18 @@ gameServer.on("disconnect", () =>
   store.dispatch(actions.updateConnected(false))
 )
 
-gameServer.on(messages.REQUESTING_MATE, (gameId) =>
+gameServer.on(messages.REQUEST_MATE, (gameId) =>
   store.dispatch(actions.handleIncomingMateRequest(gameId))
 )
 
-gameServer.on(messages.CANCEL_REQUESTING_MATE, (gameId) =>
+gameServer.on(messages.CANCEL_REQUEST_MATE, (gameId) =>
   store.dispatch(actions.handleIncomingCancelMateRequest(gameId))
 )
 
-gameServer.on(messages.ACCEPTING_MATE, (gameId, room) =>
-  store.dispatch(actions.handleIncomingMateAccept(gameId, room, gameServer))
+gameServer.on(messages.ACCEPT_MATE, (gameId, room) =>
+  store.dispatch(actions.handleIncomingAcceptMate(gameId, room, gameServer))
 )
 
-gameServer.on(messages.REJECTING_MATE, () =>
-  store.dispatch(actions.handleIncomingMateReject())
+gameServer.on(messages.DECLINE_MATE, () =>
+  store.dispatch(actions.handleIncomingDeclineMate())
 )
