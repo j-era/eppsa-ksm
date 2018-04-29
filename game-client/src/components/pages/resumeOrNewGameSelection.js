@@ -60,7 +60,7 @@ class ResumeOrNewGameSelection extends React.Component {
 
     return (
       <Container>
-        <PageTitle text={ "Spiel fortsetzen?" } />
+        <PageTitle text={ content.shared.texts.resumeGameTitle } />
         <Content>
           <FramedIcon
             scale={0.78}
@@ -70,18 +70,18 @@ class ResumeOrNewGameSelection extends React.Component {
                           ${assetServerUri}/${avatarContent.medium.src} 500w,
                           ${assetServerUri}/${avatarContent.large.src} 1000w` } />
           <StyledDescription>
-            { "Möchtest du deinen Spielstand mit deiner letzten Figur fortführen?" }
+            { content.shared.texts.resumeGameText }
           </StyledDescription>
           <Buttons>
             <ConfirmButton
               visible
               onClick={ this.confirm }
               clicked={ this.state.nextClicked }
-              text={ "Spiel fortführen" } />
+              text={ content.shared.texts.resumeGameButton } />
             <BackButton
               onClick={ this.back }
               clicked={ this.state.backClicked }>
-              { "Neues Spiel beginnen" }
+              { content.shared.texts.newGameButton }
             </BackButton>
           </Buttons>
         </Content>
