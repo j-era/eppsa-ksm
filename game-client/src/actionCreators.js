@@ -283,9 +283,9 @@ export function handleAvatarQrCode(data) {
   return dispatch => {
     if (data != null) {
       const url = new URL(data)
-      const token = url.searchParams.get("avatar")
-      if (token != null) {
-        dispatch(updateAvatar(token))
+      const avatar = url.searchParams.get("avatar")
+      if (avatar != null) {
+        dispatch(updateAvatar(avatar))
         dispatch(updateGameState(gameStates.NEW_GAME_NAME_SELECTION))
       } else {
         dispatch({ type: types.WRONG_QR_CODE_SCANNED })
