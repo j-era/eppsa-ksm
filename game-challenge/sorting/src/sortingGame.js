@@ -1,16 +1,14 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled from "styled-components"
+import { ScoreCalculation, Button } from "eppsa-ksm-shared"
 
 import pickBy from "lodash.pickby"
 import mapValues from "lodash.mapvalues"
 
 import DragDropList from "./dragDropList"
 
-import ScoreCalculation from "../node_modules/eppsa-ksm-shared/functions/score"
-import Button from "../node_modules/eppsa-ksm-shared/styled-components/components/button"
-import ButtonIcon from "../node_modules/eppsa-ksm-shared/svg/EPPSA_Assets_Button_Icon.svg"
-
+import ButtonIcon from "../node_modules/eppsa-ksm-shared/assets/EPPSA_Assets_Button_Icon.svg"
 
 const Container = styled.div`
   font-family: ${props => props.theme.font.fontFamily};
@@ -18,7 +16,13 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  padding-top: ${props => props.theme.layout.cardPadding}vw;
+  padding-bottom: ${props => props.theme.layout.cardPadding}vw;
+
   height: 100%;
+
+  box-sizing: border-box;
 `
 
 const NextIcon = styled(ButtonIcon)`
@@ -30,7 +34,7 @@ const NextIcon = styled(ButtonIcon)`
 
 const TopLabel = styled.div`
   text-align: center;
-  margin-bottom: ${props => props.theme.layout.mediumSpacing};
+  margin-bottom: ${props => props.theme.layout.mediumSpacing}vw;
 `
 
 const BottomLabel = styled.div`
@@ -91,7 +95,7 @@ export default class SortingGame extends React.Component {
   renderConfirmButton() {
     return (
       <Button onClick={ this.confirm }>
-        { this.props.data.shared.texts.confirmSelection }<NextIcon />
+        { this.props.data.shared.texts.confirm }<NextIcon />
       </Button>
     )
   }

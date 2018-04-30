@@ -47,14 +47,11 @@ services:
       - ./game-challenge/button:/app
       - /app/node_modules
 
-   game-challenge-sorting:
-     build:
-       dockerfile: Dockerfile.development
-     volumes:
-       - ./game-challenge/sorting:/app
-       - /app/node_modules
-     environment:
-       PORT: 443
+  game-challenge-sorting:
+    build:
+      dockerfile: Dockerfile.development
+    volumes:
+      - ./game-challenge/sorting:/app
 
   game-challenge-quiz:
     build:

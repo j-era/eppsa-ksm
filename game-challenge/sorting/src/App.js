@@ -1,7 +1,8 @@
 import React from "react"
 import { ThemeProvider } from "styled-components"
+import { theme } from "eppsa-ksm-shared"
+
 import SortingGame from "./sortingGame"
-import theme from "../node_modules/eppsa-ksm-shared/styled-components/theme"
 
 export default (props) =>
   <ThemeProvider theme={ theme }>

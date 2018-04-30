@@ -1,10 +1,11 @@
 import React from "react"
 import styled, { css } from "styled-components"
 import { DragSource, DropTarget } from "react-dnd"
+import { pulse } from "eppsa-ksm-shared"
+
 import { ItemTypes } from "./constants"
 import ItemComponent from "./components/itemComponent"
 
-import pulse from "../node_modules/eppsa-ksm-shared/styled-components/animations/pulse"
 
 const Container = styled(ItemComponent)`
   display: flex;
@@ -16,7 +17,8 @@ const Container = styled(ItemComponent)`
   width: 95%;
 
   visibility: ${props => props.isOver ? "hidden" : "visible"};
-  margin-bottom: ${props => props.theme.layout.mediumSpacing};
+
+  margin-bottom: ${props => props.theme.layout.mediumSpacing}vw;
 
   box-sizing: border-box;
 
