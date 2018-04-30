@@ -16,7 +16,7 @@ const Container = styled.div`
 `
 
 function Application(props) {
-  const { content, gameState } = props
+  const { content } = props
   const { render, showHeader } = getPageData(props)
   const challenge = props.content.challenges[props.challengeNumber]
 
@@ -27,8 +27,7 @@ function Application(props) {
         { showHeader && <Header props={ props } /> }
         <Background
           { ...props }
-          bannerText={ content.name }
-          inGameSetup={ inGameSetup(gameState) } >
+          bannerText={ content.name } >
           <Card ratio={ showHeader ? 0.9 : 1 }>
             { React.createElement(render, props) }
           </Card>
@@ -48,13 +47,4 @@ function updateTheme(theme, challenge) {
   return newTheme
 }
 
-function renderHeader(props) {
-  return (
-    <Header>
-      { !props.showGameManual && <GameManualButton { ...props } /> }
-      <GameBoard { ...props } />
-    </Header>
-  )
-}
-
-export default withTheme(connect((state) => state)(Application))
+export default connect((state) => state)(Application)

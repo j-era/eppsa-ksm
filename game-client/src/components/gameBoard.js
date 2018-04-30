@@ -1,8 +1,8 @@
 import React from "react"
-import styled, { css } from "styled-components"
+import styled, { css, withTheme } from "styled-components"
 import { getCookie } from "../cookie"
 
-export default function GameBoard(props) {
+function GameBoard(props) {
   const {
     avatar,
     connectedGames,
@@ -179,3 +179,5 @@ export default function GameBoard(props) {
     )
   }
 }
+
+export default withTheme(GameBoard)
