@@ -49,7 +49,7 @@ class gameScene extends Phaser.Scene {
 		this.speed7 = this.sys.game.gameData.SpeedRow7;
 	//this.questions = [];
 
-	let background = this.add.image(0, 0, 'background').setOrigin(0,0);
+	let background = this.add.image(0, 0, 'background').setOrigin(0,0).setDepth(-2);
 	background.setScale(window.innerWidth / background.width, window.innerHeight / background.height);
 
 	for(var key in this.sys.game.gameData.pictures){
@@ -312,9 +312,11 @@ spawn(waitrow, max, min) {
 		});
 		return
 	}else{
+		console.log (waitrow);
 		var element = Math.floor(Math.random() * waitrow.length)
 		var dirTemp = 'move' + this.imageArray[waitrow[element]].direction;
 		this[dirTemp].push(this.loadedImages[waitrow[element]]);
+		console.log(this.loadedImages[waitrow[element]])
 		waitrow.splice(element,1);
 
 		this.time.addEvent( {
