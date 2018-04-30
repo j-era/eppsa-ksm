@@ -31,7 +31,7 @@ class NavigationToNextArea extends React.Component {
 
     return (
       <Container>
-        <PageTitle text={ challenge.name } />
+        <PageTitle>{ challenge.name }</PageTitle>
         <Content>
           <FramedIcon
             scale={0.8}

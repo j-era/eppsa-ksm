@@ -36,7 +36,7 @@ class AreaConfirmation extends React.Component {
 
     return (
       <Container>
-        <PageTitle text={ challenge.name } />
+        <PageTitle>{ challenge.name }</PageTitle>
         <Content>
           <FramedIcon
             color={ theme.colors.area }

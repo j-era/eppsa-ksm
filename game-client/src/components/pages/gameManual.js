@@ -31,7 +31,7 @@ export default class GameManual extends React.Component {
   render() {
     return (
       <Container>
-        <PageTitle text={ this.props.content.gameManualTitle } />
+        <PageTitle>{ this.props.content.gameManualTitle }</PageTitle>
         <ManualText>
           <StyledMarkdown>{ this.props.content.gameManualText }</StyledMarkdown>
         </ManualText>

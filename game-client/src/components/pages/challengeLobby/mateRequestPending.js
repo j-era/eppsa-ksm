@@ -54,7 +54,7 @@ class MateRequestPending extends React.Component {
 
     return (
       <Container>
-        <PageTitle text={ title } />
+        <PageTitle>{ title }</PageTitle>
         <Content>
           <FramedIcon
             scale={0.78}

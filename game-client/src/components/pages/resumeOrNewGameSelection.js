@@ -60,7 +60,7 @@ class ResumeOrNewGameSelection extends React.Component {
 
     return (
       <Container>
-        <PageTitle text={ content.shared.texts.resumeGameTitle } />
+        <PageTitle>{ content.shared.texts.resumeGameTitle }</PageTitle>
         <Content>
           <FramedIcon
             scale={0.78}

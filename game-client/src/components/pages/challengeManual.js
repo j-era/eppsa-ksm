@@ -34,7 +34,7 @@ class ChallengeManual extends React.Component {
 
     return (
       <Container>
-        <PageTitle text={ name } />
+        <PageTitle>{ name }</PageTitle>
         <Content>
           <FramedIcon
             color={ theme.colors.area }

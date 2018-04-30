@@ -60,7 +60,7 @@ class NewGameAvatarConfirmation extends React.Component {
 
     return (
       <Container>
-        <PageTitle text={ content.avatars[avatar].name } />
+        <PageTitle>{ content.avatars[avatar].name }</PageTitle>
         <Content>
           <FramedIcon
             scale={0.78}

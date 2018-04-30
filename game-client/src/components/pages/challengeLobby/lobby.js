@@ -63,7 +63,7 @@ class NewGameAvatarConfirmation extends React.Component {
 
     return (
       <Container>
-        <PageTitle text={ "Wähle einen Kontrahenten!" } />
+        <PageTitle>{ "Wähle einen Kontrahenten!" }</PageTitle>
         <Content>
           <Games>
             { gamesInLobby.map(this.renderGame) }

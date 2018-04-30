@@ -75,7 +75,7 @@ class NewGameNameSelection extends React.Component {
 
     return (
       <Container>
-        <PageTitle text={ content.shared.texts.selectName } />
+        <PageTitle>{ content.shared.texts.selectName }</PageTitle>
         <Content>
           <FramedIcon
             scale={0.78}

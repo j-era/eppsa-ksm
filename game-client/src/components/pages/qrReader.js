@@ -34,7 +34,7 @@ export default ({ challengeNumber, content, dispatch, wrongQrCodeScanned }) => {
 
   return (
     <Container>
-      <PageTitle text={ challenge.name } />
+      <PageTitle>{ challenge.name }</PageTitle>
       <Content>
         <QrReader
           scale={ 1 }

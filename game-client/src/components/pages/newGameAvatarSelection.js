@@ -35,7 +35,7 @@ function NewGameAvatarSelection(props) {
 
   return (
     <Container>
-      <PageTitle text={ content.shared.texts.selectAvatar } />
+      <PageTitle>{ content.shared.texts.selectAvatar }</PageTitle>
       <Content>
         <Avatars
           onClick={ process.env.NODE_ENV === "development"

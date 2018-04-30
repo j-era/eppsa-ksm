@@ -15,13 +15,12 @@ import { cancelRequestMate } from "../../../actionCreators"
 const Container = styled(Page)`
   display: flex;
   flex-direction: column;
-`
-
-const Content = styled.div `
-  display: flex;
-  flex-direction: column;
   justify-content: space-between;
   height: 100%;
+`
+
+const StyledPageTitle = styled(PageTitle)`
+  height: 1em;
 `
 
 const CancelButton = styled(Button)`
@@ -43,18 +42,16 @@ class RequestedMateUnavailable extends React.Component {
 
     return (
       <Container>
-        <PageTitle text={ title } />
-        <Content>
-          <FramedIcon
-            scale={0.78}
-            color={ this.props.theme.colors.area }
-            iconSrc={ `${assetServerUri}/${content.shared.assets.lobbyIconError.src}` } />
-          <CancelButton
-            onClick={ this.cancel }
-            clicked={ this.state.cancelClicked }>
-            { content.shared.texts.requestedMateUnavailableCancelButton }
-          </CancelButton>
-        </Content>
+        <StyledPageTitle>{ title }</StyledPageTitle>
+        <FramedIcon
+          scale={0.78}
+          color={ this.props.theme.colors.area }
+          iconSrc={ `${assetServerUri}/${content.shared.assets.lobbyIconError.src}` } />
+        <CancelButton
+          onClick={ this.cancel }
+          clicked={ this.state.cancelClicked }>
+          { content.shared.texts.requestedMateUnavailableCancelButton }
+        </CancelButton>
       </Container>
     )
   }

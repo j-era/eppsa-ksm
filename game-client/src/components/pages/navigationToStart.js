@@ -20,7 +20,7 @@ const ManualText = styled.div`
 export default function NavigationToStart({ content, dispatch }) {
   return (
     <Container>
-      <PageTitle text={ content.navigationToStartTitle } />
+      <PageTitle>{ content.navigationToStartTitle }</PageTitle>
       <ManualText>
         <StyledMarkdown>{ content.navigationToStartText }</StyledMarkdown>
       </ManualText>
