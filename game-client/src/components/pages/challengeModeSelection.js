@@ -10,7 +10,7 @@ import {
   PageTitle
 } from "eppsa-ksm-shared"
 
-import { joinChallengeLobby, updateGameState } from "../../actionCreators"
+import { joinChallengeLobby, startChallenge } from "../../actionCreators"
 import { CHALLENGE_MANUAL } from "../../gameStates"
 
 const Container = styled(Page)`
@@ -83,7 +83,7 @@ class ChallengeModeSelection extends React.Component {
   async onSingleplayer() {
     this.setState({ singleplayerClicked: true })
     await delay(100)
-    this.props.dispatch(updateGameState(CHALLENGE_MANUAL))
+    this.props.dispatch(startChallenge(this.props.gameServer))
   }
 }
 
