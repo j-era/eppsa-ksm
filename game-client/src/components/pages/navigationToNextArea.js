@@ -24,7 +24,7 @@ class NavigationToNextArea extends React.Component {
     autoBind(this)
     this.state = { nextClicked: false }
   }
-  
+
   render() {
     const { assetServerUri, challengeNumber, content, theme } = this.props
     const challenge = content.challenges[challengeNumber]
@@ -34,7 +34,7 @@ class NavigationToNextArea extends React.Component {
         <PageTitle>{ challenge.name }</PageTitle>
         <Content>
           <FramedIcon
-            scale={0.8}
+            scale={ 0.8 }
             color={ theme.colors.area }
             iconSrc={ `${assetServerUri}/${challenge.icon.src}` } />
           <Description>

@@ -39,11 +39,6 @@ const Game = styled.div `
   width: 40%;
 `
 
-const StyledDescription = styled(Description)`
-  margin-top: ${props => props.theme.layout.smallSpacing}vw;
-  max-height: calc(3em + ${props => props.theme.layout.smallSpacing}vw);
-`
-
 const BackButton = styled(Button)`
   margin-top: ${props => props.theme.layout.mediumSpacing}vw;
   align-self: center;
@@ -58,7 +53,7 @@ class NewGameAvatarConfirmation extends React.Component {
   }
 
   render() {
-    const { challengeNumber, connectedGames, content, dispatch, gameId, gameServer } = this.props
+    const { challengeNumber, connectedGames, content, gameId } = this.props
     const gamesInLobby = findGamesInLobby(challengeNumber, connectedGames, gameId)
 
     return (

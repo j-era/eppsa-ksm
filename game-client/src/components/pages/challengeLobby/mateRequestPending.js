@@ -57,7 +57,7 @@ class MateRequestPending extends React.Component {
         <PageTitle>{ title }</PageTitle>
         <Content>
           <FramedIcon
-            scale={0.78}
+            scale={ 0.78 }
             color={ this.props.theme.colors.area }
             iconSrc={ `${assetServerUri}/${content.shared.assets.skillIcon.src}` } />
           <Buttons>
@@ -78,7 +78,7 @@ class MateRequestPending extends React.Component {
   }
 
   async accept() {
-    const { dispatch, gameServer, mateRequests } = this.props
+    const { dispatch, gameServer, mateRequests } = this.props
     const mateRequest = mateRequests.values().next().value
 
     this.setState({ acceptClicked: true })
@@ -87,7 +87,7 @@ class MateRequestPending extends React.Component {
   }
 
   async decline() {
-    const { dispatch, gameServer, mateRequests } = this.props
+    const { dispatch, gameServer, mateRequests } = this.props
     const mateRequest = mateRequests.values().next().value
 
     this.setState({ declineClicked: true })

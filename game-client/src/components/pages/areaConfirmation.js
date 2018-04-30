@@ -29,7 +29,7 @@ class AreaConfirmation extends React.Component {
     autoBind(this)
     this.state = { nextClicked: false }
   }
-  
+
   render() {
     const { assetServerUri, challengeNumber, content, theme } = this.props
     const challenge = content.challenges[challengeNumber]

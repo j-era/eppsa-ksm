@@ -36,7 +36,7 @@ class RequestedMateUnavailable extends React.Component {
   }
 
   render() {
-    const { assetServerUri, connectedGames, content, requestedMate } = this.props
+    const { assetServerUri, content, requestedMate } = this.props
     const title = content.shared.texts.requestedMateUnavailableTitle
       .replace(/\${mate}/g, requestedMate.name)
 
@@ -44,7 +44,7 @@ class RequestedMateUnavailable extends React.Component {
       <Container>
         <StyledPageTitle>{ title }</StyledPageTitle>
         <FramedIcon
-          scale={0.78}
+          scale={ 0.78 }
           color={ this.props.theme.colors.area }
           iconSrc={ `${assetServerUri}/${content.shared.assets.lobbyIconError.src}` } />
         <CancelButton

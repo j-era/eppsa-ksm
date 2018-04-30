@@ -11,7 +11,6 @@ import {
 } from "eppsa-ksm-shared"
 
 import { joinChallengeLobby, startChallenge } from "../../actionCreators"
-import { CHALLENGE_MANUAL } from "../../gameStates"
 
 const Container = styled(Page)`
   display: flex;
@@ -55,7 +54,7 @@ class ChallengeModeSelection extends React.Component {
         <PageTitle>{ content.shared.texts.challengeModeSelectionTitle }</PageTitle>
         <Content>
           <FramedIcon
-            scale={0.78}
+            scale={ 0.78 }
             color={ theme.colors.area }
             iconSrc={ `${assetServerUri}/${content.shared.assets.skillIcon.src}` } />
           <Buttons>

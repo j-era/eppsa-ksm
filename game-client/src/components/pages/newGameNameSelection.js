@@ -78,7 +78,7 @@ class NewGameNameSelection extends React.Component {
         <PageTitle>{ content.shared.texts.selectName }</PageTitle>
         <Content>
           <FramedIcon
-            scale={0.78}
+            scale={ 0.78 }
             color={ this.props.theme.colors.primary }
             iconSrc={ `${assetServerUri}/${content.avatars[avatar].medium.src}` }
             iconSrcSet={ `${assetServerUri}/${content.avatars[avatar].small.src} 250w,

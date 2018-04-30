@@ -55,7 +55,7 @@ class ResumeOrNewGameSelection extends React.Component {
   }
 
   render() {
-    const { assetServerUri, avatar, content, resumableGame } = this.props
+    const { assetServerUri, content, resumableGame } = this.props
     const avatarContent = content.avatars[resumableGame.avatar]
 
     return (
@@ -63,7 +63,7 @@ class ResumeOrNewGameSelection extends React.Component {
         <PageTitle>{ content.shared.texts.resumeGameTitle }</PageTitle>
         <Content>
           <FramedIcon
-            scale={0.78}
+            scale={ 0.78 }
             color={ this.props.theme.colors.primary }
             iconSrc={ `${assetServerUri}/${avatarContent.medium.src}` }
             iconSrcSet={ `${assetServerUri}/${avatarContent.small.src} 250w,
