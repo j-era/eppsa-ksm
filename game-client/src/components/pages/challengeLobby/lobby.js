@@ -66,9 +66,10 @@ class NewGameAvatarConfirmation extends React.Component {
       <Container>
         <PageTitle>{ content.shared.texts.lobbyTitle }</PageTitle>
         <Content>
-          <Games>
-            { gamesInLobby.map(this.renderGame) }
-          </Games>
+          { gamesInLobby.length > 0 ?
+            <Games>{ gamesInLobby.map(this.renderGame) }</Games> :
+            <Description>{ content.shared.texts.lobbyIsEmpty }</Description>
+          }
           <BackButton
             onClick={ this.back }
             clicked={ this.state.backClicked }>
