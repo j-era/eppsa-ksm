@@ -8,7 +8,7 @@ import thunk from "redux-thunk"
 import { applyMiddleware, createStore, combineReducers } from "redux"
 import { createLogger } from "redux-logger"
 import { ThemeProvider } from "styled-components"
-import { injectGlobalStyle, calculateTheme } from "eppsa-ksm-shared"
+import { injectGlobalStyle, theme } from "eppsa-ksm-shared"
 
 import Application from "./components/application"
 import * as gameStates from "./gameStates"
@@ -57,7 +57,7 @@ contentServer.getData().then(transform).then(async (content) => {
 
   render(
     <Provider store={ store }>
-      <ThemeProvider theme={ calculateTheme }>
+      <ThemeProvider theme={ theme }>
         <Application
           content={ content }
           resumableGame={ resumableGame }
