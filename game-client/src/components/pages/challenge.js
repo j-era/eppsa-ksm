@@ -21,8 +21,8 @@ export default function Challenge(props) {
         if (iframe) {
           // eslint-disable-next-line no-param-reassign
           iframe.setAttribute("allow", "camera")
-          iframe.onload =
-            () => props.onChallengeReady(iframe.contentWindow, props.challengeData, props.challengeUri)
+          iframe.onload = () =>
+            props.onChallengeReady(iframe.contentWindow, props.challengeData, props.challengeUri)
         }
       } } />
   )
