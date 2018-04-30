@@ -22,6 +22,9 @@ class gameScene extends Phaser.Scene {
 		this.row2 = [];
 		this.row3 = [];
 		this.row4 = [];
+		this.row5 = [];
+		this.row6 = [];
+		this.row7 = [];
 		this.moveLeft = [];
 		this.moveRight = [];
 
@@ -29,6 +32,9 @@ class gameScene extends Phaser.Scene {
 		this.waitrow2 = [];
 		this.waitrow3 = [];
 		this.waitrow4 = [];
+		this.waitrow5 = [];
+		this.waitrow6 = [];
+		this.waitrow7 = [];
 		this.correct = 0;
 
 		this.imageArray = {};
@@ -38,6 +44,9 @@ class gameScene extends Phaser.Scene {
 		this.speed2 = this.sys.game.gameData.SpeedRow2;
 		this.speed3 = this.sys.game.gameData.SpeedRow3;
 		this.speed4 = this.sys.game.gameData.SpeedRow4;
+		this.speed5 = this.sys.game.gameData.SpeedRow5;
+		this.speed6 = this.sys.game.gameData.SpeedRow6;
+		this.speed7 = this.sys.game.gameData.SpeedRow7;
 	//this.questions = [];
 
 	let background = this.add.image(0, 0, 'background').setOrigin(0,0);
@@ -125,64 +134,16 @@ class gameScene extends Phaser.Scene {
 	var that = this;
 
 	for(var element in this.imageArray){
-		//var i = 0;
 		this.scale;
-		if(that.imageArray[element].type == 1){
-			if(that.imageArray[element].depth == 1){
-				this.scale = /*(this.picMaxWidth / that.loadedImages[element].displayWidth) * */that.sys.game.gameData.ScalingImages1;
-				that.loadedImages[element].setScale(this.scale,this.scale);
+		//if(that.imageArray[element].type == 1){
 
-			}else if(that.imageArray[element].depth == 2){
-				this.scale = /*(this.picMinWidth / that.loadedImages[element].displayWidth) * */that.sys.game.gameData.ScalingImages2;
-				that.loadedImages[element].setScale(this.scale,this.scale);
-			}else {
-				if(that.imageArray[element].depth == 3){
-					this.scale = /*(this.picMinHeight / that.loadedImages[element].displayHeight) * */that.sys.game.gameData.ScalingImages3;
-					that.loadedImages[element].setScale(this.scale,this.scale);
-				}else if(that.imageArray[element].depth == 4){
-					this.scale = /*(this.picMinHeight / that.loadedImages[element].displayHeight) * */that.sys.game.gameData.ScalingImages4;
-					that.loadedImages[element].setScale(this.scale,this.scale);
-				}else {
-				}
-			}
+			var scalingNumber = that.sys.game.gameData.ScalingImages + that.imageArray[element].depth;
+			this.scale = scalingNumber;
+			that.loadedImages[element].setScale(this.scale,this.scale);
 
 			//that.loadedImages[element].displayHeight = that.picMaxHeight * (that.imageArray[element].depth/2);
-		}else{
-			if(that.imageArray[element].depth == 1){
-				this.scale = /*(this.picMaxWidth / that.loadedImages[element].displayWidth) * */that.sys.game.gameData.ScalingImages1;
-				that.loadedImages[element].setScale(this.scale,this.scale);
-
-			}else if(that.imageArray[element].depth == 2){
-				this.scale = /*(this.picMinWidth / that.loadedImages[element].displayWidth) * */that.sys.game.gameData.ScalingImages2;
-				that.loadedImages[element].setScale(this.scale,this.scale);
-			}else {
-				if(that.imageArray[element].depth == 3){
-					this.scale = /*(this.picMinHeight / that.loadedImages[element].displayHeight) * */that.sys.game.gameData.ScalingImages3;
-					that.loadedImages[element].setScale(this.scale,this.scale);
-				}else if(that.imageArray[element].depth == 4){
-					this.scale = /*(this.picMinHeight / that.loadedImages[element].displayHeight) * */that.sys.game.gameData.ScalingImages4;
-					that.loadedImages[element].setScale(this.scale,this.scale);
-				}else {
-				}
-			}
-			/*if(that.loadedImages[element].displayWidth > that.restPicMaxWidth){
-				this.scale = (this.restPicMaxWidth / that.loadedImages[element].displayWidth) * that.sys.game.gameData.ScalingImages;
-				that.loadedImages[element].setScale(this.scale,this.scale);
-
-			}else if(that.loadedImages[element].displayWidth < that.restPicMinWidth){
-				this.scale = (this.restPicMinWidth / that.loadedImages[element].displayWidth) * that.sys.game.gameData.ScalingImages;
-				that.loadedImages[element].setScale(this.scale,this.scale);
-			}else {
-				if(that.loadedImages[element].displayHeight > this.restPicMaxHeight){
-					this.scale = (this.restPicMinHeight / that.loadedImages[element].displayHeight) * that.sys.game.gameData.ScalingImages;
-					that.loadedImages[element].setScale(this.scale,this.scale);
-				}else if(that.loadedImages[element].displayHeight < this.restPicMinHeight){
-					this.scale = (this.restPicMinHeight / that.loadedImages[element].displayHeight) * that.sys.game.gameData.ScalingImages;
-					that.loadedImages[element].setScale(this.scale,this.scale);
-				}else {
-				}
-			}*/
-		}
+		//}else{
+		//}
 		var temp = 'row' + that.imageArray[element].depth;
 		that[temp].push(that.loadedImages[element]);
 		this['wait' + temp].push(element);	
@@ -222,9 +183,30 @@ class gameScene extends Phaser.Scene {
 	})
 
 	var SpawnTimerRow4 = this.time.addEvent( {
-		delay: 2000,
+		delay: 0,
 		callback:this.spawn,
 		args: [this.waitrow4, this.syst.Row4Max, this.syst.Row4Min],
+		callbackScope: this,
+	})
+
+	var SpawnTimerRow5 = this.time.addEvent( {
+		delay: 0,
+		callback:this.spawn,
+		args: [this.waitrow5, this.syst.Row5Max, this.syst.Row5Min],
+		callbackScope: this,
+	})
+
+	var SpawnTimerRow6 = this.time.addEvent( {
+		delay: 0,
+		callback:this.spawn,
+		args: [this.waitrow6, this.syst.Row6Max, this.syst.Row6Min],
+		callbackScope: this,
+	})
+
+	var SpawnTimerRow7 = this.time.addEvent( {
+		delay: 0,
+		callback:this.spawn,
+		args: [this.waitrow7, this.syst.Row7Max, this.syst.Row7Min],
 		callbackScope: this,
 	})
 
@@ -275,9 +257,12 @@ class gameScene extends Phaser.Scene {
 	this.row1Dif = this.syst.YPosRow2;
 	this.row2Dif = this.syst.YPosRow3;
 	this.row3Dif = this.syst.YPosRow4;
+	this.row4Dif = this.syst.YPosRow5;
+	this.row5Dif = this.syst.YPosRow6;
+	this.row6Dif = this.syst.YPosRow7;
 
 
-	for(var i = 1; i < 5; i++){
+	for(var i = 1; i < 8; i++){
 		var temp = 'row' + i;
 
 		for(var j = 0; j < that[temp].length; j++){
