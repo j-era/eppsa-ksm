@@ -35,8 +35,8 @@ contentServer.getData().then(transform).then(async (content) => {
   // }
 
   const resumableGame = await findResumableGame()
-  const name = `Client${Math.floor((new Date().getTime() / 1000) % 1000)}`
-  const avatar = Object.keys(content.avatars)[Math.floor(Math.random() * Object.keys(content.avatars).length)]
+  const name = `Client${Math.floor(Math.random() * 1000)}`
+  const avatar = Object.keys(content.avatars)[Math.floor(Math.random() * Object.keys(omit(content.avatars, "template")).length)]
   store.dispatch(actions.startNewGame(name, avatar, 11, gameServer))
   setTimeout(() => {
     store.dispatch(actions.selectChallengeType(

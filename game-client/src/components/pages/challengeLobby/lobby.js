@@ -28,6 +28,17 @@ const Content = styled.div `
   height: 100%;
 `
 
+const Games = styled.div `
+  display: flex;
+  flex-wrap: wrap;
+  overflow: scroll;
+`
+
+const Game = styled.div `
+  padding: 5%;
+  width: 40%;
+`
+
 const StyledDescription = styled(Description)`
   margin-top: ${props => props.theme.layout.smallSpacing}vw;
   max-height: calc(3em + ${props => props.theme.layout.smallSpacing}vw);
@@ -54,32 +65,34 @@ class NewGameAvatarConfirmation extends React.Component {
       <Container>
         <PageTitle text={ "Wähle einen Kontrahenten!" } />
         <Content>
-        {/* { <FramedIcon
-            scale={0.78}
-            color={ this.props.theme.colors.primary }
-            iconSrc={ `${assetServerUri}/${content.avatars[avatar].medium.src}` }
-            iconSrcSet={ `${assetServerUri}/${content.avatars[avatar].small.src} 250w,
-                          ${assetServerUri}/${content.avatars[avatar].medium.src} 500w,
-                          ${assetServerUri}/${content.avatars[avatar].large.src} 1000w` } /> } */}
-          <ul>
-        {
-          gamesInLobby.map((game) =>
-            <li key={ game.gameId }>
-              <button
-                onClick={ () => dispatch(requestMate(game.gameId, game.name, gameServer)) }>
-                { game.name }
-              </button>
-            </li>
-          )
-        }
-      </ul>
-            <BackButton
-              onClick={ this.back }
-              clicked={ this.state.backClicked }>
-              { content.shared.texts.back }
-            </BackButton>
+          <Games>
+            { gamesInLobby.map(this.renderGame) }
+          </Games>
+          <BackButton
+            onClick={ this.back }
+            clicked={ this.state.backClicked }>
+            { content.shared.texts.back }
+          </BackButton>
         </Content>
       </Container>
+    )
+  }
+
+  renderGame(game) {
+    const { assetServerUri, content, dispatch, gameServer } = this.props
+
+    return (
+      <Game
+        key={ game.gameId }
+        onClick={ () => dispatch(requestMate(game.gameId, game.name, gameServer)) }>
+        <FramedIcon
+          color={ this.props.theme.colors.area }
+          iconSrc={ `${assetServerUri}/${content.avatars[game.avatar].medium.src}` }
+          iconSrcSet={ `${assetServerUri}/${content.avatars[game.avatar].small.src} 250w,
+                        ${assetServerUri}/${content.avatars[game.avatar].medium.src} 500w,
+                        ${assetServerUri}/${content.avatars[game.avatar].large.src} 1000w` } />
+        <Description>{ game.name }</Description>
+      </Game>
     )
   }
 
