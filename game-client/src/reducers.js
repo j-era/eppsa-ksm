@@ -105,7 +105,7 @@ export function timelineClockRunning(state = false, action) {
     case types.START_TIMELINE_CLOCK:
       return true
     case types.STOP_TIMELINE_CLOCK:
-      return true
+      return false
     default:
       return state
   }

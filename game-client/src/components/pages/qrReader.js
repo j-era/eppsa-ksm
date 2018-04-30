@@ -50,7 +50,10 @@ export default ({ challengeNumber, content, dispatch, wrongQrCodeScanned }) => {
             </StyledErrorMessage> :
             <StyledDescription
               onClick={ process.env.NODE_ENV === "development"
-                ? () => dispatch(handleChallengeQrCode(challenge.token, challenge))
+                ? () => dispatch(handleChallengeQrCode(
+                  `http://development/?token=${challenge.token}`,
+                  challenge
+                ))
                 : () => {} }>
               { content.shared.texts.scanQrInstructions }
             </StyledDescription>
