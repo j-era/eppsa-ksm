@@ -48,7 +48,6 @@ const BackButton = styled(Button)`
   margin-top: ${props => props.theme.layout.mediumSpacing}vw;
   align-self: center;
   border-color: ${props => props.theme.colors.secondary};
-  flex-shrink: 0;
 `
 
 class NewGameAvatarConfirmation extends React.Component {
