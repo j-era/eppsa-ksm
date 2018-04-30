@@ -30,42 +30,28 @@ injectGlobalStyle(process.env.STATIC_SERVER_URI)
 contentServer.getData().then(transform).then(async (content) => {
   const maxChallenges = Object.keys(content.challenges).length - 1
 
-  // if (config.avatar) {
-  //   store.dispatch(actions.updateAvatar(config.avatar))
-  // }
+  if (config.avatar) {
+    store.dispatch(actions.updateAvatar(config.avatar))
+  }
 
   const resumableGame = await findResumableGame()
-  const name = `Client${Math.floor(Math.random() * 1000)}`
-  const avatar = Object.keys(content.avatars)[Math.floor(Math.random() * Object.keys(omit(content.avatars, "template")).length)]
-  store.dispatch(actions.startNewGame(name, avatar, 11, gameServer))
-  setTimeout(() => {
-    store.dispatch(actions.selectChallengeType(
-      "skill",
-      content,
-      process.env.ASSET_SERVER_URI,
-      process.env.GAME_SERVER_URI,
-      process.env.STATIC_SERVER_URI
-    ))
-
-    store.dispatch(actions.joinChallengeLobby(gameServer))
-  }, 200)
-  // if (resumableGame) {
-  //   if (config.token) {
-  //     store.dispatch(actions.resumeGame(resumableGame.gameId, gameServer))
-  //   } else {
-  //     store.dispatch(actions.updateGameState(gameStates.RESUME_OR_NEW_GAME_SELECTION))
-  //   }
-  // } else {
-  //   if (config.token) {
-  //     store.dispatch(actions.updateGameState(gameStates.NAVIGATION_TO_START))
-  //   } else {
-  //     if (config.avatar) {
-  //       store.dispatch(actions.updateGameState(gameStates.NEW_GAME_NAME_SELECTION))
-  //     } else {
-  //       store.dispatch(actions.updateGameState(gameStates.NEW_GAME_AVATAR_SELECTION))
-  //     }
-  //   }
-  // }
+  if (resumableGame) {
+    if (config.token) {
+      store.dispatch(actions.resumeGame(resumableGame.gameId, gameServer))
+    } else {
+      store.dispatch(actions.updateGameState(gameStates.RESUME_OR_NEW_GAME_SELECTION))
+    }
+  } else {
+    if (config.token) {
+      store.dispatch(actions.updateGameState(gameStates.NAVIGATION_TO_START))
+    } else {
+      if (config.avatar) {
+        store.dispatch(actions.updateGameState(gameStates.NEW_GAME_NAME_SELECTION))
+      } else {
+        store.dispatch(actions.updateGameState(gameStates.NEW_GAME_AVATAR_SELECTION))
+      }
+    }
+  }
 
   window.addEventListener("message", receiveMessage, false)
 
