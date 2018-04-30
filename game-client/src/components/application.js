@@ -26,6 +26,7 @@ function Application(props) {
       <Container>
         { showHeader && <Header props={ props } /> }
         <Background
+          { ...props }
           bannerText={ content.name }
           gameState={ gameState } >
           <Card>
