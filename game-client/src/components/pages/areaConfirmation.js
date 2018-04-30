@@ -39,6 +39,7 @@ class AreaConfirmation extends React.Component {
         <PageTitle>{ challenge.name }</PageTitle>
         <Content>
           <FramedIcon
+            scale={ 0.78 }
             color={ theme.colors.area }
             iconSrc={ `${assetServerUri}/${challenge.icon.src}` } />
           <StyledDescription>

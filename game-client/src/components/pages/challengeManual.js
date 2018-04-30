@@ -4,7 +4,6 @@ import styled, { withTheme } from "styled-components"
 import { delay, Description, FramedIcon, NextButton, Page, PageTitle } from "eppsa-ksm-shared"
 
 import { selectChallengeMode } from "../../actionCreators"
-import { CHALLENGE_SELECTION } from "../../gameStates"
 
 const Container = styled(Page)`
   display: flex;
@@ -24,7 +23,7 @@ class ChallengeManual extends React.Component {
     autoBind(this)
     this.state = { nextClicked: false }
   }
-  
+
   render() {
     const { assetServerUri, challengeData, content, theme } = this.props
 
@@ -37,6 +36,7 @@ class ChallengeManual extends React.Component {
         <PageTitle>{ name }</PageTitle>
         <Content>
           <FramedIcon
+            scale={ 0.78 }
             color={ theme.colors.area }
             iconSrc={ `${assetServerUri}/${icon.src}` } />
           <Description>
