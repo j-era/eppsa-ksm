@@ -16,6 +16,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  transform: translateY(${props => props.slideDown ? props.theme.font.button.size * 2 : 0}vw);
+  transition: transform 500ms ease;
 `
 
 const BackgroundArcSVG = styled(BackgroundArcSvg)`
@@ -64,7 +66,10 @@ const TimerBar = styled(TimerBarComponent)`
 `
 
 export default props =>
-  <Container className={ props.className } isBannerVisible={ isBannerVisible(props.gameState) }>
+  <Container
+    className={ props.className }
+    isBannerVisible={ isBannerVisible(props.gameState) }
+    slideDown={ props.showScore }>
     <BannerContainer visible={ isBannerVisible(props.gameState) }>
       <Banner>{ props.bannerText }</Banner>
     </BannerContainer>

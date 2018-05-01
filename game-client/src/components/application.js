@@ -25,6 +25,7 @@ function Application(props) {
       theme={ (theme) => updateTheme(theme, challenge) }>
       <Container>
         { showHeader && <Header props={ props } /> }
+        { props.showScore && <div>{ props.challengeScore }</div>}
         <Background
           { ...props }
           bannerText={ content.name } >

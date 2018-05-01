@@ -1,5 +1,7 @@
 import uuid from "uuid/v4"
 
+import { delay } from "eppsa-ksm-shared"
+
 import { setCookie } from "./cookie"
 import * as gameStates from "./gameStates"
 import * as types from "./actionTypes"
@@ -46,6 +48,10 @@ export function startChallenge(gameServer, room = null) {
 export function finishChallenge(challengeData, gameServer) {
   return async (dispatch) => {
     const data = await gameServer.finishChallenge(challengeData)
+    dispatch(showChallengeScore(challengeData.score))
+    await delay(1500)
+    dispatch(hideChallengeScore())
+    await delay(500)
 
     if (data.finished) {
       dispatch(updateGameState(gameStates.FINISHED))
@@ -103,6 +109,19 @@ export function updateConnected(connected) {
   return {
     type: types.UPDATE_CONNECTED,
     connected
+  }
+}
+
+export function showChallengeScore(score) {
+  return {
+    type: types.SHOW_SCORE,
+    score
+  }
+}
+
+export function hideChallengeScore() {
+  return {
+    type: types.HIDE_SCORE
   }
 }
 
