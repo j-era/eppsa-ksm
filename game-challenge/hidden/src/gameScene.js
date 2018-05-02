@@ -385,6 +385,10 @@ update(){
 		this.moveLeft[i].x -= this[temp];
 
 		if(this.moveLeft[i].x < (0 - this.moveLeft[i].displayWidth - this.moveLeft[i].displayWidth)){
+			if(this.moveLeft[i].input.enabled == false){
+				this.moveLeft[i].input.enabled = true;
+			}
+
 			this.moveLeft[i].x = window.innerWidth + this.moveLeft[i].displayWidth;
 			var temp = 'waitrow' + this.imageArray[this.moveLeft[i].name].depth
 			this[temp].push(this.moveLeft[i].name);
