@@ -117,7 +117,7 @@ let GraphGame = new Phaser.Class({
 		this.spawnAgent();
 
 		if(gameData.showScrollButton == "true"){
-			this.moveRight = this.add.image(this.width - this.width/2, this.height - this.height/20, 'button').setName("right").setInteractive();
+			this.moveRight = this.add.image(this.width - this.width/1, this.height - this.height/20, 'button').setName("right").setInteractive();
 			this.moveRight.setScale(this.width/this.moveRight.width * 0.15);
 			this.moveLeft = this.add.image(2 * this.width - this.width/2, this.height - this.height/20, 'button').setScale(0.2, 0.2).setName("left").setInteractive();
 			this.moveLeft.setScale(this.width/this.moveLeft.width * 0.15);
@@ -149,7 +149,7 @@ let GraphGame = new Phaser.Class({
 				
 
 			}else if(gameObject.name == 'right'){
-				that.cameras.main.scrollX = that.width - that.width/10;
+				that.cameras.main.scrollX = that.width - that.width/5;
 				this.scrolled = true;
 			}else if(gameObject.name == 'left'){
 				this.cameras.main.scrollX = 0;
@@ -739,7 +739,7 @@ let GraphGame = new Phaser.Class({
 	},
 
 	xPosToScreen: function(pos){
-		return this.width * pos/100;
+		return (this.width - this.width/10) * pos/100
 	},
 
 	yPosToScreen: function(pos){
