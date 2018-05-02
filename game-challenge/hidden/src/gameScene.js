@@ -262,7 +262,7 @@ class gameScene extends Phaser.Scene {
 				scaleX: gameObject.scaleX * parseFloat(that.sys.game.gameData.ClickScaleX),
 				scaleY: gameObject.scaleY * parseFloat(that.sys.game.gameData.ClickScaleY),
 				ease: 'Linear',
-				duration: 500,
+				duration: 250,
 				repeat: 0,
 				yoyo: true,
 				//onComplete: function() {gameObject.input.enabled = true}
