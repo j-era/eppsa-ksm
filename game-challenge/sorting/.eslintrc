@@ -9,6 +9,7 @@
         "DropTarget",
         "TouchBackend"
       ]
-    }]
+    }],
+    "react/prefer-stateless-function": "off"
   }
 }

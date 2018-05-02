@@ -66,7 +66,7 @@ class SortingItem extends React.Component {
   render() {
     let content =
       // `div` around a styled component is required by react-dnd
-      <div style={ { "display": "flex", "justifyContent": "center" } }>
+      <div style={ { display: "flex", justifyContent: "center" } }>
         <Container image={ this.props.item.image } { ...this.props }>
           <ItemText color={ this.props.item.color }>{ this.props.item.text }</ItemText>
         </Container>
