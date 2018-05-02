@@ -116,7 +116,7 @@ class gameScene extends Phaser.Scene {
 			//TODO number should not be hardcoded but come from cms
 			//970 is the width of the base tile of the broken down dome picture
 			//please don't hate me future Barbara!
-			blocking.setScale(window.innerWidth/970);
+			blocking.setScale(window.innerWidth/this.blockImages[blockElements].baseWidth);
 
 
 			blocking.depth = this.blockImages[blockElements].depth;
@@ -139,6 +139,9 @@ class gameScene extends Phaser.Scene {
 			this.scale = parseFloat(scalingNumber);
 			console.log(parseFloat(scalingNumber));
 			that.loadedImages[element].setScale(window.innerWidth/that.loadedImages[element].width * this.scale);
+			if(his.blockImages[blockElements].baseWidth != undefined && his.blockImages[blockElements].baseWidth != ""){
+				that.loadedImages[element].setScale(window.innerWidth/this.blockImages[blockElements].baseWidth);
+			}
 
 			//that.loadedImages[element].displayHeight = that.picMaxHeight * (that.imageArray[element].depth/2);
 		//}else{
