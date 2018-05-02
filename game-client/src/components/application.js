@@ -60,7 +60,7 @@ class Application extends React.Component {
           <Background
             { ...this.props }
             bannerText={ content.name } >
-            <Card ratio={ showHeader ? 0.9 : 1 }>
+            <Card small={ showHeader }>
               { this.state.renderCardContent && 
                 <CardContent>{ React.createElement(render, this.props) }</CardContent> }
             </Card>

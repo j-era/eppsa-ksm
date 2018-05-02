@@ -8,7 +8,7 @@ import { default as TimerBarComponent } from "./timerBar"
 const Container = styled.div`
   position: relative;
 
-  padding-top: 5vw;
+  padding-top: 2%;
 
   box-sizing: border-box;
 
@@ -31,6 +31,7 @@ const BackgroundArcSVG = styled(BackgroundArcSvg)`
   fill: ${props => props.theme.colors.area};
   margin-bottom: -1px;
   width: 100%;
+  height: 5%;
   background-color: white;
   transition: fill 0.5s ease;
 `

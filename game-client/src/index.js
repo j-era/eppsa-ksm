@@ -27,6 +27,8 @@ const config = querystring.parse(window.location.search.substring(1))
 
 injectGlobalStyle(process.env.STATIC_SERVER_URI)
 
+const CARD_RATIO = 2 / 3
+
 contentServer.getData().then(transform).then(async (content) => {
   const maxChallenges = Object.keys(content.challenges).length - 1
 
@@ -55,8 +57,9 @@ contentServer.getData().then(transform).then(async (content) => {
 
   window.addEventListener("message", receiveMessage, false)
 
-  const { cardViewWidth, cardViewHeight, cardViewRatio } = calculateCardSize()
-  const theme = calculateTheme(cardViewWidth, cardViewHeight, cardViewRatio)
+  const largeCardWidth = calculateCardWidth(0.95, 0.8, CARD_RATIO)
+  const smallCardWidth = calculateCardWidth(0.95, 0.7, CARD_RATIO)
+  const theme = calculateTheme(largeCardWidth, smallCardWidth, CARD_RATIO)
 
   render(
     <Provider store={ store }>
@@ -94,16 +97,10 @@ async function findResumableGame() {
   return null
 }
 
-function calculateCardSize() {
-  const winWidthHeightRatio = window.innerWidth / window.innerHeight
-  const maxWidth = 98 // maximal relative width
-  const maxRatio = 0.46 // maximal expected display ratio (1:2)
-  const cardWidthHeightRatio = 2 / 3
-
-  const cardViewWidth = (1 + maxRatio - winWidthHeightRatio) * maxWidth
-  const cardViewHeight = cardViewWidth / cardWidthHeightRatio
-  const cardViewRatio = cardViewWidth / 100
-  return { cardViewWidth, cardViewHeight, cardViewRatio }
+function calculateCardWidth(maxWidth, maxHeight) {
+  const cardRatio = 2 / 3
+  const winRatio = (window.innerWidth * maxWidth) / (window.innerHeight * maxHeight)
+  return winRatio < cardRatio ? maxWidth * 100 : maxWidth * (cardRatio / winRatio) * 100
 }
 
 async function onChallengeReady(challengeWindow, data, uri) {
