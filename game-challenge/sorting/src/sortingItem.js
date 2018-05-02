@@ -40,11 +40,8 @@ const ItemText = styled.div`
 
 const dragSource = {
   beginDrag(props) {
-    console.log(props)
     return {
-      id: props.id,
       item: props.item,
-      index: props.index,
       onReorder: props.onReorder
     }
   },
@@ -56,9 +53,10 @@ const dragSource = {
 const dropTarget = {
   hover(props, monitor) {
     const dragItem = monitor.getItem()
+
     const dropItem = props
 
-    dragItem.onReorder(dragItem, dropItem)
+    dragItem.onReorder(dragItem.item, dropItem.item)
   }
 }
 

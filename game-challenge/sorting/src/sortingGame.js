@@ -48,17 +48,14 @@ export default class SortingGame extends React.Component {
 
     this.points = { bonus: 0, score: 0 }
 
-    const items = selectItems(this.props.data)
-    const itemsMap = new Map()
-    Object.keys(items).forEach((key, index) =>
-      itemsMap.set(index, items[key])
-    )
+    const items = Object.values(selectItems(this.props.data))
+    console.log(items)
 
     this.state = {
       isConfirmed: false,
       isCorrect: false,
       isWrong: false,
-      itemsMap
+      items
     }
   }
 
@@ -79,7 +76,7 @@ export default class SortingGame extends React.Component {
         <div>
           <TopLabel>{ this.props.data.challenge.topLabel }</TopLabel>
           <DragDropList
-            itemsMap={ this.state.itemsMap }
+            items={ this.state.items }
             isConfirmed={ this.state.isConfirmed }
             isCorrect={ this.state.isCorrect }
             isWrong={ this.state.isWrong }
@@ -156,24 +153,20 @@ export default class SortingGame extends React.Component {
       return
     }
 
-    const steps = hoverItem.index - dragItem.index
-    console.log(steps)
+    const newItems = Array.from(this.state.items)
+    console.log(newItems)
 
-    const itemsMap = new Map(this.state.itemsMap)
+    const dragItemIndex = this.state.items.indexOf(dragItem)
+    const hoverItemIndex = this.state.items.indexOf(hoverItem)
 
-    if (steps > 0) {
-      itemsMap.set(dragItem.index + steps - 1, this.state.itemsMap.get(hoverItem.index))
-      itemsMap.set(hoverItem.index, this.state.itemsMap.get(dragItem.index + steps - 1))
-    } else {
-      itemsMap.set(dragItem.index + steps + 1, this.state.itemsMap.get(hoverItem.index))
-      itemsMap.set(hoverItem.index, this.state.itemsMap.get(dragItem.index + steps + 1))
-    }
+    newItems[dragItemIndex] = this.state.items[hoverItemIndex]
+    newItems[hoverItemIndex] = this.state.items[dragItemIndex]
 
     console.log(`Moved ${dragItem.index} to ${hoverItem.index}`)
     console.log("After")
-    console.log(itemsMap)
+    console.log(newItems)
 
-    this.setState({ itemsMap })
+    this.setState({ items: newItems })
   }
 }
 

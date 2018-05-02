@@ -18,15 +18,13 @@ class DragDropList extends React.Component {
     return (
       <Container className={ this.props.className }>
         {
-          Array.from(this.props.itemsMap.keys()).map(
-            (key) =>
+          this.props.items.map((item, index) =>
               <SortingItem
                 isConfirmed={ this.props.isConfirmed }
                 isCorrect={ this.props.isCorrect }
                 isWrong={ this.props.isWrong }
-                key={ key } index={ key }
-                id={ this.props.itemsMap.get(key).id }
-                item={ this.props.itemsMap.get(key) }
+                key={ item.id }
+                item={ item }
                 onReorder={ this.props.reorder } />
           )
         }
