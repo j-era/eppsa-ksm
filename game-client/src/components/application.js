@@ -16,27 +16,59 @@ const Container = styled.div`
   flex-direction: column;
 `
 
-function Application(props) {
-  const { content, score, showScore } = props
-  const { render, showHeader } = getPageData(props)
-  const challenge = props.content.challenges[props.challengeNumber]
+const CardContent = styled.div`
+  width: 100%;
+  height: 100%;
+  animation: fadein 0.5s;
+  @keyframes fadein {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+  }
+`
 
-  return (
-    <ThemeProvider
-      theme={ (theme) => updateTheme(theme, challenge) }>
-      <Container>
-        <Header { ...props } show={ showHeader } />
-        <Score score={ score } show={ showScore } />
-        <Background
-          { ...props }
-          bannerText={ content.name } >
-          <Card ratio={ showHeader ? 0.9 : 1 }>
-            { React.createElement(render, props) }
-          </Card>
-        </Background>
-      </Container>
-    </ThemeProvider>
-  )
+class Application extends React.Component {
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { showHeader } = getPageData(nextProps)
+    if (showHeader !== prevState.showHeader) {
+      clearTimeout(prevState.timeout)
+      return { renderCardContent: false, timeout: null }
+    }
+
+    return null
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = { renderCardContent: true, timeout: null }
+  }
+
+  render() {
+    if (!this.state.renderCardContent && !this.state.timeout) {
+      setTimeout(() => this.setState({ renderCardContent: true, timeout: null }), 500)
+    }
+
+    const { challengeNumber, content, score, showScore } = this.props
+    const { render, showHeader } = getPageData(this.props)
+    const challenge = content.challenges[challengeNumber]
+
+    return (
+      <ThemeProvider
+        theme={ (theme) => updateTheme(theme, challenge) }>
+        <Container>
+          <Header { ...this.props } show={ showHeader } />
+          <Score score={ score } show={ showScore } />
+          <Background
+            { ...this.props }
+            bannerText={ content.name } >
+            <Card ratio={ showHeader ? 0.9 : 1 }>
+              { this.state.renderCardContent && 
+                <CardContent>{ React.createElement(render, this.props) }</CardContent> }
+            </Card>
+          </Background>
+        </Container>
+      </ThemeProvider>
+    )
+  }
 }
 
 function getPageData({ showGameManual, gameState }) {
