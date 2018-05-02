@@ -11,14 +11,8 @@ const Container = styled(Page)`
   flex-direction: column;
 `
 
-const ManualText = styled.div`
-  display: flex;
-  flex-shrink: 1;
-`
-
 const StyledNextButton = styled(NextButton)`
    ${props => props.isInitial && css`border-color: ${props.theme.colors.primary}`};
-   flex-shrink: 0;
 `
 
 export default class GameManual extends React.Component {
@@ -32,9 +26,7 @@ export default class GameManual extends React.Component {
     return (
       <Container>
         <PageTitle>{ this.props.content.gameManualTitle }</PageTitle>
-        <ManualText>
-          <StyledMarkdown>{ this.props.content.gameManualText }</StyledMarkdown>
-        </ManualText>
+        <StyledMarkdown>{ this.props.content.gameManualText }</StyledMarkdown>
         <StyledNextButton
           isInitial={ this.props.gameState === gameStates.INITIAL_GAME_MANUAL }
           visible
