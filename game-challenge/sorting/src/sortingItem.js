@@ -34,6 +34,7 @@ const Container = styled(ItemComponent)`
 `
 
 const ItemText = styled.div`
+  color: ${props => props.color};
   font-size: ${props => props.theme.font.text.size};
   padding: ${props => props.theme.layout.mediumSpacing}
 `
@@ -66,7 +67,7 @@ class SortingItem extends React.Component {
       // `div` around a styled component is required by react-dnd
       <div style={ { "display": "flex", "justifyContent": "center" } }>
         <Container image={ this.props.item.image } { ...this.props }>
-          <ItemText>{ this.props.item.text }</ItemText>
+          <ItemText color={ this.props.item.color }>{ this.props.item.text }</ItemText>
         </Container>
       </div>
 
