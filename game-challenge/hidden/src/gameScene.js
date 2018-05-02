@@ -139,7 +139,7 @@ class gameScene extends Phaser.Scene {
 			this.scale = parseFloat(scalingNumber);
 			console.log(parseFloat(scalingNumber));
 			that.loadedImages[element].setScale(window.innerWidth/that.loadedImages[element].width * this.scale);
-			if(his.blockImages[blockElements].baseWidth != undefined && his.blockImages[blockElements].baseWidth != ""){
+			if(this.blockImages[blockElements].baseWidth != undefined && this.blockImages[blockElements].baseWidth != ""){
 				that.loadedImages[element].setScale(window.innerWidth/this.blockImages[blockElements].baseWidth);
 			}
 
