@@ -154,17 +154,12 @@ export default class SortingGame extends React.Component {
     }
 
     const newItems = Array.from(this.state.items)
-    console.log(newItems)
 
     const dragItemIndex = this.state.items.indexOf(dragItem)
     const hoverItemIndex = this.state.items.indexOf(hoverItem)
 
     newItems[dragItemIndex] = this.state.items[hoverItemIndex]
     newItems[hoverItemIndex] = this.state.items[dragItemIndex]
-
-    console.log(`Moved ${dragItem.index} to ${hoverItem.index}`)
-    console.log("After")
-    console.log(newItems)
 
     this.setState({ items: newItems })
   }
