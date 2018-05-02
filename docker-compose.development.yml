@@ -52,6 +52,7 @@ services:
       dockerfile: Dockerfile.development
     volumes:
       - ./game-challenge/sorting:/app
+      - /app/node_modules
 
   game-challenge-quiz:
     build:
