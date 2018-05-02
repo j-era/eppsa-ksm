@@ -46,12 +46,13 @@ export function startChallenge(gameServer, room = null) {
 }
 
 export function finishChallenge(challengeData, gameServer) {
-  return async (dispatch) => {
-    const data = await gameServer.finishChallenge(challengeData)
-    dispatch(showChallengeScore(challengeData.score))
-    await delay(1500)
-    dispatch(hideChallengeScore())
-    await delay(500)
+  return async (dispatch, getState) => {
+    if (challengeData.score) {
+      dispatch(addScore(challengeData.score))
+      await delay(3000)
+    }
+
+    const data = await gameServer.finishChallenge({ ...challengeData, score: getState().score })
 
     if (data.finished) {
       dispatch(updateGameState(gameStates.FINISHED))
@@ -60,6 +61,12 @@ export function finishChallenge(challengeData, gameServer) {
     }
 
     dispatch(updateGameData(data))
+  }
+}
+
+export function addScore(increment) {
+  return async (dispatch) => {
+    dispatch({ type: types.ADD_SCORE, increment })
   }
 }
 
@@ -109,19 +116,6 @@ export function updateConnected(connected) {
   return {
     type: types.UPDATE_CONNECTED,
     connected
-  }
-}
-
-export function showChallengeScore(score) {
-  return {
-    type: types.SHOW_SCORE,
-    score
-  }
-}
-
-export function hideChallengeScore() {
-  return {
-    type: types.HIDE_SCORE
   }
 }
 

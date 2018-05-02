@@ -135,6 +135,7 @@ function receiveMessage(event) {
 
     switch (event.data.id) {
       case "finish": return store.dispatch(actions.finishChallenge(challengeData, gameServer))
+      case "addScore": return store.dispatch(actions.addScore(event.data.score))
       case "showTimeline": return store.dispatch(actions.showTimeline(event.data.startTime))
       case "startTimelineClock": return store.dispatch(actions.startTimelineClock())
       case "stopTimelineClock": return store.dispatch(actions.stopTimelineClock())

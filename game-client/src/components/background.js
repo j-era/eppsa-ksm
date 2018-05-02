@@ -16,8 +16,15 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  transform: translateY(${props => props.slideDown ? 5 : 0}vw);
   transition: transform 500ms ease;
+  animation: slideDown 3s;
+
+  @keyframes slideDown {
+      0% {transform: translateY(0vw);}
+      20% {transform: translateY(5vw);}
+      80% {transform: translateY(5vw);}
+      100% {transform: translateY(0vw);}
+  }
 `
 
 const BackgroundArcSVG = styled(BackgroundArcSvg)`
@@ -27,7 +34,7 @@ const BackgroundArcSVG = styled(BackgroundArcSvg)`
   background-color: white;
 `
 
-const Background = styled.div`
+const BackgroundContainer = styled.div`
   position: relative;
 
   display: flex;
@@ -65,21 +72,39 @@ const TimerBar = styled(TimerBarComponent)`
   width: 50%;
 `
 
-export default props =>
-  <Container
-    className={ props.className }
-    isBannerVisible={ isBannerVisible(props.gameState) }
-    slideDown={ props.showScore }>
-    <BannerContainer visible={ isBannerVisible(props.gameState) }>
-      <Banner>{ props.bannerText }</Banner>
-    </BannerContainer>
-    <BackgroundArcSVG />
-    { props.gameState === "CHALLENGE" && renderTimerBar(props) }
-    <Background>
-      { props.children }
-    </Background>
-  </Container>
+export default class Background extends React.Component {
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.score !== prevState.score) {
+      return { score: nextProps.score }
+    }
 
+    return null
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = { score: props.score }
+  }
+
+  render() {
+    console.log(`score: ${this.props.score}`)
+    return (
+      <Container
+        className={ this.props.className }
+        isBannerVisible={ isBannerVisible(this.props.gameState) }
+        key={ this.props.score }>
+        <BannerContainer visible={ isBannerVisible(this.props.gameState) }>
+          <Banner>{ this.props.bannerText }</Banner>
+        </BannerContainer>
+        <BackgroundArcSVG />
+        { this.props.gameState === "CHALLENGE" && renderTimerBar(this.props) }
+        <BackgroundContainer>
+          { this.props.children }
+        </BackgroundContainer>
+      </Container>
+    )
+  }
+}
 
 function renderTimerBar(props) {
   return (

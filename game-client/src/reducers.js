@@ -75,26 +75,19 @@ export function score(state = 0, action) {
   switch (action.type) {
     case types.UPDATE_GAME_DATA:
       return action.data.score
+    case types.ADD_SCORE:
+      return state + action.increment
     default:
       return state
   }
 }
 
-export function showScore(state = false, action) {
+export function addScore(state = 0, action) {
   switch (action.type) {
-    case types.SHOW_SCORE:
-      return true
-    case types.HIDE_SCORE:
-      return false
-    default:
-      return state
-  }
-}
-
-export function challengeScore(state = 0, action) {
-  switch (action.type) {
-    case types.SHOW_SCORE:
-      return action.score
+    case types.PREPARE_ADD_SCORE:
+      return action.increment
+    case types.ADD_SCORE:
+      return 0
     default:
       return state
   }

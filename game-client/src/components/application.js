@@ -17,7 +17,7 @@ const Container = styled.div`
 `
 
 function Application(props) {
-  const { content } = props
+  const { content, score } = props
   const { render, showHeader } = getPageData(props)
   const challenge = props.content.challenges[props.challengeNumber]
 
@@ -26,7 +26,7 @@ function Application(props) {
       theme={ (theme) => updateTheme(theme, challenge) }>
       <Container>
         { showHeader && <Header props={ props } /> }
-        <Score visible={ props.showScore } text={ props.challengeScore } />
+        <Score score={ score } />
         <Background
           { ...props }
           bannerText={ content.name } >
