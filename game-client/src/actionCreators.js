@@ -47,7 +47,7 @@ export function startChallenge(gameServer, room = null) {
 
 export function finishChallenge(challengeData, gameServer) {
   return async (dispatch, getState) => {
-    if (challengeData.score) {
+    if (challengeData.score != null) {
       dispatch(addScore(challengeData.score))
       await delay(3000)
     }

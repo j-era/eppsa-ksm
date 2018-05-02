@@ -3,7 +3,7 @@ import autoBind from "react-autobind"
 import styled, { ThemeProvider } from "styled-components"
 import shuffle from "lodash.shuffle"
 
-import { delay, AnimNextButton, Page, ScoreCalculation, theme } from "eppsa-ksm-shared"
+import { delay, AnimNextButton, Page, ScoreCalculation, calculateTheme } from "eppsa-ksm-shared"
 
 import AnswerButton from "./components/answerButton"
 import QuestionText from "./components/questionText"
@@ -60,7 +60,9 @@ export default class App extends React.Component {
 
   render() {
     const { question } = this.props.content.challenge
+    const theme = calculateTheme()
     theme.colors.area = this.props.content.color
+
     return (
       <ThemeProvider theme={ theme }>
         <Container>
@@ -159,16 +161,21 @@ export default class App extends React.Component {
     await delay(this.blinking.duration * this.blinking.repeats)
     this.setState({ greyOut: true })
     await delay(this.greyOutDuration)
+    this.props.callbacks.addScore(this.points.score + this.points.bonus)
+    await delay(3000)
     this.setState({ showNext: true })
   }
 
   async nextChallenge(timedOut = false) {
+    const { hideTimeline, finishChallenge } = this.props.callbacks
     if (!timedOut) {
       this.setState({ nextClicked: true })
       await delay(100)
+      hideTimeline()
+      finishChallenge(null)
+    } else {
+      hideTimeline()
+      finishChallenge(0)
     }
-    const { hideTimeline } = this.props.callbacks
-    hideTimeline()
-    this.props.callbacks.finishChallenge(this.points.score + this.points.bonus)
   }
 }
