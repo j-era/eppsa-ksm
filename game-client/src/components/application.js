@@ -25,7 +25,7 @@ function Application(props) {
     <ThemeProvider
       theme={ (theme) => updateTheme(theme, challenge) }>
       <Container>
-        { showHeader && <Header props={ props } /> }
+        <Header { ...props } show={ showHeader } />
         <Score score={ score } show={ showScore } />
         <Background
           { ...props }

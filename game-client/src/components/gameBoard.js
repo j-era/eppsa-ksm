@@ -55,8 +55,6 @@ function GameBoard(props) {
 
     position: relative;
     width: 20%;
-
-    padding-bottom: 1%;
   `
 
   const Field = styled.div`
@@ -143,7 +141,7 @@ function GameBoard(props) {
     <Board>
       <Area>
         <Field color={ props.theme.colors.secondary }>
-          { challengeNumber === 0 && renderMyAvatar() }
+          { challengeNumber === 0 && avatar && renderMyAvatar() }
         </Field>
       </Area>
       {
