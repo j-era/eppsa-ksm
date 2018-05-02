@@ -8,7 +8,7 @@ const Container = styled(ItemComponent)`
   top: 0;
   left: 0;
 
-  background: ${props => `url(${props.item.image.src})`};
+  background-image: ${props => `url(${props.item.image.src})`};
 
   width: 100%;
 `

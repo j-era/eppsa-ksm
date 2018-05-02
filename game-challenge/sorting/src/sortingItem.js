@@ -12,7 +12,7 @@ const Container = styled(ItemComponent)`
   flex-direction: column;
   justify-content: center;
 
-  background: ${props => `url(${props.image.src})`};
+  background-image: ${props => `url(${props.image.src})`};
 
   width: 95%;
 
