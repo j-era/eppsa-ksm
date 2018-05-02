@@ -31,12 +31,13 @@ const Container = styled(ItemComponent)`
     border: 5px solid red;
     animation: ${pulse("red", "black", { duration: 250, repeats: 3 }, "border-color")};
   ` : ""}
+
+  padding: ${props => props.theme.layout.mediumSpacing}vw;
 `
 
 const ItemText = styled.div`
   color: ${props => props.color};
-  font-size: ${props => props.theme.font.text.size};
-  padding: ${props => props.theme.layout.mediumSpacing}
+  font-size: ${props => props.theme.font.text.size}vw;
 `
 
 const dragSource = {
