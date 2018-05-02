@@ -11,10 +11,8 @@ COPY package-lock.json /app/package-lock.json
 RUN npm install
 
 COPY src /app/src
-COPY public /app/public
 COPY .babelrc /app/.babelrc
 COPY webpack.config.js /app/webpack.config.js
-RUN npm run build
 
 
 # start app
