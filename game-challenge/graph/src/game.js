@@ -739,7 +739,12 @@ let GraphGame = new Phaser.Class({
 	},
 
 	xPosToScreen: function(pos){
-		return (this.width - this.width/10) * pos/100
+		if(gameData.showScrollButton == "true"){
+			return (this.width - this.width/10) * pos/100
+		}else{
+			return this.width * pos/100;
+		}
+		
 	},
 
 	yPosToScreen: function(pos){
