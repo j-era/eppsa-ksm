@@ -262,13 +262,13 @@ class gameScene extends Phaser.Scene {
 	});
 
 
-	this.PosY = this.syst.YPosRow1;
-	this.row1Dif = this.syst.YPosRow2;
-	this.row2Dif = this.syst.YPosRow3;
-	this.row3Dif = this.syst.YPosRow4;
-	this.row4Dif = this.syst.YPosRow5;
-	this.row5Dif = this.syst.YPosRow6;
-	this.row6Dif = this.syst.YPosRow7;
+	this.PosY = this.yPosToScreen(parseInt(this.syst.YPosRow1));
+	this.row1Dif = this.yPosToScreen(parseInt(this.syst.YPosRow2));
+	this.row2Dif = this.yPosToScreen(parseInt(this.syst.YPosRow3));
+	this.row3Dif = this.yPosToScreen(parseInt(this.syst.YPosRow4));
+	this.row4Dif = this.yPosToScreen(parseInt(this.syst.YPosRow5));
+	this.row5Dif = this.yPosToScreen(parseInt(this.syst.YPosRow6));
+	this.row6Dif = this.yPosToScreen(parseInt(this.syst.YPosRow7));
 
 
 	for(var i = 1; i < 8; i++){
