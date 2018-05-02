@@ -7,6 +7,7 @@ let orientation;
 let gameData;
 let gameCallbacks;
 let shared;
+let color;
 
 let room;
 let ownID;
@@ -24,6 +25,7 @@ bootstrap((config, { callbacks }) => {
 	gameCallbacks = callbacks;
 	shared = config.shared;
 	room = config.room;
+	color = config.color;
 
 	if(config.room && config.room != null){
 		socket = client(config.gameServerUri, { secure: true })
@@ -145,42 +147,18 @@ let SkillGameAirship = new Phaser.Class({
 
 	create: function(data){
 		//setup gameboard
-		//this.timeLeft = this.add.graphics();
-		this.cloud1 = this.add.image(this.width/3, -200, 'cloud1').setScale(0.2);
-		this.cloud2 = this.add.image(2 * this.width/3, -100, 'cloud2').setScale(0.2);
-		this.cloud3 = this.add.image(3 * this.width/4, -500, 'cloud3').setScale(0.2);
+		this.addCloudImages();
 
-		this.tweens.add({
-			targets: this.cloud1,
-			y: this.height + 200,
-			duration: 10 * this.height,
-			ease: 'Sine.easeInOut',
-			loop: true,
-			loopDelay: 400
-		});
-
-		this.tweens.add({
-			targets: this.cloud2,
-			y: this.height + 300,
-			duration: 15 * this.height,
-			ease: 'Sine.easeInOut',
-			loop: true,
-			loopDelay: 900
-		});
-
-		this.tweens.add({
-			targets: this.cloud3,
-			y: this.height + 200,
-			duration: 20 * this.height,
-			ease: 'Sine.easeInOut',
-			loop: true,
-			loopDelay: 100
-		});
-
-		//text for debugging
-		//this.rotationText = this.add.text(10, 10, 'phaser', {fill: '#000000'});
+		let lineColor = color.replace("#", "0x");
+		var line = new Phaser.Geom.Line(-20, this.height/2 + this.height/20, this.width + 20, this.height/2 - this.height/20);
+		var circle = new Phaser.Geom.Circle(this.width/2, this.height/2, this.height/6);
+		this.CountdownGraphics = this.add.graphics({ lineStyle: { width: this.height/6, color: lineColor }, fillStyle: { color: lineColor } });
 		
+		this.CountdownGraphics.strokeLineShape(line);
+		this.CountdownGraphics.fillCircleShape(circle);
+		this.CountdownGraphics.setDepth(1);
 
+		
 		if(this.singleplayer){
 			this.singleplayer = true;
 			this.playingShip = true;
@@ -196,7 +174,7 @@ let SkillGameAirship = new Phaser.Class({
 			this.windDirectionLeft = this.add.image(this.width/4, this.height/6, 'windDirection').setScale(0.2);
 			this.windDirectionRight = this.add.image(3 * this.width/4, this.height/3, 'windDirection').setScale(0.2);
 
-			this.countdownText = this.add.text(this.width/2, this.height/2, this.countdown, {font: '60px Arial', fill: '#000000'});
+			this.countdownText = this.add.text(this.width/2, this.height/2, this.countdown, {font: '60px Arial', fill: '#ffffff'}).setDepth(2).setOrigin(0.5);
 			this.countdownTimer = this.time.addEvent({delay: 1000, callback: this.countdownFunc, callbackScope: this, repeat: this.countdown});
 		}else{
 			//server code
@@ -241,13 +219,43 @@ let SkillGameAirship = new Phaser.Class({
 
 		this.pointHUD = this.add.image(this.width/2, this.height, 'pointHUD').setOrigin(0.5, 1).setScale(0.2);
 		this.scoreText = this.add.text(this.width/2, this.height, "0 Punkte", {font: '16px Cabin', fill: '#ffffff'}).setOrigin(0.5, 1);
+	},
 
-		
-		
+	addCloudImages: function(){
+		this.cloud1 = this.add.image(this.width/3, -200, 'cloud1').setScale(0.2);
+		this.cloud2 = this.add.image(2 * this.width/3, -100, 'cloud2').setScale(0.2);
+		this.cloud3 = this.add.image(3 * this.width/4, -500, 'cloud3').setScale(0.2);
+
+		this.tweens.add({
+			targets: this.cloud1,
+			y: this.height + 200,
+			duration: 10 * this.height,
+			ease: 'Sine.easeInOut',
+			loop: true,
+			loopDelay: 400
+		});
+
+		this.tweens.add({
+			targets: this.cloud2,
+			y: this.height + 300,
+			duration: 15 * this.height,
+			ease: 'Sine.easeInOut',
+			loop: true,
+			loopDelay: 900
+		});
+
+		this.tweens.add({
+			targets: this.cloud3,
+			y: this.height + 200,
+			duration: 20 * this.height,
+			ease: 'Sine.easeInOut',
+			loop: true,
+			loopDelay: 100
+		});
 	},
 
 	startMultiplayerGame: function(){
-		this.countdownText = this.add.text(this.width/2, this.height/2, this.countdown, {font: '60px Arial', fill: '#000000'});
+		this.countdownText = this.add.text(this.width/2, this.height/2, this.countdown, {font: '60px Arial', fill: '#ffffff'}).setDepth(2).setOrigin(0.5);
 		this.countdownTimer = this.time.addEvent({delay: 1000, callback: this.countdownFunc, callbackScope: this, repeat: this.countdown});
 	},
 
@@ -293,6 +301,7 @@ let SkillGameAirship = new Phaser.Class({
 		}
 		else{
 			this.countdownText.destroy();
+			this.CountdownGraphics.destroy();
 			gameCallbacks.showTimeline(this.timer);
 			gameCallbacks.startTimelineClock();
 			this.gameTimer = this.time.addEvent({delay: 1000 * this.timer, callback: this.onGameEnd, callbackScope: this, startAt: 0 });
