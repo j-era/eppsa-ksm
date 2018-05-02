@@ -1,4 +1,5 @@
 import Phaser from "./phaser.min";
+import {ScoreCalculation} from "eppsa-ksm-shared";
 
 class GameScene extends Phaser.Scene {
 	constructor() {
@@ -25,6 +26,17 @@ class GameScene extends Phaser.Scene {
 		this.countdownText;
 		this.currentCountdownValue = 3;
 		this.gameStarted = false;
+
+		
+		
+
+
+		var back = this.add.image(0, 0, 'background').setOrigin(0, 0).setInteractive();
+		let backHeight = 1;
+		if(this.sys.game.gameData.ScaleOfBackground != undefined){
+			backHeight = this.sys.game.gameData.ScaleOfBackground;
+		}
+		back.setScale(window.innerWidth/back.displayWidth, (window.innerHeight/backHeight)/back.displayHeight)
 
 		if(this.sys.game.gameData.showWater == "true"){
 			this.anims.create( {
@@ -59,15 +71,6 @@ class GameScene extends Phaser.Scene {
 		
 			})
 		}
-		
-
-
-		var back = this.add.image(0, 0, 'background').setOrigin(0, 0).setInteractive();
-		let backHeight = 1;
-		if(this.sys.game.gameData.ScaleOfBackground != undefined){
-			backHeight = this.sys.game.gameData.ScaleOfBackground;
-		}
-		back.setScale(window.innerWidth/back.displayWidth, (window.innerHeight/backHeight)/back.displayHeight)
 		
 		back.on('pointerup', function(pointer){
 			if(scope.gameStarted){
@@ -112,7 +115,16 @@ class GameScene extends Phaser.Scene {
 
 		this.boatPic.setScale(boatPicScaleWidthBy);
 
-		this.countdownText = this.add.text(this.width/2, this.height/2, "3", {font: '60px Arial', fill: '#000000'});
+		let lineColor = this.sys.game.color.replace("#", "0x");
+		var line = new Phaser.Geom.Line(-20, window.innerHeight/2 + window.innerHeight/20, window.innerWidth + 20, window.innerHeight/2 - window.innerHeight/20);
+		var circle = new Phaser.Geom.Circle(window.innerWidth/2, window.innerHeight/2, window.innerHeight/6);
+		this.CountdownGraphics = this.add.graphics({ lineStyle: { width: window.innerHeight/6, color: lineColor }, fillStyle: { color: lineColor } });
+		
+		this.CountdownGraphics.strokeLineShape(line);
+		this.CountdownGraphics.fillCircleShape(circle);
+		this.CountdownGraphics.setDepth(10);
+
+		this.countdownText = this.add.text(window.innerWidth/2, window.innerHeight/2, "3", {font: '60px Arial', fill: '#ffffff'}).setDepth(10).setOrigin(0.5);
 		this.countdownTimer = this.time.addEvent({delay: 1000, callback: this.countdownFunc, callbackScope: this, repeat: 3});
 
 		var scope = this;
@@ -142,6 +154,7 @@ class GameScene extends Phaser.Scene {
 			this.countdownText.setText(this.currentCountdownValue);
 		}
 		else{
+			this.CountdownGraphics.destroy();
 			this.countdownText.destroy();
 			this.sys.game.gameCallbacks.showTimeline(this.sys.game.gameData.timer);
 			this.sys.game.gameCallbacks.startTimelineClock();
@@ -159,11 +172,19 @@ class GameScene extends Phaser.Scene {
 	}
 
 	gameWin(Timeleft){
-		this.scene.start('WinScene', { t: Timeleft});
+		//this.scene.start('WinScene', { t: Timeleft});
+		const scoreCalc = new ScoreCalculation(
+			Timeleft,
+			{ ...this.sys.game.gameData.score, gameFactor: this.sys.game.shared.config.clickerScoreFactor }
+		  )
+		  this.points = scoreCalc.getScore();
+
+		this.sys.game.completeChallenge(this.points.score + this.points.bonus);
 	}
 
 	gameLose(){
-		this.scene.start('LoseScene');
+		//this.scene.start('LoseScene');
+		this.sys.game.completeChallenge(0);
 	}
 
 }
