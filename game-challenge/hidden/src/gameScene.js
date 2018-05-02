@@ -259,8 +259,8 @@ class gameScene extends Phaser.Scene {
 
 			that.tweens.add( {
 				targets: gameObject,
-				scaleX: parseFloat(that.sys.game.gameData.ClickScaleX),
-				scaleY: parseFloat(that.sys.game.gameData.ClickScaleY),
+				scaleX: gameObject.scaleX * parseFloat(that.sys.game.gameData.ClickScaleX),
+				scaleY: gameObject.scaleY * parseFloat(that.sys.game.gameData.ClickScaleY),
 				ease: 'Linear',
 				duration: 500,
 				repeat: 0,
