@@ -13,6 +13,9 @@
 [submodule "game-client/lib/eppsa-ksm-shared"]
 	path = game-client/lib/eppsa-ksm-shared
 	url = https://github.com/artcom/eppsa-ksm-shared
+[submodule "game-challenge/sorting/lib/eppsa-ksm-shared"]
+	path = game-challenge/sorting/lib/eppsa-ksm-shared
+	url = https://github.com/artcom/eppsa-ksm-shared.git
 [submodule "game-challenge/button/lib/eppsa-ksm-shared"]
 	path = game-challenge/button/lib/eppsa-ksm-shared
 	url = https://github.com/artcom/eppsa-ksm-shared
@@ -28,3 +31,7 @@
 [submodule "game-challenge/skill/lib/eppsa-ksm-shared"]
 	path = game-challenge/skill/lib/eppsa-ksm-shared
 	url = https://github.com/artcom/eppsa-ksm-shared
+[submodule "game-challenge/sorting/lib/react-dnd-touch-backend"]
+	path = game-challenge/sorting/lib/react-dnd-touch-backend
+	url = https://github.com/artcom/react-dnd-touch-backend.git
+	

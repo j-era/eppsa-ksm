@@ -134,7 +134,7 @@ export default class App extends React.Component {
     if (answerIndex === correctAnswer) {
       const scoreCalc = new ScoreCalculation(
         this.timeToAnswer,
-        { ...score, gameFactor: shared.config.quizFactor }
+        { ...score, gameFactor: shared.config.quizScoreFactor }
       )
       this.points = scoreCalc.getScore()
       this.setState({ confirmed: answerIndex })
