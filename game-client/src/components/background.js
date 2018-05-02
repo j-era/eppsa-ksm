@@ -32,6 +32,7 @@ const BackgroundArcSVG = styled(BackgroundArcSvg)`
   margin-bottom: -1px;
   width: 100%;
   background-color: white;
+  transition: fill 0.5s ease;
 `
 
 const BackgroundContainer = styled.div`
@@ -43,6 +44,7 @@ const BackgroundContainer = styled.div`
   flex-grow: 1;
 
   background-color: ${props => props.theme.colors.area};
+  transition: background-color 0.5s ease;
 `
 
 const BannerContainer = styled.div`
