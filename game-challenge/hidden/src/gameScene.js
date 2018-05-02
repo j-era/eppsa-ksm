@@ -25,6 +25,7 @@ class gameScene extends Phaser.Scene {
 		this.row5 = [];
 		this.row6 = [];
 		this.row7 = [];
+		this.row8 = [];
 		this.moveLeft = [];
 		this.moveRight = [];
 
@@ -35,6 +36,7 @@ class gameScene extends Phaser.Scene {
 		this.waitrow5 = [];
 		this.waitrow6 = [];
 		this.waitrow7 = [];
+		this.waitrow8 = [];
 		this.correct = 0;
 
 		this.imageArray = {};
@@ -47,6 +49,7 @@ class gameScene extends Phaser.Scene {
 		this.speed5 = this.sys.game.gameData.SpeedRow5;
 		this.speed6 = this.sys.game.gameData.SpeedRow6;
 		this.speed7 = this.sys.game.gameData.SpeedRow7;
+		this.speed8 = this.sys.game.gameData.SpeedRow8;
 	//this.questions = [];
 
 	let background = this.add.image(0, 0, 'background').setOrigin(0,0).setDepth(-2);
@@ -219,6 +222,13 @@ class gameScene extends Phaser.Scene {
 		callbackScope: this,
 	})
 
+	var SpawnTimerRow8 = this.time.addEvent( {
+		delay: 0,
+		callback:this.spawn,
+		args: [this.waitrow8, this.syst.Row8Max, this.syst.Row8Min],
+		callbackScope: this,
+	})
+
 	this.input.on('gameobjectdown', function(pointer, gameObject){
 
 		if(gameObject.eppsaInactive != undefined && gameObject.eppsaInactive == true){
@@ -269,9 +279,10 @@ class gameScene extends Phaser.Scene {
 	this.row4Dif = this.yPosToScreen(parseInt(this.syst.YPosRow5));
 	this.row5Dif = this.yPosToScreen(parseInt(this.syst.YPosRow6));
 	this.row6Dif = this.yPosToScreen(parseInt(this.syst.YPosRow7));
+	this.row7Dif = this.yPosToScreen(parseInt(this.syst.YPosRow8));
 
 
-	for(var i = 1; i < 8; i++){
+	for(var i = 1; i < 9; i++){
 		var temp = 'row' + i;
 
 		for(var j = 0; j < that[temp].length; j++){
