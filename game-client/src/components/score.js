@@ -4,13 +4,13 @@ import styled, { css } from "styled-components"
 const ScoreContainer = styled.div`
   position: absolute;
   width: 100%;
+  height: 10vw;
   display: flex;
   justify-content: center;
   align-items: center;
 `
 
 const Score = styled.div`
-  margin-top: 0.5em;
   display: flex;
   justify-content: center;
   align-items: center;

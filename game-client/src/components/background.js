@@ -16,7 +16,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  transform: translateY(${props => props.slideDown ? props.theme.font.button.size : 0}vw);
+  transform: translateY(${props => props.slideDown ? 5 : 0}vw);
   transition: transform 500ms ease;
 `
 
