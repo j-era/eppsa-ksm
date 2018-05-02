@@ -86,14 +86,6 @@ class gameScene extends Phaser.Scene {
 		}
 	}
 
-	/*for(var element in this.sys.game.gameData.questions){
-		if(element == "template"){
-			continue;
-		}else{
-			this.questions.push(this.sys.game.gameData.questions[element]);
-		}
-	}*/
-
 	/*this.blockMaxWidth = window.innerWidth/3;
 	this.blockMaxHeight = this.picMaxWidth*0.75;
 	this.blockMinWidth = window.innerWidth/4;
@@ -121,27 +113,10 @@ class gameScene extends Phaser.Scene {
 		console.log(blockElements);
 		if(this.blockImages[blockElements].direction == ""){
 			var blocking = this.add.image(this.xPosToScreen(this.blockImages[blockElements].positionX),this.yPosToScreen(this.blockImages[blockElements].positionY), this.blockImages[blockElements].img).setOrigin(0.5,1).setName(imageKey).setInteractive();
-			if(blocking.displayWidth > this.blockMaxWidth){
-				var scale = (this.blockMaxWidth / blocking.displayWidth)
-				blocking.setScale(scale,scale);
-
-			}else if(blocking.displayWidth < this.blockMinWidth){
-				var scale = (this.blockMinWidth / blocking.displayWidth)
-				blocking.setScale(scale,scale);
-			}else {
-				blocking.displayWidth = blocking.displayWidth
-			}
-
-			if(blocking.displayHeight > this.blockMaxHeight){
-				var scale = (this.blockMinHeight / blocking.displayHeight)
-				blocking.setScale(scale,scale);
-			}else if(blocking.displayHeight < this.blockMinHeight){
-				var scale = (this.blockMinHeight / blocking.displayHeight)
-				blocking.setScale(scale,scale);
-			}else {
-				blocking.displayHeight = blocking.displayHeight
-			}
-			blocking.setScale(window.innerWidth/blocking.width, window.innerHeight/blocking.height);
+			//TODO number should not be hardcoded but come from cms
+			//970 is the width of the base tile of the broken down dome picture
+			//please don't hate me future Barbara!
+			blocking.setScale(window.innerWidth/970);
 
 
 			blocking.depth = this.blockImages[blockElements].depth;
