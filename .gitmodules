@@ -34,3 +34,4 @@
 [submodule "game-challenge/sorting/lib/react-dnd-touch-backend"]
 	path = game-challenge/sorting/lib/react-dnd-touch-backend
 	url = https://github.com/artcom/react-dnd-touch-backend.git
+	
