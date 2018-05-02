@@ -106,8 +106,9 @@ export default class SortingGame extends React.Component {
 
     this.timeNeeded = (new Date() - this.startTime) / 1000
 
-    for (const [index, item] of this.state.itemsMap) {
-      if (item.correctPosition - 1 !== index) {
+    for (let position = 0; position < this.state.items.length; position++) {
+      const item = this.state.items[position]
+      if (position !== item.correctPosition - 1) {
         this.setState({
           isConfirmed: true,
           isCorrect: false,
