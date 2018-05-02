@@ -8,27 +8,27 @@ const ScoreContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  @keyframes animIncrement {
-    0% {transform: translate(-100px) scale(0, 0); opacity: 0;}
-    20% {transform: translate(-100px) scale(1, 1); opacity: 1;}
-    40% {transform: translate(-100px) scale(1, 1); opacity: 1;}
-    60% {transform: translate(0px); opacity: 1;}
-    80% {transform: translate(0px) scale(1, 1); opacity: 0;}
-  }
-
   @keyframes animOldScore {
-      0% {transform: translate(100px) scale(0, 0); opacity: 0;}
-      20% {transform: translate(100px) scale(1, 1); opacity: 1;}
-      40% {transform: translate(100px) scale(1, 1); opacity: 1;}
-      60% {transform: translate(0px); opacity: 1;}
-      80% {transform: translate(0px) scale(1, 1); opacity: 0;}
+    0% {transform: translate(-7.5em) scale(0, 0); opacity: 0;}
+    20% {transform: translate(-7.5em) scale(1, 1); opacity: 1;}
+    40% {transform: translate(-7.5em) scale(1, 1); opacity: 1;}
+    60% {transform: translate(-2.5em); opacity: 1;}
+    80% {transform: translate(-2.5em) scale(1, 1); opacity: 0;}
   }
 
-  @keyframes animBaz {
-      0% {opacity: 0;}
-      60% {opacity: 0;}
-      80% {transform: translate(0px) scale(1, 1);opacity: 1;}
-      100% {transform: translate(0px) scale(0, 0); opacity: 0;}
+  @keyframes animIncrement {
+      0% {transform: translate(2.5em) scale(0, 0); opacity: 0;}
+      20% {transform: translate(2.5em) scale(1, 1); opacity: 1;}
+      40% {transform: translate(2.5em) scale(1, 1); opacity: 1;}
+      60% {transform: translate(-2.5em); opacity: 1;}
+      80% {transform: translate(-2.5em) scale(1, 1); opacity: 0;}
+  }
+
+  @keyframes animNewScore {
+      0% {transform: translate(-2.5em); opacity: 0;}
+      60% {transform: translate(-2.5em); opacity: 0;}
+      80% {transform: translate(-2.5em) scale(1, 1); opacity: 1;}
+      100% {transform: translate(-2.5em) scale(0, 0); opacity: 0;}
   }
 `
 
@@ -36,68 +36,49 @@ const AnimationContainer = styled.div`
   height: 100%;
 `
 
-const ScoreIncrement = styled.div`
+const ScoreElement = styled.div`
   position: absolute;
+  box-sizing: border-box;
   top: calc((10vw - 1.2em) / 2);
   z-index: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: ${props => props.theme.font.button.size}vw;
-  background-color: blue;
-  color: white;
   padding-left: 1em;
   padding-right: 1em;
   height: 1.2em;
   width: 5em;
   border-radius: ${props => props.theme.layout.borderRadius};
+  transition:
+      transform 150ms cubic-bezier(0.2, 0.7, 0.55, 1.2),
+      opacity  150ms ease;
+`
+
+const ScoreIncrement = styled(ScoreElement)`
+  color: black;
+  background-color: white;
   animation: animIncrement 3s;
-  transform: translate(-100px) scale(0, 0);
+  transform: translate(2.5em) scale(0, 0);
+  opacity: 0;
+`
+
+const OldScore = styled(ScoreElement)`
+  color: white;
+  background-color: ${props => props.theme.colors.area};
+  animation: animOldScore 3s;
+  transform: translate(2.5em) scale(0, 0);
   opacity: 0;
   transition:
       transform 150ms cubic-bezier(0.2, 0.7, 0.55, 1.2),
       opacity  150ms ease;
 `
 
-const OldScore = styled.div`
-  position: absolute;
-  top: calc((10vw - 1.2em) / 2);
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: ${props => props.theme.font.button.size}vw;
-  background-color: red;
+const NewScore = styled(ScoreElement)`
   color: white;
-  padding-left: 1em;
-  padding-right: 1em;
-  height: 1.2em;
-  width: 5em;
-  border-radius: ${props => props.theme.layout.borderRadius};
-  animation: animOldScore 3s;
-  transform: translate(200px) scale(0, 0);
-  opacity: 0;
-  transition:
-      transform 150ms cubic-bezier(0.2, 0.7, 0.55, 1.2),
-      opacity  150ms ease;
-`
-
-const NewScore = styled.div`
-  position: absolute;
-  top: calc((10vw - 1.2em) / 2);
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: ${props => props.theme.font.button.size}vw;
-  background-color: green;
-  color: white;
-  padding-left: 1em;
-  padding-right: 1em;
-  height: 1.2em;
-  width: 5em;
-  border-radius: ${props => props.theme.layout.borderRadius};
-  animation: animOldScore 3s;
+  background-color: ${props => props.theme.colors.area};
+  animation: animNewScore 3s;
+  transform: translate(-2.5em);
   opacity: 0;
   transition:
       transform 150ms cubic-bezier(0.2, 0.7, 0.55, 1.2),

@@ -87,7 +87,6 @@ export default class Background extends React.Component {
   }
 
   render() {
-    console.log(`score: ${this.props.score}`)
     return (
       <Container
         className={ this.props.className }
