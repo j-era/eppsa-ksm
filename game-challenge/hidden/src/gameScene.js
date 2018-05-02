@@ -57,7 +57,23 @@ class gameScene extends Phaser.Scene {
 			continue;
 		}
 		if(this.sys.game.gameData.pictures[key].type == 1){
-			this.imageArray[key] = this.sys.game.gameData.pictures[key];
+			if(this.sys.game.gameData.pictures[key].rows != undefined && this.sys.game.gameData.pictures[key].rows != ""){
+				let depthArray = JSON.parse(this.sys.game.gameData.pictures[key].rows);
+				console.log(depthArray);
+				if(depthArray.length > 1){
+					for(let i = 0; i < depthArray.length; i++){
+						//this.sys.game.gameData.pictures[key].depth = depthArray[i];
+						//this.imageArray[key + i] = this.sys.game.gameData.pictures[key];
+						this.imageArray[key + i] = Object.assign({}, this.sys.game.gameData.pictures[key]);
+						this.imageArray[key + i].depth = depthArray[i]; 
+					}
+				}
+				console.log(this.imageArray);
+			}
+			else{
+				this.imageArray[key] = this.sys.game.gameData.pictures[key];
+			}
+			//this.imageArray[key] = this.sys.game.gameData.pictures[key];
 		}else{
 			this.blockImages[key] = this.sys.game.gameData.pictures[key];
 			if(this.blockImages[key].direction != ""){
@@ -90,11 +106,18 @@ class gameScene extends Phaser.Scene {
 	this.restPicMinWidth = window.innerWidth/4;
 	this.restPicMinHeight = this.restPicMinWidth * 0.75;*/  //Beeinflusst Scaling der Bilder - Referenz Diddi
 
+	this.loadedImages = {};
+
+	for(var imageKey in this.imageArray){
+		var image = this.add.image(0,0, this.imageArray[imageKey].img).setOrigin(0.5,1).setInteractive().setName(imageKey);
+		this.loadedImages[imageKey] = image;
+	}
 
 
 	for(var blockElements in this.blockImages){
+		console.log(blockElements);
 		if(this.blockImages[blockElements].direction == ""){
-			var blocking = this.add.image(this.blockImages[blockElements].positionX,this.blockImages[blockElements].positionY, this.blockImages[blockElements].img).setOrigin(0.5,1).setName(imageKey).setInteractive();
+			var blocking = this.add.image(this.xPosToScreen(this.blockImages[blockElements].positionX),this.yPosToScreen(this.blockImages[blockElements].positionY), this.blockImages[blockElements].img).setOrigin(0.5,1).setName(imageKey).setInteractive();
 			if(blocking.displayWidth > this.blockMaxWidth){
 				var scale = (this.blockMaxWidth / blocking.displayWidth)
 				blocking.setScale(scale,scale);
@@ -115,6 +138,8 @@ class gameScene extends Phaser.Scene {
 			}else {
 				blocking.displayHeight = blocking.displayHeight
 			}
+			blocking.setScale(window.innerWidth/blocking.width, window.innerHeight/blocking.height);
+
 
 			blocking.depth = this.blockImages[blockElements].depth;
 			blocking.eppsaInactive = true;
@@ -124,22 +149,18 @@ class gameScene extends Phaser.Scene {
 		
 	}
 
-	this.loadedImages = {};
-
-	for(var imageKey in this.imageArray){
-		var image = this.add.image(0,0, this.imageArray[imageKey].img).setOrigin(0.5,1).setInteractive().setName(imageKey);
-		this.loadedImages[imageKey] = image;
-	}
+	
 
 	var that = this;
 
 	for(var element in this.imageArray){
 		this.scale;
 		//if(that.imageArray[element].type == 1){
-
-			var scalingNumber = that.sys.game.gameData.ScalingImages + that.imageArray[element].depth;
-			this.scale = scalingNumber;
-			that.loadedImages[element].setScale(this.scale,this.scale);
+			console.log(that.imageArray[element].depth);
+			var scalingNumber = that.sys.game.gameData["ScalingImages" + that.imageArray[element].depth];
+			this.scale = parseFloat(scalingNumber);
+			console.log(parseFloat(scalingNumber));
+			that.loadedImages[element].setScale(this.scale);
 
 			//that.loadedImages[element].displayHeight = that.picMaxHeight * (that.imageArray[element].depth/2);
 		//}else{
@@ -148,18 +169,6 @@ class gameScene extends Phaser.Scene {
 		that[temp].push(that.loadedImages[element]);
 		this['wait' + temp].push(element);	
 	}
-
-	//this.random = Math.floor(Math.random() * this.questions.length);
-
-	/*this.TempTags = this.questions[this.random].tag.split(',');
-
-	this.QuesText = this.questions[this.random].question;
-
-	this.ques = this.add.text(window.innerWidth/2, window.innerHeight*0.9, 'Hey',{ font: window.innerHeight/35 + 'px Arial', fill: 'green'});
-
-	this.ques.setText(this.QuesText);*/
-
-
 
 	this.syst = this.sys.game.gameData;
 
@@ -240,11 +249,11 @@ class gameScene extends Phaser.Scene {
 
 			that.tweens.add( {
 				targets: gameObject,
-				scaleX: that.sys.game.gameData.ClickScaleX,
-				scaleY: that.sys.game.gameData.ClickScaleY,
+				scaleX: parseFloat(that.sys.game.gameData.ClickScaleX),
+				scaleY: parseFloat(that.sys.game.gameData.ClickScaleY),
 				ease: 'Linear',
 				duration: 500,
-				repeat: 1,
+				repeat: 0,
 				yoyo: true,
 				//onComplete: function() {gameObject.input.enabled = true}
 			})
@@ -269,7 +278,8 @@ class gameScene extends Phaser.Scene {
 			//that[temp][j].displayWidth = that.picMaxWidth * (that.imageArray[that[temp][j].name].depth / 2);
 			that[temp][j].depth = that.imageArray[that[temp][j].name].depth;
 			if(that.imageArray[that[temp][j].name].direction == "Left"){
-				that[temp][j].x = window.innerWidth
+				that[temp][j].x = window.innerWidth +that[temp][j].displayWidth;
+				that[temp][j].flipX = !that[temp][j].flipX;
 			}else{
 				that[temp][j].x = 0 - that[temp][j].displayWidth;
 			}
@@ -282,8 +292,8 @@ class gameScene extends Phaser.Scene {
 
 
 		var Height = 'row' + i + 'Dif';
-		console.log(Height);
-		console.log(this[Height])
+		//console.log(Height);
+		//console.log(this[Height])
 		this.PosY = this[Height];
 	}
 
@@ -312,11 +322,11 @@ spawn(waitrow, max, min) {
 		});
 		return
 	}else{
-		console.log (waitrow);
+		//console.log (waitrow);
 		var element = Math.floor(Math.random() * waitrow.length)
 		var dirTemp = 'move' + this.imageArray[waitrow[element]].direction;
 		this[dirTemp].push(this.loadedImages[waitrow[element]]);
-		console.log(this.loadedImages[waitrow[element]])
+		//console.log(this.loadedImages[waitrow[element]])
 		waitrow.splice(element,1);
 
 		this.time.addEvent( {
@@ -328,6 +338,14 @@ spawn(waitrow, max, min) {
 	}
 }
 
+xPosToScreen(pos){
+	console.log(pos);
+	return window.innerWidth * pos/100
+}
+
+yPosToScreen(pos){
+	return window.innerHeight * pos/100;
+}
 
 
 
@@ -356,7 +374,7 @@ update(){
 		this.moveLeft[i].x -= this[temp];
 
 		if(this.moveLeft[i].x < (0 - this.moveLeft[i].displayWidth - this.moveLeft[i].displayWidth)){
-			this.moveLeft[i].x = window.innerWidth;
+			this.moveLeft[i].x = window.innerWidth + this.moveLeft[i].displayWidth;
 			var temp = 'waitrow' + this.imageArray[this.moveLeft[i].name].depth
 			this[temp].push(this.moveLeft[i].name);
 			this.moveLeft.splice(i,1)
