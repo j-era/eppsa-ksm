@@ -1,6 +1,7 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled, { ThemeProvider } from "styled-components"
+import shuffle from "lodash.shuffle"
 
 import { delay, AnimNextButton, Page, ScoreCalculation, theme } from "eppsa-ksm-shared"
 
@@ -38,7 +39,8 @@ export default class App extends React.Component {
       showNext: false,
       nextClicked: false
     }
-    this.answerOrder = this.scrambleArray([1, 2, 3, 4])
+
+    this.answerOrder = shuffle([1, 2, 3, 4])
   }
 
   componentDidMount() {
@@ -85,14 +87,14 @@ export default class App extends React.Component {
 
   renderAnswers() {
     const answers = this.answerOrder.map(
-      i => ({
-        text: this.props.content.challenge[`answer${i}`],
-        index: i
+      index => ({
+        text: this.props.content.challenge[`answer${index}`],
+        index
       })
     )
     const titles = ["A", "B", "C", "D"]
 
-    return answers.map((answer, i) =>
+    return answers.map((answer, index) =>
       <AnswerButton
         key={ answer.index + 1 }
         visible={ this.state.visible }
@@ -103,8 +105,8 @@ export default class App extends React.Component {
         blinking={ this.blinking }
         greyOutDuration={ this.greyOutDuration }
         answer={ answer.text }
-        title={ titles[i] }
-        index={ i } />
+        title={ titles[index] }
+        index={ index } />
     )
   }
 
@@ -168,14 +170,5 @@ export default class App extends React.Component {
     const { hideTimeline } = this.props.callbacks
     hideTimeline()
     this.props.callbacks.finishChallenge(this.points.score + this.points.bonus)
-  }
-
-  scrambleArray(array) {
-    const a = array
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]]
-    }
-    return a
   }
 }
