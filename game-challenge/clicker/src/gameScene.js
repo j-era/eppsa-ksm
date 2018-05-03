@@ -89,7 +89,7 @@ class GameScene extends Phaser.Scene {
 			Ziel.setAlpha(0);
 		}
 
-		Ziel.setScale(this.xPosToScreen(this.sys.game.gameData.finishLineWidth),this.yPosToScreen(this.sys.game.gameData.finishLineHeight));
+		Ziel.setScale(window.innerWidth/Ziel.width * this.sys.game.gameData.finishLineWidth,window.innerHeight/Ziel.height * this.sys.game.gameData.finishLineHeight);
 
 		this.anims.create( {
 			key: 'boatAnim',
