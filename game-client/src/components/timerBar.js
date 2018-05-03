@@ -170,21 +170,54 @@ function decreaseFuse() {
   `
 }
 
-export default (props) =>
-  <Container { ...props }>
-    <TimeBallContainer><TimeBall><Text>{ props.seconds }</Text></TimeBall></TimeBallContainer>
-    <ProgressBar>
-      <Progress seconds={ props.seconds } playState={ props.running ? "running" : "paused" } />
-      { props.running && renderFuse(props) }
-    </ProgressBar>
-  </Container>
+export default class TimerBar extends React.Component {
+  constructor(props) {
+    super(props)
 
-function renderFuse(props) {
-  return (
-    <Fuse seconds={ props.seconds } >
-      <FuseSVG1 />
-      <FuseSVG2 />
-      <FuseSVG3 />
-    </Fuse>
-  )
+    this.countdown = 0
+
+    this.state = {
+      countdown: 0
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.isRunning && !this.interval) {
+      setTimeout(() => this.setState({ countdown: this.props.seconds }), 0)
+      this.interval = setInterval(() => {
+        this.setState({ countdown: this.state.countdown - 1 })
+        if (this.state.countdown <= 0) {
+          clearInterval(this.interval)
+        }
+      }, 1000)
+    } else if (!this.props.isRunning && this.interval) {
+      clearInterval(this.interval)
+    }
+  }
+
+  render() {
+    return (
+      <Container { ...this.props }>
+        <TimeBallContainer>
+          <TimeBall><Text>{ this.state.countdown }</Text></TimeBall>
+        </TimeBallContainer>
+        <ProgressBar>
+          <Progress
+            seconds={ this.props.seconds }
+            playState={ this.props.isRunning ? "running" : "paused" } />
+          { this.props.isRunning && this.renderFuse() }
+        </ProgressBar>
+      </Container>
+    )
+  }
+
+  renderFuse() {
+    return (
+      <Fuse seconds={ this.props.seconds } >
+        <FuseSVG1 />
+        <FuseSVG2 />
+        <FuseSVG3 />
+      </Fuse>
+    )
+  }
 }
