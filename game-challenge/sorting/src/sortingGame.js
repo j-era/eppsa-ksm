@@ -5,6 +5,7 @@ import { ScoreCalculation, Button } from "eppsa-ksm-shared"
 
 import pickBy from "lodash.pickby"
 import mapValues from "lodash.mapvalues"
+import orderBy from "lodash.orderby"
 
 import DragDropList from "./dragDropList"
 
@@ -48,8 +49,7 @@ export default class SortingGame extends React.Component {
 
     this.points = { bonus: 0, score: 0 }
 
-    const items = Object.values(selectItems(this.props.data))
-    console.log(items)
+    const items = orderBy(Object.values(selectItems(this.props.data)), ["initialPosition"])
 
     this.state = {
       isConfirmed: false,
