@@ -38,6 +38,7 @@ export default class App extends React.Component {
       showNext: false,
       nextClicked: false
     }
+    this.answerOrder = this.scrambleArray([1, 2, 3, 4])
   }
 
   componentDidMount() {
@@ -83,20 +84,25 @@ export default class App extends React.Component {
   }
 
   renderAnswers() {
-    const answers = [1, 2, 3, 4].map(i => this.props.content.challenge[`answer${i}`])
+    const answers = this.answerOrder.map(
+      i => ({
+        text: this.props.content.challenge[`answer${i}`],
+        index: i
+      })
+    )
     const titles = ["A", "B", "C", "D"]
 
     return answers.map((answer, i) =>
       <AnswerButton
-        key={ i + 1 }
+        key={ answer.index + 1 }
         visible={ this.state.visible }
-        onClick={ !this.state.confirmed ? () => this.confirm(i + 1) : () => {} }
-        clicked={ this.state.confirmed === i + 1 }
-        selection={ this.getSelection(i + 1) }
+        onClick={ !this.state.confirmed ? () => this.confirm(answer.index) : () => {} }
+        clicked={ this.state.confirmed === answer.index }
+        selection={ this.getSelection(answer.index) }
         initialDelay={ this.questionFadeIn }
         blinking={ this.blinking }
         greyOutDuration={ this.greyOutDuration }
-        answer={ answer }
+        answer={ answer.text }
         title={ titles[i] }
         index={ i } />
     )
@@ -162,5 +168,14 @@ export default class App extends React.Component {
     const { hideTimeline } = this.props.callbacks
     hideTimeline()
     this.props.callbacks.finishChallenge(this.points.score + this.points.bonus)
+  }
+
+  scrambleArray(array) {
+    const a = array
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]]
+    }
+    return a
   }
 }
