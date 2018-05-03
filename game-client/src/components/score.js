@@ -105,7 +105,7 @@ export default class Score extends React.Component {
       <ScoreContainer>
         <AnimationContainer>
           <ScoreIncrement show={ show }>
-            {
+            + {
               this.props.score - this.state.oldScore
             }
           </ScoreIncrement>
