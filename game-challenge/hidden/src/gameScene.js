@@ -139,8 +139,8 @@ class gameScene extends Phaser.Scene {
 			this.scale = parseFloat(scalingNumber);
 			console.log(parseFloat(scalingNumber));
 			that.loadedImages[element].setScale(window.innerWidth/that.loadedImages[element].width * this.scale);
-			if(this.blockImages[blockElements].baseWidth != undefined && this.blockImages[blockElements].baseWidth != ""){
-				that.loadedImages[element].setScale(window.innerWidth/this.blockImages[blockElements].baseWidth);
+			if(that.imageArray[element].baseWidth != undefined && that.imageArray[element].baseWidth != ""){
+				that.loadedImages[element].setScale(window.innerWidth/that.imageArray[element].baseWidth * this.scale);
 			}
 
 			//that.loadedImages[element].displayHeight = that.picMaxHeight * (that.imageArray[element].depth/2);
