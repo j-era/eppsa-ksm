@@ -86,17 +86,17 @@ const NewScore = styled(ScoreElement)`
 `
 
 export default class Score extends React.Component {
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.score !== prevState.score) {
-      return { score: nextProps.score, diff: nextProps.score - prevState.score }
-    } else {
-      return { score: nextProps.score, diff: 0 }
-    }
-  }
-
   constructor(props) {
     super(props)
-    this.state = { score: props.score, diff: 0 }
+    this.state = { oldScore: 0 }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.show === this.props.show) {
+      this.setState({
+        oldScore: this.props.score
+      })
+    }
   }
 
   render() {
@@ -106,17 +106,17 @@ export default class Score extends React.Component {
         <AnimationContainer>
           <ScoreIncrement show={ show }>
             {
-              this.state.diff
+              this.props.score - this.state.oldScore
             }
           </ScoreIncrement>
           <OldScore show={ show }>
             {
-              this.state.score - this.state.diff
+              this.state.oldScore
             }
           </OldScore>
           <NewScore show={ show }>
             {
-              this.state.score
+              this.props.score
             }
           </NewScore>
         </AnimationContainer>
