@@ -84,7 +84,7 @@ class GameScene extends Phaser.Scene {
 		})
 
 		var TempZiel = this.textures.get('Ziellinie');
-		var Ziel = this.add.image(this.xPosToScreen(this.sys.game.gameData.finishLineX), this.yPosToScreen(this.sys.game.gameData.finishLineY), 'Ziellinie').setOrigin(0,0);
+		var Ziel = this.add.image(this.xPosToScreen(this.sys.game.gameData.finishLineX), this.yPosToScreen(this.sys.game.gameData.finishLineY), 'Ziellinie').setOrigin(0,0).setDepth(3);
 		if(this.sys.game.gameData.showFinishLine != "true"){
 			Ziel.setAlpha(0);
 		}
