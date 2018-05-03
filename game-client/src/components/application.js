@@ -17,25 +17,22 @@ const Container = styled.div`
 `
 
 class Application extends React.Component {
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const { showHeader } = getPageData(nextProps)
-    if (showHeader !== prevState.showHeader) {
-      return { renderCardContent: false, showHeader }
-    }
-
-    return null
-  }
-
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = { renderCardContent: true, showHeader: getPageData(props).showHeader }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const previousPage = getPageData(this.props)
+    const nextPage = getPageData(nextProps)
+    if (previousPage.showHeader !== nextPage.showHeader) {
+      console.log("Fooo")
+      this.setState({ renderCardContent: false, showHeader: nextPage.showHeader })
+      setTimeout(() => this.setState({ renderCardContent: true }), 500)
+    }
   }
 
   render() {
-    if (!this.state.renderCardContent && !this.state.timeout) {
-      setTimeout(() => this.setState({ renderCardContent: true }), 500)
-    }
-
     const { challengeNumber, content, score, showScore } = this.props
     const { render, showHeader } = getPageData(this.props)
     const challenge = content.challenges[challengeNumber]
