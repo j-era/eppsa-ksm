@@ -34,4 +34,4 @@ class DragDropList extends React.Component {
   }
 }
 
-export default DragDropContext(TouchBackend({ delayHoldTouchStart: 500 }))(DragDropList)
+export default DragDropContext(TouchBackend({ delayHoldTouchStart: 0 }))(DragDropList)
