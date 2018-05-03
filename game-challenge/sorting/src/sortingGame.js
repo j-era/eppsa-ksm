@@ -50,6 +50,8 @@ export default class SortingGame extends React.Component {
 
     const items = orderBy(Object.values(selectItems(this.props.data)), ["initialPosition"])
 
+    this.props.theme.colors.area = this.props.data.color
+
     this.state = {
       isConfirmed: false,
       isCorrect: false,
