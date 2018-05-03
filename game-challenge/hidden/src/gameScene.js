@@ -240,10 +240,32 @@ class gameScene extends Phaser.Scene {
 				scaleX: gameObject.scaleX * parseFloat(that.sys.game.gameData.ClickScaleX),
 				scaleY: gameObject.scaleY * parseFloat(that.sys.game.gameData.ClickScaleY),
 				ease: 'Linear',
-				duration: 250,
+				duration: 150,
 				repeat: 0,
 				yoyo: true,
+				onStart: function(){
+					gameObject.setTint(0xd6f259);
+				},
+				onComplete: function(){
+					gameObject.clearTint();
+				}
 				//onComplete: function() {gameObject.input.enabled = true}
+			})
+		}else{
+			that.tweens.add( {
+				targets: gameObject,
+				angle: gameObject.angle + 10,
+				ease: 'Linear',
+				duration: 150,
+				repeat: 1,
+				yoyo: true,
+				onStart: function(){
+					gameObject.setTint(0xff6600);
+				},
+				onComplete: function() {
+					gameObject.clearTint();
+					gameObject.angle = 0;
+				}
 			})
 		}
 
