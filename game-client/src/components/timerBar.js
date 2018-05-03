@@ -1,5 +1,5 @@
 import React from "react"
-import styled, { css, keyframes } from "styled-components"
+import styled, { keyframes } from "styled-components"
 import FuseIcon from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_1.svg"
 import FuseIcon1 from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_2.svg"
 import FuseIcon2 from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_3.svg"
