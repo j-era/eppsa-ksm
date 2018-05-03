@@ -11,6 +11,7 @@ const Container = styled(ItemComponent)`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 
   background-image: ${props => `url(${props.image.src})`};
 
@@ -23,12 +24,12 @@ const Container = styled(ItemComponent)`
   box-sizing: border-box;
 
   ${props => props.isCorrect ? css`
-    border: 5px solid green;
+    border: ${props.theme.layout.buttonBorder} solid ${props.theme.colors.rightAnswer};
     animation: ${pulse(props.theme.colors.rightAnswer, "black", { duration: 250, repeats: 3 }, "border-color")};
     ` : ""}
 
   ${props => props.isWrong ? css`
-    border: 5px solid red;
+    border: ${props.theme.layout.buttonBorder} solid ${props.theme.colors.wrongAnswer};
     animation: ${pulse(props.theme.colors.wrongAnswer, "black", { duration: 250, repeats: 3 }, "border-color")};
   ` : ""}
 
