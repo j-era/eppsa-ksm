@@ -26,7 +26,6 @@ class Application extends React.Component {
     const previousPage = getPageData(this.props)
     const nextPage = getPageData(nextProps)
     if (previousPage.showHeader !== nextPage.showHeader) {
-      console.log("Fooo")
       this.setState({ renderCardContent: false, showHeader: nextPage.showHeader })
       setTimeout(() => this.setState({ renderCardContent: true }), 500)
     }
