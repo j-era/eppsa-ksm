@@ -72,6 +72,16 @@ class GameScene extends Phaser.Scene {
 			if(scope.gameStarted){
 				scope.boatPic.x = parseInt(scope.boatPic.x);
 				scope.boatPic.x += scope.xPosToScreen(scope.sys.game.gameData.MovementX);
+				scope.tweens.add( {
+					targets: scope.boatPic,
+					scaleX: scope.boatPic.scaleX * 1.2,
+					scaleY: scope.boatPic.scaleY * 1.2,
+					ease: 'Linear',
+					duration: 50,
+					repeat: 0,
+					yoyo: true,
+				});
+
 				//if(bla.boatPic.x > window.innerHeight-(window.innerHeight*0.35)){
 				if(scope.boatPic.x > scope.xPosToScreen(scope.sys.game.gameData.EndPointX)){
 					scope.timedEvent.paused = true;
