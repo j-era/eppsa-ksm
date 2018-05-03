@@ -8,7 +8,7 @@ import { default as TimerBarComponent } from "./timerBar"
 const Container = styled.div`
   position: relative;
 
-  padding-top: 2%;
+  padding-top: 4%;
 
   box-sizing: border-box;
 
