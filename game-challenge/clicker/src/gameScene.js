@@ -1,4 +1,5 @@
 import Phaser from "./phaser.min";
+import ScoreCalculation from "../node_modules/eppsa-ksm-shared/functions/scoreCalculation"
 
 class GameScene extends Phaser.Scene {
 	constructor() {
@@ -26,6 +27,13 @@ class GameScene extends Phaser.Scene {
 		this.currentCountdownValue = 3;
 		this.gameStarted = false;
 
+		var back = this.add.image(0, 0, 'background').setOrigin(0, 0).setInteractive();
+		let backHeight = 1;
+		if(this.sys.game.gameData.ScaleOfBackground != undefined){
+			backHeight = this.sys.game.gameData.ScaleOfBackground;
+		}
+		back.setScale(window.innerWidth/back.displayWidth, (window.innerHeight/backHeight)/back.displayHeight)
+
 		if(this.sys.game.gameData.showWater == "true"){
 			this.anims.create( {
 				key: 'waterAnim',
@@ -47,9 +55,9 @@ class GameScene extends Phaser.Scene {
 			waterPic.on('pointerup', function(pointer){
 				if(scope.gameStarted){
 					scope.boatPic.x = parseInt(scope.boatPic.x);
-					scope.boatPic.x += scope.sys.game.gameData.MovementX;
+					scope.boatPic.x += scope.xPosToScreen(scope.sys.game.gameData.MovementX);
 					//if(bla.boatPic.x > window.innerHeight-(window.innerHeight*0.35)){
-					if(scope.boatPic.x > scope.sys.game.gameData.EndPointX){
+					if(scope.boatPic.x > scope.xPosToScreen(scope.sys.game.gameData.EndPointX)){
 						scope.timedEvent.paused = true;
 						var Timeleft = scope.timedEvent.getProgress().toString().substr(0,4) * 10;
 						Timeleft = Timeleft.toFixed(1);
@@ -60,21 +68,12 @@ class GameScene extends Phaser.Scene {
 			})
 		}
 		
-
-
-		var back = this.add.image(0, 0, 'background').setOrigin(0, 0).setInteractive();
-		let backHeight = 1;
-		if(this.sys.game.gameData.ScaleOfBackground != undefined){
-			backHeight = this.sys.game.gameData.ScaleOfBackground;
-		}
-		back.setScale(window.innerWidth/back.displayWidth, (window.innerHeight/backHeight)/back.displayHeight)
-		
 		back.on('pointerup', function(pointer){
 			if(scope.gameStarted){
 				scope.boatPic.x = parseInt(scope.boatPic.x);
-				scope.boatPic.x += scope.sys.game.gameData.MovementX;
+				scope.boatPic.x += scope.xPosToScreen(scope.sys.game.gameData.MovementX);
 				//if(bla.boatPic.x > window.innerHeight-(window.innerHeight*0.35)){
-				if(scope.boatPic.x > scope.sys.game.gameData.EndPointX){
+				if(scope.boatPic.x > scope.xPosToScreen(scope.sys.game.gameData.EndPointX)){
 					scope.timedEvent.paused = true;
 					var Timeleft = scope.timedEvent.getProgress().toString().substr(0,4) * 10;
 					Timeleft = Timeleft.toFixed(1);
@@ -85,13 +84,12 @@ class GameScene extends Phaser.Scene {
 		})
 
 		var TempZiel = this.textures.get('Ziellinie');
-		var ZielScale = window.innerHeight / TempZiel.source[0].height *0.04;
-		var Ziel = this.add.image(window.innerWidth - (window.innerWidth*0.15), window.innerHeight-(window.innerHeight*1), 'Ziellinie').setOrigin(0,0);
+		var Ziel = this.add.image(this.xPosToScreen(this.sys.game.gameData.finishLineX), this.yPosToScreen(this.sys.game.gameData.finishLineY), 'Ziellinie').setOrigin(0,0).setDepth(3);
 		if(this.sys.game.gameData.showFinishLine != "true"){
 			Ziel.setAlpha(0);
 		}
 
-		Ziel.setScale(ZielScale,window.innerWidth/(Ziel.width/2));
+		Ziel.setScale(window.innerWidth/Ziel.width * this.sys.game.gameData.finishLineWidth,window.innerHeight/Ziel.height * this.sys.game.gameData.finishLineHeight);
 
 		this.anims.create( {
 			key: 'boatAnim',
@@ -108,11 +106,21 @@ class GameScene extends Phaser.Scene {
 		var boatPicScaleWidthBy = window.innerWidth / tempImg.source[0].width * 0.5;
 
 		//this.boatPic = this.add.sprite(window.innerWidth - window.innerWidth*0.85, window.innerHeight - (tempImg.source[0].width * boatPicScaleHeightBy * 5), 'boat').play('boatAnim');
-		this.boatPic = this.add.sprite(this.sys.game.gameData.StartPointX, this.sys.game.gameData.StartPointY , 'boat').play('boatAnim').setOrigin(0,0).setDepth(5).setScale(5,5);
+		this.boatPic = this.add.sprite(this.xPosToScreen(this.sys.game.gameData.StartPointX), this.xPosToScreen(this.sys.game.gameData.StartPointY) , 'boat').play('boatAnim').setOrigin(0,0).setDepth(5);
 
 		this.boatPic.setScale(boatPicScaleWidthBy);
 
-		this.countdownText = this.add.text(this.width/2, this.height/2, "3", {font: '60px Arial', fill: '#000000'});
+		let lineColor = this.sys.game.color.replace("#", "0x");
+		var line = new Phaser.Geom.Line(-20, window.innerHeight/2 + window.innerHeight/20, window.innerWidth + 20, window.innerHeight/2 - window.innerHeight/20);
+		var circle = new Phaser.Geom.Circle(window.innerWidth/2, window.innerHeight/2, window.innerHeight/6);
+		this.CountdownGraphics = this.add.graphics({ lineStyle: { width: window.innerHeight/6, color: lineColor }, fillStyle: { color: lineColor } });
+		
+		this.CountdownGraphics.strokeLineShape(line);
+		this.CountdownGraphics.fillCircleShape(circle);
+		this.CountdownGraphics.setDepth(10);
+
+		let countdownTextSize = window.innerHeight/5;
+		this.countdownText = this.add.text(window.innerWidth/2, window.innerHeight/2, "3", {font: countdownTextSize + 'px Arial', fill: '#ffffff'}).setDepth(10).setOrigin(0.5);
 		this.countdownTimer = this.time.addEvent({delay: 1000, callback: this.countdownFunc, callbackScope: this, repeat: 3});
 
 		var scope = this;
@@ -120,6 +128,14 @@ class GameScene extends Phaser.Scene {
 			
 	}
 
+	xPosToScreen(pos){
+		return window.innerWidth * pos/100
+	}
+	
+	yPosToScreen(pos){
+		return window.innerHeight * pos/100;
+	}
+	
 	moveImage(){
 		let scope = this;
 		if(scope.gameStarted){
@@ -142,6 +158,7 @@ class GameScene extends Phaser.Scene {
 			this.countdownText.setText(this.currentCountdownValue);
 		}
 		else{
+			this.CountdownGraphics.destroy();
 			this.countdownText.destroy();
 			this.sys.game.gameCallbacks.showTimeline(this.sys.game.gameData.timer);
 			this.sys.game.gameCallbacks.startTimelineClock();
@@ -159,11 +176,19 @@ class GameScene extends Phaser.Scene {
 	}
 
 	gameWin(Timeleft){
-		this.scene.start('WinScene', { t: Timeleft});
+		//this.scene.start('WinScene', { t: Timeleft});
+		const scoreCalc = new ScoreCalculation(
+			Timeleft,
+			{ ...this.sys.game.gameData.score, gameFactor: this.sys.game.shared.config.clickerScoreFactor }
+		  )
+		  this.points = scoreCalc.getScore();
+
+		this.sys.game.completeChallenge(this.points.score + this.points.bonus);
 	}
 
 	gameLose(){
-		this.scene.start('LoseScene');
+		//this.scene.start('LoseScene');
+		this.sys.game.completeChallenge(0);
 	}
 
 }

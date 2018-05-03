@@ -166,15 +166,21 @@ let SkillGameAirship = new Phaser.Class({
 			this.windImage = this.add.image(this.width, this.height/2, 'wind').setOrigin(1,1);
 			this.windImage.setScale(this.width/this.windImage.width, this.width/this.windImage.width);
 
-			this.vehicleImage = this.add.image(this.width/2, this.height/2 + this.height/6, 'vehicle').setOrigin(0.5, 0).setScale(0.15);
+			this.vehicleImage = this.add.image(this.width/2, this.height/2 + this.height/6, 'vehicle').setOrigin(0.5, 0);
+			this.vehicleImage.setScale(this.height/this.vehicleImage.height * 0.3);
 
-			this.streamArrow = this.add.image(this.width/2,this.height/2 - this.height/8, 'windArrowSmall').setOrigin(0.5,1).setScale(0.2);
-			this.vehicleArrow = this.add.image(this.width/2, this.height/2 + 10, 'vehicleArrowLarge').setOrigin(0.5,0).setScale(0.2);
+			this.streamArrow = this.add.image(this.width/2,this.height/2 - this.height/8, 'windArrowSmall').setOrigin(0.5,1);
+			this.streamArrow.setScale(this.height/this.streamArrow.height * 0.05);
+			this.vehicleArrow = this.add.image(this.width/2, this.height/2 + 10, 'vehicleArrowLarge').setOrigin(0.5,0);
+			this.vehicleArrow.setScale(this.height/this.vehicleArrow.height * 0.1);
 
-			this.windDirectionLeft = this.add.image(this.width/4, this.height/6, 'windDirection').setScale(0.2);
-			this.windDirectionRight = this.add.image(3 * this.width/4, this.height/3, 'windDirection').setScale(0.2);
+			this.windDirectionLeft = this.add.image(this.width/4, this.height/6, 'windDirection');
+			this.windDirectionLeft.setScale(this.height/this.windDirectionLeft.height * 0.2);
+			this.windDirectionRight = this.add.image(3 * this.width/4, this.height/3, 'windDirection');
+			this.windDirectionRight.setScale(this.height/this.windDirectionRight.height * 0.2);
 
-			this.countdownText = this.add.text(this.width/2, this.height/2, this.countdown, {font: '60px Arial', fill: '#ffffff'}).setDepth(2).setOrigin(0.5);
+			let countdownTextSize = this.height/5;
+			this.countdownText = this.add.text(this.width/2, this.height/2, this.countdown, {font: countdownTextSize + 'px Arial', fill: '#ffffff'}).setDepth(2).setOrigin(0.5);
 			this.countdownTimer = this.time.addEvent({delay: 1000, callback: this.countdownFunc, callbackScope: this, repeat: this.countdown});
 		}else{
 			//server code
@@ -189,27 +195,37 @@ let SkillGameAirship = new Phaser.Class({
 				this.windImage = this.add.image(this.width, this.height/2, 'wind').setOrigin(1,1);
 				this.windImage.setScale(this.width/this.windImage.width, this.width/this.windImage.width);
 
-				this.vehicleImage = this.add.image(this.width/2, this.height - this.height/6, 'vehicle').setOrigin(0.5, 0).setScale(0.15);
+				this.vehicleImage = this.add.image(this.width/2, this.height - this.height/6, 'vehicle').setOrigin(0.5, 0);
+				this.vehicleImage.setScale(this.height/this.vehicleImage.height * 0.3);
 
-				this.streamArrow = this.add.image(this.width/2,this.height/2 - this.height/8, 'windArrowSmall').setOrigin(0.5,1).setScale(0.2);
-				this.vehicleArrow = this.add.image(this.width/2, this.height/2 + 10, 'vehicleArrowLarge').setOrigin(0.5,0).setScale(0.2);
+				this.streamArrow = this.add.image(this.width/2,this.height/2 - this.height/8, 'windArrowSmall').setOrigin(0.5,1);
+				this.streamArrow.setScale(this.height/this.streamArrow.height * 0.05);
+				this.vehicleArrow = this.add.image(this.width/2, this.height/2 + 10, 'vehicleArrowLarge').setOrigin(0.5,0);
+				this.vehicleArrow.setScale(this.height/this.vehicleArrow.height * 0.1);
 
-				this.windDirectionLeft = this.add.image(this.width/4, this.height/6, 'windDirection').setScale(0.2);
-				this.windDirectionRight = this.add.image(3 * this.width/4, this.height/3, 'windDirection').setScale(0.2);
+				this.windDirectionLeft = this.add.image(this.width/4, this.height/6, 'windDirection');
+				this.windDirectionLeft.setScale(this.height/this.windDirectionLeft.height * 0.2);
+				this.windDirectionRight = this.add.image(3 * this.width/4, this.height/3, 'windDirection');
+				this.windDirectionRight.setScale(this.height/this.windDirectionRight.height * 0.2);
 			}else{
 				this.playingShip = false;
 				this.windImage = this.add.image(0, this.height/2, 'wind').setOrigin(0, 0);
 				this.windImage.flipY = -1;
 				this.windImage.setScale(this.width/this.windImage.width);
-
-				this.vehicleImage = this.add.image(this.width/2, this.height/6, 'vehicle').setOrigin(0.5, 0).setScale(0.15);
+				
+				this.vehicleImage = this.add.image(this.width/2, this.height/6, 'vehicle').setOrigin(0.5, 0);
+				this.vehicleImage.setScale(this.height/this.vehicleImage.height * 0.3);
 				this.vehicleImage.flipY = -1;
 
-				this.streamArrow = this.add.image(this.width/2,this.height/2 + this.height/8, 'windArrowLarge').setOrigin(0.5,1).setScale(0.2);
-				this.vehicleArrow = this.add.image(this.width/2, this.height/2 - 10, 'vehicleArrowSmall').setOrigin(0.5,0).setScale(0.2);
+				this.streamArrow = this.add.image(this.width/2,this.height/2 + this.height/8, 'windArrowLarge').setOrigin(0.5,1);
+				this.streamArrow.setScale(this.height/this.streamArrow.height * 0.1);
+				this.vehicleArrow = this.add.image(this.width/2, this.height/2 - 10, 'vehicleArrowSmall').setOrigin(0.5,0);
+				this.vehicleArrow.setScale(this.height/this.vehicleArrow.height * 0.05);
 
 				this.windDirectionLeft = this.add.image(this.width/4, this.height-this.height/6, 'windDirection').setScale(0.2);
+				this.windDirectionLeft.setScale(this.height/this.windDirectionLeft.height * 0.2);
 				this.windDirectionRight = this.add.image(3 * this.width/4, this.height-this.height/3, 'windDirection').setScale(0.2);
+				this.windDirectionRight.setScale(this.height/this.windDirectionRight.height * 0.2);
 			}
 			/*if(ownID != undefined && otherID != undefined){
 				this.startMultiplayerGame();
@@ -218,13 +234,18 @@ let SkillGameAirship = new Phaser.Class({
 		}
 
 		this.pointHUD = this.add.image(this.width/2, this.height, 'pointHUD').setOrigin(0.5, 1).setScale(0.2);
-		this.scoreText = this.add.text(this.width/2, this.height, "0 Punkte", {font: '16px Cabin', fill: '#ffffff'}).setOrigin(0.5, 1);
+		this.pointHUD.setScale(this.height/this.pointHUD.height * 0.03);
+		let fontSize = (this.pointHUD.height - this.pointHUD.height/3) * this.height/this.pointHUD.height * 0.03;
+		this.scoreText = this.add.text(this.width/2, this.height, "0 Punkte", {font: fontSize + 'px Cabin', fill: '#ffffff'}).setOrigin(0.5, 1);
 	},
 
 	addCloudImages: function(){
 		this.cloud1 = this.add.image(this.width/3, -200, 'cloud1').setScale(0.2);
+		this.cloud1.setScale(this.height/this.cloud1.height * 0.2);
 		this.cloud2 = this.add.image(2 * this.width/3, -100, 'cloud2').setScale(0.2);
+		this.cloud2.setScale(this.height/this.cloud2.height * 0.2);
 		this.cloud3 = this.add.image(3 * this.width/4, -500, 'cloud3').setScale(0.2);
+		this.cloud3.setScale(this.height/this.cloud3.height * 0.2);
 
 		this.tweens.add({
 			targets: this.cloud1,
@@ -255,7 +276,8 @@ let SkillGameAirship = new Phaser.Class({
 	},
 
 	startMultiplayerGame: function(){
-		this.countdownText = this.add.text(this.width/2, this.height/2, this.countdown, {font: '60px Arial', fill: '#ffffff'}).setDepth(2).setOrigin(0.5);
+		let countdownTextSize = this.height/5;
+		this.countdownText = this.add.text(this.width/2, this.height/2, this.countdown, {font: countdownTextSize + 'px Arial', fill: '#ffffff'}).setDepth(2).setOrigin(0.5);
 		this.countdownTimer = this.time.addEvent({delay: 1000, callback: this.countdownFunc, callbackScope: this, repeat: this.countdown});
 	},
 

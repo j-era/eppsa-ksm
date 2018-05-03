@@ -542,13 +542,22 @@ let GraphGame = new Phaser.Class({
 	animateCrash: function(agent, node){
 		var ccDestX = agent.x;
 		var ccDestY = agent.y;
-		//delete after half of duration
-		/*switch (agent.currentDirection){
-			case "up":
-				crashCarY = - 100
-		}*/
 		var crashCar = this.add.image(node.x, node.y, "crashCar");
 		crashCar.setScale(this.height/crashCar.height * 0.2);
+		switch (agent.currentDirection){
+			case "up":
+				crashCar.angle = 180;
+				break;
+			case "down":
+				crashCar.angle = 0;
+				break;
+			case "right":
+				crashCar.angle = 270;
+				break;
+			case "left":
+				crashCar.angle = 90;
+				break;
+		}
 
 		var that = this;
 
@@ -739,7 +748,12 @@ let GraphGame = new Phaser.Class({
 	},
 
 	xPosToScreen: function(pos){
-		return (this.width - this.width/10) * pos/100
+		if(gameData.showScrollButton == "true"){
+			return (this.width - this.width/10) * pos/100
+		}else{
+			return this.width * pos/100;
+		}
+		
 	},
 
 	yPosToScreen: function(pos){
