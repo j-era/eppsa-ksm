@@ -96,7 +96,9 @@ export default function Background(props) {
 function renderTimerBar(props) {
   return (
     <TimerBarContainer>
-      <TimerBar seconds={ props.challengeData.challenge.score.sessionLength } isRunning={ props.timelineClockRunning } />
+      <TimerBar
+        seconds={ props.challengeData.challenge.score.sessionLength }
+        isRunning={ props.timelineClockRunning } />
     </TimerBarContainer>
   )
 }
