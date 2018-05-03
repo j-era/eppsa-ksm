@@ -38,12 +38,10 @@ function NewGameAvatarSelection(props) {
       <PageTitle>{ content.shared.texts.selectAvatar }</PageTitle>
       <Content>
         <Avatars
-          onClick={ process.env.NODE_ENV === "development"
-            ? () => {
-              dispatch(updateAvatar("airplane"))
-              dispatch(updateGameState(NEW_GAME_AVATAR_CONFIRMATION))
-            }
-            : () => {} }
+          onClick={ () => {
+            dispatch(updateAvatar("airplane"))
+            dispatch(updateGameState(NEW_GAME_AVATAR_CONFIRMATION))
+          } }
           src={ `${assetServerUri}/${content.shared.assets.avatarsMedium.src}` }
           srcSet={ `${assetServerUri}/${content.shared.assets.avatarsSmall.src} 250w,
                     ${assetServerUri}/${content.shared.assets.avatarsMedium.src} 500w,

@@ -4,14 +4,15 @@ import GameBoard from "./gameBoard"
 import GameManualButton from "./gameManualButton"
 
 const Header = styled.div`
-  height: 15%;
+  height: ${props => props.show ? 15 : 0}%;
   overflow: hidden;
+  transition: height 0.5s ease;
 `
-export default function renderHeader({ props }) {
+export default function renderHeader(props) {
   return (
-    <Header>
+    <Header show={ props.show }>
       <GameBoard { ...props } />
-      { !props.showGameManual && <GameManualButton { ...props } /> }
+      <GameManualButton { ...props } show={ props.show && !props.showGameManual } />
     </Header>
   )
 }

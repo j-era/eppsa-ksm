@@ -25,6 +25,7 @@ class gameScene extends Phaser.Scene {
 		this.row5 = [];
 		this.row6 = [];
 		this.row7 = [];
+		this.row8 = [];
 		this.moveLeft = [];
 		this.moveRight = [];
 
@@ -35,6 +36,7 @@ class gameScene extends Phaser.Scene {
 		this.waitrow5 = [];
 		this.waitrow6 = [];
 		this.waitrow7 = [];
+		this.waitrow8 = [];
 		this.correct = 0;
 
 		this.imageArray = {};
@@ -47,6 +49,7 @@ class gameScene extends Phaser.Scene {
 		this.speed5 = this.sys.game.gameData.SpeedRow5;
 		this.speed6 = this.sys.game.gameData.SpeedRow6;
 		this.speed7 = this.sys.game.gameData.SpeedRow7;
+		this.speed8 = this.sys.game.gameData.SpeedRow8;
 	//this.questions = [];
 
 	let background = this.add.image(0, 0, 'background').setOrigin(0,0).setDepth(-2);
@@ -57,7 +60,23 @@ class gameScene extends Phaser.Scene {
 			continue;
 		}
 		if(this.sys.game.gameData.pictures[key].type == 1){
-			this.imageArray[key] = this.sys.game.gameData.pictures[key];
+			if(this.sys.game.gameData.pictures[key].rows != undefined && this.sys.game.gameData.pictures[key].rows != ""){
+				let depthArray = JSON.parse(this.sys.game.gameData.pictures[key].rows);
+				console.log(depthArray);
+				if(depthArray.length > 1){
+					for(let i = 0; i < depthArray.length; i++){
+						//this.sys.game.gameData.pictures[key].depth = depthArray[i];
+						//this.imageArray[key + i] = this.sys.game.gameData.pictures[key];
+						this.imageArray[key + i] = Object.assign({}, this.sys.game.gameData.pictures[key]);
+						this.imageArray[key + i].depth = depthArray[i]; 
+					}
+				}
+				console.log(this.imageArray);
+			}
+			else{
+				this.imageArray[key] = this.sys.game.gameData.pictures[key];
+			}
+			//this.imageArray[key] = this.sys.game.gameData.pictures[key];
 		}else{
 			this.blockImages[key] = this.sys.game.gameData.pictures[key];
 			if(this.blockImages[key].direction != ""){
@@ -66,14 +85,6 @@ class gameScene extends Phaser.Scene {
 			}
 		}
 	}
-
-	/*for(var element in this.sys.game.gameData.questions){
-		if(element == "template"){
-			continue;
-		}else{
-			this.questions.push(this.sys.game.gameData.questions[element]);
-		}
-	}*/
 
 	/*this.blockMaxWidth = window.innerWidth/3;
 	this.blockMaxHeight = this.picMaxWidth*0.75;
@@ -90,31 +101,23 @@ class gameScene extends Phaser.Scene {
 	this.restPicMinWidth = window.innerWidth/4;
 	this.restPicMinHeight = this.restPicMinWidth * 0.75;*/  //Beeinflusst Scaling der Bilder - Referenz Diddi
 
+	this.loadedImages = {};
+
+	for(var imageKey in this.imageArray){
+		var image = this.add.image(0,0, this.imageArray[imageKey].img).setOrigin(0.5,1).setInteractive().setName(imageKey);
+		this.loadedImages[imageKey] = image;
+	}
 
 
 	for(var blockElements in this.blockImages){
+		console.log(blockElements);
 		if(this.blockImages[blockElements].direction == ""){
-			var blocking = this.add.image(this.blockImages[blockElements].positionX,this.blockImages[blockElements].positionY, this.blockImages[blockElements].img).setOrigin(0.5,1).setName(imageKey).setInteractive();
-			if(blocking.displayWidth > this.blockMaxWidth){
-				var scale = (this.blockMaxWidth / blocking.displayWidth)
-				blocking.setScale(scale,scale);
+			var blocking = this.add.image(this.xPosToScreen(this.blockImages[blockElements].positionX),this.yPosToScreen(this.blockImages[blockElements].positionY), this.blockImages[blockElements].img).setOrigin(0.5,1).setName(imageKey).setInteractive();
+			//TODO number should not be hardcoded but come from cms
+			//970 is the width of the base tile of the broken down dome picture
+			//please don't hate me future Barbara!
+			blocking.setScale(window.innerWidth/this.blockImages[blockElements].baseWidth);
 
-			}else if(blocking.displayWidth < this.blockMinWidth){
-				var scale = (this.blockMinWidth / blocking.displayWidth)
-				blocking.setScale(scale,scale);
-			}else {
-				blocking.displayWidth = blocking.displayWidth
-			}
-
-			if(blocking.displayHeight > this.blockMaxHeight){
-				var scale = (this.blockMinHeight / blocking.displayHeight)
-				blocking.setScale(scale,scale);
-			}else if(blocking.displayHeight < this.blockMinHeight){
-				var scale = (this.blockMinHeight / blocking.displayHeight)
-				blocking.setScale(scale,scale);
-			}else {
-				blocking.displayHeight = blocking.displayHeight
-			}
 
 			blocking.depth = this.blockImages[blockElements].depth;
 			blocking.eppsaInactive = true;
@@ -124,22 +127,21 @@ class gameScene extends Phaser.Scene {
 		
 	}
 
-	this.loadedImages = {};
-
-	for(var imageKey in this.imageArray){
-		var image = this.add.image(0,0, this.imageArray[imageKey].img).setOrigin(0.5,1).setInteractive().setName(imageKey);
-		this.loadedImages[imageKey] = image;
-	}
+	
 
 	var that = this;
 
 	for(var element in this.imageArray){
 		this.scale;
 		//if(that.imageArray[element].type == 1){
-
-			var scalingNumber = that.sys.game.gameData.ScalingImages + that.imageArray[element].depth;
-			this.scale = scalingNumber;
-			that.loadedImages[element].setScale(this.scale,this.scale);
+			console.log(that.imageArray[element].depth);
+			var scalingNumber = that.sys.game.gameData["ScalingImages" + that.imageArray[element].depth];
+			this.scale = parseFloat(scalingNumber);
+			console.log(parseFloat(scalingNumber));
+			that.loadedImages[element].setScale(window.innerWidth/that.loadedImages[element].width * this.scale);
+			if(that.imageArray[element].baseWidth != undefined && that.imageArray[element].baseWidth != ""){
+				that.loadedImages[element].setScale(window.innerWidth/that.imageArray[element].baseWidth * this.scale);
+			}
 
 			//that.loadedImages[element].displayHeight = that.picMaxHeight * (that.imageArray[element].depth/2);
 		//}else{
@@ -148,18 +150,6 @@ class gameScene extends Phaser.Scene {
 		that[temp].push(that.loadedImages[element]);
 		this['wait' + temp].push(element);	
 	}
-
-	//this.random = Math.floor(Math.random() * this.questions.length);
-
-	/*this.TempTags = this.questions[this.random].tag.split(',');
-
-	this.QuesText = this.questions[this.random].question;
-
-	this.ques = this.add.text(window.innerWidth/2, window.innerHeight*0.9, 'Hey',{ font: window.innerHeight/35 + 'px Arial', fill: 'green'});
-
-	this.ques.setText(this.QuesText);*/
-
-
 
 	this.syst = this.sys.game.gameData;
 
@@ -210,6 +200,13 @@ class gameScene extends Phaser.Scene {
 		callbackScope: this,
 	})
 
+	var SpawnTimerRow8 = this.time.addEvent( {
+		delay: 0,
+		callback:this.spawn,
+		args: [this.waitrow8, this.syst.Row8Max, this.syst.Row8Min],
+		callbackScope: this,
+	})
+
 	this.input.on('gameobjectdown', function(pointer, gameObject){
 
 		if(gameObject.eppsaInactive != undefined && gameObject.eppsaInactive == true){
@@ -240,11 +237,11 @@ class gameScene extends Phaser.Scene {
 
 			that.tweens.add( {
 				targets: gameObject,
-				scaleX: that.sys.game.gameData.ClickScaleX,
-				scaleY: that.sys.game.gameData.ClickScaleY,
+				scaleX: gameObject.scaleX * parseFloat(that.sys.game.gameData.ClickScaleX),
+				scaleY: gameObject.scaleY * parseFloat(that.sys.game.gameData.ClickScaleY),
 				ease: 'Linear',
-				duration: 500,
-				repeat: 1,
+				duration: 250,
+				repeat: 0,
 				yoyo: true,
 				//onComplete: function() {gameObject.input.enabled = true}
 			})
@@ -253,23 +250,25 @@ class gameScene extends Phaser.Scene {
 	});
 
 
-	this.PosY = this.syst.YPosRow1;
-	this.row1Dif = this.syst.YPosRow2;
-	this.row2Dif = this.syst.YPosRow3;
-	this.row3Dif = this.syst.YPosRow4;
-	this.row4Dif = this.syst.YPosRow5;
-	this.row5Dif = this.syst.YPosRow6;
-	this.row6Dif = this.syst.YPosRow7;
+	this.PosY = this.yPosToScreen(parseInt(this.syst.YPosRow1));
+	this.row1Dif = this.yPosToScreen(parseInt(this.syst.YPosRow2));
+	this.row2Dif = this.yPosToScreen(parseInt(this.syst.YPosRow3));
+	this.row3Dif = this.yPosToScreen(parseInt(this.syst.YPosRow4));
+	this.row4Dif = this.yPosToScreen(parseInt(this.syst.YPosRow5));
+	this.row5Dif = this.yPosToScreen(parseInt(this.syst.YPosRow6));
+	this.row6Dif = this.yPosToScreen(parseInt(this.syst.YPosRow7));
+	this.row7Dif = this.yPosToScreen(parseInt(this.syst.YPosRow8));
 
 
-	for(var i = 1; i < 8; i++){
+	for(var i = 1; i < 9; i++){
 		var temp = 'row' + i;
 
 		for(var j = 0; j < that[temp].length; j++){
 			//that[temp][j].displayWidth = that.picMaxWidth * (that.imageArray[that[temp][j].name].depth / 2);
 			that[temp][j].depth = that.imageArray[that[temp][j].name].depth;
 			if(that.imageArray[that[temp][j].name].direction == "Left"){
-				that[temp][j].x = window.innerWidth
+				that[temp][j].x = window.innerWidth +that[temp][j].displayWidth;
+				that[temp][j].flipX = !that[temp][j].flipX;
 			}else{
 				that[temp][j].x = 0 - that[temp][j].displayWidth;
 			}
@@ -282,8 +281,8 @@ class gameScene extends Phaser.Scene {
 
 
 		var Height = 'row' + i + 'Dif';
-		console.log(Height);
-		console.log(this[Height])
+		//console.log(Height);
+		//console.log(this[Height])
 		this.PosY = this[Height];
 	}
 
@@ -312,11 +311,11 @@ spawn(waitrow, max, min) {
 		});
 		return
 	}else{
-		console.log (waitrow);
+		//console.log (waitrow);
 		var element = Math.floor(Math.random() * waitrow.length)
 		var dirTemp = 'move' + this.imageArray[waitrow[element]].direction;
 		this[dirTemp].push(this.loadedImages[waitrow[element]]);
-		console.log(this.loadedImages[waitrow[element]])
+		//console.log(this.loadedImages[waitrow[element]])
 		waitrow.splice(element,1);
 
 		this.time.addEvent( {
@@ -328,6 +327,14 @@ spawn(waitrow, max, min) {
 	}
 }
 
+xPosToScreen(pos){
+	console.log(pos);
+	return window.innerWidth * pos/100
+}
+
+yPosToScreen(pos){
+	return window.innerHeight * pos/100;
+}
 
 
 
@@ -356,7 +363,11 @@ update(){
 		this.moveLeft[i].x -= this[temp];
 
 		if(this.moveLeft[i].x < (0 - this.moveLeft[i].displayWidth - this.moveLeft[i].displayWidth)){
-			this.moveLeft[i].x = window.innerWidth;
+			if(this.moveLeft[i].input.enabled == false){
+				this.moveLeft[i].input.enabled = true;
+			}
+
+			this.moveLeft[i].x = window.innerWidth + this.moveLeft[i].displayWidth;
 			var temp = 'waitrow' + this.imageArray[this.moveLeft[i].name].depth
 			this[temp].push(this.moveLeft[i].name);
 			this.moveLeft.splice(i,1)

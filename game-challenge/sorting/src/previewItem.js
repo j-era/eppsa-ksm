@@ -6,11 +6,11 @@ import ItemComponent from "./components/itemComponent"
 const Container = styled(ItemComponent)`
   position: absolute;
   top: 0;
-  left: 0;
+  left: ${props => props.theme.layout.cardPaddingVertical};
 
   background-image: ${props => `url(${props.item.image.src})`};
 
-  width: 100%;
+  width: calc(100% - ${props => props.theme.layout.cardPaddingVertical} * 2);
 `
 
 function collect(monitor) {

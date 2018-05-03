@@ -23,8 +23,8 @@ bootstrap((data, callbacks) => {
 var config = {
 	type: Phaser.AUTO,
 	parent: 'content',
-	width: window.innerWidth * window.devicePixelRatio,
-	height: window.innerHeight * window.devicePixelRatio,
+	width: window.innerWidth,
+	height: window.innerHeight,
 
 	scene: [
 	boot,

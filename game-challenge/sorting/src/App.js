@@ -8,5 +8,5 @@ const theme = calculateTheme()
 
 export default (props) =>
   <ThemeProvider theme={ theme }>
-    <SortingGame { ...props } />
+    <SortingGame { ...props } theme={ theme }/>
   </ThemeProvider>

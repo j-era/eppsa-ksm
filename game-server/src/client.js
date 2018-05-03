@@ -160,9 +160,13 @@ module.exports = class Client {
       this.log.info({ socketId: this.socket.id, gameId: this.game.gameId },
         "Finishing challenge")
 
-      if (await this.mongoDB.finishChallenge(this.game.gameId, this.game.challengeNumber, result)) {
-        this.game.score += result.score
+      if (await this.mongoDB.finishChallenge(
+        this.game.gameId,
+        this.game.challengeNumber,
+        { ...result, score: result.score - this.game.score }
+      )) {
         this.game.challengeNumber++
+        this.game.score = result.score
 
         if (this.game.challengeNumber > this.game.maxChallenges) {
           this.game.finished = true

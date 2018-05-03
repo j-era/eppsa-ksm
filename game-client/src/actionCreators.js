@@ -1,5 +1,7 @@
 import uuid from "uuid/v4"
 
+import { delay } from "eppsa-ksm-shared"
+
 import { setCookie } from "./cookie"
 import * as gameStates from "./gameStates"
 import * as types from "./actionTypes"
@@ -44,8 +46,13 @@ export function startChallenge(gameServer, room = null) {
 }
 
 export function finishChallenge(challengeData, gameServer) {
-  return async (dispatch) => {
-    const data = await gameServer.finishChallenge(challengeData)
+  return async (dispatch, getState) => {
+    if (challengeData.score != null) {
+      dispatch(addScore(challengeData.score))
+      await delay(3000)
+    }
+
+    const data = await gameServer.finishChallenge({ ...challengeData, score: getState().score })
 
     if (data.finished) {
       dispatch(updateGameState(gameStates.FINISHED))
@@ -54,6 +61,27 @@ export function finishChallenge(challengeData, gameServer) {
     }
 
     dispatch(updateGameData(data))
+  }
+}
+
+export function addScore(increment) {
+  return async (dispatch) => {
+    dispatch({ type: types.ADD_SCORE, increment })
+    dispatch(showScore())
+    await delay(3000)
+    dispatch(hideScore())
+  }
+}
+
+export function showScore() {
+  return {
+    type: types.SHOW_SCORE,
+  }
+}
+
+export function hideScore() {
+  return {
+    type: types.HIDE_SCORE,
   }
 }
 

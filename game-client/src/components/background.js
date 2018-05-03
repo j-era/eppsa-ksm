@@ -8,7 +8,7 @@ import { default as TimerBarComponent } from "./timerBar"
 const Container = styled.div`
   position: relative;
 
-  padding-top: 5vw;
+  padding-top: 4%;
 
   box-sizing: border-box;
 
@@ -16,16 +16,27 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  transition: transform 500ms ease;
+  animation: ${props => props.showScore ? "slideDown 3s;" : ";"}
+
+  @keyframes slideDown {
+      0% {transform: translateY(0vw);}
+      20% {transform: translateY(5vw);}
+      80% {transform: translateY(5vw);}
+      100% {transform: translateY(0vw);}
+  }
 `
 
 const BackgroundArcSVG = styled(BackgroundArcSvg)`
   fill: ${props => props.theme.colors.area};
   margin-bottom: -1px;
   width: 100%;
+  height: 5%;
   background-color: white;
+  transition: fill 0.5s ease;
 `
 
-const Background = styled.div`
+const BackgroundContainer = styled.div`
   position: relative;
 
   display: flex;
@@ -34,6 +45,7 @@ const Background = styled.div`
   flex-grow: 1;
 
   background-color: ${props => props.theme.colors.area};
+  transition: background-color 0.5s ease;
 `
 
 const BannerContainer = styled.div`
@@ -63,18 +75,23 @@ const TimerBar = styled(TimerBarComponent)`
   width: 50%;
 `
 
-export default props =>
-  <Container className={ props.className } isBannerVisible={ isBannerVisible(props.gameState) }>
-    <BannerContainer visible={ isBannerVisible(props.gameState) }>
-      <Banner>{ props.bannerText }</Banner>
-    </BannerContainer>
-    <BackgroundArcSVG />
-    { props.gameState === "CHALLENGE" && renderTimerBar(props) }
-    <Background>
-      { props.children }
-    </Background>
-  </Container>
-
+export default function Background(props) {
+  return (
+    <Container
+      className={ props.className }
+      isBannerVisible={ isBannerVisible(props.gameState) }
+      showScore={ props.showScore }>
+      <BannerContainer visible={ isBannerVisible(props.gameState) }>
+        <Banner>{ props.bannerText }</Banner>
+      </BannerContainer>
+      <BackgroundArcSVG />
+      { props.gameState === "CHALLENGE" && renderTimerBar(props) }
+      <BackgroundContainer>
+        { props.children }
+      </BackgroundContainer>
+    </Container>
+  )
+}
 
 function renderTimerBar(props) {
   return (
