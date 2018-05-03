@@ -50,6 +50,8 @@ class gameScene extends Phaser.Scene {
 		this.speed6 = this.sys.game.gameData.SpeedRow6;
 		this.speed7 = this.sys.game.gameData.SpeedRow7;
 		this.speed8 = this.sys.game.gameData.SpeedRow8;
+
+		this.playing = true;
 	//this.questions = [];
 
 	let background = this.add.image(0, 0, 'background').setOrigin(0,0).setDepth(-2);
@@ -317,8 +319,28 @@ class gameScene extends Phaser.Scene {
 	});
 }
 gameWin() {
-	this.points = this.correct * this.sys.game.gameData.score.reward * this.sys.game.shared.config.hiddenScoreFactor;
-	this.sys.game.completeChallenge(this.points);
+	this.points = Math.floor(this.correct * this.sys.game.gameData.score.reward * this.sys.game.shared.config.hiddenScoreFactor);
+	this.playing = false;
+
+	let scope = this;
+	let lineColor = this.sys.game.color.replace("#", "0x");
+	var line = new Phaser.Geom.Line(-20, window.innerHeight/2 + window.innerHeight/20, window.innerWidth + 20, window.innerHeight/2 - window.innerHeight/20);
+	var circle = new Phaser.Geom.Circle(window.innerWidth/2, window.innerHeight/2, window.innerHeight/6);
+	this.CountdownGraphics = this.add.graphics({ lineStyle: { width: window.innerHeight/6, color: lineColor }, fillStyle: { color: lineColor } });
+		
+	this.CountdownGraphics.strokeLineShape(line);
+	this.CountdownGraphics.fillCircleShape(circle);
+	this.CountdownGraphics.setDepth(10);
+
+	let countdownTextSize = window.innerHeight/10;
+	this.countdownText = this.add.text(window.innerWidth/2, window.innerHeight/2, "+ " + this.points, {font: countdownTextSize + 'px Arial', fill: '#ffffff'}).setDepth(10).setOrigin(0.5);
+
+
+	setTimeout(function(){
+		scope.sys.game.completeChallenge(this.points);
+	}, 1000);
+
+	
 	//this.scene.start('WinScene', { t: this.correct})
 }
 
@@ -361,40 +383,43 @@ yPosToScreen(pos){
 
 
 update(){
-	for(var i = 0; i < this.moveRight.length; i++){
-		var temp = 'speed' + this.moveRight[i].depth
-
-		this.moveRight[i].x += this[temp];
-
-
-		if(this.moveRight[i].x > window.innerWidth + this.moveRight[i].displayWidth){
-			if(this.moveRight[i].input.enabled == false){
-				this.moveRight[i].input.enabled = true
+	if(this.playing == true){
+		for(var i = 0; i < this.moveRight.length; i++){
+			var temp = 'speed' + this.moveRight[i].depth
+	
+			this.moveRight[i].x += this[temp];
+	
+	
+			if(this.moveRight[i].x > window.innerWidth + this.moveRight[i].displayWidth){
+				if(this.moveRight[i].input.enabled == false){
+					this.moveRight[i].input.enabled = true
+				}
+	
+				this.moveRight[i].x = 0 - this.moveRight[i].displayWidth;
+				var temp = 'waitrow' + this.imageArray[this.moveRight[i].name].depth
+				this[temp].push(this.moveRight[i].name);
+				this.moveRight.splice(i,1);
 			}
-
-			this.moveRight[i].x = 0 - this.moveRight[i].displayWidth;
-			var temp = 'waitrow' + this.imageArray[this.moveRight[i].name].depth
-			this[temp].push(this.moveRight[i].name);
-			this.moveRight.splice(i,1);
+		}
+	
+		for(var i = 0; i < this.moveLeft.length; i++){
+			var temp = 'speed' + this.moveLeft[i].depth
+	
+			this.moveLeft[i].x -= this[temp];
+	
+			if(this.moveLeft[i].x < (0 - this.moveLeft[i].displayWidth - this.moveLeft[i].displayWidth)){
+				if(this.moveLeft[i].input.enabled == false){
+					this.moveLeft[i].input.enabled = true;
+				}
+	
+				this.moveLeft[i].x = window.innerWidth + this.moveLeft[i].displayWidth;
+				var temp = 'waitrow' + this.imageArray[this.moveLeft[i].name].depth
+				this[temp].push(this.moveLeft[i].name);
+				this.moveLeft.splice(i,1)
+			}
 		}
 	}
-
-	for(var i = 0; i < this.moveLeft.length; i++){
-		var temp = 'speed' + this.moveLeft[i].depth
-
-		this.moveLeft[i].x -= this[temp];
-
-		if(this.moveLeft[i].x < (0 - this.moveLeft[i].displayWidth - this.moveLeft[i].displayWidth)){
-			if(this.moveLeft[i].input.enabled == false){
-				this.moveLeft[i].input.enabled = true;
-			}
-
-			this.moveLeft[i].x = window.innerWidth + this.moveLeft[i].displayWidth;
-			var temp = 'waitrow' + this.imageArray[this.moveLeft[i].name].depth
-			this[temp].push(this.moveLeft[i].name);
-			this.moveLeft.splice(i,1)
-		}
-	}
+	
 
 }
 
