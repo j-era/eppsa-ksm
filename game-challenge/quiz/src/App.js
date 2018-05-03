@@ -1,6 +1,7 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled, { ThemeProvider } from "styled-components"
+import shuffle from "lodash.shuffle"
 
 import { delay, AnimNextButton, Page, ScoreCalculation, theme } from "eppsa-ksm-shared"
 
@@ -38,6 +39,8 @@ export default class App extends React.Component {
       showNext: false,
       nextClicked: false
     }
+
+    this.answerOrder = shuffle([1, 2, 3, 4])
   }
 
   componentDidMount() {
@@ -83,22 +86,27 @@ export default class App extends React.Component {
   }
 
   renderAnswers() {
-    const answers = [1, 2, 3, 4].map(i => this.props.content.challenge[`answer${i}`])
+    const answers = this.answerOrder.map(
+      index => ({
+        text: this.props.content.challenge[`answer${index}`],
+        index
+      })
+    )
     const titles = ["A", "B", "C", "D"]
 
-    return answers.map((answer, i) =>
+    return answers.map((answer, index) =>
       <AnswerButton
-        key={ i + 1 }
+        key={ answer.index + 1 }
         visible={ this.state.visible }
-        onClick={ !this.state.confirmed ? () => this.confirm(i + 1) : () => {} }
-        clicked={ this.state.confirmed === i + 1 }
-        selection={ this.getSelection(i + 1) }
+        onClick={ !this.state.confirmed ? () => this.confirm(answer.index) : () => {} }
+        clicked={ this.state.confirmed === answer.index }
+        selection={ this.getSelection(answer.index) }
         initialDelay={ this.questionFadeIn }
         blinking={ this.blinking }
         greyOutDuration={ this.greyOutDuration }
-        answer={ answer }
-        title={ titles[i] }
-        index={ i } />
+        answer={ answer.text }
+        title={ titles[index] }
+        index={ index } />
     )
   }
 
