@@ -176,11 +176,16 @@ class GameScene extends Phaser.Scene {
 	}
 
 	gameWin(Timeleft){
-		//this.scene.start('WinScene', { t: Timeleft});
-		const scoreCalc = new ScoreCalculation(
-			Timeleft,
-			{ ...this.sys.game.gameData.score, gameFactor: this.sys.game.shared.config.clickerScoreFactor }
-		  )
+    const scoreCalc = new ScoreCalculation(
+      Timeleft,
+      {
+        reward: this.sys.game.gameData.score.reward,
+        tier1TimeBonus: this.sys.game.gameData.score.tier1TimeBonus,
+        tier2TimeBonus: this.sys.game.gameData.score.tier2TimeBonus,
+        tier3TimeBonus: this.sys.game.gameData.score.tier3TimeBonus,
+        sessionLength: this.sys.game.gameData.score.sessionLength,
+        gameFactor: this.sys.game.shared.config.clickerScoreFactor
+      })
 		  this.points = scoreCalc.getScore();
 
 		this.sys.game.completeChallenge(this.points.score + this.points.bonus);
