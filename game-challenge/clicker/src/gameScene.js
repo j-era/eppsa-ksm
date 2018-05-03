@@ -84,13 +84,12 @@ class GameScene extends Phaser.Scene {
 		})
 
 		var TempZiel = this.textures.get('Ziellinie');
-		var ZielScale = window.innerWidth / TempZiel.source[0].width *0.40;
-		var Ziel = this.add.image(window.innerWidth - (window.innerWidth*0.15), window.innerHeight/backHeight, 'Ziellinie').setOrigin(0,0);
+		var Ziel = this.add.image(this.xPosToScreen(this.sys.game.gameData.finishLineX), this.yPosToScreen(this.sys.game.gameData.finishLineY), 'Ziellinie').setOrigin(0,0);
 		if(this.sys.game.gameData.showFinishLine != "true"){
 			Ziel.setAlpha(0);
 		}
 
-		Ziel.setScale(ZielScale,(window.innerHeight/backHeight)/Ziel.height);
+		Ziel.setScale(this.xPosToScreen(this.sys.game.gameData.finishLineWidth),this.yPosToScreen(this.sys.game.gameData.finishLineHeight));
 
 		this.anims.create( {
 			key: 'boatAnim',
