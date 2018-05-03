@@ -2,7 +2,7 @@ import React from "react"
 import { DragDropContext } from "react-dnd"
 import styled from "styled-components"
 
-import { default as TouchBackend } from "../lib/react-dnd-touch-backend/src/Touch"
+import { default as TouchBackend } from "./Touch"
 
 import PreviewItem from "./previewItem"
 import SortingItem from "./sortingItem"
