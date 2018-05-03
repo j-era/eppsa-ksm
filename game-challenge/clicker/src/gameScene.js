@@ -27,10 +27,6 @@ class GameScene extends Phaser.Scene {
 		this.currentCountdownValue = 3;
 		this.gameStarted = false;
 
-		
-		
-
-
 		var back = this.add.image(0, 0, 'background').setOrigin(0, 0).setInteractive();
 		let backHeight = 1;
 		if(this.sys.game.gameData.ScaleOfBackground != undefined){
@@ -59,9 +55,9 @@ class GameScene extends Phaser.Scene {
 			waterPic.on('pointerup', function(pointer){
 				if(scope.gameStarted){
 					scope.boatPic.x = parseInt(scope.boatPic.x);
-					scope.boatPic.x += scope.sys.game.gameData.MovementX;
+					scope.boatPic.x += scope.xPosToScreen(scope.sys.game.gameData.MovementX);
 					//if(bla.boatPic.x > window.innerHeight-(window.innerHeight*0.35)){
-					if(scope.boatPic.x > scope.sys.game.gameData.EndPointX){
+					if(scope.boatPic.x > scope.xPosToScreen(scope.sys.game.gameData.EndPointX)){
 						scope.timedEvent.paused = true;
 						var Timeleft = scope.timedEvent.getProgress().toString().substr(0,4) * 10;
 						Timeleft = Timeleft.toFixed(1);
@@ -75,9 +71,9 @@ class GameScene extends Phaser.Scene {
 		back.on('pointerup', function(pointer){
 			if(scope.gameStarted){
 				scope.boatPic.x = parseInt(scope.boatPic.x);
-				scope.boatPic.x += scope.sys.game.gameData.MovementX;
+				scope.boatPic.x += scope.xPosToScreen(scope.sys.game.gameData.MovementX);
 				//if(bla.boatPic.x > window.innerHeight-(window.innerHeight*0.35)){
-				if(scope.boatPic.x > scope.sys.game.gameData.EndPointX){
+				if(scope.boatPic.x > scope.xPosToScreen(scope.sys.game.gameData.EndPointX)){
 					scope.timedEvent.paused = true;
 					var Timeleft = scope.timedEvent.getProgress().toString().substr(0,4) * 10;
 					Timeleft = Timeleft.toFixed(1);
@@ -111,7 +107,7 @@ class GameScene extends Phaser.Scene {
 		var boatPicScaleWidthBy = window.innerWidth / tempImg.source[0].width * 0.5;
 
 		//this.boatPic = this.add.sprite(window.innerWidth - window.innerWidth*0.85, window.innerHeight - (tempImg.source[0].width * boatPicScaleHeightBy * 5), 'boat').play('boatAnim');
-		this.boatPic = this.add.sprite(this.sys.game.gameData.StartPointX, this.sys.game.gameData.StartPointY , 'boat').play('boatAnim').setOrigin(0,0).setDepth(5).setScale(5,5);
+		this.boatPic = this.add.sprite(this.xPosToScreen(this.sys.game.gameData.StartPointX), this.xPosToScreen(this.sys.game.gameData.StartPointY) , 'boat').play('boatAnim').setOrigin(0,0).setDepth(5);
 
 		this.boatPic.setScale(boatPicScaleWidthBy);
 
@@ -124,7 +120,8 @@ class GameScene extends Phaser.Scene {
 		this.CountdownGraphics.fillCircleShape(circle);
 		this.CountdownGraphics.setDepth(10);
 
-		this.countdownText = this.add.text(window.innerWidth/2, window.innerHeight/2, "3", {font: '60px Arial', fill: '#ffffff'}).setDepth(10).setOrigin(0.5);
+		let countdownTextSize = window.innerHeight/5;
+		this.countdownText = this.add.text(window.innerWidth/2, window.innerHeight/2, "3", {font: countdownTextSize + 'px Arial', fill: '#ffffff'}).setDepth(10).setOrigin(0.5);
 		this.countdownTimer = this.time.addEvent({delay: 1000, callback: this.countdownFunc, callbackScope: this, repeat: 3});
 
 		var scope = this;
@@ -132,6 +129,14 @@ class GameScene extends Phaser.Scene {
 			
 	}
 
+	xPosToScreen(pos){
+		return window.innerWidth * pos/100
+	}
+	
+	yPosToScreen(pos){
+		return window.innerHeight * pos/100;
+	}
+	
 	moveImage(){
 		let scope = this;
 		if(scope.gameStarted){
