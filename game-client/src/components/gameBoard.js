@@ -21,7 +21,9 @@ function GameBoard(props) {
   }
 
   // sort games into stations
-  connectedGames.forEach(game => {
+  connectedGames
+  .filter((game) => game.challengeNumber <= maxChallenges)
+  .forEach(game => {
     const station = stations[game.challengeNumber - 1]
 
     if (game.gameId === getCookie("gameId")) {
@@ -111,7 +113,7 @@ function GameBoard(props) {
     }
   }
 
-  const avatarWith = 13
+  const avatarWidth = 13
 
   const AvatarImage = styled.div`
     background: url(${props => props.src});
@@ -121,8 +123,8 @@ function GameBoard(props) {
     margin-left: -20%;
     margin-right: -20%;
 
-    width: ${avatarWith}vw;
-    height: ${avatarWith}vw;
+    width: ${avatarWidth}vw;
+    height: ${avatarWidth}vw;
   `
 
   const MyAvatarImage = styled.div`
@@ -130,8 +132,8 @@ function GameBoard(props) {
     background-size: contain;
     background-repeat: no-repeat;
 
-    width: ${avatarWith}vw;
-    height: ${avatarWith}vw;
+    width: ${avatarWidth}vw;
+    height: ${avatarWidth}vw;
 
     transform-origin: bottom;
     transform: scale(1.2);
