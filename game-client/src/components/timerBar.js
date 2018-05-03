@@ -1,5 +1,5 @@
 import React from "react"
-import styled, { keyframes } from "styled-components"
+import styled, { css, keyframes } from "styled-components"
 import FuseIcon from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_1.svg"
 import FuseIcon1 from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_2.svg"
 import FuseIcon2 from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_3.svg"
@@ -201,9 +201,9 @@ export default class TimerBar extends React.Component {
         </TimeBallContainer>
         <ProgressBar>
           <Progress
-            seconds={ this.props.seconds }
+            seconds={ this.props.isRunning ? this.props.seconds : this.props.initSeconds }
             playState={ this.props.isRunning ? "running" : "paused" } />
-          { this.props.isRunning && this.renderFuse() }
+          { this.renderFuse() }
         </ProgressBar>
       </Container>
     )
@@ -211,7 +211,9 @@ export default class TimerBar extends React.Component {
 
   renderFuse() {
     return (
-      <Fuse seconds={ this.props.seconds } >
+      <Fuse
+        playState={ this.props.isRunning ? "running" : "paused" }
+        seconds={ this.props.isRunning ? this.props.seconds : this.props.initSeconds } >
         <FuseSVG1 />
         <FuseSVG2 />
         <FuseSVG3 />
