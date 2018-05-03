@@ -103,7 +103,7 @@ const FuseSVG1 = styled(FuseIcon)`
 
   opacity: 1;
 
-  animation: ${blinkOut()} 1.5s steps(1, end) 0s infinite;
+  animation: ${blinkOut()} 2.0s steps(1, end) 0s infinite;
 `
 
 const FuseSVG2 = styled(FuseIcon1)`
@@ -116,25 +116,12 @@ const FuseSVG2 = styled(FuseIcon1)`
 
   opacity: 0;
 
-  animation: ${blinkIn()} 1.5s steps(1, start) 0.5s infinite;
-`
-
-const FuseSVG3 = styled(FuseIcon2)`
-  position: absolute;
-
-  width: 30px;
-  height: 30px;
-
-  fill: ${props => props.theme.colors.background};
-
-  opacity: 0;
-
-  animation: ${blinkIn()} 1.5s steps(1, start) 1s infinite;
+  animation: ${blinkIn()} 2.0s steps(1, end) 0s infinite;
 `
 
 function blinkOut() {
   return keyframes`
-    33.33% {
+    50% {
       opacity: 0.0;
     }
   `
@@ -142,7 +129,7 @@ function blinkOut() {
 
 function blinkIn() {
   return keyframes`
-    33.33% {
+    50% {
       opacity: 1.0;
     }
   `
@@ -216,7 +203,6 @@ export default class TimerBar extends React.Component {
         seconds={ this.props.isRunning ? this.props.seconds : this.props.initSeconds } >
         <FuseSVG1 />
         <FuseSVG2 />
-        <FuseSVG3 />
       </Fuse>
     )
   }
