@@ -1,0 +1,15 @@
+{
+  "extends": "artcom-react",
+  "rules": {
+    "new-cap": [2, {
+      "capIsNewExceptions": [
+        "DragDropContext",
+        "DragLayer",
+        "DragSource",
+        "DropTarget",
+        "TouchBackend"
+      ]
+    }],
+    "react/prefer-stateless-function": "off"
+  }
+}
