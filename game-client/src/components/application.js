@@ -16,22 +16,11 @@ const Container = styled.div`
   flex-direction: column;
 `
 
-const CardContent = styled.div`
-  width: 100%;
-  height: 100%;
-  animation: fadein 0.5s;
-  @keyframes fadein {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-  }
-`
-
 class Application extends React.Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     const { showHeader } = getPageData(nextProps)
     if (showHeader !== prevState.showHeader) {
-      clearTimeout(prevState.timeout)
-      return { renderCardContent: false, timeout: null }
+      return { renderCardContent: false, showHeader }
     }
 
     return null
@@ -39,12 +28,12 @@ class Application extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = { renderCardContent: true, timeout: null }
+    this.state = {}
   }
 
   render() {
     if (!this.state.renderCardContent && !this.state.timeout) {
-      setTimeout(() => this.setState({ renderCardContent: true, timeout: null }), 500)
+      setTimeout(() => this.setState({ renderCardContent: true }), 500)
     }
 
     const { challengeNumber, content, score, showScore } = this.props
@@ -61,8 +50,7 @@ class Application extends React.Component {
             { ...this.props }
             bannerText={ content.name } >
             <Card small={ showHeader }>
-              { this.state.renderCardContent && 
-                <CardContent>{ React.createElement(render, this.props) }</CardContent> }
+              { this.state.renderCardContent && React.createElement(render, this.props) }
             </Card>
           </Background>
         </Container>
