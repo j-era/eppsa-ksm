@@ -1,5 +1,5 @@
 import client from "socket.io-client"
-import {bootstrap} from "eppsa-ksm-shared"
+import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
 import Phaser from "./phaser.min"
 
 let socket;
@@ -98,14 +98,14 @@ let SkillGameAirship = new Phaser.Class({
 		this.streamRange = gameData.streamRange;		//Defines the max. angle in which the Player B can veer the Stream's vector.
 		this.streamForce = gameData.streamForce;		//Factor with which the force of stream's vector can be adjusted.
 		this.streamWinAngle = gameData.streamWinAngle;	//Defines the angle in which Player B has to keep the stream's vector within, to possibly reach win-state. The win-state is only triggered if Player A's ship is within VehicleWinAngle.
-	
+
 		this.destabiliser = gameData.destabiliser;	//0.0x Factor that is multiplied with the time spent within win-state. The closer the product reaches 1, the more Sensitivity will increase, possibly throwing them out of win-state.
-	
+
 		this.NPCHorizontalStay = gameData.npcHorizontalStay;	//Sets the probability with which the NPC stays in its horizontal state.
 		this.NPCHorizontalExit = gameData.npcHorizontalExit;	//Sets the probability with which the NPC goes from horizontal state to tilt state.
 		this.NPCTiltStay = gameData.npcTiltStay;			//Sets the probability with which the NPC stays in its tilt state.
 		this.NPCTiltExit = gameData.npcTiltExit;			//Sets the probability with which the NPC goes form tilt state to horizontal state.
-		
+
 		//other variables needed
 		this.vehiclearrow;
 		this.streamArrow;
@@ -126,14 +126,14 @@ let SkillGameAirship = new Phaser.Class({
 
 		this.width = window.innerWidth ;
 		this.height = window.innerHeight ;
-	
+
 		this.NPCState = 'horizontal';
-		this.npcStates = ['horizontal', 'tilt']; 
+		this.npcStates = ['horizontal', 'tilt'];
 		this.npcHorizontalWeight = [this.NPCHorizontalStay, this.NPCHorizontalExit];
 		this.npcTiltWeight = [this.NPCTiltExit, this.NPCTiltStay];
 
 		this.singleplayer = singleplayer;
-		
+
 	},
 
 	preload: function(){
@@ -143,7 +143,7 @@ let SkillGameAirship = new Phaser.Class({
 			}
 			this.load.image(gameData.assets[key].name, process.env.ASSET_SERVER_URI + "/" + gameData.assets[key].image.src);
 		}
-	}, 
+	},
 
 	create: function(data){
 		//setup gameboard
@@ -153,12 +153,12 @@ let SkillGameAirship = new Phaser.Class({
 		var line = new Phaser.Geom.Line(-20, this.height/2 + this.height/20, this.width + 20, this.height/2 - this.height/20);
 		var circle = new Phaser.Geom.Circle(this.width/2, this.height/2, this.height/6);
 		this.CountdownGraphics = this.add.graphics({ lineStyle: { width: this.height/6, color: lineColor }, fillStyle: { color: lineColor } });
-		
+
 		this.CountdownGraphics.strokeLineShape(line);
 		this.CountdownGraphics.fillCircleShape(circle);
 		this.CountdownGraphics.setDepth(1);
 
-		
+
 		if(this.singleplayer){
 			this.singleplayer = true;
 			this.playingShip = true;
@@ -201,7 +201,7 @@ let SkillGameAirship = new Phaser.Class({
 				this.windImage = this.add.image(0, this.height/2, 'wind').setOrigin(0, 0);
 				this.windImage.flipY = -1;
 				this.windImage.setScale(this.width/this.windImage.width);
-				
+
 				this.vehicleImage = this.add.image(this.width/2, this.height/6, 'vehicle').setOrigin(0.5, 0).setScale(0.15);
 				this.vehicleImage.flipY = -1;
 
@@ -278,7 +278,7 @@ let SkillGameAirship = new Phaser.Class({
 				this.winStateCounter.remove(false);
 				this.currentTimeInWinState = 0;
 				this.sensitivity = this.baseSensitivity;
-			}		
+			}
 		}
 	},
 
@@ -351,14 +351,14 @@ let SkillGameAirship = new Phaser.Class({
 		var total_weight = weight.reduce(function (prev, cur, i, arr) {
 			return prev + cur;
 		});
-		 
+
 		var random_num = this.rand(0, total_weight);
 		var weight_sum = 0;
-		 
+
 		for (var i = 0; i < list.length; i++) {
 			weight_sum += weight[i];
 			weight_sum = +weight_sum.toFixed(2);
-			 
+
 			if (random_num <= weight_sum) {
 				return list[i];
 			}
@@ -393,11 +393,11 @@ let SkillGameAirship = new Phaser.Class({
 
 		let orientationGamma = e.gamma;
 		console.log(orientationGamma);
-	
+
 		//clamp value of tilt input to minTilt and maxTilt as defined in backend
 		orientationGamma = orientationGamma <= that.minTilt ? that.minTilt : orientationGamma >= that.maxTilt ? that.maxTilt : orientationGamma;
 		let newRotation = orientationGamma * that.sensitivity;
-	
+
 		if(this.playingShip){
 			//clamp value of newRotation to vehicleAngle and negative vehicleAngle
 			newRotation = newRotation <= -that.vehicleAngle ? -that.vehicleAngle : newRotation >= that.vehicleAngle ? that.vehicleAngle : newRotation;
@@ -407,7 +407,7 @@ let SkillGameAirship = new Phaser.Class({
 			newRotation = newRotation <= -that.streamRange ? -that.streamRange : newRotation >= that.streamRange ? that.streamRange : newRotation;
 			let orientatationEvent = that.time.addEvent({delay: 0, callback: that.rotateArrow, args: [that.streamArrow, newRotation], callbackScope: that});
 		}
-		
+
 	},
 
 	rotateArrow: function(arrow, newRotation){
@@ -416,7 +416,7 @@ let SkillGameAirship = new Phaser.Class({
 		if(!this.singleplayer){
 			socket.emit("sendToRoom", "sendToRoom",room, {'rotation': newRotation});
 		}
-		
+
 	},
 
 	checkIfWinState: function(){
@@ -446,9 +446,8 @@ let config = {
 	scene: [ SkillGameAirship ] // our newly created scene
   };
 
-let game;  
+let game;
 
   let init = function(){
 	game = new Phaser.Game(config);
   }
-  

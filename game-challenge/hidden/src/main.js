@@ -1,4 +1,4 @@
-import { bootstrap } from "eppsa-ksm-shared"
+import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
 import Boot from "./boot.js";
 import GameScene from "./gameScene.js";
 import Win from "./Win.js";
@@ -24,7 +24,7 @@ var config = {
 	parent: 'gameHere',
 	width: window.innerWidth,
 	height: window.innerHeight,
-	backgroundColor: "#ffffff", 
+	backgroundColor: "#ffffff",
 
 	scene: [
 	Boot,
@@ -47,6 +47,3 @@ var init = function(){
 		}, 1000)
 	}
 }
-
-
-

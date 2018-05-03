@@ -1,0 +1,19 @@
+FROM node:9.11.1
+
+# set working directory
+RUN mkdir /app
+WORKDIR /app
+
+# install and cache app dependencies
+COPY lib /app/lib
+COPY package.json /app/package.json
+COPY package-lock.json /app/package-lock.json
+RUN npm install
+
+COPY src /app/src
+COPY .babelrc /app/.babelrc
+COPY webpack.config.js /app/webpack.config.js
+
+
+# start app
+CMD ["npm", "start"]

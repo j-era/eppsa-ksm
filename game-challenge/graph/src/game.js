@@ -1,4 +1,4 @@
-import {bootstrap} from "eppsa-ksm-shared"
+import bootstrap from "../node_modules/eppsa-ksm-shared/functions/bootstrap"
 import Phaser from "./phaser.min"
 
 let gameData;
@@ -64,13 +64,13 @@ let GraphGame = new Phaser.Class({
 			this.controllPoints[key] = gameData.controlpoints[key];
 		}
 		//console.log("controlPoints" ,this.controllPoints);
-	
+
 		//other variables needed
 		this.agentSpawnRates = [];
 
 		this.currentAgentsOnBoard = 0;
-		this.currentAgents = {};	
-		this.currentAgentDistribution = {};	
+		this.currentAgents = {};
+		this.currentAgentDistribution = {};
 		this.currentAgentID = 0;
 
 		this.pathSelectionActive = false;
@@ -102,7 +102,7 @@ let GraphGame = new Phaser.Class({
 			}
 			this.load.image(gameData.assets[key].name, process.env.ASSET_SERVER_URI + "/" + gameData.assets[key].image.src);
 		}
-	}, 
+	},
 
 	create: function(data){
 		var that = this;
@@ -123,7 +123,7 @@ let GraphGame = new Phaser.Class({
 			this.moveLeft.setScale(this.width/this.moveLeft.width * 0.15);
 			this.moveLeft.flipX = !this.moveLeft.flipX;
 		}
-		
+
 		this.input.on('gameobjectdown', function(pointer, gameObject){
 			if(gameObject.name == 'agent'){
 				gameObject.timer.remove(false); //stopping autonomous movement
@@ -134,7 +134,7 @@ let GraphGame = new Phaser.Class({
 				gameObject.selected = true;
 
 				that.removePathVisuals(gameObject);
-				
+
 				that.pathSelectionActive = true;
 				that.currentPath[that.currentPathID] = {'agent' : gameObject, 'path' : []};
 				gameObject.setTint(0xff0000);
@@ -146,7 +146,7 @@ let GraphGame = new Phaser.Class({
 						that.currentPath[that.currentPathID].path.push(that.spawnedNodes[that.currentAgents[agent].nodeID]);
 					}
 				}
-				
+
 
 			}else if(gameObject.name == 'right'){
 				that.cameras.main.scrollX = that.width - that.width/5;
@@ -190,7 +190,7 @@ let GraphGame = new Phaser.Class({
 				});
 			}
 		});
-	
+
 		this.input.on('pointerup', function(){
 			if(that.pathSelectionActive){
 				that.pathSelectionActive = false;
@@ -216,12 +216,12 @@ let GraphGame = new Phaser.Class({
 					let agent = that.currentPath[that.currentPathID].agent;
 					let node = that.currentPath[that.currentPathID].path[0];
 					that.currentPath[that.currentPathID].agent.timer = that.time.addEvent({delay: 1000, callback: that.moveAgentToNextNode, args: [agent, node], callbackScope: that});
-				} 
-				that.currentPathID ++;				
+				}
+				that.currentPathID ++;
 			}
-			
+
 		});
-		
+
 		gameCallbacks.showTimeline(this.timer);
 		gameCallbacks.startTimelineClock();
 		this.gameTimer = this.time.addEvent({delay: 1000 * this.timer, callback: this.onGameEnd, callbackScope: this, startAt: 0 });
@@ -286,7 +286,7 @@ let GraphGame = new Phaser.Class({
 			}
 			that.changeDirection(agent);
 		}
-		
+
 		let check = that.checkControlPoint(agent.lastNode.id, node.id, nextNode.id);
 
 		if(check == "crash"){
@@ -352,15 +352,15 @@ let GraphGame = new Phaser.Class({
 							}
 							if(that.currentAgents[otherAgentID].img.selected){
 								that.pathSelectionActive = false;
-								
+
 								that.graphicsPath.forEach(function(element){
 									element.clear();
 								});
 								that.currentPath[that.currentPathID].agent.selected = false;
 								that.graphicsPath = [];
-								that.pathCounter = 0;										
-								that.currentPathID ++;	
-								
+								that.pathCounter = 0;
+								that.currentPathID ++;
+
 							}
 							if(that.currentAgents[otherAgentID].img.graphicsPath){
 								that.removePathVisuals(that.currentAgents[otherAgentID].img);
@@ -369,9 +369,9 @@ let GraphGame = new Phaser.Class({
 							agentPush.lastNode = node;
 							that.moveAgentToNextNode(agentPush, nextNode);
 						}
-							
+
 					}
-						
+
 				}
 				that.spawnedNodes[nextNode.id].agentOnNode = currentlyMovingAgent.id;
 
@@ -395,7 +395,7 @@ let GraphGame = new Phaser.Class({
 					}
 					that.time.addEvent({delay: 1000 * additionalWaiting, callback: that.rotateImage, args: [controlPoint.image, controlPoint.degree], callbackScope: that});
 				}
-				
+
 				if(pathID != null){
 					that.currentPath[pathID].path.shift();
 					if(that.currentPath[pathID].path[1] != undefined){
@@ -421,10 +421,10 @@ let GraphGame = new Phaser.Class({
 					agent.lastNode = node;
 					agent.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[nextNode.id].nodePauseTime + additionalWaiting), callback: that.moveAgentToNextNode, args: [agent, nextNode], callbackScope: that});
 				}
-				
+
 			}
 		});
-			
+
 	},
 
 	changeDirection: function(agent){
@@ -467,7 +467,7 @@ let GraphGame = new Phaser.Class({
 					case "up":
 						this.makeUTurn(agent);
 						break
-					case "down":	
+					case "down":
 						break;
 					case "left":
 						this.turnRight(agent);
@@ -482,7 +482,7 @@ let GraphGame = new Phaser.Class({
 						this.turnLeft(agent);
 						break
 					case "down":
-						this.turnRight(agent);	
+						this.turnRight(agent);
 						break;
 					case "left":
 						this.makeUTurn(agent);
@@ -496,7 +496,7 @@ let GraphGame = new Phaser.Class({
 						this.turnRight(agent);
 						break
 					case "down":
-						this.turnLeft(agent);	
+						this.turnLeft(agent);
 						break;
 					case "left":
 						break;
@@ -560,7 +560,7 @@ let GraphGame = new Phaser.Class({
 			yoyo: false,
 			repeat: 0,
 			onComplete: function(){
-				
+
 				var crashedCar1 = that.add.image(crashCar.x, crashCar.y, "redCarCrashed");
 				crashedCar1.setScale(that.height/crashedCar1.height * 0.2);
 				crashedCar1.angle = crashCar.angle;
@@ -590,7 +590,7 @@ let GraphGame = new Phaser.Class({
 				image.destroy();
 				image = null;
 			}
-		})	
+		})
 	},
 
 	calculateScore: function(){
@@ -652,7 +652,7 @@ let GraphGame = new Phaser.Class({
 			if(this.nodes[node].nodeState == "start" /*or startExit*/){
 				this.startNodes.push({'id': this.nodes[node].nodeID, 'x': this.xPosToScreen(this.nodes[node].xPosition), 'y': this.yPosToScreen(this.nodes[node].yPosition)});
 			}
-			
+
 			if(currentNode.skin != ''){
 				this.node.img = that.add.sprite(this.xPosToScreen(currentNode.xPosition),this.yPosToScreen(currentNode.yPosition), currentNode.skin).setInteractive();
 				this.node.img.setScale(this.height/this.node.img.height * 0.3)
@@ -673,7 +673,7 @@ let GraphGame = new Phaser.Class({
 			if(gameData.designModeOn == "true"){
 				that.add.text(this.xPosToScreen(currentNode.xPosition), this.yPosToScreen(currentNode.yPosition), that.nodes[node].nodeID, {fill: '#ffffff'});
 			}
-			
+
 			/*let controllPoint = this.controllPoints[currentNode.nodeID];
 			if(controllPoint && controllPoint.skin != ''){
 				console.log(currentNode.nodeID);
@@ -687,14 +687,14 @@ let GraphGame = new Phaser.Class({
 					lineTemp.pos1y = that.nodes[node].yPosition;
 					lineTemp.pos2x = that.nodes[element].xPosition;
 					lineTemp.pos2y = that.nodes[element].yPosition;
-	
+
 					if(that.lines.length == 0){
 							var graphics = that.add.graphics({fillStyle: {color: that.lineColor}});
 							let middleLine = new Phaser.Geom.Line(that.xPosToScreen(that.nodes[node].xPosition), that.yPosToScreen(that.nodes[node].yPosition), that.xPosToScreen(that.nodes[element].xPosition), that.yPosToScreen(that.nodes[element].yPosition));
-	
+
 							var length = Phaser.Geom.Line.Length(middleLine);
 							var points = middleLine.getPoints(length/10);
-	
+
 							for (var i = 0; i < points.length; i++)
 							{
 								var p = points[i];
@@ -711,10 +711,10 @@ let GraphGame = new Phaser.Class({
 						if(insert){
 							var graphics = that.add.graphics({fillStyle: {color: that.lineColor}});
 							let middleLine = new Phaser.Geom.Line(that.xPosToScreen(that.nodes[node].xPosition), that.yPosToScreen(that.nodes[node].yPosition), that.xPosToScreen(that.nodes[element].xPosition), that.yPosToScreen(that.nodes[element].yPosition));
-		
+
 							var length = Phaser.Geom.Line.Length(middleLine);
 							var points = middleLine.getPoints(length/10);
-		
+
 							for (var i = 0; i < points.length; i++)
 							{
 								var p = points[i];
@@ -725,9 +725,9 @@ let GraphGame = new Phaser.Class({
 					}
 				});
 			}
-			
+
 			this.spawnedNodes.push(this.node);
-			this.node.img.setDepth(1);	
+			this.node.img.setDepth(1);
 		}
 		console.log('spawned Nodes ', this.spawnedNodes);
 	},
@@ -757,16 +757,16 @@ let GraphGame = new Phaser.Class({
 
 		var random_num = rand(0, total_weight);
     	var weight_sum = 0;
-     
+
 		for (var i = 0; i < list.length; i++) {
 			weight_sum += weight[i];
 			weight_sum = +weight_sum.toFixed(2);
-			
+
 			if (random_num <= weight_sum) {
 				return list[i];
 			}
 		}
-	
+
 	},
 
 	removePathVisuals: function(agent){
@@ -784,7 +784,7 @@ let GraphGame = new Phaser.Class({
 				element.clear();
 			});
 		}
-		
+
 	},
 
 	destroyAgent: function(agentID){
@@ -890,7 +890,7 @@ let GraphGame = new Phaser.Class({
 			this.spawnedNodes[startNode.id].agentOnNode = this.currentAgentID;
 			this.currentAgentID ++;
 			this.currentAgentsOnBoard ++;
-		
+
 			//if agent was spawned, start his movement
 			newAgent.img.lastNode = startNode;
 			newAgent.img.timer = this.time.addEvent({delay: 1000 * newAgent.pauseTime, callback: this.moveAgentToNextNode, args: [newAgent.img, startNode], callbackScope: this});
@@ -903,7 +903,7 @@ let GraphGame = new Phaser.Class({
 		let score = this.calculateScore();
 		gameCallbacks.finishChallenge(score)
 	}
-	
+
 });
 
 let game;
@@ -917,10 +917,8 @@ let init = function(){
 		backgroundColor: gameData.backgroundColor,
 		parent: 'game',
 		displayVisibilityChange: true,
-		scene: [ GraphGame] 
+		scene: [ GraphGame]
 	};
 
 	game = new Phaser.Game(config);
 }
-   
-  
