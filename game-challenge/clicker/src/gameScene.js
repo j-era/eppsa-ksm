@@ -183,6 +183,7 @@ class GameScene extends Phaser.Scene {
         tier1TimeBonus: this.sys.game.gameData.score.tier1TimeBonus,
         tier2TimeBonus: this.sys.game.gameData.score.tier2TimeBonus,
         tier3TimeBonus: this.sys.game.gameData.score.tier3TimeBonus,
+        sessionLength: this.sys.game.gameData.score.sessionLength,
         gameFactor: this.sys.game.shared.config.clickerScoreFactor
       })
 		  this.points = scoreCalc.getScore();
