@@ -17,7 +17,7 @@ const Container = styled.div`
   flex-direction: column;
   flex-grow: 1;
   transition: transform 500ms ease;
-  animation: slideDown 3s;
+  animation: ${props => props.showScore ? "slideDown 3s;" : ";"}
 
   @keyframes slideDown {
       0% {transform: translateY(0vw);}
@@ -72,37 +72,22 @@ const TimerBar = styled(TimerBarComponent)`
   width: 50%;
 `
 
-export default class Background extends React.Component {
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.score !== prevState.score) {
-      return { score: nextProps.score }
-    }
-
-    return null
-  }
-
-  constructor(props) {
-    super(props)
-    this.state = { score: props.score }
-  }
-
-  render() {
-    return (
-      <Container
-        className={ this.props.className }
-        isBannerVisible={ isBannerVisible(this.props.gameState) }
-        key={ this.props.score }>
-        <BannerContainer visible={ isBannerVisible(this.props.gameState) }>
-          <Banner>{ this.props.bannerText }</Banner>
-        </BannerContainer>
-        <BackgroundArcSVG />
-        { this.props.gameState === "CHALLENGE" && renderTimerBar(this.props) }
-        <BackgroundContainer>
-          { this.props.children }
-        </BackgroundContainer>
-      </Container>
-    )
-  }
+export default function Background(props) {
+  return (
+    <Container
+      className={ props.className }
+      isBannerVisible={ isBannerVisible(props.gameState) }
+      showScore={ props.showScore }>
+      <BannerContainer visible={ isBannerVisible(props.gameState) }>
+        <Banner>{ props.bannerText }</Banner>
+      </BannerContainer>
+      <BackgroundArcSVG />
+      { props.gameState === "CHALLENGE" && renderTimerBar(props) }
+      <BackgroundContainer>
+        { props.children }
+      </BackgroundContainer>
+    </Container>
+  )
 }
 
 function renderTimerBar(props) {

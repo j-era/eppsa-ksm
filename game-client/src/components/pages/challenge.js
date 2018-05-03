@@ -19,6 +19,7 @@ export default function Challenge(props) {
         if (iframe) {
           // eslint-disable-next-line no-param-reassign
           iframe.setAttribute("allow", "camera")
+          // eslint-disable-next-line no-param-reassign
           iframe.onload = () =>
             props.onChallengeReady(iframe.contentWindow, props.challengeData, props.challengeUri)
         }

@@ -58,7 +58,7 @@ const ScoreElement = styled.div`
 const ScoreIncrement = styled(ScoreElement)`
   color: black;
   background-color: white;
-  animation: animIncrement 3s;
+  animation: ${props => props.show ? "animIncrement 3s;" : ";"}
   transform: translate(2.5em) scale(0, 0);
   opacity: 0;
 `
@@ -66,7 +66,7 @@ const ScoreIncrement = styled(ScoreElement)`
 const OldScore = styled(ScoreElement)`
   color: white;
   background-color: ${props => props.theme.colors.area};
-  animation: animOldScore 3s;
+  animation: ${props => props.show ? "animOldScore 3s;" : ";"}
   transform: translate(2.5em) scale(0, 0);
   opacity: 0;
   transition:
@@ -77,7 +77,7 @@ const OldScore = styled(ScoreElement)`
 const NewScore = styled(ScoreElement)`
   color: white;
   background-color: ${props => props.theme.colors.area};
-  animation: animNewScore 3s;
+  animation: ${props => props.show ? "animNewScore 3s;" : ";"}
   transform: translate(-2.5em);
   opacity: 0;
   transition:
@@ -89,9 +89,9 @@ export default class Score extends React.Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.score !== prevState.score) {
       return { score: nextProps.score, diff: nextProps.score - prevState.score }
+    } else {
+      return { score: nextProps.score, diff: 0 }
     }
-
-    return null
   }
 
   constructor(props) {
@@ -100,24 +100,22 @@ export default class Score extends React.Component {
   }
 
   render() {
+    const { show } = this.props
     return (
       <ScoreContainer>
         <AnimationContainer>
-          <ScoreIncrement
-            key={ `${this.props.score}-increment` }
-            visible={ this.state.visible }>{
+          <ScoreIncrement show={ show }>
+            {
               this.state.diff
             }
           </ScoreIncrement>
-          <OldScore
-            key={ `${this.props.score}-old` }
-            visible={ this.state.visible }>{
+          <OldScore show={ show }>
+            {
               this.state.score - this.state.diff
             }
           </OldScore>
-          <NewScore
-            key={ `${this.props.score}-new` }
-            visible={ this.state.visible }>{
+          <NewScore show={ show }>
+            {
               this.state.score
             }
           </NewScore>

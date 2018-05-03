@@ -93,6 +93,17 @@ export function addScore(state = 0, action) {
   }
 }
 
+export function showScore(state = false, action) {
+  switch (action.type) {
+    case types.SHOW_SCORE:
+      return true
+    case types.HIDE_SCORE:
+      return false
+    default:
+      return state
+  }
+}
+
 export function showTimeline(state = false, action) {
   switch (action.type) {
     case types.SHOW_TIMELINE:
