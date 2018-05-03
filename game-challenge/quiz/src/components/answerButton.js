@@ -92,8 +92,8 @@ function selectionColor(selection, theme, colorType = "area") {
 function AnswerButton(props) {
   return (
     <StyledButton { ...props }>
-      <Title { ...props }>{ props.title }:</Title>
-      <Answer { ...props }>{ props.answer }</Answer>
+      <Title selection={ props.selection } blinking={ props.blinking }>{ props.title }:</Title>
+      <Answer selection={ props.selection } blinking={ props.blinking }>{ props.answer }</Answer>
     </StyledButton>
   )
 }
