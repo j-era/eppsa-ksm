@@ -177,21 +177,18 @@ export default class TimerBar extends React.Component {
     this.countdown = 0
 
     this.state = {
-      countdown: props.seconds
+      countdown: props.initSeconds
     }
   }
 
   componentDidUpdate() {
-    if (this.props.isRunning && !this.interval) {
-      setTimeout(() => this.setState({ countdown: this.props.seconds }), 0)
-      this.interval = setInterval(() => {
-        if (this.state.countdown <= 0) {
-          clearInterval(this.interval)
-        }
-        this.setState({ countdown: this.state.countdown - 1 })
-      }, 1000)
-    } else if (!this.props.isRunning && this.interval) {
-      setTimeout(() => this.setState({ countdown: 0 }))
+    if (this.props.isRunning) {
+      if (!this.interval) {
+        this.interval = setInterval(() => {
+          this.setState({ countdown: this.state.countdown - 1 })
+        }, 1000)
+      }
+    } else {
       clearInterval(this.interval)
     }
   }
