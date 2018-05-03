@@ -18,8 +18,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
 
-  padding-top: ${props => props.theme.layout.cardPadding}vw;
-  padding-bottom: ${props => props.theme.layout.cardPadding}vw;
+  padding: ${props => props.theme.layout.cardPadding};
 
   height: 100%;
 
