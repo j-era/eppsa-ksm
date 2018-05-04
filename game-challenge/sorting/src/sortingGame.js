@@ -92,15 +92,16 @@ export default class SortingGame extends React.Component {
 
   renderConfirmButton() {
     return (
-      <Button onClick={ this.confirm }>
+      <Button onClick={ () => this.confirm(true) }>
         { this.props.data.shared.texts.confirm }<NextIcon />
       </Button>
     )
   }
 
-  confirm() {
+  confirm(stopTimeline) {
     clearTimeout(this.timeLineTimeout)
-    this.props.callbacks.stopTimelineClock()
+
+    stopTimeline && this.props.callbacks.stopTimelineClock()
 
     const { score } = this.props.data.challenge
     const { shared } = this.props.data
