@@ -13,6 +13,8 @@ const Container = styled(ItemComponent)`
   justify-content: center;
   align-items: center;
 
+  font-size: ${props => props.theme.font.button.size}vw;
+
   background-image: ${props => `url(${props.image.src})`};
 
   width: 95%;
