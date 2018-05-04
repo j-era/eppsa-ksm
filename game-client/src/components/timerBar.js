@@ -1,8 +1,7 @@
 import React from "react"
 import styled, { css, keyframes } from "styled-components"
-import FuseIcon from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_1.svg"
-import FuseIcon1 from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_2.svg"
-import FuseIcon2 from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_3.svg"
+import Fuse1SVG from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_1.svg"
+import Fuse2SVG from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_2.svg"
 
 const Container = styled.div`
   display: flex;
@@ -89,7 +88,9 @@ const Fuse = styled.div`
   position: absolute;
   left: 98%;
 
-  transform: translateX(-${props => props.isRunning ? 0 : (1 - props.countdown / props.seconds) * 100}%);
+  transform: translateX(
+    -${props => props.isRunning ? 0 : (1 - props.countdown / props.seconds) * 100}%
+  );
 
   ${props => props.isRunning ? css`
     animation: ${decreaseFuse()} ${props => props.seconds}s linear forwards};
@@ -97,7 +98,7 @@ const Fuse = styled.div`
   `}
 `
 
-const FuseSVG1 = styled(FuseIcon)`
+const StyledFuse1SVG = styled(Fuse1SVG)`
   position: absolute;
 
   width: 30px;
@@ -107,10 +108,10 @@ const FuseSVG1 = styled(FuseIcon)`
 
   opacity: 1;
 
-  animation: ${blinkOut()} 2.0s steps(1, end) 0s infinite;
+  animation: ${blinkOut()} 1.5s steps(1, end) 0s infinite;
 `
 
-const FuseSVG2 = styled(FuseIcon1)`
+const StyledFuse2SVG = styled(Fuse2SVG)`
   position: absolute;
 
   width: 30px;
@@ -120,7 +121,7 @@ const FuseSVG2 = styled(FuseIcon1)`
 
   opacity: 0;
 
-  animation: ${blinkIn()} 2.0s steps(1, end) 0s infinite;
+  animation: ${blinkIn()} 1.5s steps(1, end) 0s infinite;
 `
 
 function blinkOut() {
@@ -199,7 +200,7 @@ export default class TimerBar extends React.Component {
             seconds={ this.props.initSeconds }
             countdown={ this.state.countdown }
             isRunning={ this.props.isRunning } />
-          { this.renderFuse() }
+          { this.props.isRunning && this.state.countdown !== 0 && this.renderFuse() }
         </ProgressBar>
       </Container>
     )
@@ -211,8 +212,8 @@ export default class TimerBar extends React.Component {
         seconds={ this.props.initSeconds }
         countdown={ this.state.countdown }
         isRunning={ this.props.isRunning } >
-        <FuseSVG1 />
-        <FuseSVG2 />
+        <StyledFuse1SVG />
+        <StyledFuse2SVG />
       </Fuse>
     )
   }
