@@ -74,8 +74,8 @@ class GameScene extends Phaser.Scene {
 				scope.boatPic.x += scope.xPosToScreen(scope.sys.game.gameData.MovementX);
 				scope.tweens.add( {
 					targets: scope.boatPic,
-					scaleX: scope.boatPic.scaleX * 1.2,
-					scaleY: scope.boatPic.scaleY * 1.2,
+					scaleX: scope.boatPic.scaleX * 1.04,
+					scaleY: scope.boatPic.scaleY * 1.04,
 					ease: 'Linear',
 					duration: 50,
 					repeat: 0,
@@ -186,24 +186,58 @@ class GameScene extends Phaser.Scene {
 	}
 
 	gameWin(Timeleft){
-    const scoreCalc = new ScoreCalculation(
-      Timeleft,
-      {
-        reward: this.sys.game.gameData.score.reward,
-        tier1TimeBonus: this.sys.game.gameData.score.tier1TimeBonus,
-        tier2TimeBonus: this.sys.game.gameData.score.tier2TimeBonus,
-        tier3TimeBonus: this.sys.game.gameData.score.tier3TimeBonus,
-        sessionLength: this.sys.game.gameData.score.sessionLength,
-        gameFactor: this.sys.game.shared.config.clickerScoreFactor
-      })
-		  this.points = scoreCalc.getScore();
+    	const scoreCalc = new ScoreCalculation(
+			Timeleft,
+			{
+				reward: this.sys.game.gameData.score.reward,
+				tier1TimeBonus: this.sys.game.gameData.score.tier1TimeBonus,
+				tier2TimeBonus: this.sys.game.gameData.score.tier2TimeBonus,
+				tier3TimeBonus: this.sys.game.gameData.score.tier3TimeBonus,
+				sessionLength: this.sys.game.gameData.score.sessionLength,
+				gameFactor: this.sys.game.shared.config.clickerScoreFactor
+			})
+		this.points = scoreCalc.getScore();
+		let scope = this;
+		let lineColor = this.sys.game.color.replace("#", "0x");
+		var line = new Phaser.Geom.Line(-20, window.innerHeight/2 + window.innerHeight/20, window.innerWidth + 20, window.innerHeight/2 - window.innerHeight/20);
+		var circle = new Phaser.Geom.Circle(window.innerWidth/2, window.innerHeight/2, window.innerHeight/6);
+		this.CountdownGraphics = this.add.graphics({ lineStyle: { width: window.innerHeight/6, color: lineColor }, fillStyle: { color: lineColor } });
+			
+		this.CountdownGraphics.strokeLineShape(line);
+		this.CountdownGraphics.fillCircleShape(circle);
+		this.CountdownGraphics.setDepth(10);
 
-		this.sys.game.completeChallenge(this.points.score + this.points.bonus);
+		let countdownTextSize = window.innerHeight/10;
+		let finalScore = this.points.score + this.points.bonus;
+		this.countdownText = this.add.text(window.innerWidth/2, window.innerHeight/2, "+ " + finalScore, {font: countdownTextSize + 'px Arial', fill: '#ffffff'}).setDepth(10).setOrigin(0.5);
+
+
+		setTimeout(function(){
+			scope.sys.game.completeChallenge(scope.points.score + scope.points.bonus);
+		}, 1000);
+
 	}
 
 	gameLose(){
-		//this.scene.start('LoseScene');
-		this.sys.game.completeChallenge(0);
+		let scope = this;
+		let lineColor = this.sys.game.color.replace("#", "0x");
+		var line = new Phaser.Geom.Line(-20, window.innerHeight/2 + window.innerHeight/20, window.innerWidth + 20, window.innerHeight/2 - window.innerHeight/20);
+		var circle = new Phaser.Geom.Circle(window.innerWidth/2, window.innerHeight/2, window.innerHeight/6);
+		this.CountdownGraphics = this.add.graphics({ lineStyle: { width: window.innerHeight/6, color: lineColor }, fillStyle: { color: lineColor } });
+			
+		this.CountdownGraphics.strokeLineShape(line);
+		this.CountdownGraphics.fillCircleShape(circle);
+		this.CountdownGraphics.setDepth(10);
+
+		let countdownTextSize = window.innerHeight/10;
+		this.countdownText = this.add.text(window.innerWidth/2, window.innerHeight/2, "GAME OVER", {font: countdownTextSize + 'px Arial', fill: '#ffffff'}).setDepth(10).setOrigin(0.5);
+
+
+		setTimeout(function(){
+			scope.sys.game.completeChallenge(0);
+		}, 1000);
+
+		//this.sys.game.completeChallenge(0);
 	}
 
 }
