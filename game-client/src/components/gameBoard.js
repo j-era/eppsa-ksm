@@ -22,22 +22,22 @@ function GameBoard(props) {
 
   // sort games into stations
   connectedGames
-  .filter((game) => game.challengeNumber <= maxChallenges)
-  .forEach(game => {
-    const station = stations[game.challengeNumber - 1]
+    .filter((game) => game.challengeNumber <= maxChallenges)
+    .forEach(game => {
+      const station = stations[game.challengeNumber - 1]
 
-    if (game.gameId === getCookie("gameId")) {
-      ownGame = game
-    }
+      if (game.gameId === getCookie("gameId")) {
+        ownGame = game
+      }
 
-    if (station.length < 3 || game.gameId === getCookie("gameId")) {
-      station.push(game)
-    }
+      if (station.length < 3 || game.gameId === getCookie("gameId")) {
+        station.push(game)
+      }
 
-    if (station.length > 3) {
-      station.shift()
-    }
-  })
+      if (station.length > 3) {
+        station.shift()
+      }
+    })
 
   const Board = styled.div`
     height: 100%;

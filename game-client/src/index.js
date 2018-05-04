@@ -98,7 +98,7 @@ async function findResumableGame() {
 }
 
 function calculateCardWidth(maxWidth, maxHeight) {
-  const winRatio = (window.innerWidth * maxWidth) / (window.innerHeight * maxHeight)
+  const winRatio = window.innerWidth * maxWidth / (window.innerHeight * maxHeight)
   return winRatio < CARD_RATIO ? maxWidth * 100 : maxWidth * (CARD_RATIO / winRatio) * 100
 }
 

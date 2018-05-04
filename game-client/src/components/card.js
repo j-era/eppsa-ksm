@@ -1,10 +1,10 @@
 import styled from "styled-components"
 
 export default styled.div`
-  width: ${props => 
+  width: ${props =>
     props.small ?
-    props.theme.layout.smallCardViewWidth :
-    props.theme.layout.largeCardViewWidth}vw;
+      props.theme.layout.smallCardViewWidth :
+      props.theme.layout.largeCardViewWidth}vw;
   height: ${props => props.small ?
     props.theme.layout.smallCardViewWidth / props.theme.layout.cardRatio :
     props.theme.layout.largeCardViewWidth / props.theme.layout.cardRatio}vw;
