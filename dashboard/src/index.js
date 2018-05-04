@@ -1,3 +1,4 @@
+import { injectGlobalStyle, calculateTheme } from "eppsa-ksm-shared"
 import omit from "lodash.omit"
 import mapValues from "lodash.mapvalues"
 import React from "react"
@@ -16,6 +17,8 @@ const store = applyMiddleware(createLogger())(createStore)(combineReducers(reduc
 const contentServer = new ContentServer(process.env.CONTENT_SERVER_URI)
 const gameServer = new GameServer(process.env.GAME_SERVER_URI)
 
+injectGlobalStyle(process.env.STATIC_SERVER_URI)
+
 Promise.all([
   contentServer.getData().then(transform),
   gameServer.findRecentFinishedGames(),
@@ -26,11 +29,15 @@ Promise.all([
   store.dispatch(actions.updateHighscoreGames(highscoreGames))
   store.dispatch(actions.updateConnectedGames(connectedGames))
 
+  const theme = calculateTheme()
+
   render(
     <Provider store={ store }>
-      <Application
-        content={ content }
-        assetServerUri={ process.env.ASSET_SERVER_URI } />
+      <ThemeProvider theme={ theme }>
+        <Application
+          content={ content }
+          assetServerUri={ process.env.ASSET_SERVER_URI } />
+      </ThemeProvider>
     </Provider>,
     document.getElementById("app")
   )
