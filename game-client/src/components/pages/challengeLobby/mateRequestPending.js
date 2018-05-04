@@ -47,8 +47,7 @@ class MateRequestPending extends React.Component {
   }
 
   render() {
-    const { assetServerUri, connectedGames, content, mateRequests } = this.props
-    const mateRequest = mateRequests.values().next().value
+    const { assetServerUri, connectedGames, content, mateRequest } = this.props
     const { name } = connectedGames.find(({ gameId }) => mateRequest === gameId)
     const title = content.shared.texts.mateRequestPendingTitle.replace(/\${mate}/g, name)
 
@@ -78,8 +77,7 @@ class MateRequestPending extends React.Component {
   }
 
   async accept() {
-    const { dispatch, gameServer, mateRequests } = this.props
-    const mateRequest = mateRequests.values().next().value
+    const { dispatch, gameServer, mateRequest } = this.props
 
     this.setState({ acceptClicked: true })
     await delay(100)
@@ -87,8 +85,7 @@ class MateRequestPending extends React.Component {
   }
 
   async decline() {
-    const { dispatch, gameServer, mateRequests } = this.props
-    const mateRequest = mateRequests.values().next().value
+    const { dispatch, gameServer, mateRequest } = this.props
 
     this.setState({ declineClicked: true })
     await delay(100)
