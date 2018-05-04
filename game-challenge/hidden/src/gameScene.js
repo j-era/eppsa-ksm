@@ -334,7 +334,7 @@ gameWin() {
 
 
 	setTimeout(function(){
-		scope.sys.game.completeChallenge(this.points);
+		scope.sys.game.completeChallenge(scope.points);
 	}, 1000);
 
 	
