@@ -231,6 +231,8 @@ export function wrongQrCodeScanned(state = false, action) {
       return true
     case types.CORRECT_QR_CODE_SCANNED:
       return false
+    case types.UPDATE_GAME_STATE:
+      return false
     default:
       return state
   }
