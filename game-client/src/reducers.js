@@ -179,7 +179,7 @@ export function requestedMate(state = noRequestedMate, action) {
     case types.CANCEL_REQUEST_MATE:
       return noRequestedMate
     case types.UPDATE_CONNECTED:
-      return state.requestState === requestedMateStates.PENDING
+      return !action.connected && state.requestState === requestedMateStates.PENDING
         ? { ...state, requestState: requestedMateStates.NOT_AVAILABLE }
         : state
     case types.UPDATE_CONNECTED_GAMES:
