@@ -69,6 +69,10 @@ const Progress = styled.div`
 
   background: ${props => props.theme.colors.background};
 
+  border-radius: ${props => props.theme.layout.borderRadius};
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+
   transform-origin: left;
 
   ${props => props.isRunning ? css`
@@ -86,7 +90,7 @@ const Fuse = styled.div`
   height: 100%;
 
   position: absolute;
-  left: 98%;
+  left: 95%;
 
   transform: translateX(
     -${props => props.isRunning ? 0 : (1 - props.countdown / props.seconds) * 100}%
