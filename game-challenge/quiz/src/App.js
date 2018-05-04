@@ -46,12 +46,11 @@ export default class App extends React.Component {
   componentDidMount() {
     this.startTime = new Date()
     const { sessionLength } = this.props.content.challenge.score
-    const { showTimeline, startTimelineClock, stopTimelineClock } = this.props.callbacks
+    const { showTimeline, startTimelineClock } = this.props.callbacks
     showTimeline(sessionLength)
     startTimelineClock()
     this.timeLineTimeout = setTimeout(() => {
       this.setState({ confirmed: true })
-      stopTimelineClock()
       this.nextChallenge(true)
     }, sessionLength * 1000)
     setTimeout(() => this.setState({ visible: true }), 0)
