@@ -98,7 +98,6 @@ function renderTimerBar(props) {
     <TimerBarContainer>
       <TimerBar
         initSeconds={ props.challengeData.challenge.score.sessionLength }
-        seconds={ props.timelineClockTime }
         isRunning={ props.timelineClockRunning } />
     </TimerBarContainer>
   )

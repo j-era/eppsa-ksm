@@ -1,5 +1,5 @@
 import React from "react"
-import styled, { keyframes } from "styled-components"
+import styled, { css, keyframes } from "styled-components"
 import FuseIcon from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_1.svg"
 import FuseIcon1 from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_2.svg"
 import FuseIcon2 from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_3.svg"
@@ -65,15 +65,17 @@ const ProgressBar = styled.div`
 `
 
 const Progress = styled.div`
-  width: 100%;
+  width: ${props => props.isRunning ? 100 : props.countdown / props.seconds * 100}%;
   height: 100%;
 
   background: ${props => props.theme.colors.background};
 
   transform-origin: left;
 
-  animation: ${decrease()} ${props => props.seconds}s linear forwards;
-  animation-play-state: ${props => props.playState};
+  ${props => props.isRunning ? css`
+    animation: ${decrease()} ${props => props.seconds}s linear forwards};
+  ` : `
+  `}
 `
 
 const Fuse = styled.div`
@@ -87,10 +89,12 @@ const Fuse = styled.div`
   position: absolute;
   left: 98%;
 
-  transform: translateX(-100%);
+  transform: translateX(-${props => props.isRunning ? 0 : (1 - props.countdown / props.seconds) * 100}%);
 
-  animation: ${decreaseFuse()} ${props => props.seconds}s linear forwards;
-  animation-play-state: ${props => props.playState};
+  ${props => props.isRunning ? css`
+    animation: ${decreaseFuse()} ${props => props.seconds}s linear forwards};
+  ` : `
+  `}
 `
 
 const FuseSVG1 = styled(FuseIcon)`
@@ -188,8 +192,9 @@ export default class TimerBar extends React.Component {
         </TimeBallContainer>
         <ProgressBar>
           <Progress
-            seconds={ this.props.isRunning ? this.props.seconds : this.props.initSeconds }
-            playState={ this.props.isRunning ? "running" : "paused" } />
+            seconds={ this.props.initSeconds }
+            countdown={ this.state.countdown }
+            isRunning={ this.props.isRunning } />
           { this.renderFuse() }
         </ProgressBar>
       </Container>
@@ -199,8 +204,9 @@ export default class TimerBar extends React.Component {
   renderFuse() {
     return (
       <Fuse
-        playState={ this.props.isRunning ? "running" : "paused" }
-        seconds={ this.props.isRunning ? this.props.seconds : this.props.initSeconds } >
+        seconds={ this.props.initSeconds }
+        countdown={ this.state.countdown }
+        isRunning={ this.props.isRunning } >
         <FuseSVG1 />
         <FuseSVG2 />
       </Fuse>
