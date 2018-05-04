@@ -129,9 +129,11 @@ class NewGameNameSelection extends React.Component {
   }
 
   async confirm() {
-    this.setState({ confirmed: true })
-    await delay(100)
-    this.props.dispatch(updateGameState(gameStates.INITIAL_GAME_MANUAL))
+    if (this.state.nameEntered) {
+      this.setState({ confirmed: true })
+      await delay(100)
+      this.props.dispatch(updateGameState(gameStates.INITIAL_GAME_MANUAL))
+    }
   }
 }
 
