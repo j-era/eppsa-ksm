@@ -1,5 +1,5 @@
 import React from "react"
-import styled from "styled-components"
+import styled, { keyframes } from "styled-components"
 
 const ScoreContainer = styled.div`
   position: absolute;
@@ -8,28 +8,6 @@ const ScoreContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  @keyframes animOldScore {
-    0% {transform: translate(-7.5em) scale(0, 0); opacity: 0;}
-    20% {transform: translate(-7.5em) scale(1, 1); opacity: 1;}
-    40% {transform: translate(-7.5em) scale(1, 1); opacity: 1;}
-    60% {transform: translate(-2.5em); opacity: 1;}
-    80% {transform: translate(-2.5em) scale(1, 1); opacity: 0;}
-  }
-
-  @keyframes animIncrement {
-      0% {transform: translate(2.5em) scale(0, 0); opacity: 0;}
-      20% {transform: translate(2.5em) scale(1, 1); opacity: 1;}
-      40% {transform: translate(2.5em) scale(1, 1); opacity: 1;}
-      60% {transform: translate(-2.5em); opacity: 1;}
-      80% {transform: translate(-2.5em) scale(1, 1); opacity: 0;}
-  }
-
-  @keyframes animNewScore {
-      0% {transform: translate(-2.5em); opacity: 0;}
-      60% {transform: translate(-2.5em); opacity: 0;}
-      80% {transform: translate(-2.5em) scale(1, 1); opacity: 1;}
-      100% {transform: translate(-2.5em) scale(0, 0); opacity: 0;}
-  }
 `
 
 const AnimationContainer = styled.div`
@@ -50,40 +28,56 @@ const ScoreElement = styled.div`
   height: 1.2em;
   width: 5em;
   border-radius: ${props => props.theme.layout.borderRadius};
-  transition:
-      transform 150ms cubic-bezier(0.2, 0.7, 0.55, 1.2),
-      opacity  150ms ease;
 `
 
-const ScoreIncrement = styled(ScoreElement)`
+const AddScore = styled(ScoreElement)`
   color: black;
-  background-color: white;
-  animation: ${props => props.show ? "animIncrement 3s;" : ";"}
-  transform: translate(2.5em) scale(0, 0);
+  animation: ${props => props.show ? `${keyframesAddScore()} 3s;` : ";"}
   opacity: 0;
 `
 
 const OldScore = styled(ScoreElement)`
   color: white;
   background-color: ${props => props.theme.colors.area};
-  animation: ${props => props.show ? "animOldScore 3s;" : ";"}
-  transform: translate(2.5em) scale(0, 0);
+  animation: ${props => props.show ? `${keyframesOldScore()} 3s;` : ";"}
   opacity: 0;
-  transition:
-      transform 150ms cubic-bezier(0.2, 0.7, 0.55, 1.2),
-      opacity  150ms ease;
 `
 
 const NewScore = styled(ScoreElement)`
   color: white;
   background-color: ${props => props.theme.colors.area};
-  animation: ${props => props.show ? "animNewScore 3s;" : ";"}
+  animation: ${props => props.show ? `${keyframesNewScore()} 3s;` : ";"}
   transform: translate(-2.5em);
   opacity: 0;
-  transition:
-      transform 150ms cubic-bezier(0.2, 0.7, 0.55, 1.2),
-      opacity  150ms ease;
 `
+
+function keyframesOldScore() {
+  return keyframes`
+    0% {transform: translate(-7.5em) scale(0); opacity: 0;}
+    20% {transform: translate(-7.5em) scale(1); opacity: 1;}
+    60% {transform: translate(-2.5em) scale(1); opacity: 1;}
+    80% {transform: translate(-2.5em) scale(1); opacity: 1;}
+    100% {transform: translate(-2.5em) scale(0); opacity: 0;}
+  `
+}
+
+function keyframesAddScore() {
+  return keyframes`
+    0% {transform: translate(2.5em) scale(0); opacity: 0;}
+    20% {transform: translate(2.5em) scale(1); opacity: 1;}
+    60% {transform: translate(-2.5em) scale(1); opacity: 1;}
+    80% {transform: translate(-2.5em) scale(1); opacity: 1;}
+    100% {transform: translate(-2.5em) scale(0); opacity: 0;}
+  `
+}
+
+function keyframesNewScore() {
+  return keyframes`
+    60% {transform: translate(-2.5em) scale(1); opacity: 0;}
+    80% {transform: translate(-2.5em) scale(1); opacity: 1;}
+    100% {transform: translate(-2.5em) scale(0); opacity: 0;}
+  `
+}
 
 export default class Score extends React.Component {
   constructor(props) {
@@ -104,11 +98,11 @@ export default class Score extends React.Component {
     return (
       <ScoreContainer>
         <AnimationContainer>
-          <ScoreIncrement show={ show }>
+          <AddScore show={ show }>
             + {
               this.props.score - this.state.oldScore
             }
-          </ScoreIncrement>
+          </AddScore>
           <OldScore show={ show }>
             {
               this.state.oldScore
