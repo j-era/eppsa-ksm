@@ -186,6 +186,24 @@ class GameScene extends Phaser.Scene {
 	}
 
 	gameWin(Timeleft){
+		let scope = this;
+		let startY = this.boatPic.y;
+
+		this.tweens.add( {
+			targets: scope.boatPic,
+			y: startY + 10,
+			ease: 'Linear',
+			duration: 250,
+			repeat: -1,
+			yoyo: true,
+			onYoyo: function(){
+				//scope.boatPic.angle = 0;
+			},
+			onComplete: function() {
+				//scope.boatPic.angle = 0;
+			}
+		})
+
     	const scoreCalc = new ScoreCalculation(
 			Timeleft,
 			{
@@ -197,7 +215,6 @@ class GameScene extends Phaser.Scene {
 				gameFactor: this.sys.game.shared.config.clickerScoreFactor
 			})
 		this.points = scoreCalc.getScore();
-		let scope = this;
 		let lineColor = this.sys.game.color.replace("#", "0x");
 		var line = new Phaser.Geom.Line(-20, window.innerHeight/2 + window.innerHeight/20, window.innerWidth + 20, window.innerHeight/2 - window.innerHeight/20);
 		var circle = new Phaser.Geom.Circle(window.innerWidth/2, window.innerHeight/2, window.innerHeight/6);
