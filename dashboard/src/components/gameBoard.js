@@ -1,6 +1,16 @@
 import React from "react"
+import styled, { css, withTheme } from "styled-components"
 
-export default function GameBoard({ connectedGames, content }) {
+// const Board = styled.div`
+//   height: 100%;
+//   width: ${(maxChallenges + 1) * 20}%;
+
+//   display: flex;
+
+//   transform: translate(${40 - 20 * challengeNumber}vw);
+// `
+
+function GameBoard({ connectedGames, content }) {
   return (
     <div style={ { height: "50px" } }>
       { renderGames(connectedGames, content.challenges) }
@@ -8,6 +18,8 @@ export default function GameBoard({ connectedGames, content }) {
     </div>
   )
 }
+
+export default withTheme(GameBoard)
 
 function renderGames(connectedGames, challenges) {
   const stepPercent = 100 / Object.keys(challenges).length

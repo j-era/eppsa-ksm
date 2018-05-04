@@ -21,6 +21,22 @@ module.exports = {
             options: { minimize: true }
           }
         ]
+      },
+      {
+        oneOf: [
+          {
+            test: /\.svg$/,
+            use: "svg-react-loader"
+          },
+          {
+            test: /\.(js|jsx|mjs)$/,
+            include: ["./src", "./lib"],
+            loader: require.resolve("babel-loader"),
+            options: {
+              cacheDirectory: true,
+            },
+          },
+        ],
       }
     ]
   },
@@ -30,13 +46,14 @@ module.exports = {
       filename: "./index.html"
     }),
     new webpack.EnvironmentPlugin([
-      "CONTENT_SERVER_URI",
       "ASSET_SERVER_URI",
-      "GAME_SERVER_URI"
+      "CONTENT_SERVER_URI",
+      "GAME_SERVER_URI",
+      "STATIC_SERVER_URI"
     ])
   ],
   devServer: {
     disableHostCheck: true,
     host: "0.0.0.0"
   }
-};
+}
