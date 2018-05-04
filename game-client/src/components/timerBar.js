@@ -1,8 +1,7 @@
 import React from "react"
-import styled, { keyframes } from "styled-components"
-import FuseIcon from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_1.svg"
-import FuseIcon1 from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_2.svg"
-import FuseIcon2 from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_3.svg"
+import styled, { css, keyframes } from "styled-components"
+import Fuse1SVG from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_1.svg"
+import Fuse2SVG from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_2.svg"
 
 const Container = styled.div`
   display: flex;
@@ -65,15 +64,20 @@ const ProgressBar = styled.div`
 `
 
 const Progress = styled.div`
-  width: 100%;
+  width: ${props => props.isRunning ? 100 : props.countdown / props.seconds * 100}%;
   height: 100%;
 
   background: ${props => props.theme.colors.background};
 
+  border-radius: ${props => props.theme.layout.borderRadius};
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+
   transform-origin: left;
 
-  animation: ${decrease()} ${props => props.seconds}s linear forwards;
-  animation-play-state: ${props => props.playState};
+  ${props => props.isRunning ? css`
+    animation: ${decrease()} ${props => props.seconds}s linear forwards};
+  ` : null}
 `
 
 const Fuse = styled.div`
@@ -85,15 +89,18 @@ const Fuse = styled.div`
   height: 100%;
 
   position: absolute;
-  left: 98%;
+  left: 95%;
 
-  transform: translateX(-100%);
+  transform: translateX(
+    -${props => props.isRunning ? 0 : (1 - props.countdown / props.seconds) * 100}%
+  );
 
-  animation: ${decreaseFuse()} ${props => props.seconds}s linear forwards;
-  animation-play-state: ${props => props.playState};
+  ${props => props.isRunning ? css`
+    animation: ${decreaseFuse()} ${props => props.seconds}s linear forwards};
+  ` : null}
 `
 
-const FuseSVG1 = styled(FuseIcon)`
+const StyledFuse1SVG = styled(Fuse1SVG)`
   position: absolute;
 
   width: 30px;
@@ -106,7 +113,7 @@ const FuseSVG1 = styled(FuseIcon)`
   animation: ${blinkOut()} 1.5s steps(1, end) 0s infinite;
 `
 
-const FuseSVG2 = styled(FuseIcon1)`
+const StyledFuse2SVG = styled(Fuse2SVG)`
   position: absolute;
 
   width: 30px;
@@ -116,25 +123,12 @@ const FuseSVG2 = styled(FuseIcon1)`
 
   opacity: 0;
 
-  animation: ${blinkIn()} 1.5s steps(1, start) 0.5s infinite;
-`
-
-const FuseSVG3 = styled(FuseIcon2)`
-  position: absolute;
-
-  width: 30px;
-  height: 30px;
-
-  fill: ${props => props.theme.colors.background};
-
-  opacity: 0;
-
-  animation: ${blinkIn()} 1.5s steps(1, start) 1s infinite;
+  animation: ${blinkIn()} 1.5s steps(1, end) 0s infinite;
 `
 
 function blinkOut() {
   return keyframes`
-    33.33% {
+    50% {
       opacity: 0.0;
     }
   `
@@ -142,7 +136,7 @@ function blinkOut() {
 
 function blinkIn() {
   return keyframes`
-    33.33% {
+    50% {
       opacity: 1.0;
     }
   `
@@ -170,21 +164,59 @@ function decreaseFuse() {
   `
 }
 
-export default (props) =>
-  <Container { ...props }>
-    <TimeBallContainer><TimeBall><Text>{ props.seconds }</Text></TimeBall></TimeBallContainer>
-    <ProgressBar>
-      <Progress seconds={ props.seconds } playState={ props.running ? "running" : "paused" } />
-      { props.running && renderFuse(props) }
-    </ProgressBar>
-  </Container>
+export default class TimerBar extends React.Component {
+  constructor(props) {
+    super(props)
 
-function renderFuse(props) {
-  return (
-    <Fuse seconds={ props.seconds } >
-      <FuseSVG1 />
-      <FuseSVG2 />
-      <FuseSVG3 />
-    </Fuse>
-  )
+    this.countdown = 0
+
+    this.state = {
+      countdown: props.initSeconds
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.isRunning) {
+      if (!this.interval) {
+        this.interval = setInterval(() => {
+          if (this.state.countdown === 0) {
+            clearInterval(this.interval)
+          } else {
+            this.setState({ countdown: this.state.countdown - 1 })
+          }
+        }, 1000)
+      }
+    } else {
+      clearInterval(this.interval)
+    }
+  }
+
+  render() {
+    return (
+      <Container { ...this.props }>
+        <TimeBallContainer>
+          <TimeBall><Text>{ this.state.countdown }</Text></TimeBall>
+        </TimeBallContainer>
+        <ProgressBar>
+          <Progress
+            seconds={ this.props.initSeconds }
+            countdown={ this.state.countdown }
+            isRunning={ this.props.isRunning } />
+          { this.props.isRunning && this.state.countdown !== 0 && this.renderFuse() }
+        </ProgressBar>
+      </Container>
+    )
+  }
+
+  renderFuse() {
+    return (
+      <Fuse
+        seconds={ this.props.initSeconds }
+        countdown={ this.state.countdown }
+        isRunning={ this.props.isRunning } >
+        <StyledFuse1SVG />
+        <StyledFuse2SVG />
+      </Fuse>
+    )
+  }
 }

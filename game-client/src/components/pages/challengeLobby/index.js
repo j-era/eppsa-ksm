@@ -21,9 +21,16 @@ export default function ChallengeLobby(props) {
     }
   }
 
-  if (props.mateRequests.size > 0) {
-    return <MateRequestPending { ...props } />
+  const { mateRequests, connectedGames } = props
+  const mateRequest = Array.from(mateRequests).find((gameId) => connected(gameId, connectedGames))
+
+  if (mateRequest) {
+    return <MateRequestPending { ...props } mateRequest={ mateRequest } />
   }
 
   return <Lobby { ...props } />
+}
+
+function connected(gameId, connectedGames) {
+  return connectedGames.find((game) => game.gameId === gameId && game.inLobby)
 }

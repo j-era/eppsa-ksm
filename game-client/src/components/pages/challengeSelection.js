@@ -79,8 +79,10 @@ class ChallengeSelection extends React.Component {
   }
 
   onClick() {
-    clearTimeout(this.timeout)
-    this.setState({ developmentView: true })
+    if (process.env.NODE_ENV === "development") {
+      clearTimeout(this.timeout)
+      this.setState({ developmentView: true })
+    }
   }
 
   selectChallengeType(name) {
