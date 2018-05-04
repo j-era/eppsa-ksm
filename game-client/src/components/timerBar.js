@@ -77,8 +77,7 @@ const Progress = styled.div`
 
   ${props => props.isRunning ? css`
     animation: ${decrease()} ${props => props.seconds}s linear forwards};
-  ` : `
-  `}
+  ` : null}
 `
 
 const Fuse = styled.div`
@@ -98,8 +97,7 @@ const Fuse = styled.div`
 
   ${props => props.isRunning ? css`
     animation: ${decreaseFuse()} ${props => props.seconds}s linear forwards};
-  ` : `
-  `}
+  ` : null}
 `
 
 const StyledFuse1SVG = styled(Fuse1SVG)`
