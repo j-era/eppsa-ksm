@@ -13,7 +13,7 @@ class Boot extends Phaser.Scene {
 	create () {
 
 		var timedEvent = this.time.addEvent({
-			delay: 2000,
+			delay: 0,
 			callback: this.start,
 			callbackScope: this
 		});
@@ -32,7 +32,7 @@ class Boot extends Phaser.Scene {
 		this.tempTags = this.questions[this.random].tag.split(',');
 		this.QuesText = this.questions[this.random].question;
 
-		this.ques = this.add.text(window.innerWidth/2, window.innerHeight/1.5, 'Hey',{ font: window.innerHeight/35 + 'px Arial', fill: 'grey'});
+		/*this.ques = this.add.text(window.innerWidth/2, window.innerHeight/1.5, 'Hey',{ font: window.innerHeight/35 + 'px Arial', fill: 'grey'});
 		this.ques.setText(this.QuesText);
 		this.ques.setOrigin(0.5,0,5);
 
@@ -49,7 +49,7 @@ class Boot extends Phaser.Scene {
 		this.icon = this.add.image(window.innerWidth/2, window.innerHeight/3, "icon").setScale(0.3);
 		this.icon.setScale(window.innerWidth/this.icon.width * 0.4);
 		
-		graphics.setDepth(1);
+		graphics.setDepth(1);*/
 		
 	}
 
