@@ -35,10 +35,12 @@ const NextIcon = styled(ButtonIcon)`
 const TopLabel = styled.div`
   text-align: center;
   margin-bottom: ${props => props.theme.layout.mediumSpacing}vw;
+  font-size: ${props => props.theme.font.text.size}vw;
 `
 
 const BottomLabel = styled.div`
   text-align: center;
+  font-size: ${props => props.theme.font.text.size}vw;
 `
 
 export default class SortingGame extends React.Component {

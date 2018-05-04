@@ -38,7 +38,7 @@ const Container = styled(ItemComponent)`
 
 const ItemText = styled.div`
   color: ${props => props.color};
-  font-size: ${props => props.theme.font.text.size}vw;
+  font-size: ${props => props.theme.font.button.size}vw;
 `
 
 const dragSource = {
