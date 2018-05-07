@@ -71,7 +71,7 @@ class SortingItem extends React.Component {
   render() {
     let content =
       // `div` around a styled component is required by react-dnd
-      <div style={ { display: "flex", justifyContent: "center" } }>
+      <div style={ getDivStyle(this.props) }>
         <Container image={ this.props.item.image } { ...this.props }>
           <ItemText color={ this.props.item.color }>{ this.props.item.text }</ItemText>
         </Container>
@@ -82,6 +82,14 @@ class SortingItem extends React.Component {
     content = this.props.connectDragPreview(content)
 
     return content
+  }
+}
+
+function getDivStyle({item, isWrong}) {
+  return {
+    display: "flex",
+    justifyContent: "center",
+    order: `${isWrong ? item.correctPosition : 0}`
   }
 }
 
