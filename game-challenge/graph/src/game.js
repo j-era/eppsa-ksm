@@ -134,6 +134,14 @@ let GraphGame = new Phaser.Class({
 
 				that.pathSelectionActive = true;
 				that.currentPath[that.currentPathID] = {'agent' : gameObject, 'path' : []};
+
+				gameObject.selectedTween = that.tweens.add({
+					targets: gameObject,
+					alpha: 0.5,
+					duration: 500,
+					yoyo: true,
+					repeat: -1,
+				});
 				gameObject.setTint(0xff0000);
 
 				//push current nodeID into path
@@ -201,6 +209,11 @@ let GraphGame = new Phaser.Class({
 				that.currentPath[that.currentPathID].agent.selectedNodes = that.selectedNodes;
 				for (var agent in that.currentAgents){
 					that.currentAgents[agent].img.clearTint();
+
+					if(that.currentAgents[agent].img.selectedTween){
+						that.currentAgents[agent].img.selectedTween.stop();
+						that.currentAgents[agent].img.alpha = 1;
+					}
 				}
 				/*that.graphicsPath.forEach(function(element){
 					element.clear();
@@ -258,6 +271,13 @@ let GraphGame = new Phaser.Class({
 		}
 
 		if(that.nodes[nextNode.id].nodeState == 'exit' && currentlyMovingAgent.assignedDestination.indexOf(nextNode.id) == -1){
+			that.tweens.add({
+				targets: currentlyMovingAgent.img,
+				x: currentlyMovingAgent.img.x +10,
+				duration: 200,
+				yoyo: true,
+				repeat: 2,
+			});
 			console.log("agent can't enter here");
 			if(pathID != null){
 				currentlyMovingAgent.img.selectedNodes.forEach(function(element){
@@ -353,6 +373,9 @@ let GraphGame = new Phaser.Class({
 							}
 							if(that.currentAgents[otherAgentID].img.selected){
 								that.pathSelectionActive = false;
+
+								that.currentAgents[otherAgentID].img.selectedTween.stop();
+								that.currentAgents[otherAgentID].img.alpha = 1;
 
 								that.graphicsPath.forEach(function(element){
 									element.clear();
