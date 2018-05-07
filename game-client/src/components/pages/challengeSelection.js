@@ -29,19 +29,33 @@ class ChallengeSelection extends React.Component {
     super(props)
 
     const { content, challengeNumber } = this.props
-    const challengeTypes = omit(content.challenges[challengeNumber].challengeTypes, "template")
+    this.challengeTypes = omit(content.challenges[challengeNumber].challengeTypes, "template")
 
     this.state = {
-      names: Object.keys(challengeTypes),
+      names: Object.keys(this.challengeTypes),
       developmentView: false
     }
   }
 
   componentDidMount() {
+    const challanges = new Map()
+
+    this.state.names.forEach(challengeName => {
+      const challenge = this.challengeTypes[challengeName]
+
+      if (challanges.has(challenge.template)) {
+        challanges.get(challenge.template).push(challengeName)
+      } else {
+        challanges.set(challenge.template, [challengeName])
+      }
+    })
+
+    const challengeTypes = Array.from(challanges.keys())
+
     this.timeout = setTimeout(() => {
-      const { names } = this.state
-      const index = Math.floor(Math.random() * names.length)
-      this.selectChallengeType(names[index])
+      const challengeType = challengeTypes[Math.floor(Math.random() * challengeTypes.length)]
+      const index = Math.floor(Math.random() * challanges.get(challengeType).length)
+      this.selectChallengeType(challanges.get(challengeType)[index])
     }, SELECTION_TIMEOUT)
   }
 
