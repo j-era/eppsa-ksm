@@ -176,8 +176,13 @@ let GraphGame = new Phaser.Class({
 
 				//console.log("Checking nodes");
 				that.spawnedNodes.forEach(function(element){
-					let radius = gameData.edgeThreshold;
-					console.log(radius);
+					let dpr = 1;
+					//console.log("dpr", window.devicePixelRatio);
+					if(window.devicePixelRatio != 1){
+						dpr = window.devicePixelRatio;
+					}
+					let radius = gameData.edgeThreshold + dpr;
+					//console.log(radius);
 					if( x - radius <= element.img.x && element.img.x <= x + radius && y - radius  <= element.img.y &&  element.img.y <= y + radius){
 						//console.log("found node " + element.id);
 						var pathLength = that.currentPath[that.currentPathID].path.length;
