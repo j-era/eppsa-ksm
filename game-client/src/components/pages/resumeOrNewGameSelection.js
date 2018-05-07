@@ -65,10 +65,10 @@ class ResumeOrNewGameSelection extends React.Component {
           <FramedIcon
             scale={ 0.78 }
             color={ this.props.theme.colors.primary }
-            iconSrc={ `${assetServerUri}/${avatarContent.medium.src}` }
-            iconSrcSet={ `${assetServerUri}/${avatarContent.small.src} 250w,
-                          ${assetServerUri}/${avatarContent.medium.src} 500w,
-                          ${assetServerUri}/${avatarContent.large.src} 1000w` } />
+            iconSrc={ `${assetServerUri}/${avatarContent.mediumCentered.src}` }
+            iconSrcSet={ `${assetServerUri}/${avatarContent.smallCentered.src} 250w,
+                          ${assetServerUri}/${avatarContent.mediumCentered.src} 500w,
+                          ${assetServerUri}/${avatarContent.largeCentered.src} 1000w` } />
           <StyledDescription>
             { content.shared.texts.resumeGameText }
           </StyledDescription>

@@ -83,10 +83,10 @@ class NewGameAvatarConfirmation extends React.Component {
         onClick={ () => dispatch(requestMate(game.gameId, game.name, gameServer)) }>
         <FramedIcon
           color={ this.props.theme.colors.area }
-          iconSrc={ `${assetServerUri}/${content.avatars[game.avatar].medium.src}` }
-          iconSrcSet={ `${assetServerUri}/${content.avatars[game.avatar].small.src} 250w,
-                        ${assetServerUri}/${content.avatars[game.avatar].medium.src} 500w,
-                        ${assetServerUri}/${content.avatars[game.avatar].large.src} 1000w` } />
+          iconSrc={ `${assetServerUri}/${content.avatars[game.avatar].mediumCentered.src}` }
+          iconSrcSet={ `${assetServerUri}/${content.avatars[game.avatar].smallCentered.src} 250w,
+                        ${assetServerUri}/${content.avatars[game.avatar].mediumCentered.src} 500w,
+                        ${assetServerUri}/${content.avatars[game.avatar].largeCentered.src} 1000w` } />
         <Description>{ game.name }</Description>
       </Game>
     )
@@ -106,4 +106,3 @@ function findGamesInLobby(challengeNumber, connectedGames, gameId) {
     gameId !== game.gameId && challengeNumber === game.challengeNumber && game.inLobby
   )
 }
-
