@@ -46,8 +46,6 @@ let GraphGame = new Phaser.Class({
 		console.log(this.agentClasses);
 
 		//nodeAttributes
-		//this.nodeCount = 35; 		//Defines the amount nodes for the graph.
-
 		this.nodes = {};
 		for(var key in gameData.nodes){
 			if(key == "template"){
@@ -121,9 +119,6 @@ let GraphGame = new Phaser.Class({
 		if(gameData.showScrollButton == "true"){
 			this.moveRight = this.add.image(this.width - this.width/10, this.height - this.height/20, 'button').setName("right").setInteractive();
 			this.moveRight.setScale(this.width/this.moveRight.width * 0.15);
-			//this.moveLeft = this.add.image(2 * this.width - this.width/2, this.height - this.height/20, 'button').setScale(0.2, 0.2).setName("left").setInteractive();
-			//this.moveLeft.setScale(this.width/this.moveLeft.width * 0.15);
-			//this.moveLeft.flipX = !this.moveLeft.flipX;
 		}
 
 		this.input.on('gameobjectdown', function(pointer, gameObject){
@@ -277,7 +272,7 @@ let GraphGame = new Phaser.Class({
 				});
 			}
 			agent.lastNode = node;
-			currentlyMovingAgent.img.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[nextNode.id].nodePauseTime), callback: that.moveAgentToNextNode, args: [currentlyMovingAgent.img, nextNode], callbackScope: that});
+			currentlyMovingAgent.img.timer = that.time.addEvent({delay: 1000 * (currentlyMovingAgent.pauseTime + that.nodes[nextNode.id].nodePauseTime), callback: that.moveAgentToNextNode, args: [currentlyMovingAgent.img, node], callbackScope: that});
 			return;
 		}
 
