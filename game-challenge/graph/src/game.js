@@ -4,12 +4,14 @@ import Phaser from "./phaser.min"
 let gameData;
 let gameCallbacks;
 let shared;
+let color;
 
 bootstrap((data, callbacks) => {
 	console.log(data, callbacks);
 	gameData = data.challenge;
 	gameCallbacks = callbacks.callbacks;
 	shared = data.shared;
+	color = data.color;
 	init();
   })
 
@@ -917,9 +919,27 @@ let GraphGame = new Phaser.Class({
 	},
 
 	onGameEnd: function(){
-		console.log('game over');
-		let score = this.calculateScore();
-		gameCallbacks.finishChallenge(score)
+		this.cameras.main.scrollX = 0;
+		this.scrolled = false;
+
+		let lineColor = color.replace("#", "0x");
+		var line = new Phaser.Geom.Line(-20, window.innerHeight/2 + window.innerHeight/20, window.innerWidth + 20, window.innerHeight/2 - window.innerHeight/20);
+		var circle = new Phaser.Geom.Circle(window.innerWidth/2, window.innerHeight/2, window.innerHeight/6);
+		this.CountdownGraphics = this.add.graphics({ lineStyle: { width: window.innerHeight/6, color: lineColor }, fillStyle: { color: lineColor } });
+			
+		this.CountdownGraphics.strokeLineShape(line);
+		this.CountdownGraphics.fillCircleShape(circle);
+		this.CountdownGraphics.setDepth(10);
+
+		let countdownTextSize = window.innerHeight/10;
+		this.countdownText = this.add.text(window.innerWidth/2, window.innerHeight/2, "+ " + this.calculateScore(), {font: countdownTextSize + 'px Arial', fill: '#ffffff'}).setDepth(10).setOrigin(0.5);
+		
+		let that = this;
+		setTimeout(function(){
+			let score = that.calculateScore();
+			gameCallbacks.finishChallenge(score)
+		}, 1000);
+
 	}
 
 });
