@@ -927,6 +927,21 @@ let GraphGame = new Phaser.Class({
 				this.spawnAgent();
 				return;
 			}
+			var nodeIndex = Math.floor(Math.random() * this.startNodes.length);
+
+			if(gameData.showScrollButton == "true" && this.agentCounter == 0){
+				nodeIndex = 0;
+				if(gameData.firstAgentToSpawn != undefined){
+					this.agentClasses.forEach(function(element){
+						if(element.name == gameData.firstAgentToSpawn){
+							agentType = element;
+						}
+					})
+				}
+			}
+			if(gameData.showScrollButton == "true" && this.agentCounter == 1){
+				nodeIndex = 2;
+			}
 
 			//adjust current distribution values
 			if(this.currentAgentDistribution[agentType.name] == undefined){
@@ -935,14 +950,6 @@ let GraphGame = new Phaser.Class({
 				this.currentAgentDistribution[agentType.name].value ++;
 			}
 
-			var nodeIndex = Math.floor(Math.random() * this.startNodes.length);
-
-			if(gameData.showScrollButton == "true" && this.agentCounter == 0){
-				nodeIndex = 0;
-			}
-			if(gameData.showScrollButton == "true" && this.agentCounter == 1){
-				nodeIndex = 2;
-			}
 
 			//copying values of selected startNode to not impact the startNode by later changes
 			var startNode = {};
