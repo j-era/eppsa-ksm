@@ -116,7 +116,9 @@ export default class SortingGame extends React.Component {
         this.setState({
           isConfirmed: true,
           isCorrect: false,
-          isWrong: true
+          isWrong: true,
+          items: orderBy(this.state.items, ["correctPosition"])
+
         })
         return
       }
@@ -146,8 +148,6 @@ export default class SortingGame extends React.Component {
   proceed() {
     const { hideTimeline } = this.props.callbacks
     hideTimeline()
-
-    console.log(`${this.points.score}, ${this.points.bonus}`)
 
     this.props.callbacks.finishChallenge(this.points.score + this.points.bonus)
   }
