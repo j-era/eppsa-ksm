@@ -119,8 +119,8 @@ let GraphGame = new Phaser.Class({
 		this.spawnAgent();
 
 		if(gameData.showScrollButton == "true"){
-			this.moveRight = this.add.image(this.width - this.width/10, this.height - this.height/20, 'button').setName("right").setInteractive();
-			this.moveRight.setScale(this.height/this.moveRight.height * 0.10);
+			this.moveRight = this.add.image(this.width - this.width/7, this.height - this.height/20, 'button').setName("right").setInteractive();
+			this.moveRight.setScale(this.height/this.moveRight.height * 0.20);
 		}
 
 		this.input.on('gameobjectdown', function(pointer, gameObject){
@@ -157,11 +157,13 @@ let GraphGame = new Phaser.Class({
 
 			}else if(gameObject.name == 'right'){
 				gameObject.name = "left";
+				gameObject.x = gameObject.x + that.width/10;
 				gameObject.flipX = !gameObject.flipX;
 				that.cameras.main.scrollX = that.width - that.width/5;
 				this.scrolled = true;
 			}else if(gameObject.name == 'left'){
 				gameObject.name = "right";
+				gameObject.x = gameObject.x - that.width/10;
 				gameObject.flipX = !gameObject.flipX;
 				this.cameras.main.scrollX = 0;
 				this.scrolled = false;
@@ -764,7 +766,7 @@ let GraphGame = new Phaser.Class({
 							let middleLine = new Phaser.Geom.Line(that.xPosToScreen(that.nodes[node].xPosition), that.yPosToScreen(that.nodes[node].yPosition), that.xPosToScreen(that.nodes[element].xPosition), that.yPosToScreen(that.nodes[element].yPosition));
 
 							var length = Phaser.Geom.Line.Length(middleLine);
-							var points = middleLine.getPoints(length/12);
+							var points = middleLine.getPoints(length/12/window.devicePixelRatio);
 
 							for (var i = 0; i < points.length; i++)
 							{
@@ -784,7 +786,7 @@ let GraphGame = new Phaser.Class({
 							let middleLine = new Phaser.Geom.Line(that.xPosToScreen(that.nodes[node].xPosition), that.yPosToScreen(that.nodes[node].yPosition), that.xPosToScreen(that.nodes[element].xPosition), that.yPosToScreen(that.nodes[element].yPosition));
 
 							var length = Phaser.Geom.Line.Length(middleLine);
-							var points = middleLine.getPoints(length/12);
+							var points = middleLine.getPoints(length/12/window.devicePixelRatio);
 
 							for (var i = 0; i < points.length; i++)
 							{
