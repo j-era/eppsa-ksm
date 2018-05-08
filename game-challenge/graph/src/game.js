@@ -73,6 +73,8 @@ let GraphGame = new Phaser.Class({
 		this.currentAgentDistribution = {};
 		this.currentAgentID = 0;
 
+		this.agentCounter = 0;
+
 		this.pathSelectionActive = false;
 		this.currentPathID = 0;
 		this.currentPath = {};
@@ -895,6 +897,13 @@ let GraphGame = new Phaser.Class({
 
 			var nodeIndex = Math.floor(Math.random() * this.startNodes.length);
 
+			if(gameData.showScrollButton == "true" && this.agentCounter == 0){
+				nodeIndex = 0;
+			}
+			if(gameData.showScrollButton == "true" && this.agentCounter == 1){
+				nodeIndex = 2;
+			}
+
 			//copying values of selected startNode to not impact the startNode by later changes
 			var startNode = {};
 			for (var prop in this.startNodes[nodeIndex]){
@@ -937,6 +946,8 @@ let GraphGame = new Phaser.Class({
 			//if agent was spawned, start his movement
 			newAgent.img.lastNode = startNode;
 			newAgent.img.timer = this.time.addEvent({delay: 1000 * newAgent.pauseTime, callback: this.moveAgentToNextNode, args: [newAgent.img, startNode], callbackScope: this});
+			
+			this.agentCounter ++;
 		}
 		this.spawnAgentTimer = this.time.addEvent({delay: this.spawnInterval * 1000, callback: this.spawnAgent, callbackScope: this});
 	},
