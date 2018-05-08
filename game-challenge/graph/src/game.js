@@ -726,17 +726,24 @@ let GraphGame = new Phaser.Class({
 				this.startNodes.push({'id': this.nodes[node].nodeID, 'x': this.xPosToScreen(this.nodes[node].xPosition), 'y': this.yPosToScreen(this.nodes[node].yPosition)});
 			}
 
+			let scaleNoSkin = 0.05;
+			let scaleSkin = 0.4;
+
+			if(currentNode.sizeMultiplier != undefined){
+				scaleNoSkin, scaleSkin = currentNode.sizeMultiplier;
+			}
+
 			if(currentNode.skin != ''){
 				this.node.img = that.add.sprite(this.xPosToScreen(currentNode.xPosition),this.yPosToScreen(currentNode.yPosition), currentNode.skin).setInteractive();
-				this.node.img.setScale(this.height/this.node.img.height * 0.3)
+				this.node.img.setScale(this.width/this.node.img.width * scaleSkin);
 			}else{
 				this.node.img = that.add.sprite(this.xPosToScreen(currentNode.xPosition),this.yPosToScreen(currentNode.yPosition), currentNode.nodeState).setInteractive();
-				this.node.img.setScale(this.height/this.node.img.height * 0.03)
+				this.node.img.setScale(this.width/this.node.img.width * scaleNoSkin);
 			}
 			this.node.connectedTo = currentNode.connectedTo;
 			this.node.pauseTime = currentNode.nodePauseTime;
-			console.log(currentNode.edgeThreshold);
-			this.node.edgeThreshold = currentNode.edgeThreshold;
+			//console.log(currentNode.edgeThreshold);
+			//this.node.edgeThreshold = currentNode.edgeThreshold;
 			this.node.id = currentNode.nodeID;
 			this.node.img.setName('node');
 			if(gameData.drawLinesAndNodes != "true"){
