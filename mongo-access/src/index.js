@@ -11,6 +11,7 @@ database.connect().then(() => {
   const server = io(3000)
 
   server.on("connect", socket => {
+    console.log(`client ${socket.id} connected`)
     socket.on("request", async (request, response) => {
       const result = await database.querry(request)
       response(result)
