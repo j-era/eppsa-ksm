@@ -252,7 +252,7 @@ let GraphGame = new Phaser.Class({
 	moveAgentToNextNode(agent, node, pathID = null){
 		let that = this;
 		//console.log(agent.id);
-		//console.log(node);
+		//console.log("node to move to",node);
 		let nextNode = {};
 		//if agent has no path selected, move him randomly
 		if(pathID == null){
@@ -303,17 +303,36 @@ let GraphGame = new Phaser.Class({
 			return;
 		}
 
+		let offsetX = 0;
+		let offsetY = 0;
+		let controlPoint = that.checkWaitTime(node.id, nextNode.id);
+
 		if(gameData.rotateAgents == "true"){
-			if(Math.floor(agent.x) != Math.floor(nextNode.x)){
-				//Math.floor(agent.x) > Math.floor(nextNode.x) ? that.changeToLeft(agent) : that.changeToRight(agent);
-				Math.floor(agent.x) > Math.floor(nextNode.x) ? agent.nextDirection = "left" : agent.nextDirection = "right";
+			if(node.x == undefined){
+				node.x = this.xPosToScreen(this.nodes[node.id].xPosition);
+				node.y = this.yPosToScreen(this.nodes[node.id].yPosition);
 			}
-			if(Math.floor(agent.y) != Math.floor(nextNode.y)){
-				//Math.floor(agent.y) > Math.floor(nextNode.y) ? that.changeToStraight(agent) : that.changeToBackwards(agent);
-				Math.floor(agent.y) > Math.floor(nextNode.y) ? agent.nextDirection = "up" : agent.nextDirection = "down";
+			if(Math.floor(node.x) != Math.floor(nextNode.x)){
+				Math.floor(node.x) > Math.floor(nextNode.x) ? agent.nextDirection = "left" : agent.nextDirection = "right";
+				if(controlPoint){
+					if(controlPoint.waitTime != undefined){
+						offsetX = this.xPosToScreen(-5);
+					}
+				}
+				
+			}
+			if(Math.floor(node.y) != Math.floor(nextNode.y)){
+				Math.floor(node.y) > Math.floor(nextNode.y) ? agent.nextDirection = "up" : agent.nextDirection = "down";
+				if(controlPoint){
+					if(controlPoint.waitTime != undefined){
+						offsetY = this.yPosToScreen(5);
+					}
+				}
 			}
 			that.changeDirection(agent);
 		}
+		
+		
 
 		let check = that.checkControlPoint(agent.lastNode.id, node.id, nextNode.id);
 
@@ -341,8 +360,8 @@ let GraphGame = new Phaser.Class({
 
 		agent.tween = this.tweens.add({
 			targets: agent,
-			x: nextNode.x,
-			y: nextNode.y,
+			x: nextNode.x + offsetX,
+			y: nextNode.y + offsetY,
 			duration: distance * currentlyMovingAgent.speed,
 			yoyo: false,
 			repeat: 0,
@@ -417,7 +436,7 @@ let GraphGame = new Phaser.Class({
 				/*if(that.nodes[nextNode.id].nodePauseTime && that.nodes[nextNode.id].nodePauseTime != 0){
 					that.nodes[nextNode.id].timer = that.time.addEvent({delay: 1000 * that.nodes[nextNode.id].nodePauseTime, callback: that.rotateImage, args: [nextNode.id], callbackScope: that});
 				}*/
-				let controlPoint = that.checkWaitTime(node.id, nextNode.id);
+				//let controlPoint = that.checkWaitTime(node.id, nextNode.id);
 				let additionalWaiting = 0;
 
 				if(controlPoint){
@@ -573,8 +592,8 @@ let GraphGame = new Phaser.Class({
 	animateCrash: function(agent, node){
 		var ccDestX = agent.x;
 		var ccDestY = agent.y;
-		var crashCar = this.add.image(node.x, node.y, "crashCar");
-		crashCar.setScale(this.height/crashCar.height * 0.2);
+		var crashCar = this.add.image(node.x, node.y, "crashCar").setOrigin(1 - gameData.agentOriginX, gameData.agentOriginY);
+		crashCar.setScale(this.height/crashCar.height * 0.1);
 		switch (agent.currentDirection){
 			case "up":
 				crashCar.angle = 180;
@@ -601,12 +620,12 @@ let GraphGame = new Phaser.Class({
 			repeat: 0,
 			onComplete: function(){
 
-				var crashedCar1 = that.add.image(crashCar.x, crashCar.y, "redCarCrashed");
-				crashedCar1.setScale(that.height/crashedCar1.height * 0.2);
+				var crashedCar1 = that.add.image(crashCar.x, crashCar.y, "redCarCrashed").setOrigin(1 - gameData.agentOriginX, gameData.agentOriginY);
+				crashedCar1.setScale(that.height/crashedCar1.height * 0.1);
 				crashedCar1.angle = crashCar.angle;
 				that.fadeAndDestroy(crashedCar1);
 				var crashedCar2 = that.add.image(agent.x, agent.y, "blueCarCrashed");
-				crashedCar2.setScale(that.height/crashedCar1.height * 0.2);
+				crashedCar2.setScale(that.height/crashedCar1.height * 0.1);
 				crashedCar2.angle = agent.angle;
 				that.fadeAndDestroy(crashedCar2);
 
@@ -913,7 +932,11 @@ let GraphGame = new Phaser.Class({
 			var newAgent = {};
 			newAgent.img = this.add.image(startNode.x, startNode.y, agentType.name).setInteractive().setName('agent').setDepth(1).setAlpha(0);
 			newAgent.img.setOrigin(gameData.agentOriginX, gameData.agentOriginY);
-			newAgent.img.setScale(this.height/newAgent.img.height * 0.2);
+			let sizeMod = 0.2;
+			if(agentType.sizeMultiplier){
+				sizeMod = agentType.sizeMultiplier;
+			}
+			newAgent.img.setScale(this.height/newAgent.img.height * sizeMod);
 			newAgent.img.id = this.currentAgentID;
 			newAgent.type = agentType.name;
 			newAgent.id = this.currentAgentID;
