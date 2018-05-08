@@ -195,7 +195,7 @@ let GraphGame = new Phaser.Class({
 							var lastElement = that.currentPath[that.currentPathID].path[pathLength-1];
 							if(element.connectedTo.indexOf(lastElement.id) != -1){
 								let middleLine = new Phaser.Geom.Line(that.xPosToScreen(that.nodes[lastElement.id].xPosition), that.yPosToScreen(that.nodes[lastElement.id].yPosition), that.xPosToScreen(that.nodes[element.id].xPosition), that.yPosToScreen(that.nodes[element.id].yPosition));
-								that.graphicsPath[that.pathCounter] = that.add.graphics({lineStyle: {width: 4, color: that.pathColor}});
+								that.graphicsPath[that.pathCounter] = that.add.graphics({lineStyle: {width: that.xPosToScreen(1), color: that.pathColor}});
 								that.graphicsPath[that.pathCounter].strokeLineShape(middleLine);
 								that.currentPath[that.currentPathID].path.push(element);
 								that.selectedNodes.push(element.id);
@@ -764,12 +764,12 @@ let GraphGame = new Phaser.Class({
 							let middleLine = new Phaser.Geom.Line(that.xPosToScreen(that.nodes[node].xPosition), that.yPosToScreen(that.nodes[node].yPosition), that.xPosToScreen(that.nodes[element].xPosition), that.yPosToScreen(that.nodes[element].yPosition));
 
 							var length = Phaser.Geom.Line.Length(middleLine);
-							var points = middleLine.getPoints(length/10);
+							var points = middleLine.getPoints(length/12);
 
 							for (var i = 0; i < points.length; i++)
 							{
 								var p = points[i];
-								graphics.fillCircle(p.x - 1, p.y - 1, 2);
+								graphics.fillCircle(p.x - 1, p.y - 1, that.xPosToScreen(1));
 							}
 							that.lines.push(lineTemp);
 					}else{
@@ -784,12 +784,12 @@ let GraphGame = new Phaser.Class({
 							let middleLine = new Phaser.Geom.Line(that.xPosToScreen(that.nodes[node].xPosition), that.yPosToScreen(that.nodes[node].yPosition), that.xPosToScreen(that.nodes[element].xPosition), that.yPosToScreen(that.nodes[element].yPosition));
 
 							var length = Phaser.Geom.Line.Length(middleLine);
-							var points = middleLine.getPoints(length/10);
+							var points = middleLine.getPoints(length/12);
 
 							for (var i = 0; i < points.length; i++)
 							{
 								var p = points[i];
-								graphics.fillCircle(p.x - 1, p.y - 1, 2);
+								graphics.fillCircle(p.x - 1, p.y - 1, that.xPosToScreen(1));
 							}
 							that.lines.push(lineTemp);
 						}
