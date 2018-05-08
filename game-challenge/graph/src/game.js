@@ -120,7 +120,7 @@ let GraphGame = new Phaser.Class({
 
 		if(gameData.showScrollButton == "true"){
 			this.moveRight = this.add.image(this.width - this.width/10, this.height - this.height/20, 'button').setName("right").setInteractive();
-			this.moveRight.setScale(this.width/this.moveRight.width * 0.15);
+			this.moveRight.setScale(this.height/this.moveRight.height * 0.10);
 		}
 
 		this.input.on('gameobjectdown', function(pointer, gameObject){
