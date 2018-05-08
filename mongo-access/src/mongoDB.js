@@ -12,9 +12,9 @@ module.exports = class MongoDB {
     this.database = connection.db(this.databaseName)
   }
 
-  async querry(request) {
-    return await this.database.collection(request.collection)
-      .find(request.filter)
+  querry(request) {
+    return this.database.collection(request.collection)
+      .find(request.find)
       .sort(request.sort)
       .limit(request.limit).toArray()
   }

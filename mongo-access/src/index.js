@@ -16,7 +16,6 @@ database.connect().then(() => {
     res.end("hi")
   })
 
-
   io.on("connect", socket => {
     console.log(`client ${socket.id} connected`)
     socket.on("request", async (request, response) => {
