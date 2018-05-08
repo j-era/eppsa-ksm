@@ -135,6 +135,9 @@ let GraphGame = new Phaser.Class({
 				that.removePathVisuals(gameObject);
 
 				that.pathSelectionActive = true;
+				that.currentlyDrawingLineGraphics = that.add.graphics({lineStyle: {width: that.xPosToScreen(1), color: that.pathColor}});
+				that.currentlyDrawingLine = new Phaser.Geom.Line(gameObject.x, gameObject.y, 0, 0);
+
 				that.currentPath[that.currentPathID] = {'agent' : gameObject, 'path' : []};
 
 				gameObject.selectedTween = that.tweens.add({
@@ -178,6 +181,10 @@ let GraphGame = new Phaser.Class({
 					x += that.width - that.width/5;
 				}
 
+				that.currentlyDrawingLine.x2 = x;
+				that.currentlyDrawingLine.y2 = y;
+				that.redrawCurrentLine();
+
 				//console.log("Checking nodes");
 				that.spawnedNodes.forEach(function(element){
 					let dpr = 1;
@@ -202,6 +209,10 @@ let GraphGame = new Phaser.Class({
 								that.currentPath[that.currentPathID].path.push(element);
 								that.selectedNodes.push(element.id);
 								that.pathCounter ++;
+
+								that.currentlyDrawingLine.x1 = element.img.x;
+								that.currentlyDrawingLine.y1 = element.img.y;
+								that.redrawCurrentLine();
 							}
 						}
 					}
@@ -241,14 +252,20 @@ let GraphGame = new Phaser.Class({
 					that.currentPath[that.currentPathID].agent.timer = that.time.addEvent({delay: 1000, callback: that.moveAgentToNextNode, args: [agent, node], callbackScope: that});
 				}
 				that.currentPathID ++;
+				
 			}
-
+			that.currentlyDrawingLineGraphics.clear();
 		});
 
 		gameCallbacks.showTimeline(this.timer);
 		gameCallbacks.startTimelineClock();
 		this.gameTimer = this.time.addEvent({delay: 1000 * this.timer, callback: this.onGameEnd, callbackScope: this, startAt: 0 });
 
+	},
+
+	redrawCurrentLine(){
+		this.currentlyDrawingLineGraphics.clear();
+		this.currentlyDrawingLineGraphics.strokeLineShape(this.currentlyDrawingLine);
 	},
 
 	moveAgentToNextNode(agent, node, pathID = null){
