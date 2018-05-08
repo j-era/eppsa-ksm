@@ -339,14 +339,14 @@ let GraphGame = new Phaser.Class({
 		if(check == "crash"){
 			that.spawnedNodes[currentlyMovingAgent.nodeID].agentOnNode = undefined;
 			//start movement
-			agent.tween = this.tweens.add({
+			/*agent.tween = this.tweens.add({
 				targets: agent,
 				x: nextNode.x,
 				y: nextNode.y,
 				duration: 2000,
 				yoyo: false,
 				repeat: 0,
-			});
+			});*/
 			that.animateCrash(agent, nextNode);
 			//delete after half of duration
 			//that.time.addEvent({delay: 500, callback: that.destroyAgent, args: [currentlyMovingAgent.id], callbackScope: that});
@@ -590,8 +590,27 @@ let GraphGame = new Phaser.Class({
 	},
 
 	animateCrash: function(agent, node){
-		var ccDestX = agent.x;
-		var ccDestY = agent.y;
+		let a = agent.x - node.x;
+		let b = agent.y - node.y;
+
+		//agent movement
+		agent.tween = this.tweens.add({
+			targets: agent,
+			x: agent.x - a/1.6,
+			y: agent.y - b/1.6,
+			duration: 1000,
+			yoyo: false,
+			repeat: 0,
+			onComplete: function(){
+				var crashedCar2 = that.add.image(agent.x, agent.y, "redCarCrashed").setOrigin(gameData.agentOriginX, gameData.agentOriginY);
+				crashedCar2.setScale(that.height/crashedCar2.height * 0.1);
+				crashedCar2.angle = agent.angle;
+				that.fadeAndDestroy(crashedCar2);
+
+				that.destroyAgent(agent.id);
+			}
+		});
+
 		var crashCar = this.add.image(node.x, node.y, "crashCar").setOrigin(1 - gameData.agentOriginX, gameData.agentOriginY);
 		crashCar.setScale(this.height/crashCar.height * 0.1);
 		switch (agent.currentDirection){
@@ -613,29 +632,22 @@ let GraphGame = new Phaser.Class({
 
 		this.tweens.add({
 			targets: crashCar,
-			x: ccDestX,
-			y: ccDestY,
+			x: node.x + a/1.6,
+			y: node.y + b/1.6,
 			duration: 1000,
 			yoyo: false,
 			repeat: 0,
 			onComplete: function(){
-
 				var crashedCar1 = that.add.image(crashCar.x, crashCar.y, "redCarCrashed").setOrigin(1 - gameData.agentOriginX, gameData.agentOriginY);
 				crashedCar1.setScale(that.height/crashedCar1.height * 0.1);
 				crashedCar1.angle = crashCar.angle;
 				that.fadeAndDestroy(crashedCar1);
-				var crashedCar2 = that.add.image(agent.x, agent.y, "blueCarCrashed");
-				crashedCar2.setScale(that.height/crashedCar1.height * 0.1);
-				crashedCar2.angle = agent.angle;
-				that.fadeAndDestroy(crashedCar2);
-
+				
 				crashCar.destroy();
 				crashCar = null;
-				that.destroyAgent(agent.id);
 			}
 		})
 
-		//this.time.addEvent({delay: 1800, callback: this.destroyAgent, args: [agent.id], callbackScope: this});
 	},
 
 	fadeAndDestroy: function(image){
