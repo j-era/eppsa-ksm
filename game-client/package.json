@@ -5,7 +5,8 @@
   "scripts": {
     "lint": "eslint src",
     "watch": "webpack-dev-server --mode development --port $PORT",
-    "start": "webpack --mode production && http-server ./dist -p $PORT -c 0"
+    "start": "webpack --mode production && http-server ./dist -p $PORT -c 0",
+    "build": "webpack --mode production"
   },
   "engines": {
     "node": "9.7.1"

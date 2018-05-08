@@ -64,27 +64,6 @@ services:
       - asset-server
       - game-server
 
-  game-client:
-    build:
-      context: ./game-client
-    environment:
-      ASSET_SERVER_URI: https://asset-server.${HOST}
-      CONTENT_SERVER_URI: https://content-server.${HOST}
-      GAME_SERVER_URI: https://game-server.${HOST}
-      STATIC_SERVER_URI: https://static.${HOST}
-      PORT: 443
-    depends_on:
-      - content-server
-      - asset-server
-      - game-server
-      - game-challenge-button
-      - game-challenge-quiz
-      - game-challenge-clicker
-      - game-challenge-hidden
-      - game-challenge-skill
-      - game-challenge-graph
-      - game-challenge-sorting
-
   game-server:
     build:
       context: ./game-server
@@ -92,72 +71,6 @@ services:
       MONGODB_URI: mongodb://mongo
     depends_on:
       - mongo
-
-  game-challenge-button:
-    build:
-      context: ./game-challenge/button
-    environment:
-      PORT: 443
-
-  game-challenge-sorting:
-    build:
-      context: ./game-challenge/sorting
-    environment:
-      PORT: 443
-      ASSET_SERVER_URI: https://asset-server.${HOST}
-      CONTENT_SERVER_URI: https://content-server.${HOST}
-      GAME_SERVER_URI: https://game-server.${HOST}
-      STATIC_SERVER_URI: https://static.${HOST}
-
-  game-challenge-quiz:
-    build:
-      context: ./game-challenge/quiz
-    environment:
-      PORT: 443
-      ASSET_SERVER_URI: https://asset-server.${HOST}
-      CONTENT_SERVER_URI: https://content-server.${HOST}
-      GAME_SERVER_URI: https://game-server.${HOST}
-      STATIC_SERVER_URI: https://static.${HOST}
-
-  game-challenge-clicker:
-    build:
-      context: ./game-challenge/clicker
-    environment:
-      PORT: 443
-      ASSET_SERVER_URI: https://asset-server.${HOST}
-      CONTENT_SERVER_URI: https://content-server.${HOST}
-      GAME_SERVER_URI: https://game-server.${HOST}
-      STATIC_SERVER_URI: https://static.${HOST}
-
-  game-challenge-graph:
-    build:
-      context: ./game-challenge/graph
-    environment:
-      PORT: 80
-      ASSET_SERVER_URI: https://asset-server.${HOST}
-      CONTENT_SERVER_URI: https://content-server.${HOST}
-      GAME_SERVER_URI: https://game-server.${HOST}
-      STATIC_SERVER_URI: https://static.${HOST}
-
-  game-challenge-hidden:
-    build:
-      context: ./game-challenge/hidden
-    environment:
-      PORT: 443
-      ASSET_SERVER_URI: https://asset-server.${HOST}
-      CONTENT_SERVER_URI: https://content-server.${HOST}
-      GAME_SERVER_URI: https://game-server.${HOST}
-      STATIC_SERVER_URI: https://static.${HOST}
-
-  game-challenge-skill:
-    build:
-      context: ./game-challenge/skill
-    environment:
-      PORT: 443
-      ASSET_SERVER_URI: https://asset-server.${HOST}
-      CONTENT_SERVER_URI: https://content-server.${HOST}
-      GAME_SERVER_URI: https://game-server.${HOST}
-      STATIC_SERVER_URI: https://static.${HOST}
 
   mongo:
     image: "mongo:3.6.3-jessie"

@@ -24,7 +24,25 @@ services:
 
   game-client:
     build:
+      context: ./game-client
       dockerfile: Dockerfile.development
+    environment:
+      ASSET_SERVER_URI: https://asset-server.${HOST}
+      CONTENT_SERVER_URI: https://content-server.${HOST}
+      GAME_SERVER_URI: https://game-server.${HOST}
+      STATIC_SERVER_URI: https://static.${HOST}
+      PORT: 443
+    depends_on:
+      - content-server
+      - asset-server
+      - game-server
+      - game-challenge-button
+      - game-challenge-quiz
+      - game-challenge-clicker
+      - game-challenge-hidden
+      - game-challenge-skill
+      - game-challenge-graph
+      - game-challenge-sorting
     volumes:
       - ./game-client:/app
       - /app/node_modules
@@ -42,49 +60,94 @@ services:
 
   game-challenge-button:
     build:
+      context: ./game-challenge/button
       dockerfile: Dockerfile.development
+    environment:
+      PORT: 443
     volumes:
       - ./game-challenge/button:/app
       - /app/node_modules
 
   game-challenge-sorting:
     build:
+      context: ./game-challenge/sorting
       dockerfile: Dockerfile.development
+    environment:
+      PORT: 443
+      ASSET_SERVER_URI: https://asset-server.${HOST}
+      CONTENT_SERVER_URI: https://content-server.${HOST}
+      GAME_SERVER_URI: https://game-server.${HOST}
+      STATIC_SERVER_URI: https://static.${HOST}
     volumes:
       - ./game-challenge/sorting:/app
       - /app/node_modules
 
   game-challenge-quiz:
     build:
+      context: ./game-challenge/quiz
       dockerfile: Dockerfile.development
+    environment:
+      PORT: 443
+      ASSET_SERVER_URI: https://asset-server.${HOST}
+      CONTENT_SERVER_URI: https://content-server.${HOST}
+      GAME_SERVER_URI: https://game-server.${HOST}
+      STATIC_SERVER_URI: https://static.${HOST}
     volumes:
       - ./game-challenge/quiz:/app
       - /app/node_modules
 
   game-challenge-clicker:
     build:
+      context: ./game-challenge/clicker
       dockerfile: Dockerfile.development
+    environment:
+      PORT: 443
+      ASSET_SERVER_URI: https://asset-server.${HOST}
+      CONTENT_SERVER_URI: https://content-server.${HOST}
+      GAME_SERVER_URI: https://game-server.${HOST}
+      STATIC_SERVER_URI: https://static.${HOST}
     volumes:
       - ./game-challenge/clicker:/app
       - /app/node_modules
 
   game-challenge-graph:
     build:
+      context: ./game-challenge/graph
       dockerfile: Dockerfile.development
+    environment:
+      PORT: 80
+      ASSET_SERVER_URI: https://asset-server.${HOST}
+      CONTENT_SERVER_URI: https://content-server.${HOST}
+      GAME_SERVER_URI: https://game-server.${HOST}
+      STATIC_SERVER_URI: https://static.${HOST}
     volumes:
       - ./game-challenge/graph:/app
       - /app/node_modules
 
   game-challenge-hidden:
     build:
+      context: ./game-challenge/hidden
       dockerfile: Dockerfile.development
+    environment:
+      PORT: 443
+      ASSET_SERVER_URI: https://asset-server.${HOST}
+      CONTENT_SERVER_URI: https://content-server.${HOST}
+      GAME_SERVER_URI: https://game-server.${HOST}
+      STATIC_SERVER_URI: https://static.${HOST}
     volumes:
       - ./game-challenge/hidden:/app
       - /app/node_modules
 
   game-challenge-skill:
     build:
+      context: ./game-challenge/skill
       dockerfile: Dockerfile.development
+    environment:
+      PORT: 443
+      ASSET_SERVER_URI: https://asset-server.${HOST}
+      CONTENT_SERVER_URI: https://content-server.${HOST}
+      GAME_SERVER_URI: https://game-server.${HOST}
+      STATIC_SERVER_URI: https://static.${HOST}
     volumes:
       - ./game-challenge/skill:/app
       - /app/node_modules
