@@ -80,6 +80,13 @@ services:
     ports:
       - "27017:27017"
 
+  mongo-access:
+      build:
+        dockerfile: Dockerfile.development
+      volumes:
+        - ./mongo-access:/app
+        - /app/node_modules
+
   game-challenge-button:
     build:
       context: ./game-challenge/button
