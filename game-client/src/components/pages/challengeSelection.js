@@ -46,16 +46,7 @@ class ChallengeSelection extends React.Component {
 
   componentDidMount() {
     this.timeout = setTimeout(() => {
-      const templates = uniq(Object.values(this.challenges).map(challenge => challenge.template))
-      const randomTemplate = random(templates)
-
-      const names = Object.keys(
-        pickBy(this.challenges, challenge => challenge.template === randomTemplate)
-      )
-      const randomName = random(names)
-
-      console.log(randomName)
-      this.selectChallengeType(randomName)
+      this.selectChallengeType(this.chooseRandomChallengeType())
     }, SELECTION_TIMEOUT)
   }
 
@@ -90,6 +81,17 @@ class ChallengeSelection extends React.Component {
           text={ content.shared.texts.next } />
       </Container>
     )
+  }
+
+  chooseRandomChallengeType() {
+    const templates = uniq(Object.values(this.challenges).map(challenge => challenge.template))
+    const randomTemplate = random(templates)
+
+    const names = Object.keys(
+      pickBy(this.challenges, challenge => challenge.template === randomTemplate)
+    )
+
+    return random(names)
   }
 
   onClick() {
