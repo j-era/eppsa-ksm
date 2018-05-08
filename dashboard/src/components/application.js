@@ -14,6 +14,16 @@ const Container = styled.div`
   flex-direction: column;
 `
 
+const Background = styled.div`
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  background-image: url(${props => props.image});
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position-y: bottom;
+`
+
 function Application(props) {
   return (
     <Container>
@@ -21,15 +31,18 @@ function Application(props) {
         assetServerUri={ props.assetServerUri }
         content={ props.content }
         connectedGames={ props.connectedGames } />
-      {
-        props.scoreMode === scoreModes.ALL_TIME_HIGHSCORE ?
-          <HighscoreGames
-            content={ props.content }
-            highscoreGames={ props.highscoreGames } /> :
-          <RecentFinishedGames
-            content={ props.content }
-            recentFinishedGames={ props.recentFinishedGames } />
-      }
+      <Background
+        image={ `${props.assetServerUri}/${props.content.shared.assets.dashboardMap.src}` }>
+        {
+          props.scoreMode === scoreModes.ALL_TIME_HIGHSCORE ?
+            <HighscoreGames
+              content={ props.content }
+              highscoreGames={ props.highscoreGames } /> :
+            <RecentFinishedGames
+              content={ props.content }
+              recentFinishedGames={ props.recentFinishedGames } />
+        }
+      </Background>
     </Container>
   )
 }
