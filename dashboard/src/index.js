@@ -13,6 +13,7 @@ import * as reducers from "./reducers"
 import ContentServer from "./api/contentServer"
 import GameServer from "./api/gameServer"
 import * as actions from "./actionCreators"
+import * as scoreModes from "./scoreModes"
 
 const store = applyMiddleware(createLogger())(createStore)(combineReducers(reducers))
 const contentServer = new ContentServer(process.env.CONTENT_SERVER_URI)
@@ -50,6 +51,10 @@ function transform(content) {
     omit(content.index, "template")
   )
 }
+
+setInterval(() => store.getState().scoreMode === scoreModes.ALL_TIME_HIGHSCORE
+  ? store.dispatch(actions.setScoreMode(scoreModes.RECENT_FINISHED_GAMES))
+  : store.dispatch(actions.setScoreMode(scoreModes.ALL_TIME_HIGHSCORE)), 2000)
 
 gameServer.on("recentFinishedGames", (games) => {
   store.dispatch(actions.updateRecentFinishedGames(games))

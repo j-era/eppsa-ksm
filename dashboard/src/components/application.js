@@ -5,6 +5,7 @@ import styled from "styled-components"
 import Header from "./header"
 import RecentFinishedGames from "./recentFinishedGames"
 import HighscoreGames from "./highscoreGames"
+import * as scoreModes from "../scoreModes"
 
 const Container = styled.div`
   width: 100%;
@@ -20,12 +21,15 @@ function Application(props) {
         assetServerUri={ props.assetServerUri }
         content={ props.content }
         connectedGames={ props.connectedGames } />
-      <RecentFinishedGames
-        content={ props.content }
-        recentFinishedGames={ props.recentFinishedGames } />
-      <HighscoreGames
-        content={ props.content }
-        highscoreGames={ props.highscoreGames } />
+      {
+        props.scoreMode === scoreModes.ALL_TIME_HIGHSCORE ?
+          <HighscoreGames
+            content={ props.content }
+            highscoreGames={ props.highscoreGames } /> :
+          <RecentFinishedGames
+            content={ props.content }
+            recentFinishedGames={ props.recentFinishedGames } />
+      }
     </Container>
   )
 }
