@@ -1,4 +1,8 @@
+import autoBind from "react-autobind"
+import uniq from "lodash.uniq"
 import omit from "lodash.omit"
+import pickBy from "lodash.pickby"
+
 import React from "react"
 import styled, { withTheme } from "styled-components"
 import {
@@ -28,10 +32,12 @@ class ChallengeSelection extends React.Component {
   constructor(props) {
     super(props)
 
-    const { content, challengeNumber } = this.props
+    autoBind(this)
 
-    this.challengeTypes = omit(content.challenges[challengeNumber].challengeTypes, "template")
-    this.names = Object.keys(this.challengeTypes)
+    this.challenges = omit(
+      this.props.content.challenges[this.props.challengeNumber].challengeTypes,
+      "template"
+    )
 
     this.state = {
       developmentView: false
@@ -39,24 +45,17 @@ class ChallengeSelection extends React.Component {
   }
 
   componentDidMount() {
-    const challangeMap = new Map()
-
-    this.names.forEach(challengeName => {
-      const challenge = this.challengeTypes[challengeName]
-
-      if (challangeMap.has(challenge.template)) {
-        challangeMap.get(challenge.template).push(challengeName)
-      } else {
-        challangeMap.set(challenge.template, [challengeName])
-      }
-    })
-
-    const challengeTypes = Array.from(challangeMap.keys())
-
     this.timeout = setTimeout(() => {
-      const challengeType = challengeTypes[Math.floor(Math.random() * challengeTypes.length)]
-      const index = Math.floor(Math.random() * challangeMap.get(challengeType).length)
-      this.selectChallengeType(challangeMap.get(challengeType)[index])
+      const templates = uniq(Object.values(this.challenges).map(challenge => challenge.template))
+      const randomTemplate = random(templates)
+
+      const names = Object.keys(
+        pickBy(this.challenges, challenge => challenge.template === randomTemplate)
+      )
+      const randomName = random(names)
+
+      console.log(randomName)
+      this.selectChallengeType(randomName)
     }, SELECTION_TIMEOUT)
   }
 
@@ -73,7 +72,7 @@ class ChallengeSelection extends React.Component {
         <PageTitle>{ content.shared.texts.challengeSelectionTitle }</PageTitle>
         {
           developmentView ?
-            this.names.map((name) =>
+            Object.keys(this.challenges).map((name) =>
               <Button key={ name } onClick={ () => this.selectChallengeType(name) }>
                 { name }
               </Button>
@@ -104,6 +103,10 @@ class ChallengeSelection extends React.Component {
     const { content, dispatch, assetServerUri, gameServerUri, staticServerUri } = this.props
     dispatch(selectChallengeType(name, content, assetServerUri, gameServerUri, staticServerUri))
   }
+}
+
+function random(array) {
+  return array[Math.floor(Math.random() * array.length)]
 }
 
 export default withTheme(ChallengeSelection)
