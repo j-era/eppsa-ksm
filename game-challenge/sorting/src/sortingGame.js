@@ -118,7 +118,6 @@ export default class SortingGame extends React.Component {
           isCorrect: false,
           isWrong: true,
           items: orderBy(this.state.items, ["correctPosition"])
-
         })
         return
       }
