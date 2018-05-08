@@ -35,7 +35,6 @@
     "lodash.omit": "^4.5.0",
     "lodash.pickby": "^4.6.0",
     "lodash.uniq": "^4.5.0",
-    "lodash.uniqby": "^4.7.0",
     "querystring": "^0.2.0",
     "react": "^16.2.0",
     "react-autobind": "^1.0.6",
