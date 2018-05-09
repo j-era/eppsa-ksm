@@ -63,6 +63,14 @@ Set the HOST variable of your target environment:
 * CMS: https://cms.local.staging.eppsa.de/
 * Dashboard: https://dashboard.local.eppsa.de/
 
+## Production
+```
+HOST=<environment>.eppsa.de
+./build.sh
+docker-compose -f docker-compose.yml -f docker-compose.production.yml build
+docker-compose -f docker-compose.yml -f docker-compose.production.yml up
+```
+
 #### Troubleshooting (Development)
 
 ##### Missing npm packages
