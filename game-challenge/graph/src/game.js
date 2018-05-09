@@ -620,8 +620,8 @@ let GraphGame = new Phaser.Class({
 			yoyo: false,
 			repeat: 0,
 			onComplete: function(){
-				var crashedCar2 = that.add.image(agent.x, agent.y, "redCarCrashed").setOrigin(gameData.agentOriginX, gameData.agentOriginY);
-				crashedCar2.setScale(that.height/crashedCar2.height * 0.1);
+				var crashedCar2 = that.add.image(agent.x, agent.y, "blueCarCrashed").setOrigin(gameData.agentOriginX, gameData.agentOriginY);
+				crashedCar2.setScale(that.height/crashedCar2.height * 0.15);
 				crashedCar2.angle = agent.angle;
 				that.fadeAndDestroy(crashedCar2);
 
@@ -630,7 +630,7 @@ let GraphGame = new Phaser.Class({
 		});
 
 		var crashCar = this.add.image(node.x, node.y, "crashCar").setOrigin(1 - gameData.agentOriginX, gameData.agentOriginY);
-		crashCar.setScale(this.height/crashCar.height * 0.1);
+		crashCar.setScale(this.height/crashCar.height * 0.15);
 		switch (agent.currentDirection){
 			case "up":
 				crashCar.angle = 180;
@@ -657,7 +657,7 @@ let GraphGame = new Phaser.Class({
 			repeat: 0,
 			onComplete: function(){
 				var crashedCar1 = that.add.image(crashCar.x, crashCar.y, "redCarCrashed").setOrigin(1 - gameData.agentOriginX, gameData.agentOriginY);
-				crashedCar1.setScale(that.height/crashedCar1.height * 0.1);
+				crashedCar1.setScale(that.height/crashedCar1.height * 0.15);
 				crashedCar1.angle = crashCar.angle;
 				that.fadeAndDestroy(crashedCar1);
 				
@@ -1020,7 +1020,7 @@ let GraphGame = new Phaser.Class({
 
 	onGameEnd: function(){
 		gameCallbacks.stopTimelineClock();
-		
+
 		this.cameras.main.scrollX = 0;
 		this.scrolled = false;
 
