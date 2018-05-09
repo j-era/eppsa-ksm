@@ -3,8 +3,19 @@ version: "3.2"
 services:
   nginx:
     build:
+      dockerfile: Dockerfile.production
       args:
         environment: production
+    volumes:
+      - ./dashboard/dist:/dashboard
+      - ./game-client/dist:/client
+      - ./game-challenge/button/dist:/button
+      - ./game-challenge/clicker/dist:/clicker
+      - ./game-challenge/graph/dist:/graph
+      - ./game-challenge/hidden/dist:/hidden
+      - ./game-challenge/quiz/dist:/quiz
+      - ./game-challenge/skill/dist:/skill
+      - ./game-challenge/sorting/dist:/sorting
 
   cms-frontend:
     build:
@@ -16,42 +27,6 @@ services:
     ports:
       - "27017:27017"
 
-  dashboard:
-    build:
-      dockerfile: Dockerfile.production
-
-  game-client:
-    build:
-      dockerfile: Dockerfile.production
-
   game-server:
-    build:
-      dockerfile: Dockerfile.production
-
-  game-challenge-button:
-    build:
-      dockerfile: Dockerfile.production
-
-  game-challenge-sorting:
-    build:
-      dockerfile: Dockerfile.production
-
-  game-challenge-quiz:
-    build:
-      dockerfile: Dockerfile.production
-
-  game-challenge-clicker:
-    build:
-      dockerfile: Dockerfile.production
-
-  game-challenge-graph:
-    build:
-      dockerfile: Dockerfile.production
-
-  game-challenge-hidden:
-    build:
-      dockerfile: Dockerfile.production
-
-  game-challenge-skill:
     build:
       dockerfile: Dockerfile.production

@@ -80,10 +80,10 @@ class NewGameNameSelection extends React.Component {
           <FramedIcon
             scale={ 0.78 }
             color={ this.props.theme.colors.primary }
-            iconSrc={ `${assetServerUri}/${content.avatars[avatar].medium.src}` }
-            iconSrcSet={ `${assetServerUri}/${content.avatars[avatar].small.src} 250w,
-                          ${assetServerUri}/${content.avatars[avatar].medium.src} 500w,
-                          ${assetServerUri}/${content.avatars[avatar].large.src} 1000w` } />
+            iconSrc={ `${assetServerUri}/${content.avatars[avatar].mediumCentered.src}` }
+            iconSrcSet={ `${assetServerUri}/${content.avatars[avatar].smallCentered.src} 250w,
+                          ${assetServerUri}/${content.avatars[avatar].mediumCentered.src} 500w,
+                          ${assetServerUri}/${content.avatars[avatar].largeCentered.src} 1000w` } />
           <NameInputContainer>
             <form onSubmit={ this.onSubmit }>
               <NameInput
