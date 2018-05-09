@@ -68,8 +68,8 @@ Set the HOST variable of your target environment:
 ##### Missing npm packages
 When you need to recreate a volume (but not "named volumes"), first use the following commands before using 'up':
 ```
-docker-compose stop
-docker-compose rm
+docker-compose -f docker-compose.yml -f docker-compose.development.yml stop
+docker-compose -f docker-compose.yml -f docker-compose.development.yml rm
 ```
 This will be necessary if you want to install new node dependencies using `npm install` during the build.
 
