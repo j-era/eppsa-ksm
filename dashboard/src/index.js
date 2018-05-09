@@ -54,7 +54,7 @@ function transform(content) {
 
 setInterval(() => store.getState().scoreMode === scoreModes.ALL_TIME_HIGHSCORE
   ? store.dispatch(actions.setScoreMode(scoreModes.RECENT_FINISHED_GAMES))
-  : store.dispatch(actions.setScoreMode(scoreModes.ALL_TIME_HIGHSCORE)), 2000)
+  : store.dispatch(actions.setScoreMode(scoreModes.ALL_TIME_HIGHSCORE)), 10000)
 
 gameServer.on("recentFinishedGames", (games) => {
   store.dispatch(actions.updateRecentFinishedGames(games))

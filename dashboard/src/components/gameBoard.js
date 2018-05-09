@@ -1,5 +1,8 @@
 import React from "react"
+import { TransitionGroup } from "react-transition-group"
 import styled from "styled-components"
+
+import Fade from "./fade"
 
 const Container = styled.div`
   position: relative;
@@ -26,21 +29,19 @@ const Avatar = styled.img`
   width: ${props => props.stationWidth}%;
   z-index: ${props => props.index};
   transition: left 1s ease;
-  animation: fadein 1s;
-
-  @keyframes fadein {
-    from { transform: scale(0.7, 0.7); opacity: 0; }
-    to   { transform: scale(1, 1); opacity: 1; }
-  }
 `
 
 export default function GameBoard({ assetServerUri, connectedGames, content }) {
-  const stationWidth = 100 / Object.keys(content.challenges).length
-
+  const numChallenges = Object.keys(content.challenges).length
+  const stationWidth = 100 / numChallenges
+  const games = connectedGames.filter(({ challengeNumber }) => challengeNumber <= numChallenges)
+  
   return (
     <Container>
       { renderStations(content.challenges, stationWidth) }
-      { renderGames(connectedGames, content.avatars, stationWidth, assetServerUri) }
+      <TransitionGroup>
+        { renderGames(connectedGames, content.avatars, stationWidth, assetServerUri) }
+      </TransitionGroup>
     </Container>
   )
 }
@@ -67,12 +68,13 @@ function renderGames(connectedGames, avatars, stationWidth, assetServerUri) {
   })
 
   return connectedGames.map(({ avatar, challengeNumber, gameId }) =>
-    <Avatar
-      key={ gameId }
-      index={ gameLists[challengeNumber].indexOf(gameId) }
-      stationIndex={ challengeNumber - 1 }
-      stationWidth={ stationWidth }
-      numAvatarsAtStation={ gameLists[challengeNumber].length }
-      src={ `${assetServerUri}/${avatars[avatar].small.src}` } />
+    <Fade key={ gameId }>
+      <Avatar
+        index={ gameLists[challengeNumber].indexOf(gameId) }
+        stationIndex={ challengeNumber - 1 }
+        stationWidth={ stationWidth }
+        numAvatarsAtStation={ gameLists[challengeNumber].length }
+        src={ `${assetServerUri}/${avatars[avatar].small.src}` } />
+    </Fade>
   )
 }
