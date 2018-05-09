@@ -49,6 +49,21 @@ services:
       - ./game-client:/app
       - /app/node_modules
 
+
+  dashboard:
+    build:
+      context: ./dashboard
+    environment:
+      CONTENT_SERVER_URI: https://content-server.${HOST}
+      ASSET_SERVER_URI: https://asset-server.${HOST}
+      GAME_SERVER_URI: https://game-server.${HOST}
+      FONT_URI: https://static.${HOST}/fonts
+      PORT: 443
+    depends_on:
+      - content-server
+      - asset-server
+      - game-server
+
   game-server:
     build:
       dockerfile: Dockerfile.development

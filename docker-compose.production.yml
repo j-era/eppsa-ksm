@@ -7,6 +7,7 @@ services:
       args:
         environment: production
     volumes:
+      - ./dashboard/dist:/dashboard
       - ./game-client/dist:/client
       - ./game-challenge/button/dist:/button
       - ./game-challenge/clicker/dist:/clicker
@@ -25,10 +26,6 @@ services:
   mongo:
     ports:
       - "27017:27017"
-
-  dashboard:
-    build:
-      dockerfile: Dockerfile.production
 
   game-server:
     build:

@@ -53,11 +53,6 @@ http {
       server content-repo:80;
     }
 
-    upstream docker-dashboard {
-      server dashboard:443;
-      server dashboard:80;
-    }
-
     upstream docker-game-server {
       server game-server:3000;
     }

@@ -7,10 +7,11 @@ export GAME_SERVER_URI=https://game-server.${HOST}
 export FONT_URI=https://static.${HOST}/fonts
 export STATIC_SERVER_URI=https://static.${HOST}
 BASEDIR="$( cd "$( dirname "$0" )" && pwd )"
+echo $HOST
 echo $BASEEDIR
 declare -a SITES=(
+  "dashboard"
   "game-client"
-  "game-challenge/button"
   "game-challenge/clicker"
   "game-challenge/graph"
   "game-challenge/hidden"
@@ -22,10 +23,6 @@ declare -a SITES=(
 for i in "${SITES[@]}"
 do
   cd $BASEDIR/$i
-  if [ -d node_modules ]
-  then
-    rm -rf node_modules
-  fi
   npm install
   npm run build
 done
