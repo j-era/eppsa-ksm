@@ -5,6 +5,8 @@ services:
     build:
       args:
         environment: development
+    depends_on:
+      - game-client
 
   cms-frontend:
     build:

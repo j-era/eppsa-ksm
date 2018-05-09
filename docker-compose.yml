@@ -8,7 +8,6 @@ services:
       - content-server
       - content-repo
       - cms-frontend
-      - game-client
       - game-server
     ports:
       - "80:80"
