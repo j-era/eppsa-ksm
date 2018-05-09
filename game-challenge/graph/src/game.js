@@ -1019,6 +1019,8 @@ let GraphGame = new Phaser.Class({
 	},
 
 	onGameEnd: function(){
+		gameCallbacks.stopTimelineClock();
+		
 		this.cameras.main.scrollX = 0;
 		this.scrolled = false;
 

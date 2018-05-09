@@ -242,6 +242,7 @@ class GameScene extends Phaser.Scene {
 	}
 
 	gameLose(){
+		this.sys.game.gameCallbacks.stopTimelineClock();
 		let scope = this;
 		let lineColor = this.sys.game.color.replace("#", "0x");
 		var line = new Phaser.Geom.Line(-20, window.innerHeight/2 + window.innerHeight/20, window.innerWidth + 20, window.innerHeight/2 - window.innerHeight/20);

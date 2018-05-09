@@ -319,6 +319,7 @@ class gameScene extends Phaser.Scene {
 	});
 }
 gameWin() {
+	scope.sys.game.gameCallbacks.stopTimelineClock();
 	this.points = Math.floor(this.correct * this.sys.game.gameData.score.reward * this.sys.game.shared.config.hiddenScoreFactor);
 	this.playing = false;
 
