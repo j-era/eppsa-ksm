@@ -43,7 +43,7 @@ let GraphGame = new Phaser.Class({
 			gameData.agents[key].assignedDestination = JSON.parse(gameData.agents[key].assignedDestination);
 			this.agentClasses.push(gameData.agents[key]);
 		}
-		console.log(this.agentClasses);
+		//console.log(this.agentClasses);
 
 		//nodeAttributes
 		this.nodes = {};
@@ -152,7 +152,7 @@ let GraphGame = new Phaser.Class({
 				//push current nodeID into path
 				for(var agent in that.currentAgents){
 					if(gameObject == that.currentAgents[agent].img){
-						console.log(that.spawnedNodes[that.currentAgents[agent].nodeID]);
+						//console.log(that.spawnedNodes[that.currentAgents[agent].nodeID]);
 						that.currentPath[that.currentPathID].path.push(that.spawnedNodes[that.currentAgents[agent].nodeID]);
 					}
 				}
@@ -307,7 +307,7 @@ let GraphGame = new Phaser.Class({
 				yoyo: true,
 				repeat: 2,
 			});
-			console.log("agent can't enter here");
+			//console.log("agent can't enter here");
 			if(pathID != null){
 				currentlyMovingAgent.img.selectedNodes.forEach(function(element){
 					that.spawnedNodes.forEach(function(nodeElement){
@@ -399,20 +399,20 @@ let GraphGame = new Phaser.Class({
 				if(gameData.collisionOnNode == "true" && that.spawnedNodes[nextNode.id].agentOnNode != undefined){
 					//console.log('Trying to move onto node that already has agent ' + that.spawnedNodes[node.id].agentOnNode);
 					if(currentlyMovingAgent.isHostile == "true"){
-						console.log('destroying agent because of hostile agent');
+						//console.log('destroying agent because of hostile agent');
 						that.destroyAgent(that.currentAgents[that.spawnedNodes[nextNode.id].agentOnNode].id);
 						//that.currentAgents[that.spawnedNodes[nextNode.id].agentOnNode].img.destroy();
 					}
 					else{
 						let otherAgentID = that.spawnedNodes[nextNode.id].agentOnNode;
 						if(that.currentAgents[otherAgentID].isHostile == "true"){
-							console.log('moved onto hostile agent, was destroyed');
+							//console.log('moved onto hostile agent, was destroyed');
 							that.destroyAgent(currentlyMovingAgent.id);
 							return;
 						}
 						else{
 							//stop movement of agent that blocks node and send him directly to random neighboring node
-							console.log('otherAgent has to be moved at node ' + nextNode.id);
+							//console.log('otherAgent has to be moved at node ' + nextNode.id);
 							if(that.currentAgents[otherAgentID].img.timer){
 								that.currentAgents[otherAgentID].img.timer.remove(false);
 							}
@@ -449,16 +449,12 @@ let GraphGame = new Phaser.Class({
 
 				if(that.nodes[nextNode.id].nodeState == 'exit'){
 					that.spawnedNodes[nextNode.id].agentOnNode = undefined;
-					console.log('agent at exit');
+					//console.log('agent at exit');
 					that.countedWinEvents ++;
 					that.destroyAgent(currentlyMovingAgent.id);
 					return null;
 				}
 
-				/*if(that.nodes[nextNode.id].nodePauseTime && that.nodes[nextNode.id].nodePauseTime != 0){
-					that.nodes[nextNode.id].timer = that.time.addEvent({delay: 1000 * that.nodes[nextNode.id].nodePauseTime, callback: that.rotateImage, args: [nextNode.id], callbackScope: that});
-				}*/
-				//let controlPoint = that.checkWaitTime(node.id, nextNode.id);
 				let additionalWaiting = 0;
 
 				if(controlPoint){
@@ -711,12 +707,12 @@ let GraphGame = new Phaser.Class({
 			let point = this.controllPoints[current][last];
 			if(point){
 				if(point.crashIf.indexOf(next) != -1){
-					console.log("crash");
+					//console.log("crash");
 					return "crash";
 				}
 				if(point.pointsIf.indexOf(next) != -1){
 					this.countedWinEvents ++;
-					console.log("points");
+					//console.log("points");
 					return "points";
 				}
 			}
@@ -762,8 +758,6 @@ let GraphGame = new Phaser.Class({
 			}
 			this.node.connectedTo = currentNode.connectedTo;
 			this.node.pauseTime = currentNode.nodePauseTime;
-			//console.log(currentNode.edgeThreshold);
-			//this.node.edgeThreshold = currentNode.edgeThreshold;
 			this.node.id = currentNode.nodeID;
 			this.node.img.setName('node');
 			if(gameData.drawLinesAndNodes != "true"){
@@ -773,12 +767,6 @@ let GraphGame = new Phaser.Class({
 			if(gameData.designModeOn == "true"){
 				that.add.text(this.xPosToScreen(currentNode.xPosition), this.yPosToScreen(currentNode.yPosition), that.nodes[node].nodeID, {fill: '#ffffff'});
 			}
-
-			/*let controllPoint = this.controllPoints[currentNode.nodeID];
-			if(controllPoint && controllPoint.skin != ''){
-				console.log(currentNode.nodeID);
-				controllPoint.image = that.add.image(this.xPosToScreen(currentNode.xPosition), this.yPosToScreen(currentNode.yPosition), controllPoint.skin).setOrigin(0.5).setScale(0.2);
-			}*/
 
 			if(gameData.drawLinesAndNodes == "true"){
 				that.nodes[node].connectedTo.forEach(function(element){
@@ -829,7 +817,7 @@ let GraphGame = new Phaser.Class({
 			this.spawnedNodes.push(this.node);
 			this.node.img.setDepth(1);
 		}
-		console.log('spawned Nodes ', this.spawnedNodes);
+		//console.log('spawned Nodes ', this.spawnedNodes);
 	},
 
 	setupAgentSpawnRates: function(){
@@ -893,7 +881,7 @@ let GraphGame = new Phaser.Class({
 	},
 
 	destroyAgent: function(agentID){
-		console.log(agentID);
+		//console.log("destroying ", agentID);
 		let that = this;
 		let agent = this.currentAgents[agentID];
 		this.currentAgentsOnBoard --;
@@ -941,7 +929,7 @@ let GraphGame = new Phaser.Class({
 
 		delete this.currentAgents[agentID];
 		agent.img.destroy();
-		console.log(this.currentAgents);
+		//console.log(this.currentAgents);
 	},
 
 	spawnAgent: function(){
@@ -952,7 +940,7 @@ let GraphGame = new Phaser.Class({
 			//get a random agent type
 			var agentType = this.getAgentAccordingToSpawnRate(this.agentClasses, this.agentSpawnRates);
 			if(this.currentAgentDistribution[agentType.name] != undefined && this.currentAgentDistribution[agentType.name].value >= agentType.classCap){
-				console.log("trying to spawn " + agentType.name + " but cap is reached");
+				//console.log("trying to spawn " + agentType.name + " but cap is reached");
 				this.spawnAgent();
 				return;
 			}
@@ -1003,9 +991,7 @@ let GraphGame = new Phaser.Class({
 			newAgent.name = agentType.name;
 			newAgent.nodeID = startNode.id;
 			newAgent.speed = agentType.speed;
-
-			console.log(newAgent.img.rotation);
-
+			
 			if(newAgent.isHostile == "true"){
 				newAgent.img.setName('hostileAgent');
 			}
