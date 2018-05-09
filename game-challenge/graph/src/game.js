@@ -931,7 +931,16 @@ let GraphGame = new Phaser.Class({
 			}
 		});
 
+		if(this.pathSelectionActive && this.currentPath[that.currentPathID].agent.id == agentID){
+			this.currentlyDrawingLineGraphics.clear();
+			this.pathSelectionActive = false;
+			this.graphicsPath.forEach(function(element){
+				element.clear();
+			});
+		}
+
 		delete this.currentAgents[agentID];
+		agent.img.destroy();
 		console.log(this.currentAgents);
 	},
 
