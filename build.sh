@@ -7,8 +7,7 @@ export GAME_SERVER_URI=https://game-server.${HOST}
 export FONT_URI=https://static.${HOST}/fonts
 export STATIC_SERVER_URI=https://static.${HOST}
 BASEDIR="$( cd "$( dirname "$0" )" && pwd )"
-echo $HOST
-echo $BASEEDIR
+
 declare -a SITES=(
   "dashboard"
   "game-client"
