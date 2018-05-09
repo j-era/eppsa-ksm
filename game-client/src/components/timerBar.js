@@ -52,7 +52,7 @@ const ProgressBar = styled.div`
   width: 85%;
   margin-left: 15%;
 
-  height: 12px;
+  height: 3vw;
 
   border-radius: ${props => props.theme.layout.borderRadius};
   border-top-left-radius: 0;
@@ -103,8 +103,8 @@ const Fuse = styled.div`
 const StyledFuse1SVG = styled(Fuse1SVG)`
   position: absolute;
 
-  width: 30px;
-  height: 30px;
+  width: 8vw;
+  height: 8vw;
 
   fill: ${props => props.theme.colors.background};
 
@@ -116,8 +116,8 @@ const StyledFuse1SVG = styled(Fuse1SVG)`
 const StyledFuse2SVG = styled(Fuse2SVG)`
   position: absolute;
 
-  width: 30px;
-  height: 30px;
+  width: 8vw;
+  height: 8vw;
 
   fill: ${props => props.theme.colors.background};
 

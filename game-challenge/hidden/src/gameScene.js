@@ -115,11 +115,8 @@ class gameScene extends Phaser.Scene {
 		console.log(blockElements);
 		if(this.blockImages[blockElements].direction == ""){
 			var blocking = this.add.image(this.xPosToScreen(this.blockImages[blockElements].positionX),this.yPosToScreen(this.blockImages[blockElements].positionY), this.blockImages[blockElements].img).setOrigin(0.5,1).setName(imageKey).setInteractive();
-			//TODO number should not be hardcoded but come from cms
-			//970 is the width of the base tile of the broken down dome picture
-			//please don't hate me future Barbara!
-			blocking.setScale(window.innerWidth/this.blockImages[blockElements].baseWidth);
 
+			blocking.setScale(window.innerWidth/this.blockImages[blockElements].baseWidth);
 
 			blocking.depth = this.blockImages[blockElements].depth;
 			blocking.eppsaInactive = true;
@@ -254,9 +251,10 @@ class gameScene extends Phaser.Scene {
 				//onComplete: function() {gameObject.input.enabled = true}
 			})
 		}else{
+			let startX = gameObject.x;
 			that.tweens.add( {
 				targets: gameObject,
-				angle: gameObject.angle + 10,
+				x: startX + 10,
 				ease: 'Linear',
 				duration: 150,
 				repeat: 1,
@@ -266,7 +264,6 @@ class gameScene extends Phaser.Scene {
 				},
 				onComplete: function() {
 					gameObject.clearTint();
-					gameObject.angle = 0;
 				}
 			})
 		}
@@ -338,7 +335,7 @@ gameWin() {
 
 
 	setTimeout(function(){
-		scope.sys.game.completeChallenge(this.points);
+		scope.sys.game.completeChallenge(scope.points);
 	}, 1000);
 
 	

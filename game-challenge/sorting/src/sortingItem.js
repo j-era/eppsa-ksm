@@ -13,6 +13,8 @@ const Container = styled(ItemComponent)`
   justify-content: center;
   align-items: center;
 
+  font-size: ${props => props.theme.font.button.size}vw;
+
   background-image: ${props => `url(${props.image.src})`};
 
   width: 95%;
@@ -38,7 +40,9 @@ const Container = styled(ItemComponent)`
 
 const ItemText = styled.div`
   color: ${props => props.color};
-  font-size: ${props => props.theme.font.text.size}vw;
+  font-size: ${props => props.theme.font.headline.size}vw;
+
+  text-align: center;
 `
 
 const dragSource = {
