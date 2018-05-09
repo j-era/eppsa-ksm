@@ -254,7 +254,10 @@ let GraphGame = new Phaser.Class({
 				that.currentPathID ++;
 				
 			}
-			that.currentlyDrawingLineGraphics.clear();
+			if(that.currentlyDrawingLineGraphics){
+				that.currentlyDrawingLineGraphics.clear();
+			}
+			
 		});
 
 		gameCallbacks.showTimeline(this.timer);
