@@ -63,13 +63,21 @@ Set the HOST variable of your target environment:
 * CMS: https://cms.local.staging.eppsa.de/
 * Dashboard: https://dashboard.local.eppsa.de/
 
+## Production
+```
+HOST=<environment>.eppsa.de
+./build.sh
+docker-compose -f docker-compose.yml -f docker-compose.production.yml build
+docker-compose -f docker-compose.yml -f docker-compose.production.yml up
+```
+
 #### Troubleshooting (Development)
 
 ##### Missing npm packages
 When you need to recreate a volume (but not "named volumes"), first use the following commands before using 'up':
 ```
-docker-compose stop
-docker-compose rm
+docker-compose -f docker-compose.yml -f docker-compose.development.yml stop
+docker-compose -f docker-compose.yml -f docker-compose.development.yml rm
 ```
 This will be necessary if you want to install new node dependencies using `npm install` during the build.
 
