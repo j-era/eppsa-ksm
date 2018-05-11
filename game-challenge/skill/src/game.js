@@ -427,6 +427,7 @@ let SkillGameAirship = new Phaser.Class({
 
 	onEventRotateSingleplayer: function(){
 		let newState, newAngle;
+		console.log(this.NPCState);
 		if(this.NPCState == 'horizontal'){
 			newState = this.getRandomItem(this.npcStates, this.npcHorizontalWeight);
 		}else{
@@ -436,9 +437,18 @@ let SkillGameAirship = new Phaser.Class({
 			//this.streamArrow.angle = 0;
 			newAngle = 0;
 		}else{
-			//this.streamArrow.angle = this.rand(-this.streamRange, this.streamRange);
-			newAngle = this.rand(-this.streamRange, this.streamRange);
+			if(this.NPCState == "tilt"){
+				newAngle = this.streamArrow.nextAngle;
+			}else{
+				//this.streamArrow.angle = this.rand(-this.streamRange, this.streamRange);
+				newAngle = this.rand(-this.streamRange, this.streamRange);
+			}
 		}
+		console.log(newAngle);
+		this.NPCState = newState;
+
+		this.streamArrow.nextAngle = newAngle;
+
 		this.tweens.add({
 			targets: this.streamArrow,
 			angle: newAngle,
