@@ -388,17 +388,26 @@ let SkillGameAirship = new Phaser.Class({
 	},
 
 	onEventRotateSingleplayer: function(){
-		let newState;
+		let newState, newAngle;
 		if(this.NPCState == 'horizontal'){
 			newState = this.getRandomItem(this.npcStates, this.npcHorizontalWeight);
 		}else{
 			newState = this.getRandomItem(this.npcStates, this.npcTiltWeight);
 		}
 		if(newState == 'horizontal'){
-			this.streamArrow.angle = 0;
+			//this.streamArrow.angle = 0;
+			newAngle = 0;
 		}else{
-			this.streamArrow.angle = this.rand(-this.streamRange, this.streamRange);
+			//this.streamArrow.angle = this.rand(-this.streamRange, this.streamRange);
+			newAngle = this.rand(-this.streamRange, this.streamRange);
 		}
+		this.tweens.add({
+			targets: this.streamArrow,
+			angle: newAngle,
+			duration: 300,
+			//ease: 'Sine.easeInOut',
+			repeat: 0
+		})
 	},
 
 	moveOpponentArrow: function(data){
