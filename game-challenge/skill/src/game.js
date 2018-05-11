@@ -341,7 +341,7 @@ let SkillGameAirship = new Phaser.Class({
 			window.addEventListener("message", this.listenerFunc, true);
 
 			if(this.singleplayer){
-				this.timedEvent = this.time.addEvent({ delay: 300, callback: this.onEventRotateSingleplayer, callbackScope: this, loop: true });
+				this.timedEvent = this.time.addEvent({ delay: gameData.updateNPCTimeInMS, callback: this.onEventRotateSingleplayer, callbackScope: this, loop: true });
 			}
 		}
 
@@ -404,7 +404,7 @@ let SkillGameAirship = new Phaser.Class({
 		this.tweens.add({
 			targets: this.streamArrow,
 			angle: newAngle,
-			duration: 300,
+			duration: gameData.updateNPCTimeInMS,
 			//ease: 'Sine.easeInOut',
 			repeat: 0
 		})
