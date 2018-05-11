@@ -499,9 +499,19 @@ let SkillGameAirship = new Phaser.Class({
 	},
 
 	checkIfWinState: function(){
-		if(this.checkIfWithinAngle(this.vehicleArrow.angle, this.vehicleWinAngle) && this.checkIfWithinAngle (this.streamArrow.angle, this.streamWinAngle) ){
+		/*if(this.checkIfWithinAngle(this.vehicleArrow.angle, this.vehicleWinAngle) && this.checkIfWithinAngle (this.streamArrow.angle, this.streamWinAngle) ){
+			return true;
+		}*/
+		if(this.checkIfStreamlined(this.vehicleArrow.angle, this.vehicleWinAngle, this.streamArrow.angle)){
 			return true;
 		}
+	},
+
+	checkIfStreamlined: function(vehicleAngle, range, windAngle){
+		if(vehicleAngle -range <= windAngle && vehicleAngle + range >= windAngle){
+			return true;
+		}
+		return false;
 	},
 
 	checkIfWithinAngle: function(currentAngle, range){
