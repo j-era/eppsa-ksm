@@ -9,6 +9,7 @@ services:
     volumes:
       - ./dashboard/dist:/dashboard
       - ./game-client/dist:/client
+      - ./game-stats/dist:/stats
       - ./game-challenge/button/dist:/button
       - ./game-challenge/clicker/dist:/clicker
       - ./game-challenge/graph/dist:/graph
