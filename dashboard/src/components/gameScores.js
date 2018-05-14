@@ -99,7 +99,7 @@ export default function GameScores(props) {
         <LabelContainer key={ label }><Label>{ label }</Label></LabelContainer>
         {
           scores.map((game, index) =>
-            <ScoreContainer key={ `${scoreMode}_${game.gameId}` } index={ index }>
+            <ScoreContainer key={ `${index}_${game.gameId}` } index={ index }>
               { game.name }
               <Score image={ `${assetServerUri}/${content.shared.assets.dashboardWingSign.src}` }>
                 { game.score }
