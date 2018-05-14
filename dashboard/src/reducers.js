@@ -10,7 +10,7 @@ export function scoreMode(state = scoreModes.ALL_TIME_HIGHSCORE, action) {
   }
 }
 
-export function recentFinishedGames(state = 0, action) {
+export function recentFinishedGames(state = [], action) {
   switch (action.type) {
     case actionTypes.UPDATE_RECENT_FINISHED_GAMES:
       return action.games
@@ -19,7 +19,7 @@ export function recentFinishedGames(state = 0, action) {
   }
 }
 
-export function highscoreGames(state = 0, action) {
+export function highscoreGames(state = [], action) {
   switch (action.type) {
     case actionTypes.UPDATE_HIGHSCORE_GAMES:
       return action.games

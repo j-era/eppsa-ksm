@@ -8,7 +8,6 @@ const Container = styled.div`
   height: 22%;
   padding: 2%;
   box-sizing: border-box;
-
 `
 
 const PaddedContainer = styled.div`
@@ -27,12 +26,10 @@ export default function Header({ assetServerUri, content, connectedGames }) {
     <Container>
       <PaddedContainer>
         <Logo src={ `${assetServerUri}/${content.shared.assets.logo.src}` } />
-        {
-          <GameBoard
-            content={ content }
-            connectedGames={ connectedGames }
-            assetServerUri={ assetServerUri } />
-        }
+        <GameBoard
+          content={ content }
+          connectedGames={ connectedGames }
+          assetServerUri={ assetServerUri } />
       </PaddedContainer>
     </Container>
   )
