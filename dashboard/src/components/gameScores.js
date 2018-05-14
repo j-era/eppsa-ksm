@@ -18,13 +18,17 @@ const SCORE_POSITIONS = [
   [61, 55]
 ]
 
-const Container = styled.div`
+const Container = styled(TransitionGroup)`
   width: 100%;
   flex-grow: 1;
   display: flex;
   font-size: ${props => props.theme.font.dashboard.name.size}vw;
   font-weight: ${props => props.theme.font.dashboard.name.weight};
   color: ${props => props.theme.font.dashboard.name.color};
+`
+
+const Background = styled(Fade)`
+  width: 100%;
   background-image: url(${props => props.image});
   background-repeat: no-repeat;
   background-size: contain;
@@ -92,23 +96,25 @@ export default function GameScores(props) {
   const label = scoreMode === ALL_TIME_HIGHSCORE
     ? content.shared.texts.dashboardAllTimeHighscoreLabel
     : content.shared.texts.dashboardRecentFinishedGamesLabel
+  const backgroundUri = scoreMode === ALL_TIME_HIGHSCORE
+    ? `${assetServerUri}/${content.shared.assets.dashboardHighscoreBackground.src}`
+    : `${assetServerUri}/${content.shared.assets.dashboardRecentGamesBackground.src}`
 
   return (
-    <Container image={ `${assetServerUri}/${content.shared.assets.dashboardMap.src}` }>
-      <TransitionGroup>
-        <LabelContainer key={ label }><Label>{ label }</Label></LabelContainer>
-        {
-          scores.map((game, index) =>
-            <ScoreContainer key={ `${index}_${game.gameId}` } index={ index }>
-              { game.name }
-              <Score image={ `${assetServerUri}/${content.shared.assets.dashboardWingSign.src}` }>
-                { game.score }
-              </Score>
-              <Avatar src={ `${assetServerUri}/${content.avatars[game.avatar].medium.src}` } />
-            </ScoreContainer>
-          )
-        }
-      </TransitionGroup>
+    <Container>
+      <Background image={ backgroundUri } />
+      <LabelContainer key={ label }><Label>{ label }</Label></LabelContainer>
+      {
+        scores.map((game, index) =>
+          <ScoreContainer key={ `${index}_${game.gameId}` } index={ index }>
+            { game.name }
+            <Score image={ `${assetServerUri}/${content.shared.assets.dashboardWingSign.src}` }>
+              { game.score }
+            </Score>
+            <Avatar src={ `${assetServerUri}/${content.avatars[game.avatar].medium.src}` } />
+          </ScoreContainer>
+        )
+      }
     </Container>
   )
 }
