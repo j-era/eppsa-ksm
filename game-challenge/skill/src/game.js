@@ -391,6 +391,16 @@ let SkillGameAirship = new Phaser.Class({
 		this.gameStarted = false;
 		this.timedEvent.remove(false);
 
+		let newY;
+		this.vehicleImage.y > this.height/2 ? newY = 0 - this.vehicleImage.height : newY = this.height;  
+
+		this.tweens.add({
+			targets: this.vehicleImage,
+			y: newY,
+			duration: 3000,
+			repeat: 0
+		});
+
 		let score = this.calculateScore();
 
 		if(this.singleplayer){
