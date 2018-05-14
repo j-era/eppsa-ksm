@@ -13,6 +13,13 @@ const Container = styled(ItemComponent)`
   width: calc(100% - ${props => props.theme.layout.cardPaddingVertical} * 2);
 `
 
+const ItemText = styled.div`
+  color: ${props => props.color};
+  font-size: ${props => props.theme.font.headline.size}vw;
+
+  text-align: center;
+`
+
 function collect(monitor) {
   const item = monitor.getItem()
   return {
@@ -45,7 +52,9 @@ class PreviewItem extends React.Component {
     }
 
     return (
-      <Container item={ this.props.item } style={ getItemStyles(this.props.currentOffset) } />
+      <Container item={ this.props.item } style={ getItemStyles(this.props.currentOffset) } >
+        <ItemText color={ this.props.item.color }>{ this.props.item.text }</ItemText>
+      </Container>
     )
   }
 }

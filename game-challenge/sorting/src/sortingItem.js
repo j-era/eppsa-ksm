@@ -8,13 +8,6 @@ import ItemComponent from "./components/itemComponent"
 
 
 const Container = styled(ItemComponent)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  font-size: ${props => props.theme.font.button.size}vw;
-
   background-image: ${props => `url(${props.image.src})`};
 
   width: 95%;
