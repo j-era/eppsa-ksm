@@ -18,10 +18,80 @@ database.connect().then(() => {
 
   io.on("connect", socket => {
     console.log(`client ${socket.id} connected`)
+
     socket.on("request", async (request, response) => {
+      const result = await database.querry(request)
+      response(result)
+    })
+
+    socket.on("startedGamesInRange", async (range, response) => {
+      const request = {
+        collection: "games",
+        find: {
+          startTime: {
+            $gte: new Date(range.from),
+            $lte: new Date(range.to)
+          }
+        },
+        sort: { name: 1 },
+        limit: 0
+      }
+
+      const result = await database.querry(request)
+      response(result)
+    })
+
+    socket.on("finishedGamesInRange", async (range, response) => {
+      const request = {
+        collection: "games",
+        find: {
+          startTime: {
+            $gte: new Date(range.from),
+            $lte: new Date(range.to)
+          },
+          finished: true
+        },
+        sort: { name: 1 },
+        limit: 0
+      }
+
+      const result = await database.querry(request)
+      response(result)
+    })
+
+    socket.on("startedChallengesInRange", async (range, challengeNumber, response) => {
+      const request = {
+        collection: `challenge-${challengeNumber}`,
+        find: {
+          startTime: {
+            $gte: new Date(range.from),
+            $lte: new Date(range.to)
+          }
+        },
+        sort: { name: 1 },
+        limit: 0
+      }
+
+      const result = await database.querry(request)
+      response(result)
+    })
+
+    socket.on("finishedChallengesInRange", async (range, challengeNumber, response) => {
+      const request = {
+        collection: `challenge-${challengeNumber}`,
+        find: {
+          startTime: {
+            $gte: new Date(range.from),
+            $lte: new Date(range.to)
+          },
+          finished: true
+        },
+        sort: { name: 1 },
+        limit: 0
+      }
+
       const result = await database.querry(request)
       response(result)
     })
   })
 })
-
