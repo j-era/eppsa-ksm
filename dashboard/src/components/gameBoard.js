@@ -35,7 +35,7 @@ export default function GameBoard({ assetServerUri, connectedGames, content }) {
   const numChallenges = Object.keys(content.challenges).length
   const stationWidth = 100 / numChallenges
   const games = connectedGames.filter(({ challengeNumber }) => challengeNumber <= numChallenges)
-  
+
   return (
     <Container>
       { renderStations(content.challenges, stationWidth) }

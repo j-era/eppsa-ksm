@@ -4,8 +4,6 @@ import styled from "styled-components"
 
 import GameScores from "./gameScores"
 import Header from "./header"
-import RecentFinishedGames from "./recentFinishedGames"
-import HighscoreGames from "./highscoreGames"
 
 const Container = styled.div`
   width: 100%;

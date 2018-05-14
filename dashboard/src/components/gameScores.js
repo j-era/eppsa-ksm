@@ -3,7 +3,6 @@ import { TransitionGroup } from "react-transition-group"
 import styled from "styled-components"
 
 import Fade from "./fade"
-import GameBoard from "./gameBoard"
 import { ALL_TIME_HIGHSCORE } from "../scoreModes"
 
 const SCORE_POSITIONS = [
@@ -84,20 +83,21 @@ const Avatar = styled.img`
 
 export default function GameScores(props) {
   const { assetServerUri, content, highscoreGames, recentFinishedGames, scoreMode } = props
-  
-  const scores = scoreMode === ALL_TIME_HIGHSCORE ? highscoreGames : recentFinishedGames 
+
+  const scores = scoreMode === ALL_TIME_HIGHSCORE ? highscoreGames : recentFinishedGames
   const label = scoreMode === ALL_TIME_HIGHSCORE
     ? content.shared.texts.dashboardAllTimeHighscoreLabel
     : content.shared.texts.dashboardRecentFinishedGamesLabel
 
   return (
-    <Container image={ `${assetServerUri}/${content.shared.assets.dashboardMap.src}`}>
+    <Container image={ `${assetServerUri}/${content.shared.assets.dashboardMap.src}` }>
       <TransitionGroup>
         <Label key={ label }>{ label }</Label>
-        { scores.map((game, index) =>
+        {
+          scores.map((game, index) =>
             <ScoreContainer key={ `${scoreMode}_${game.gameId}` } index={ index }>
               { game.name }
-              <Score image={ `${assetServerUri}/${content.shared.assets.dashboardWingSign.src}`}>
+              <Score image={ `${assetServerUri}/${content.shared.assets.dashboardWingSign.src}` }>
                 { game.score }
               </Score>
               <Avatar src={ `${assetServerUri}/${content.avatars[game.avatar].medium.src}` } />
