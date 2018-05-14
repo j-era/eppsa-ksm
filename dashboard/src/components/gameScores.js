@@ -31,12 +31,17 @@ const Container = styled.div`
   background-position-y: bottom;
 `
 
-const Label = styled(Fade)`
+const LabelContainer = styled(Fade)`
   position: absolute;
   bottom: 2%;
-  left: 42%;
-  width: 16%;
-  padding: 0.2em 0em;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
+const Label = styled.div`
+  padding: 0.2em 1em;
   border-radius: 50px;
   font-size: ${props => props.theme.font.dashboard.label.size}vw;
   font-weight: ${props => props.theme.font.dashboard.label.weight};
@@ -91,7 +96,7 @@ export default function GameScores(props) {
   return (
     <Container image={ `${assetServerUri}/${content.shared.assets.dashboardMap.src}` }>
       <TransitionGroup>
-        <Label key={ label }>{ label }</Label>
+        <LabelContainer key={ label }><Label>{ label }</Label></LabelContainer>
         {
           scores.map((game, index) =>
             <ScoreContainer key={ `${scoreMode}_${game.gameId}` } index={ index }>
