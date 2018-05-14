@@ -504,7 +504,7 @@ let SkillGameAirship = new Phaser.Class({
 		console.log(orientationGamma);
 
 		//clamp value of tilt input to minTilt and maxTilt as defined in backend
-		orientationGamma = orientationGamma <= that.minTilt ? that.minTilt : orientationGamma >= that.maxTilt ? that.maxTilt : orientationGamma;
+		//orientationGamma = orientationGamma <= that.minTilt ? that.minTilt : orientationGamma >= that.maxTilt ? that.maxTilt : orientationGamma;
 		let newRotation = orientationGamma * that.sensitivity;
 
 		if(this.playingShip){
