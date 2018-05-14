@@ -31,3 +31,7 @@ services:
   game-server:
     build:
       dockerfile: Dockerfile.production
+
+  mongo-access:
+    build:
+      dockerfile: Dockerfile.production

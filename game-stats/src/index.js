@@ -5,12 +5,10 @@ import socketIOClient from "socket.io-client"
 import App from "./App"
 
 
-const client = socketIOClient("https://mongo.marco.eppsa.de")
+const client = socketIOClient(process.env.MONGO_ACCESS_URI)
 
 
 ReactDOM.render(
-  <App
-    client={ client }
-  />,
+  <App client={ client } />,
   document.getElementById("root")
 )

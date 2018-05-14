@@ -1,14 +1,14 @@
 const MongoClient = require("mongodb").MongoClient
 
 module.exports = class MongoDB {
-  constructor(mongoBbUri, databaseName) {
-    this.mongoBbUri = mongoBbUri
+  constructor(mongoDBUri, databaseName) {
+    this.mongoDBUri = mongoDBUri
     this.databaseName = databaseName
     this.database = null
   }
 
   async connect() {
-    const connection = await MongoClient.connect(this.mongoBbUri)
+    const connection = await MongoClient.connect(this.mongoDBUri)
     this.database = connection.db(this.databaseName)
   }
 

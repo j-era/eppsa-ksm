@@ -81,13 +81,6 @@ services:
     ports:
       - "27017:27017"
 
-  mongo-access:
-      build:
-        dockerfile: Dockerfile.development
-      volumes:
-        - ./mongo-access:/app
-        - /app/node_modules
-
   game-stats:
       build:
         context: ./game-stats
@@ -191,4 +184,11 @@ services:
       STATIC_SERVER_URI: https://static.${HOST}
     volumes:
       - ./game-challenge/skill:/app
+      - /app/node_modules
+
+  mongo-access:
+    build:
+      dockerfile: Dockerfile.development
+    volumes:
+      - ./mongo-access:/app
       - /app/node_modules
