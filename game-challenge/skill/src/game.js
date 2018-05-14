@@ -404,13 +404,28 @@ let SkillGameAirship = new Phaser.Class({
 			repeat: 0
 		});
 
-		let score = this.calculateScore();
+		let lineColor = color.replace("#", "0x");
+		var line = new Phaser.Geom.Line(-20, window.innerHeight/2 + window.innerHeight/20, window.innerWidth + 20, window.innerHeight/2 - window.innerHeight/20);
+		var circle = new Phaser.Geom.Circle(window.innerWidth/2, window.innerHeight/2, window.innerHeight/6);
+		this.CountdownGraphics = this.add.graphics({ lineStyle: { width: window.innerHeight/6, color: lineColor }, fillStyle: { color: lineColor } });
+			
+		this.CountdownGraphics.strokeLineShape(line);
+		this.CountdownGraphics.fillCircleShape(circle);
+		this.CountdownGraphics.setDepth(10);
 
-		if(this.singleplayer){
-			this.sendScore(this.calculateScore());
-		}else{
-			socket.emit("sendToRoom", "sendToRoom",room, {'score': score});
-		}
+		let countdownTextSize = window.innerHeight/10;
+		
+		let score = this.calculateScore();
+		this.countdownText = this.add.text(window.innerWidth/2, window.innerHeight/2, "+ " + score, {font: countdownTextSize + 'px Arial', fill: '#ffffff'}).setDepth(10).setOrigin(0.5);
+		let _this = this;
+		setTimeout(function(){
+			if(_this.singleplayer){
+				_this.sendScore(_this.calculateScore());
+			}else{
+				socket.emit("sendToRoom", "sendToRoom",room, {'score': score});
+			}
+		},1000)
+		
 	},
 
 	sendScore: function(score){
