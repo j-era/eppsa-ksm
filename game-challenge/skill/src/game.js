@@ -362,6 +362,7 @@ let SkillGameAirship = new Phaser.Class({
 	},
 
 	sendScore: function(score){
+		gameCallbacks.stopTimelineClock();
 		gameCallbacks.finishChallenge(score)
 	},
 
