@@ -56,15 +56,24 @@ class GameScene extends Phaser.Scene {
 				if(scope.gameStarted){
 					scope.boatPic.x = parseInt(scope.boatPic.x);
 					scope.boatPic.x += scope.xPosToScreen(scope.sys.game.gameData.MovementX);
+					scope.tweens.add( {
+						targets: scope.boatPic,
+						scaleX: scope.boatPic.scaleX * 1.04,
+						scaleY: scope.boatPic.scaleY * 1.04,
+						ease: 'Linear',
+						duration: 50,
+						repeat: 0,
+						yoyo: true,
+					});
 					//if(bla.boatPic.x > window.innerHeight-(window.innerHeight*0.35)){
 					if(scope.boatPic.x > scope.xPosToScreen(scope.sys.game.gameData.EndPointX)){
+						scope.gameStarted = false;
 						scope.timedEvent.paused = true;
 						var Timeleft = scope.timedEvent.getProgress().toString().substr(0,4) * 10;
 						Timeleft = Timeleft.toFixed(1);
 						scope.gameWin(Timeleft);
 					}
 				}
-		
 			})
 		}
 		
@@ -84,6 +93,7 @@ class GameScene extends Phaser.Scene {
 
 				//if(bla.boatPic.x > window.innerHeight-(window.innerHeight*0.35)){
 				if(scope.boatPic.x > scope.xPosToScreen(scope.sys.game.gameData.EndPointX)){
+					scope.gameStarted = false;
 					scope.timedEvent.paused = true;
 					var Timeleft = scope.timedEvent.getProgress().toString().substr(0,4) * 10;
 					Timeleft = Timeleft.toFixed(1);
@@ -172,6 +182,7 @@ class GameScene extends Phaser.Scene {
 			this.countdownText.destroy();
 			this.sys.game.gameCallbacks.showTimeline(this.sys.game.gameData.timer);
 			this.sys.game.gameCallbacks.startTimelineClock();
+			console.log("clicker game started, startTimeline called");
 			this.timedEvent = this.time.addEvent({
 				delay: this.sys.game.gameData.timer * 1000,
 				callback: this.gameLose,
@@ -186,6 +197,8 @@ class GameScene extends Phaser.Scene {
 	}
 
 	gameWin(Timeleft){
+		this.sys.game.gameCallbacks.stopTimelineClock();
+		console.log("clicker game ended, stopTimeline called");
 		let scope = this;
 		let startY = this.boatPic.y;
 
@@ -230,12 +243,14 @@ class GameScene extends Phaser.Scene {
 
 
 		setTimeout(function(){
+			console.log("clicker game called complete Challenge");
 			scope.sys.game.completeChallenge(scope.points.score + scope.points.bonus);
 		}, 1000);
 
 	}
 
 	gameLose(){
+		this.sys.game.gameCallbacks.stopTimelineClock();
 		let scope = this;
 		let lineColor = this.sys.game.color.replace("#", "0x");
 		var line = new Phaser.Geom.Line(-20, window.innerHeight/2 + window.innerHeight/20, window.innerWidth + 20, window.innerHeight/2 - window.innerHeight/20);
