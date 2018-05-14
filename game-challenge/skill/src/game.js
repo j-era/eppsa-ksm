@@ -389,6 +389,7 @@ let SkillGameAirship = new Phaser.Class({
 		window.removeEventListener("message", this.listenerFunc, true);
 		this.winStateCounter.remove(false);
 		this.gameStarted = false;
+		this.timedEvent.remove(false);
 
 		let score = this.calculateScore();
 
