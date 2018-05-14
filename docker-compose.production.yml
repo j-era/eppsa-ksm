@@ -9,6 +9,7 @@ services:
     volumes:
       - ./dashboard/dist:/dashboard
       - ./game-client/dist:/client
+      - ./game-stats/dist:/stats
       - ./game-challenge/button/dist:/button
       - ./game-challenge/clicker/dist:/clicker
       - ./game-challenge/graph/dist:/graph
@@ -28,5 +29,9 @@ services:
       - "27017:27017"
 
   game-server:
+    build:
+      dockerfile: Dockerfile.production
+
+  mongo-access:
     build:
       dockerfile: Dockerfile.production

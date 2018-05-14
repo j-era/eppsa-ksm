@@ -57,6 +57,10 @@ http {
       server game-server:3000;
     }
 
+    upstream docker-mongo-access {
+      server mongo-access:3000;
+    }
+
     include /etc/nginx/conf.d/*.conf;
 
     include /etc/nginx/sites-enabled/*;

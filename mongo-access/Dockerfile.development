@@ -9,7 +9,5 @@ COPY package.json /app/package.json
 COPY package-lock.json /app/package-lock.json
 RUN npm install
 
-COPY src /app/src
-
 # start app
-CMD ["npm", "start"]
+CMD ["npm", "run", "watch"]
