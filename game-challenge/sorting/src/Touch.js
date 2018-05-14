@@ -336,7 +336,6 @@ export class TouchBackend {
     }
 
     handleTopMoveStartCapture (e) {
-        console.log(`handleTopMoveStartCapture (${e})`)
         if (!eventShouldStartDrag(e)) {
             return;
         }
@@ -345,7 +344,6 @@ export class TouchBackend {
     }
 
     handleMoveStart (sourceId) {
-      console.log(`handleMoveStart (${sourceId})`)
         // Just because we received an event doesn't necessarily mean we need to collect drag sources.
         // We only collect start collecting drag sources on touch and left mouse events.
         if (Array.isArray(this.moveStartSourceIds)) {
@@ -362,8 +360,6 @@ export class TouchBackend {
     }
 
     handleTopMoveStart (e) {
-        console.log("handleTopMoveStart")
-
         if (!eventShouldStartDrag(e)) {
             return;
         }
@@ -380,15 +376,9 @@ export class TouchBackend {
         }
         this.waitingForDelay = false
 
-        console.log(this._mouseClientOffset.x)
-        console.log(this._mouseClientOffset.y)
-        console.log("this.moveStartSourceIds: " + this.moveStartSourceIds)
-
         const sourceIds = this.moveStartSourceIds
 
         this.startTouchTimer = setTimeout(() => {
-          console.log("this.moveStartSourceIds: " + sourceIds)
-
           if (this.touchPositionDidNotChange(clientOffset)) {
             this.actions.beginDrag(sourceIds, {
               clientOffset: this._mouseClientOffset,
@@ -400,11 +390,7 @@ export class TouchBackend {
     }
 
     touchPositionDidNotChange(origin) {
-      console.log(this.current.x)
-      console.log(this.current.y)
-
       const distanceMoved = distance(this.current.x, this.current.y, origin.x, origin.y)
-      console.log(distanceMoved)
       return distanceMoved === 0
     }
 
@@ -421,7 +407,6 @@ export class TouchBackend {
     }
 
     handleTopMoveCapture (e) {
-        console.log(`handleTopMoveCapture (${JSON.stringify(e)})`)
         this.dragOverTargetIds = [];
     }
 
@@ -430,7 +415,6 @@ export class TouchBackend {
     }
 
     handleTopMove (e) {
-      console.log(`handleTopMove (${JSON.stringify(e)})`)
         clearTimeout(this.timeout);
         if (this.waitingForDelay) {
             return;
@@ -498,7 +482,6 @@ export class TouchBackend {
         clearTimeout(this.startTouchTimer);
       }
 
-      console.log(`handleTopMoveEndCapture (e)`)
         if (!eventShouldEndDrag(e)) {
             return;
         }
