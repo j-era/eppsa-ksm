@@ -53,15 +53,14 @@ const ScoreContainer = styled(Fade)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  animation: move ${props => props.index + 15}s infinite linear ${props => props.index * 300}ms;
+  animation: move ${props => props.index * 2 + 10}s infinite linear ${props => props.index * 300}ms;
 
   @keyframes move {
-    20% { transform: translate(10%, 2%) };
-    40% { transform: translate(-10%, 2%) };
-    60% { transform: translate(-10%, -2%) };
-    80% { transform: translate(10%, 0%) };
+    20% { transform: translate(${props => props.index + 10}%, 5%) };
+    40% { transform: translate(${props => props.index}%, 5%) };
+    60% { transform: translate(${props => props.index + 10}%, 0%) };
+    80% { transform: translate(${props => props.index + 5}%, 5%) };
   }
-}
 `
 
 const Score = styled.div`
