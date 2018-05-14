@@ -27,13 +27,15 @@ const Container = styled(ItemComponent)`
 
   ${props => props.isCorrect ? css`
     border: ${props.theme.layout.buttonBorder} solid ${props.theme.colors.rightAnswer};
-    animation: ${pulse(props.theme.colors.rightAnswer, "black", { duration: 250, repeats: 3 }, "border-color")};
-    ` : ""}
+    animation: ${
+      pulse(props.theme.colors.rightAnswer, "black", { duration: 250, repeats: 3 }, "border-color")}
+    ` : ""};
 
   ${props => props.isWrong ? css`
-    border: ${props.theme.layout.buttonBorder} solid ${props.theme.colors.wrongAnswer};
-    animation: ${pulse(props.theme.colors.wrongAnswer, "black", { duration: 250, repeats: 3 }, "border-color")};
-  ` : ""}
+    border: ${props.theme.layout.buttonBorder} solid ${props.theme.colors.rightAnswer};
+    animation: ${
+      pulse(props.theme.colors.wrongAnswer, "black", { duration: 750, repeats: 3 }, "border-color")}
+      ` : ""};
 
   padding: ${props => props.theme.layout.mediumSpacing}vw;
 `
@@ -85,7 +87,7 @@ class SortingItem extends React.Component {
   }
 }
 
-function getDivStyle({item, isWrong}) {
+function getDivStyle({ item, isWrong }) {
   return {
     display: "flex",
     justifyContent: "center",

@@ -1,6 +1,5 @@
 import React from "react"
 import { DragDropContext } from "react-dnd"
-import styled from "styled-components"
 import FlipMove from "react-flip-move"
 
 import { default as TouchBackend } from "./Touch"
@@ -13,16 +12,16 @@ class DragDropList extends React.Component {
     return (
       <div>
         <FlipMove
-          duration={2000}
+          duration={ 2000 }
           easing="ease-out"
           disableAllAnimations={ !this.props.isConfirmed }>
           {
-            this.props.items.map((item, index) =>
+            this.props.items.map((item) =>
               <SortingItem
                 isConfirmed={ this.props.isConfirmed }
                 isCorrect={ this.props.isCorrect }
                 isWrong={ this.props.isWrong }
-                key ={ item.id }
+                key={ item.id }
                 item={ item }
                 onReorder={ this.props.reorder } />
             )
