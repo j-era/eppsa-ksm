@@ -158,7 +158,9 @@ let SkillGameAirship = new Phaser.Class({
 		this.CountdownGraphics.fillCircleShape(circle);
 		this.CountdownGraphics.setDepth(1);
 
-		this.winStateGraphics = this.add.graphics({/* x: 240, y: 36, */fillStyle: { color: 0x006eff } });
+		//this.winStateGraphics = this.add.graphics({/* x: 240, y: 36, */fillStyle: { color: 0x006eff } });
+		this.winStateDisplay = this.add.image(this.width/7, this.height - this.height/15, 'pointsBar').setOrigin(0.5,1).setDepth(10);
+		this.winStateDisplay.setScale(this.width/this.winStateDisplay.width * 0.08, this.width/this.winStateDisplay.width * 0.08 * 0.01);
 
 
 		if(this.singleplayer){
@@ -294,22 +296,11 @@ let SkillGameAirship = new Phaser.Class({
 
 			if(!this.lastTimeInWinState && this.currentlyInWinState ){
 				console.log("starting Winning counter");
-				this.circle = new Phaser.Geom.Circle(0 + this.width/8, this.height - this.height/8, this.width/12);
-				this.point = new Phaser.Geom.Circle(0, 0, this.width/48);
-				this.a = 0;
 				this.winStateCounter = this.time.addEvent({delay: 1000, callback: this.increaseWinStateTime, callbackScope: this, loop: true});
-				this.winStateGraphics.clear();
 			}
 
 			if(this.currentlyInWinState){
-				this.a +=  (1/(Phaser.Math.PI2/2)) * this.winStateCounter.getProgress();
-				/*if (this.a >= Phaser.Math.PI2)
-				{
-					this.a -= Phaser.Math.PI2;
-				}*/
-				Phaser.Geom.Circle.CircumferencePoint(this.circle, this.a, this.point);
-				this.winStateGraphics.fillCircleShape(this.point);
-				//this.winStateGraphics.fillRect(0, 16, 500 * this.winStateCounter.getProgress(), 8);
+				this.winStateDisplay.setScale(this.width/this.winStateDisplay.width * 0.08, this.width/this.winStateDisplay.width * 0.08 * this.winStateCounter.getProgress());
 			}
 
 			if(this.lastTimeInWinState && !this.currentlyInWinState){
@@ -317,7 +308,7 @@ let SkillGameAirship = new Phaser.Class({
 				this.winStateCounter.remove(false);
 				this.currentTimeInWinState = 0;
 				this.sensitivity = this.baseSensitivity;
-				this.winStateGraphics.clear();
+				this.winStateDisplay.setScale(this.width/this.winStateDisplay.width * 0.08, this.width/this.winStateDisplay.width * 0.08 * 0.01);
 			}
 		}
 	},
@@ -328,30 +319,24 @@ let SkillGameAirship = new Phaser.Class({
 
 	increaseWinStateTime: function(){
 		console.log('increasing win state time');
-		this.scoreText.setText(this.calculateScore() + " Punkte");
 		this.timeInWinState ++;
 		this.currentTimeInWinState ++;
+		this.scoreText.setText(this.calculateScore() + " Punkte");
 		this.sensitivity += 1 - this.destabiliser * this.currentTimeInWinState;
 
-		let fontSize = this.height * 0.15;
-		let plus = this.add.text(0 + this.width/8, this.height - this.height/8, "+", {font: fontSize + 'px Cabin', fill: '#3a7c0e'}).setOrigin(0.5, 0.5).setDepth(10);
-		console.log(plus);
-
+		let plus = this.add.image(this.width/7, this.height/2 + this.height/6, 'addPoints').setOrigin(0.5, 0.5).setDepth(10);
+		plus.setScale(this.width/plus.width * 0.1);
 
 		this.tweens.add({
 			targets: plus,
-			scaleX: 1.5,
-			scaleY: 1.5,
+			scaleX: plus.scaleX * 1.2,
+			scaleY: plus.scaleY * 1.2,
 			alpha: 0,
 			duration: 500,
 			ease: 'Sine.easeInOut',
-			repeat: 0,
-			onComplete: function(){
-				plus.setText("");
-			}
+			repeat: 0
 		});
-		this.winStateGraphics.clear();
-		this.a = 0;
+
 	},
 
 	countdownFunc: function(){
