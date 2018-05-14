@@ -40,7 +40,7 @@ export default function GameBoard({ assetServerUri, connectedGames, content }) {
     <Container>
       { renderStations(content.challenges, stationWidth) }
       <TransitionGroup>
-        { renderGames(connectedGames, content.avatars, stationWidth, assetServerUri) }
+        { renderGames(games, content.avatars, stationWidth, assetServerUri) }
       </TransitionGroup>
     </Container>
   )
@@ -57,9 +57,9 @@ function renderStations(challenges, stationWidth) {
   )
 }
 
-function renderGames(connectedGames, avatars, stationWidth, assetServerUri) {
+function renderGames(games, avatars, stationWidth, assetServerUri) {
   const gameLists = []
-  connectedGames.forEach((game) => {
+  games.forEach((game) => {
     if (!gameLists[game.challengeNumber]) {
       gameLists[game.challengeNumber] = []
     }
@@ -67,7 +67,7 @@ function renderGames(connectedGames, avatars, stationWidth, assetServerUri) {
     gameLists[game.challengeNumber].unshift(game.gameId)
   })
 
-  return connectedGames.map(({ avatar, challengeNumber, gameId }) =>
+  return games.map(({ avatar, challengeNumber, gameId }) =>
     <Fade key={ gameId }>
       <Avatar
         index={ gameLists[challengeNumber].indexOf(gameId) }
