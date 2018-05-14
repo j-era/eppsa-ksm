@@ -13,10 +13,11 @@ const Station = styled.div`
   position: absolute;
   left: ${props => props.index * props.width}%;
   bottom: 0;
-  width: ${props => props.width}%;
+  width: ${props => props.width - 0.5}%;
   height: 25%;
   background-color: ${props => props.color};
   border-radius: 50%;
+  margin: 0% 0.25%;
   align-self:flex-end;
 `
 
