@@ -171,9 +171,9 @@ let SkillGameAirship = new Phaser.Class({
 			this.vehicleImage = this.add.image(this.width/2, this.height/2 + this.height/6, 'vehicle').setOrigin(0.5, 0);
 			this.vehicleImage.setScale(this.height/this.vehicleImage.height * 0.3);
 
-			this.streamArrow = this.add.image(this.width/2,this.height/2 - this.height/8, 'windArrowSmall').setOrigin(0.5,1);
+			this.streamArrow = this.add.image(this.width/2,this.height/2 - this.height/20, 'windArrowSmall').setOrigin(0.5,1);
 			this.streamArrow.setScale(this.height/this.streamArrow.height * 0.05);
-			this.vehicleArrow = this.add.image(this.width/2, this.height/2 + 10, 'vehicleArrowLarge').setOrigin(0.5,0);
+			this.vehicleArrow = this.add.image(this.width/2, this.height/2, 'vehicleArrowLarge').setOrigin(0.5,0);
 			this.vehicleArrow.setScale(this.height/this.vehicleArrow.height * 0.1);
 
 			this.windDirectionLeft = this.add.image(this.width/4, this.height/6, 'windDirection');
@@ -197,12 +197,12 @@ let SkillGameAirship = new Phaser.Class({
 				this.windImage = this.add.image(this.width, this.height/2, 'wind').setOrigin(1,1);
 				this.windImage.setScale(this.width/this.windImage.width, this.width/this.windImage.width);
 
-				this.vehicleImage = this.add.image(this.width/2, this.height - this.height/6, 'vehicle').setOrigin(0.5, 0);
+				this.vehicleImage = this.add.image(this.width/2, this.height/2 + this.height/6, 'vehicle').setOrigin(0.5, 0);
 				this.vehicleImage.setScale(this.height/this.vehicleImage.height * 0.3);
 
-				this.streamArrow = this.add.image(this.width/2,this.height/2 - this.height/8, 'windArrowSmall').setOrigin(0.5,1);
+				this.streamArrow = this.add.image(this.width/2,this.height/2 - this.height/20, 'windArrowSmall').setOrigin(0.5,1);
 				this.streamArrow.setScale(this.height/this.streamArrow.height * 0.05);
-				this.vehicleArrow = this.add.image(this.width/2, this.height/2 + 10, 'vehicleArrowLarge').setOrigin(0.5,0);
+				this.vehicleArrow = this.add.image(this.width/2, this.height/2, 'vehicleArrowLarge').setOrigin(0.5,0);
 				this.vehicleArrow.setScale(this.height/this.vehicleArrow.height * 0.1);
 
 				this.windDirectionLeft = this.add.image(this.width/4, this.height/6, 'windDirection');
@@ -215,13 +215,13 @@ let SkillGameAirship = new Phaser.Class({
 				this.windImage.flipY = -1;
 				this.windImage.setScale(this.width/this.windImage.width);
 				
-				this.vehicleImage = this.add.image(this.width/2, this.height/6, 'vehicle').setOrigin(0.5, 0);
+				this.vehicleImage = this.add.image(this.width/2, this.height/2 - this.height/6, 'vehicle').setOrigin(0.5, 1);
 				this.vehicleImage.setScale(this.height/this.vehicleImage.height * 0.3);
 				this.vehicleImage.flipY = -1;
 
-				this.streamArrow = this.add.image(this.width/2,this.height/2 + this.height/8, 'windArrowLarge').setOrigin(0.5,1);
+				this.streamArrow = this.add.image(this.width/2,this.height/2, 'windArrowLarge').setOrigin(0.5,0);
 				this.streamArrow.setScale(this.height/this.streamArrow.height * 0.1);
-				this.vehicleArrow = this.add.image(this.width/2, this.height/2 - 10, 'vehicleArrowSmall').setOrigin(0.5,0);
+				this.vehicleArrow = this.add.image(this.width/2, this.height/2 - this.height/20, 'vehicleArrowSmall').setOrigin(0.5,1);
 				this.vehicleArrow.setScale(this.height/this.vehicleArrow.height * 0.05);
 
 				this.windDirectionLeft = this.add.image(this.width/4, this.height-this.height/6, 'windDirection').setScale(0.2);
