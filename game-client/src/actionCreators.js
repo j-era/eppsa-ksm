@@ -66,22 +66,10 @@ export function finishChallenge(challengeData, gameServer) {
 
 export function addScore(increment) {
   return async (dispatch) => {
+    dispatch({ type: types.SHOW_SCORE })
     dispatch({ type: types.ADD_SCORE, increment })
-    dispatch(showScore())
     await delay(3000)
-    dispatch(hideScore())
-  }
-}
-
-export function showScore() {
-  return {
-    type: types.SHOW_SCORE,
-  }
-}
-
-export function hideScore() {
-  return {
-    type: types.HIDE_SCORE,
+    dispatch({ type: types.HIDE_SCORE })
   }
 }
 

@@ -82,11 +82,11 @@ function keyframesNewScore() {
 export default class Score extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { oldScore: props.score }
+    this.state = { oldScore: 0 }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!nextProps.show && this.props.show) {
+    if (nextProps.show && !this.props.show) {
       this.setState({ oldScore: this.props.score })
     }
   }
