@@ -94,7 +94,7 @@ module.exports = class MongoDB extends EventEmitter {
   }
 
   ensureAllGamesDisconnected() {
-    return this.database.collection(GAMES_COLLECTION).update(
+    return this.database.collection(GAMES_COLLECTION).updateMany(
       { connected: true }, { $set: { connected: false } }
     )
   }

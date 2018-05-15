@@ -11,8 +11,8 @@ const mongoDB = new MongoDB(LOG)
 mongoDB.connect().then(async () => {
   LOG.info("Connected to MongoDB")
 
-  const result = await mongoDB.ensureAllGamesDisconnected()
-  LOG.info(result, "ensureAllGamesDisconnected")
+  const { result } = await mongoDB.ensureAllGamesDisconnected()
+  LOG.info({ result }, "ensureAllGamesDisconnected")
 
   const server = io(3000, CONNECTION_CONFIG)
   server.on("connect", socket => {
