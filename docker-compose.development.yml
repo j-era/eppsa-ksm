@@ -77,10 +77,6 @@ services:
       - ./game-server:/app
       - /app/node_modules
 
-  mongo:
-    ports:
-      - "27017:27017"
-
   game-stats:
       build:
         context: ./game-stats
