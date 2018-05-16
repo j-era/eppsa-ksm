@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+export GIT_JSON_API_URI=https://content-server.${HOST}
 export CONTENT_SERVER_URI=https://content-server.${HOST}
 export ASSET_SERVER_URI=https://asset-server.${HOST}
 export GAME_SERVER_URI=https://game-server.${HOST}
@@ -10,6 +11,7 @@ export MONGO_ACCESS_URI=https://mongo.${HOST}
 BASEDIR="$( cd "$( dirname "$0" )" && pwd )"
 
 declare -a SITES=(
+  "cms-frontend"
   "dashboard"
   "game-client"
   "game-stats"

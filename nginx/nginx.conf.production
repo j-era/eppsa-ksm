@@ -36,11 +36,6 @@ http {
 
     client_max_body_size 0;
 
-    upstream docker-cms-frontend {
-      server cms-frontend:443;
-      server cms-frontend:80;
-    }
-
     upstream docker-content-server {
       server content-server:80;
     }
