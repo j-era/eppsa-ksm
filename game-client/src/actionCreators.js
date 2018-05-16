@@ -1,4 +1,6 @@
 import uuid from "uuid/v4"
+import pickBy from "lodash.pickby"
+import isEmpty from "lodash.isempty"
 
 import { delay } from "eppsa-ksm-shared"
 
@@ -270,13 +272,17 @@ function resolveChallengeWebAppUri(webApp) {
   return challengeUri.toString()
 }
 
-export function selectChallengeMode(content, gameServer) {
+export function selectChallengeMode(content) {
   return async (dispatch, getState) => {
-    const { challengeData } = getState()
-    if (challengeData.challenge.multiplayer) {
-      dispatch(updateGameState(gameStates.CHALLENGE_MODE_SELECTION))
+    const multiplayerChallengens = pickBy(
+      content.challenges[getState().challengeNumber].challengeTypes,
+      "multiplayer"
+    )
+
+    if (isEmpty(multiplayerChallengens)) {
+      dispatch(updateGameState(gameStates.CHALLENGE_SELECTION))
     } else {
-      dispatch(startChallenge(gameServer))
+      dispatch(updateGameState(gameStates.CHALLENGE_MODE_SELECTION))
     }
   }
 }
