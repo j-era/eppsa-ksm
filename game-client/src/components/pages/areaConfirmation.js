@@ -3,8 +3,7 @@ import autoBind from "react-autobind"
 import styled, { withTheme } from "styled-components"
 import { delay, Description, FramedIcon, NextButton, Page, PageTitle } from "eppsa-ksm-shared"
 
-import { updateGameState, selectChallengeMode } from "../../actionCreators"
-import { CHALLENGE_SELECTION } from "../../gameStates"
+import { selectChallengeMode } from "../../actionCreators"
 
 const Container = styled(Page)`
   display: flex;

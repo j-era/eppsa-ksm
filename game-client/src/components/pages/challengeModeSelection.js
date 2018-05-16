@@ -1,8 +1,6 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled, { withTheme } from "styled-components"
-import * as gameStates from "../../gameStates"
-
 import {
   delay,
   FramedIcon,
@@ -12,6 +10,7 @@ import {
 } from "eppsa-ksm-shared"
 
 import { joinChallengeLobby, updateGameState } from "../../actionCreators"
+import * as gameStates from "../../gameStates"
 
 const Container = styled(Page)`
   display: flex;
