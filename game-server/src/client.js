@@ -45,7 +45,7 @@ module.exports = class Client {
     }
   }
 
-  async startGame(name, avatar, maxChallenges, toSocket) {
+  async startGame(name, avatar, maxChallenges, userAgent, toSocket) {
     this.disconnectGame()
 
     this.game = {
@@ -55,6 +55,7 @@ module.exports = class Client {
       score: 0,
       challengeNumber: 1,
       maxChallenges,
+      userAgent,
       inLobby: false,
       finished: false
     }

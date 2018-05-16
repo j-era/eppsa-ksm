@@ -8,13 +8,6 @@ import ItemComponent from "./components/itemComponent"
 
 
 const Container = styled(ItemComponent)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  font-size: ${props => props.theme.font.button.size}vw;
-
   background-image: ${props => `url(${props.image.src})`};
 
   width: 95%;
@@ -27,13 +20,15 @@ const Container = styled(ItemComponent)`
 
   ${props => props.isCorrect ? css`
     border: ${props.theme.layout.buttonBorder} solid ${props.theme.colors.rightAnswer};
-    animation: ${pulse(props.theme.colors.rightAnswer, "black", { duration: 250, repeats: 3 }, "border-color")};
-    ` : ""}
+    animation: ${
+      pulse(props.theme.colors.rightAnswer, "black", { duration: 250, repeats: 3 }, "border-color")}
+    ` : ""};
 
   ${props => props.isWrong ? css`
-    border: ${props.theme.layout.buttonBorder} solid ${props.theme.colors.wrongAnswer};
-    animation: ${pulse(props.theme.colors.wrongAnswer, "black", { duration: 250, repeats: 3 }, "border-color")};
-  ` : ""}
+    border: ${props.theme.layout.buttonBorder} solid ${props.theme.colors.rightAnswer};
+    animation: ${
+      pulse(props.theme.colors.wrongAnswer, "black", { duration: 750, repeats: 3 }, "border-color")}
+      ` : ""};
 
   padding: ${props => props.theme.layout.mediumSpacing}vw;
 `
@@ -71,7 +66,7 @@ class SortingItem extends React.Component {
   render() {
     let content =
       // `div` around a styled component is required by react-dnd
-      <div style={ { display: "flex", justifyContent: "center" } }>
+      <div style={ getDivStyle(this.props) }>
         <Container image={ this.props.item.image } { ...this.props }>
           <ItemText color={ this.props.item.color }>{ this.props.item.text }</ItemText>
         </Container>
@@ -82,6 +77,14 @@ class SortingItem extends React.Component {
     content = this.props.connectDragPreview(content)
 
     return content
+  }
+}
+
+function getDivStyle({ item, isWrong }) {
+  return {
+    display: "flex",
+    justifyContent: "center",
+    order: `${isWrong ? item.correctPosition : 0}`
   }
 }
 

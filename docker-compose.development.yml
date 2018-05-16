@@ -7,6 +7,7 @@ services:
         environment: development
     depends_on:
       - game-client
+      - game-stats
 
   cms-frontend:
     build:
@@ -58,6 +59,7 @@ services:
       CONTENT_SERVER_URI: https://content-server.${HOST}
       ASSET_SERVER_URI: https://asset-server.${HOST}
       GAME_SERVER_URI: https://game-server.${HOST}
+      STATIC_SERVER_URI: https://static.${HOST}
       FONT_URI: https://static.${HOST}/fonts
       PORT: 443
     volumes:
@@ -75,9 +77,16 @@ services:
       - ./game-server:/app
       - /app/node_modules
 
-  mongo:
-    ports:
-      - "27017:27017"
+  game-stats:
+      build:
+        context: ./game-stats
+        dockerfile: Dockerfile.development
+      environment:
+        PORT: 443
+        MONGO_ACCESS_URI: https://mongo.${HOST}
+      volumes:
+        - ./game-stats:/app
+        - /app/node_modules
 
   game-challenge-button:
     build:
@@ -171,4 +180,11 @@ services:
       STATIC_SERVER_URI: https://static.${HOST}
     volumes:
       - ./game-challenge/skill:/app
+      - /app/node_modules
+
+  mongo-access:
+    build:
+      dockerfile: Dockerfile.development
+    volumes:
+      - ./mongo-access:/app
       - /app/node_modules

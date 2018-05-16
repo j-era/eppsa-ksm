@@ -82,17 +82,6 @@ export function score(state = 0, action) {
   }
 }
 
-export function addScore(state = 0, action) {
-  switch (action.type) {
-    case types.PREPARE_ADD_SCORE:
-      return action.increment
-    case types.ADD_SCORE:
-      return 0
-    default:
-      return state
-  }
-}
-
 export function showScore(state = false, action) {
   switch (action.type) {
     case types.SHOW_SCORE:

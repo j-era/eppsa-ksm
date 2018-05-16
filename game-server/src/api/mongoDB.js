@@ -73,8 +73,9 @@ module.exports = class MongoDB extends EventEmitter {
   }
 
   async updateGame(gameId, set = null, increment = null) {
-    const lastUpdate = new Date()
-    const update = { $set: { ...set, lastUpdate } }
+    const now = new Date()
+    const finishTime = set && set.finished ? { finishTime: now } : null
+    const update = { $set: { ...set, ...finishTime, lastUpdate: now } }
 
     if (increment) {
       update.$inc = increment
@@ -93,7 +94,7 @@ module.exports = class MongoDB extends EventEmitter {
   }
 
   ensureAllGamesDisconnected() {
-    return this.database.collection(GAMES_COLLECTION).update(
+    return this.database.collection(GAMES_COLLECTION).updateMany(
       { connected: true }, { $set: { connected: false } }
     )
   }
