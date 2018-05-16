@@ -1,5 +1,6 @@
 import autoBind from "react-autobind"
 import uniq from "lodash.uniq"
+import omitBy from "lodash.omitby"
 import omit from "lodash.omit"
 import pickBy from "lodash.pickby"
 
@@ -34,9 +35,9 @@ class ChallengeSelection extends React.Component {
 
     autoBind(this)
 
-    this.challenges = omit(
-      this.props.content.challenges[this.props.challengeNumber].challengeTypes,
-      "template"
+    this.challenges = omitBy(
+      omit(this.props.content.challenges[this.props.challengeNumber].challengeTypes, "template"),
+      (challenge) => challenge.multiplayer
     )
 
     this.state = {
