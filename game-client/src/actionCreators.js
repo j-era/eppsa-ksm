@@ -1,6 +1,8 @@
 import uuid from "uuid/v4"
 import pickBy from "lodash.pickby"
-import isEmpty from "lodash.isempty"
+import uniq from "lodash.uniq"
+import omitBy from "lodash.omitby"
+import omit from "lodash.omit"
 
 import { delay } from "eppsa-ksm-shared"
 
@@ -273,7 +275,6 @@ export function selectChallengeType(
     }
 
     dispatch({ type: types.SET_CHALLENGE_TYPE, challengeData, challengeUri })
-    dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
   }
 }
 
@@ -285,22 +286,55 @@ function resolveChallengeWebAppUri(webApp) {
   return challengeUri.toString()
 }
 
-export function selectChallengeMode(content) {
+export function selectChallengeOrMode(content, assetServerUri, gameServerUri, staticServerUri) {
   return async (dispatch, getState) => {
-    const multiplayerChallenges = pickBy(
+    const multiplayerChallenges = Object.keys(pickBy(
       content.challenges[getState().challengeNumber].challengeTypes,
       "multiplayer"
-    )
+    ))
 
-    const challengeName = Object.keys(multiplayerChallenges)[0]
-
-    if (isEmpty(multiplayerChallenges)) {
-      dispatch(updateGameState(gameStates.CHALLENGE_SELECTION))
-    } else {
-      dispatch({ type: types.SET_CHALLENGE_NAME, challengeName })
+    if (multiplayerChallenges.length >= 1) {
+      const challengeName = multiplayerChallenges[0]
+      dispatch(
+        selectChallengeType(challengeName, content, assetServerUri, gameServerUri, staticServerUri)
+      )
       dispatch(updateGameState(gameStates.CHALLENGE_MODE_SELECTION))
+    } else {
+      dispatch(
+        selectRandomChallengeType(content, assetServerUri, gameServerUri, staticServerUri)
+      )
     }
   }
+}
+
+export function selectRandomChallengeType(content, assetServerUri, gameServerUri, staticServerUri) {
+  return async (dispatch, getState) => {
+    const challenges = omitBy(
+      omit(content.challenges[getState().challengeNumber].challengeTypes, "template"),
+      (challenge) => challenge.multiplayer
+    )
+
+    const challengeName = chooseRandomChallenge(challenges)
+    dispatch(
+      selectChallengeType(challengeName, content, assetServerUri, gameServerUri, staticServerUri)
+    )
+    dispatch(updateGameState(gameStates.CHALLENGE_SELECTION))
+  }
+}
+
+function chooseRandomChallenge(challenges) {
+  const templates = uniq(Object.values(challenges).map(challenge => challenge.template))
+  const randomTemplate = random(templates)
+
+  const names = Object.keys(
+    pickBy(challenges, challenge => challenge.template === randomTemplate)
+  )
+
+  return random(names)
+}
+
+function random(array) {
+  return array[Math.floor(Math.random() * array.length)]
 }
 
 export function handleChallengeQrCode(data, challenge) {

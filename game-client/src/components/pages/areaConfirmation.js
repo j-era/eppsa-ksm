@@ -3,7 +3,7 @@ import autoBind from "react-autobind"
 import styled, { withTheme } from "styled-components"
 import { delay, Description, FramedIcon, NextButton, Page, PageTitle } from "eppsa-ksm-shared"
 
-import { selectChallengeMode } from "../../actionCreators"
+import { selectChallengeOrMode } from "../../actionCreators"
 
 const Container = styled(Page)`
   display: flex;
@@ -57,7 +57,7 @@ class AreaConfirmation extends React.Component {
   async onNext() {
     this.setState({ nextClicked: true })
     await delay(100)
-    this.props.dispatch(selectChallengeMode(this.props.content))
+    this.props.dispatch(selectChallengeOrMode(this.props.content))
   }
 }
 

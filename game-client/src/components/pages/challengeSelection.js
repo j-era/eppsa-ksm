@@ -1,9 +1,6 @@
 import autoBind from "react-autobind"
-import uniq from "lodash.uniq"
-import omitBy from "lodash.omitby"
 import omit from "lodash.omit"
-import pickBy from "lodash.pickby"
-
+import omitBy from "lodash.omitby"
 import React from "react"
 import styled, { withTheme } from "styled-components"
 import {
@@ -15,7 +12,8 @@ import {
   PageTitle
 } from "eppsa-ksm-shared"
 
-import { selectChallengeType } from "../../actionCreators"
+import { selectChallengeType, updateGameState } from "../../actionCreators"
+import * as gameStates from "../../gameStates"
 
 const SELECTION_TIMEOUT = 3000
 
@@ -35,11 +33,6 @@ class ChallengeSelection extends React.Component {
 
     autoBind(this)
 
-    this.challenges = omitBy(
-      omit(this.props.content.challenges[this.props.challengeNumber].challengeTypes, "template"),
-      (challenge) => challenge.multiplayer
-    )
-
     this.state = {
       developmentView: false
     }
@@ -47,7 +40,7 @@ class ChallengeSelection extends React.Component {
 
   componentDidMount() {
     this.timeout = setTimeout(() => {
-      this.selectChallengeType(this.chooseRandomChallengeType())
+      this.props.dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
     }, SELECTION_TIMEOUT)
   }
 
@@ -64,11 +57,7 @@ class ChallengeSelection extends React.Component {
         <PageTitle>{ content.shared.texts.challengeSelectionTitle }</PageTitle>
         {
           developmentView ?
-            Object.keys(this.challenges).map((name) =>
-              <Button key={ name } onClick={ () => this.selectChallengeType(name) }>
-                { name }
-              </Button>
-            ) :
+            this.renderManualChallengeSelection() :
             <FramedIcon
               scale={ 0.78 }
               color={ this.props.theme.colors.area }
@@ -84,15 +73,27 @@ class ChallengeSelection extends React.Component {
     )
   }
 
-  chooseRandomChallengeType() {
-    const templates = uniq(Object.values(this.challenges).map(challenge => challenge.template))
-    const randomTemplate = random(templates)
-
-    const names = Object.keys(
-      pickBy(this.challenges, challenge => challenge.template === randomTemplate)
+  renderManualChallengeSelection() {
+    const challenges = omitBy(
+      omit(this.props.content.challenges[this.props.challengeNumber].challengeTypes, "template"),
+      (challenge) => challenge.multiplayer
     )
+    return (
+      Object.keys(challenges).map((name) =>
+        <Button key={ name } onClick={ () => this.selectChallengeType(name) }>
+          { name }
+        </Button>
+      )
+    )
+  }
 
-    return random(names)
+  selectChallengeType(name) {
+    const { content, assetServerUri, gameServerUri, staticServerUri } = this.props
+
+    this.props.dispatch(
+      selectChallengeType(name, content, assetServerUri, gameServerUri, staticServerUri)
+    )
+    this.props.dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
   }
 
   onClick() {
@@ -101,15 +102,5 @@ class ChallengeSelection extends React.Component {
       this.setState({ developmentView: true })
 //    }
   }
-
-  selectChallengeType(name) {
-    const { content, dispatch, assetServerUri, gameServerUri, staticServerUri } = this.props
-    dispatch(selectChallengeType(name, content, assetServerUri, gameServerUri, staticServerUri))
-  }
 }
-
-function random(array) {
-  return array[Math.floor(Math.random() * array.length)]
-}
-
 export default withTheme(ChallengeSelection)
