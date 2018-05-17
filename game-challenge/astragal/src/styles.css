@@ -23,7 +23,11 @@ canvas {
 }
 
 h1 {
-    font-size: 4em;
+    font-size: 6em;
+    
+}
+h2{
+    font-size: 6.5em;
 }
 #head {
     color: #FFFFFF;
@@ -35,7 +39,7 @@ h1 {
 }
 
 #count {
-    font-size: 2em;
+    font-size: 4em;
     color: #FFFFFF;
     z-index: 1;
 
@@ -47,14 +51,20 @@ h1 {
 .arrow {
     position: absolute;
     z-index: 1;
-    bottom: 0px;
+    bottom: 5%;
     left: 50%;
     width: 80%;
     margin-left: -40%;
-
     pointer-events: none;
 }
 
+#arrowUp{
+    position: absolute;
+    pointer-events: none;
+    right: 12%;
+    bottom: 36%;
+    height: 33%;
+}
 /*#arrowLeft{
     left:0px;
 }

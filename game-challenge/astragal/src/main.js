@@ -75,8 +75,7 @@ function setup(){
     numberOfRolls = gameData.numberOfTries;
     definedScore = gameData.score.reward;
 
-    $('#current').text(0);
-    $('#max').text("/" + numberOfRolls);
+    $('#current').text("Noch " + numberOfRolls + " Würfe");
 
     var newStyle = document.createElement('style');
     newStyle.appendChild(document.createTextNode("\
@@ -246,6 +245,7 @@ function roll ( ) {
         SetRollDirection();
         $("#result").hide();
         $("#points").hide();
+        $("#arrowUp").fadeOut(1000);
     }
 
 function SetRollDirection( ) {
@@ -270,26 +270,26 @@ function init(  ) {
         {
             name: "Hyption",
             dir: new THREE.Vector3(  1, 0, 0 ),
-            points: "4 Punkte",
+            points: "4",
             score: 4
         },
         {
 
             name: "Pranes",
             dir:  new THREE.Vector3( -1, 0, 0 ),
-            points: "3 Punkte",
+            points: "3",
             score: 3
         },
         {
             name: "Chion",
             dir: new THREE.Vector3( 0,  1, 0 ),
-            points: "1 Punkt",
+            points: "1",
             score: 1
         },
         {
             name: "Kyon",
             dir: new THREE.Vector3( 0, -1,0 ),
-            points: "6 Punkte",
+            points: "6",
             score: 6
         }
     ];
@@ -437,7 +437,13 @@ function animate() {
             $("#result").fadeIn(1500);
             $("#points").text(currentPoints);
             countRolls ++;
-            $('#current').text(countRolls);
+            let remaining = numberOfRolls - countRolls;
+            if(remaining == 1){
+                $('#current').text("Noch " + remaining + " Wurf");
+            }else{
+                $('#current').text("Noch " + remaining + " Würfe");
+            }
+            
 
             setTimeout( function() { 
             
