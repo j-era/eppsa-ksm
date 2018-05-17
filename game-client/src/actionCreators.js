@@ -39,16 +39,22 @@ export function startNewGame(name, avatar, maxChallenges, gameServer) {
   }
 }
 
-export function startChallenge(gameServer, room = null) {
+export function startChallengeOrLobby(gameServer, room = null) {
   return async (dispatch, getState) => {
     const isMultiplayerChallenge = getState().challengeData.challenge.multiplayer
     if (isMultiplayerChallenge) {
       dispatch(joinChallengeLobby(gameServer))
     } else {
-      await gameServer.startChallenge()
-      dispatch({ type: types.SET_CHALLENGE_ROOM, room })
-      dispatch(updateGameState(gameStates.CHALLENGE))
+      dispatch(startChallenge(gameServer, room))
     }
+  }
+}
+
+export function startChallenge(gameServer, room = null) {
+  return async (dispatch) => {
+    await gameServer.startChallenge()
+    dispatch({ type: types.SET_CHALLENGE_ROOM, room })
+    dispatch(updateGameState(gameStates.CHALLENGE))
   }
 }
 
@@ -200,9 +206,7 @@ export function acceptMate(gameId, gameServer) {
     gameServer.sendToPeer(messages.ACCEPT_MATE, gameId, room)
     gameServer.leaveChallengeLobby()
 
-    await gameServer.startChallenge()
-    dispatch({ type: types.SET_CHALLENGE_ROOM, room })
-    dispatch(updateGameState(gameStates.CHALLENGE))
+    dispatch(startChallenge(gameServer, room))
   }
 }
 
@@ -235,9 +239,8 @@ export function handleIncomingAcceptMate(gameId, room, gameServer) {
   return async (dispatch, getState) => {
     if (getState().requestedMate.gameId === gameId) {
       gameServer.leaveChallengeLobby()
-      await gameServer.startChallenge()
-      dispatch({ type: types.SET_CHALLENGE_ROOM, room })
-      dispatch(updateGameState(gameStates.CHALLENGE))
+
+      dispatch(startChallenge(gameServer, room))
     }
   }
 }
