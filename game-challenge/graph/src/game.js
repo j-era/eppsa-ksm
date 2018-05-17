@@ -154,6 +154,10 @@ let GraphGame = new Phaser.Class({
 					if(gameObject == that.currentAgents[agent].img){
 						//console.log(that.spawnedNodes[that.currentAgents[agent].nodeID]);
 						that.currentPath[that.currentPathID].path.push(that.spawnedNodes[that.currentAgents[agent].nodeID]);
+						if(that.spawnedNodes[that.currentAgents[agent].nodeID].waitingImageTimer != undefined){
+							that.spawnedNodes[that.currentAgents[agent].nodeID].waitingImageTimer.remove();
+							that.rotateImage(that.spawnedNodes[that.currentAgents[agent].nodeID].controlPoint.image, that.spawnedNodes[that.currentAgents[agent].nodeID].controlPoint.degree);
+						}
 					}
 				}
 
@@ -260,6 +264,24 @@ let GraphGame = new Phaser.Class({
 			
 		});
 
+		
+		if(this.textures.exists('pointParticle')){
+			this.particles = this.add.particles('pointParticle').setDepth(20);
+	
+			this.emitter = this.particles.createEmitter({
+				//angle: { min: 180, max: 360 },
+				angle: 180,
+				speed: 100,
+				//gravityY: 350,
+				lifespan: 400,
+				quantity: 1,
+				scale: { start: 0.1, end: 0.2 },
+				//blendMode: 'ADD',
+				on: false
+			});
+		}
+		
+
 		gameCallbacks.showTimeline(this.timer);
 		gameCallbacks.startTimelineClock();
 		this.gameTimer = this.time.addEvent({delay: 1000 * this.timer, callback: this.onGameEnd, callbackScope: this, startAt: 0 });
@@ -355,25 +377,15 @@ let GraphGame = new Phaser.Class({
 		}
 		
 		
-
 		let check = that.checkControlPoint(agent.lastNode.id, node.id, nextNode.id);
 
 		if(check == "crash"){
 			that.spawnedNodes[currentlyMovingAgent.nodeID].agentOnNode = undefined;
-			//start movement
-			/*agent.tween = this.tweens.add({
-				targets: agent,
-				x: nextNode.x,
-				y: nextNode.y,
-				duration: 2000,
-				yoyo: false,
-				repeat: 0,
-			});*/
 			that.animateCrash(agent, nextNode);
-			//delete after half of duration
-			//that.time.addEvent({delay: 500, callback: that.destroyAgent, args: [currentlyMovingAgent.id], callbackScope: that});
-			//that.destroyAgent(currentlyMovingAgent.id);
 			return;
+		}
+		if(check == "points"){
+			that.particles.emitParticleAt(node.x, node.y);
 		}
 
 		let a = agent.x - nextNode.x;
@@ -394,7 +406,6 @@ let GraphGame = new Phaser.Class({
 			onComplete: function(){
 				//set agents node to new node
 				currentlyMovingAgent.nodeID = nextNode.id;
-
 				//check if there is an agent on the destination node
 				if(gameData.collisionOnNode == "true" && that.spawnedNodes[nextNode.id].agentOnNode != undefined){
 					//console.log('Trying to move onto node that already has agent ' + that.spawnedNodes[node.id].agentOnNode);
@@ -451,6 +462,9 @@ let GraphGame = new Phaser.Class({
 					that.spawnedNodes[nextNode.id].agentOnNode = undefined;
 					//console.log('agent at exit');
 					that.countedWinEvents ++;
+					if(that.particles != undefined){
+						that.particles.emitParticleAt(nextNode.x, nextNode.y);
+					} 
 					that.destroyAgent(currentlyMovingAgent.id);
 					return null;
 				}
@@ -461,7 +475,8 @@ let GraphGame = new Phaser.Class({
 					if(controlPoint.waitTime != undefined){
 						additionalWaiting = controlPoint.waitTime;
 					}
-					that.time.addEvent({delay: 1000 * additionalWaiting, callback: that.rotateImage, args: [controlPoint.image, controlPoint.degree], callbackScope: that});
+					that.spawnedNodes[nextNode.id].controlPoint = controlPoint;
+					that.spawnedNodes[nextNode.id].waitingImageTimer = that.time.addEvent({delay: 1000 * additionalWaiting, callback: that.rotateImage, args: [controlPoint.image, controlPoint.degree], callbackScope: that});
 				}
 
 				if(pathID != null){
