@@ -7,18 +7,19 @@ import './styles.css';
 import * as astragalModel from './models/astragalRemodeled.json';
 import jqueryTouch from './jquery.touch';
 
-import leftIcon from './img/arrowLeft.png';
+/*import leftIcon from './img/arrowLeft.png';
 import rightIcon from './img/arrowRight.png';
 
 var leftArrow = document.getElementById('arrowLeft');
 leftArrow.src = leftIcon;
 var rightArrow = document.getElementById('arrowRight');
-rightArrow.src = rightIcon;
+rightArrow.src = rightIcon;*/
 
 let gameData;
 let gameCallbacks;
 let shared;
 let color;
+let staticURI;
 
 bootstrap((data, callbacks) => {
 	console.log(data, callbacks);
@@ -26,14 +27,14 @@ bootstrap((data, callbacks) => {
 	gameCallbacks = callbacks.callbacks;
     shared = data.shared;
     color = data.color;
+    staticURI = data.staticServerUri;
     setup();
 })
 
 var numberOfRolls;
-var scoreMultiplier;
+var definedScore;
 
 var countRolls = 0;
-var score = 0;
     
 var cameraPivot, camera, scene, renderer, ambientLight ;
 var geometry, material, mesh, texture, data;
@@ -72,11 +73,27 @@ var useTexture = false;
     
 function setup(){
     numberOfRolls = gameData.numberOfTries;
-    scoreMultiplier = gameData.score.reward;
+    definedScore = gameData.score.reward;
+
+    $('#current').text(0);
+    $('#max').text("/" + numberOfRolls);
+
+    var newStyle = document.createElement('style');
+    newStyle.appendChild(document.createTextNode("\
+    @font-face {\
+        font-family: 'Cabin';\
+        src: url('" + staticURI + "/fonts/Cabin/Cabin-Regular.ttf');\
+    }\
+    "));
+
+    document.head.appendChild(newStyle);
+    $('#result').text("Wirf den Astragal");
 
     if(gameData.useScan == "true"){
         useTexture = true;
     }
+
+    gameCallbacks.hideTimeline();
 
     if (useTexture) {
         var loader = new THREE.BufferGeometryLoader();
@@ -402,7 +419,6 @@ function animate() {
             console.log(currentDownVector);
             var minDist = 9999;
             var currentPoints;
-            var currentScore;
             for (var i = 0; i != 4; ++i ) {
                 var dist = currentDownVector.distanceTo( directions[i].dir );
                 console.log( dist );
@@ -411,7 +427,6 @@ function animate() {
                     minDownVector = directions[i].dir;
                     currentSide =   directions[i].name;
                     currentPoints = directions[i].points;
-                    currentScore = directions[i].score;
                 }
 
             }
@@ -422,7 +437,7 @@ function animate() {
             $("#result").fadeIn(1500);
             $("#points").text(currentPoints);
             countRolls ++;
-            score += currentScore;
+            $('#current').text(countRolls);
 
             setTimeout( function() { 
             
@@ -430,7 +445,7 @@ function animate() {
                 console.log(countRolls, numberOfRolls);
                 if(countRolls >= numberOfRolls){
                     setTimeout(function(){
-                        gameCallbacks.finishChallenge(score * scoreMultiplier);
+                        gameCallbacks.finishChallenge(definedScore);
                     },2000);
                 }else{
                     canRoll = true;

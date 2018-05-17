@@ -1,8 +1,3 @@
-@font-face {
-
-    font-family: "Cabin";
-    src : local("Cabin"), url("/fonts/Cabin-Regular.ttf"),url("/fonts/Cabin-Regular.ttf");
-}
 body {
     font-family: "Cabin";
     pointer-events:all;
@@ -39,15 +34,30 @@ h1 {
     text-align: center;
 }
 
+#count {
+    font-size: 2em;
+    color: #FFFFFF;
+    z-index: 1;
+
+    position: absolute;
+    width: 100%;
+    text-align: center;
+}
+
 .arrow {
     position: absolute;
     z-index: 1;
     bottom: 0px;
+    left: 50%;
+    width: 80%;
+    margin-left: -40%;
+
+    pointer-events: none;
 }
 
-#arrowLeft{
+/*#arrowLeft{
     left:0px;
 }
 #arrowRight{
     right: 0px;
-}
+}*/
