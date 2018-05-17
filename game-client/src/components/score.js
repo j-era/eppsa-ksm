@@ -86,10 +86,8 @@ export default class Score extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.show === this.props.show) {
-      this.setState({
-        oldScore: this.props.score
-      })
+    if (nextProps.show && !this.props.show) {
+      this.setState({ oldScore: this.props.score })
     }
   }
 

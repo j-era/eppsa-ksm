@@ -1,8 +1,9 @@
-const webpack = require("webpack");
-const HtmlWebPackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack")
+const path = require("path")
+const HtmlWebPackPlugin = require("html-webpack-plugin")
 
 module.exports = {
-  entry: ['babel-polyfill', './src/index.js'],
+  entry: ["babel-polyfill", "./src/index.js"],
   devtool: "source-map",
   module: {
     rules: [
@@ -46,10 +47,7 @@ module.exports = {
       filename: "./index.html"
     }),
     new webpack.EnvironmentPlugin([
-      "ASSET_SERVER_URI",
-      "CONTENT_SERVER_URI",
-      "GAME_SERVER_URI",
-      "STATIC_SERVER_URI"
+      "MONGO_ACCESS_URI"
     ])
   ],
   devServer: {

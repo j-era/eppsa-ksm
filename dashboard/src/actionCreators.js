@@ -1,5 +1,12 @@
 import * as types from "./actionTypes"
 
+export function setScoreMode(scoreMode) {
+  return {
+    type: types.SET_SCORE_MODE,
+    scoreMode
+  }
+}
+
 export function updateRecentFinishedGames(games) {
   return {
     type: types.UPDATE_RECENT_FINISHED_GAMES,

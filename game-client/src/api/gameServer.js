@@ -22,19 +22,19 @@ export default class GameServer {
   }
 
   findGame(gameId) {
-    return this.emitWithRepsonse("findGame", gameId)
+    return this.emitWithResponse("findGame", gameId)
   }
 
   findConnectedGames() {
-    return this.emitWithRepsonse("findConnectedGames")
+    return this.emitWithResponse("findConnectedGames")
   }
 
   startGame(name, avatar, maxChallenges) {
-    return this.emitWithRepsonse("startGame", name, avatar, maxChallenges)
+    return this.emitWithResponse("startGame", name, avatar, maxChallenges, navigator.userAgent)
   }
 
   resumeGame(gameId) {
-    return this.emitWithRepsonse("resumeGame", gameId)
+    return this.emitWithResponse("resumeGame", gameId)
   }
 
   startChallenge() {
@@ -42,7 +42,7 @@ export default class GameServer {
   }
 
   finishChallenge(result) {
-    return this.emitWithRepsonse("finishChallenge", result)
+    return this.emitWithResponse("finishChallenge", result)
   }
 
   joinChallengeLobby() {
@@ -57,7 +57,7 @@ export default class GameServer {
     this.socket.emit("sendToPeer", eventName, gameId, ...param)
   }
 
-  emitWithRepsonse(eventName, ...param) {
+  emitWithResponse(eventName, ...param) {
     return new Promise((resolve) => {
       this.socket.emit(eventName, ...param, result => {
         resolve(result)

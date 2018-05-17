@@ -9,6 +9,7 @@ services:
       - content-repo
       - cms-frontend
       - game-server
+      - mongo-access
     ports:
       - "80:80"
       - "443:443"
@@ -63,6 +64,16 @@ services:
       - type: volume
         source: mongoDB
         target: /data/db
+    ports:
+      - "27017:27017"
+
+  mongo-access:
+      build:
+        context: ./mongo-access
+      environment:
+        MONGODB_URI: mongodb://mongo
+      depends_on:
+        - mongo
 
 volumes:
   content:

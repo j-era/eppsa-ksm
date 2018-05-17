@@ -7,7 +7,6 @@ WORKDIR /app
 # install and cache app dependencies
 COPY package.json /app/package.json
 COPY package-lock.json /app/package-lock.json
-COPY lib /app/lib
 RUN npm install
 
 # start app

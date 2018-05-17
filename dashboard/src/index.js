@@ -1,3 +1,4 @@
+import { injectGlobalStyle, calculateTheme } from "eppsa-ksm-shared"
 import omit from "lodash.omit"
 import mapValues from "lodash.mapvalues"
 import React from "react"
@@ -5,16 +6,20 @@ import { render } from "react-dom"
 import { Provider } from "react-redux"
 import { applyMiddleware, createStore, combineReducers } from "redux"
 import { createLogger } from "redux-logger"
+import { ThemeProvider } from "styled-components"
 
 import Application from "./components/application"
 import * as reducers from "./reducers"
 import ContentServer from "./api/contentServer"
 import GameServer from "./api/gameServer"
 import * as actions from "./actionCreators"
+import * as scoreModes from "./scoreModes"
 
 const store = applyMiddleware(createLogger())(createStore)(combineReducers(reducers))
 const contentServer = new ContentServer(process.env.CONTENT_SERVER_URI)
 const gameServer = new GameServer(process.env.GAME_SERVER_URI)
+
+injectGlobalStyle(process.env.STATIC_SERVER_URI)
 
 Promise.all([
   contentServer.getData().then(transform),
@@ -26,14 +31,23 @@ Promise.all([
   store.dispatch(actions.updateHighscoreGames(highscoreGames))
   store.dispatch(actions.updateConnectedGames(connectedGames))
 
+  const theme = calculateTheme()
+
   render(
     <Provider store={ store }>
-      <Application
-        content={ content }
-        assetServerUri={ process.env.ASSET_SERVER_URI } />
+      <ThemeProvider theme={ theme }>
+        <Application
+          content={ content }
+          assetServerUri={ process.env.ASSET_SERVER_URI } />
+      </ThemeProvider>
     </Provider>,
     document.getElementById("app")
   )
+
+  setInterval(() => store.getState().scoreMode === scoreModes.ALL_TIME_HIGHSCORE
+    ? store.dispatch(actions.setScoreMode(scoreModes.RECENT_FINISHED_GAMES))
+    : store.dispatch(actions.setScoreMode(scoreModes.ALL_TIME_HIGHSCORE)),
+  content.shared.config.dashboardScoreToggleDelay * 1000)
 })
 
 function transform(content) {
