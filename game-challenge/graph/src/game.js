@@ -303,6 +303,10 @@ let GraphGame = new Phaser.Class({
 		//if agent has no path selected, move him randomly
 		if(pathID == null){
 			var nodeIndex = Math.floor(Math.random() * this.nodes[node.id].connectedTo.length);
+			if(gameData.rotateAgents == "true" && this.nodes[node.id].connectedTo[nodeIndex] == agent.lastNode.id){
+				this.moveAgentToNextNode(agent, node);
+				return;
+			}
 			nextNode.id = this.nodes[node.id].connectedTo[nodeIndex];
 			nextNode.x = this.xPosToScreen(this.nodes[nextNode.id].xPosition);
 			nextNode.y = this.yPosToScreen(this.nodes[nextNode.id].yPosition);
