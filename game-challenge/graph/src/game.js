@@ -632,11 +632,23 @@ let GraphGame = new Phaser.Class({
 		let a = agent.x - node.x;
 		let b = agent.y - node.y;
 
+		let xModifier, yModifier;
+
+		a != 0 ? xModifier = agent.displayWidth/2 : xModifier = 0; 
+		b != 0 ? yModifier = agent.displayWidth/2 : yModifier = 0;
+		
+		if(a < 0){
+			xModifier = -xModifier;
+		};
+		if(b < 0){
+			yModifier = -yModifier;
+		}
+
 		//agent movement
 		agent.tween = this.tweens.add({
 			targets: agent,
-			x: agent.x - a/1.6,
-			y: agent.y - b/1.6,
+			x: agent.x - ((a - xModifier)/2),
+			y: agent.y - ((b - yModifier)/2),
 			duration: 1000,
 			yoyo: false,
 			repeat: 0,
@@ -671,8 +683,8 @@ let GraphGame = new Phaser.Class({
 
 		this.tweens.add({
 			targets: crashCar,
-			x: node.x + a/1.6,
-			y: node.y + b/1.6,
+			x: node.x + ((a - xModifier)/2),
+			y: node.y + ((b - yModifier)/2),
 			duration: 1000,
 			yoyo: false,
 			repeat: 0,
