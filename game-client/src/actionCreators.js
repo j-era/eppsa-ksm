@@ -199,7 +199,10 @@ export function acceptMate(gameId, gameServer) {
     const room = uuid()
     gameServer.sendToPeer(messages.ACCEPT_MATE, gameId, room)
     gameServer.leaveChallengeLobby()
-    dispatch(startChallenge(gameServer, room))
+
+    await gameServer.startChallenge()
+    dispatch({ type: types.SET_CHALLENGE_ROOM, room })
+    dispatch(updateGameState(gameStates.CHALLENGE))
   }
 }
 
@@ -232,7 +235,9 @@ export function handleIncomingAcceptMate(gameId, room, gameServer) {
   return async (dispatch, getState) => {
     if (getState().requestedMate.gameId === gameId) {
       gameServer.leaveChallengeLobby()
-      dispatch(startChallenge(gameServer, room))
+      await gameServer.startChallenge()
+      dispatch({ type: types.SET_CHALLENGE_ROOM, room })
+      dispatch(updateGameState(gameStates.CHALLENGE))
     }
   }
 }
