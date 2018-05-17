@@ -277,7 +277,23 @@ let GraphGame = new Phaser.Class({
 				//gravityY: 350,
 				lifespan: 400,
 				quantity: 1,
-				scale: { start: 0.1, end: 0.2 },
+				scale: { start: 0.3, end: 0.6 },
+				//blendMode: 'ADD',
+				on: false
+			});
+		}
+
+		if(this.textures.exists('boomParticle')){
+			this.crashParticles = this.add.particles('boomParticle').setDepth(20);
+			this.crashEmitter = this.crashParticles.createEmitter({
+				//angle: { min: 180, max: 360 },
+				angle: 180,
+				speed: 100,
+				alpha: {start: 1, end: 0},
+				//gravityY: 350,
+				lifespan: 400,
+				quantity: 1,
+				scale: { start: 0.3, end: 0.4 },
 				//blendMode: 'ADD',
 				on: false
 			});
@@ -661,7 +677,7 @@ let GraphGame = new Phaser.Class({
 				crashedCar2.setScale(that.height/crashedCar2.height * 0.15);
 				crashedCar2.angle = agent.angle;
 				that.fadeAndDestroy(crashedCar2);
-
+				that.crashParticles.emitParticleAt(agent.x, agent.y);
 				that.destroyAgent(agent.id);
 			}
 		});
