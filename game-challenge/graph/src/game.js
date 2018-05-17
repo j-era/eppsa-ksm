@@ -95,6 +95,8 @@ let GraphGame = new Phaser.Class({
 
 		this.lineColor = gameData.lineColor;
 		this.pathColor = gameData.pathColor;
+
+		this.gameActive = true;
 	},
 
 	preload: function(){
@@ -385,7 +387,9 @@ let GraphGame = new Phaser.Class({
 			return;
 		}
 		if(check == "points"){
-			that.particles.emitParticleAt(node.x, node.y);
+			if(that.gameActive){
+				that.particles.emitParticleAt(node.x, node.y);
+			}
 		}
 
 		let a = agent.x - nextNode.x;
@@ -461,10 +465,12 @@ let GraphGame = new Phaser.Class({
 				if(that.nodes[nextNode.id].nodeState == 'exit'){
 					that.spawnedNodes[nextNode.id].agentOnNode = undefined;
 					//console.log('agent at exit');
-					that.countedWinEvents ++;
-					if(that.particles != undefined){
-						that.particles.emitParticleAt(nextNode.x, nextNode.y);
-					} 
+					if(that.gameActive){
+						that.countedWinEvents ++;
+						if(that.particles != undefined){
+							that.particles.emitParticleAt(nextNode.x, nextNode.y);
+						} 
+					}
 					that.destroyAgent(currentlyMovingAgent.id);
 					return null;
 				}
@@ -726,7 +732,9 @@ let GraphGame = new Phaser.Class({
 					return "crash";
 				}
 				if(point.pointsIf.indexOf(next) != -1){
-					this.countedWinEvents ++;
+					if(this.gameActive){
+						this.countedWinEvents ++;
+					}
 					//console.log("points");
 					return "points";
 				}
@@ -1035,6 +1043,7 @@ let GraphGame = new Phaser.Class({
 
 	onGameEnd: function(){
 		gameCallbacks.stopTimelineClock();
+		this.gameActive = false;
 
 		this.cameras.main.scrollX = 0;
 		this.scrolled = false;
