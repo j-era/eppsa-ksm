@@ -40,10 +40,15 @@ export function startNewGame(name, avatar, maxChallenges, gameServer) {
 }
 
 export function startChallenge(gameServer, room = null) {
-  return async (dispatch) => {
-    await gameServer.startChallenge()
-    dispatch({ type: types.SET_CHALLENGE_ROOM, room })
-    dispatch(updateGameState(gameStates.CHALLENGE))
+  return async (dispatch, getState) => {
+    const isMultiplayerChallenge = getState().challengeData.challenge.multiplayer
+    if (isMultiplayerChallenge) {
+      dispatch(joinChallengeLobby(gameServer))
+    } else {
+      await gameServer.startChallenge()
+      dispatch({ type: types.SET_CHALLENGE_ROOM, room })
+      dispatch(updateGameState(gameStates.CHALLENGE))
+    }
   }
 }
 
@@ -274,14 +279,17 @@ function resolveChallengeWebAppUri(webApp) {
 
 export function selectChallengeMode(content) {
   return async (dispatch, getState) => {
-    const multiplayerChallengens = pickBy(
+    const multiplayerChallenges = pickBy(
       content.challenges[getState().challengeNumber].challengeTypes,
       "multiplayer"
     )
 
-    if (isEmpty(multiplayerChallengens)) {
+    const challengeName = Object.keys(multiplayerChallenges)[0]
+
+    if (isEmpty(multiplayerChallenges)) {
       dispatch(updateGameState(gameStates.CHALLENGE_SELECTION))
     } else {
+      dispatch({ type: types.SET_CHALLENGE_NAME, challengeName })
       dispatch(updateGameState(gameStates.CHALLENGE_MODE_SELECTION))
     }
   }

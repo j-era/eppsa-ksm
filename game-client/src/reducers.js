@@ -51,6 +51,15 @@ export function challengeNumber(state = 0, action) {
   }
 }
 
+export function challengeName(state = null, action) {
+  switch (action.type) {
+    case types.SET_CHALLENGE_NAME:
+      return action.challengeName
+    default:
+      return state
+  }
+}
+
 export function challengeData(state = null, action) {
   switch (action.type) {
     case types.SET_CHALLENGE_TYPE:
