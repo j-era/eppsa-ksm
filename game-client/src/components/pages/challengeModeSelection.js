@@ -9,7 +9,7 @@ import {
   PageTitle
 } from "eppsa-ksm-shared"
 
-import { updateGameState, selectRandomChallengeType } from "../../actionCreators"
+import { updateGameState, selectRandomChallengeType, selectMultiplayerChallengeType } from "../../actionCreators"
 import * as gameStates from "../../gameStates"
 
 const Container = styled(Page)`
@@ -77,7 +77,11 @@ class ChallengeModeSelection extends React.Component {
     this.setState({ multiplayerClicked: true })
     await delay(100)
 
-    this.props.dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
+    const { content, assetServerUri, gameServerUri, staticServerUri } = this.props
+
+    this.props.dispatch(
+      selectMultiplayerChallengeType(content, assetServerUri, gameServerUri, staticServerUri)
+    )
   }
 
   async onSingleplayer() {

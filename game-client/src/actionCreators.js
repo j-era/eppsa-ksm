@@ -3,6 +3,7 @@ import pickBy from "lodash.pickby"
 import uniq from "lodash.uniq"
 import omitBy from "lodash.omitby"
 import omit from "lodash.omit"
+import isEmpty from "lodash.isempty"
 
 import { delay } from "eppsa-ksm-shared"
 
@@ -288,27 +289,28 @@ function resolveChallengeWebAppUri(webApp) {
 
 export function selectChallengeOrMode(content, assetServerUri, gameServerUri, staticServerUri) {
   return async (dispatch, getState) => {
-    const multiplayerChallenges = Object.keys(pickBy(
+    const hasMultiplayerChallenge = !isEmpty(pickBy(
       content.challenges[getState().challengeNumber].challengeTypes,
       "multiplayer"
     ))
 
-    if (multiplayerChallenges.length >= 1) {
-      const challengeName = multiplayerChallenges[0]
-      dispatch(
-        selectChallengeType(challengeName, content, assetServerUri, gameServerUri, staticServerUri)
-      )
+    if (hasMultiplayerChallenge) {
       dispatch(updateGameState(gameStates.CHALLENGE_MODE_SELECTION))
     } else {
-      dispatch(
-        selectRandomChallengeType(content, assetServerUri, gameServerUri, staticServerUri)
-      )
+      dispatch(selectRandomChallengeType(
+        content,
+        getState().challengeNumber,
+        assetServerUri,
+        gameServerUri,
+        staticServerUri,
+        dispatch
+      ))
     }
   }
 }
 
 export function selectRandomChallengeType(content, assetServerUri, gameServerUri, staticServerUri) {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     const challenges = omitBy(
       omit(content.challenges[getState().challengeNumber].challengeTypes, "template"),
       (challenge) => challenge.multiplayer
@@ -319,6 +321,22 @@ export function selectRandomChallengeType(content, assetServerUri, gameServerUri
       selectChallengeType(challengeName, content, assetServerUri, gameServerUri, staticServerUri)
     )
     dispatch(updateGameState(gameStates.CHALLENGE_SELECTION))
+  }
+}
+
+export function selectMultiplayerChallengeType(content, assetServerUri, gameServerUri, staticServerUri) {
+  return (dispatch, getState) => {
+    const multiplayerChallenges = Object.keys(pickBy(
+      content.challenges[getState().challengeNumber].challengeTypes,
+      "multiplayer"
+    ))
+
+    const challengeName = multiplayerChallenges[0]
+
+    dispatch(
+      selectChallengeType(challengeName, content, assetServerUri, gameServerUri, staticServerUri)
+    )
+    dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
   }
 }
 
