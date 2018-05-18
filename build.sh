@@ -19,6 +19,7 @@ declare -a SITES=(
   "game-challenge/quiz"
   "game-challenge/skill"
   "game-challenge/sorting"
+  "game-challenge/astragal"
 )
 
 for i in "${SITES[@]}"
