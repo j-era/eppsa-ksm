@@ -18,6 +18,8 @@ let score = 0;
 let scoreCount = 0;
 
 let singleplayer = false;
+let multiplayerStarted = false;
+let otherPlayerLeft = false;
 
 bootstrap((config, { callbacks }) => {
 	console.log(config);
@@ -31,6 +33,10 @@ bootstrap((config, { callbacks }) => {
 		socket = client(config.gameServerUri, { secure: true })
 		socket.on("clientsInRoom", (clientsInRoom) =>
 		  {
+			if(multiplayerStarted && clientsInRoom.length == 1){
+				otherPlayerLeft = true;
+				return;
+			}
 			console.log(`Clients in the room: ${JSON.stringify(clientsInRoom)}`);
 			clientsInRoom.forEach(function(element){
 				if(element != ownID){
@@ -39,8 +45,16 @@ bootstrap((config, { callbacks }) => {
 			});
 			otherID < ownID ? playing = "ship" : "wind";
 			if(otherID != undefined && ownID != undefined){
+				multiplayerStarted = true;
 				init();
 			}
+
+			setTimeout(function(){
+				if(clientsInRoom.length == 1 && !multiplayerStarted){
+					singleplayer = true;
+					init();
+				}
+			},3000)
 		  }
 		)
 		socket.on("connect", () => {
@@ -405,6 +419,8 @@ let SkillGameAirship = new Phaser.Class({
 		let _this = this;
 		setTimeout(function(){
 			if(_this.singleplayer){
+				_this.sendScore(_this.calculateScore());
+			}else if(otherPlayerLeft){
 				_this.sendScore(_this.calculateScore());
 			}else{
 				socket.emit("sendToRoom", "sendToRoom",room, {'score': score});
