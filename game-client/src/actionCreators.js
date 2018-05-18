@@ -291,7 +291,7 @@ export function selectChallengeOrMode(content) {
     if (hasMultiplayerChallenge) {
       dispatch(updateGameState(gameStates.CHALLENGE_MODE_SELECTION))
     } else {
-      dispatch(selectRandomChallengeType(content, getState().challengeNumber, dispatch))
+      dispatch(selectRandomChallengeType(content))
     }
   }
 }
