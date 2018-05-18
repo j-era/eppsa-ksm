@@ -17,6 +17,7 @@ services:
       - ./game-challenge/quiz/dist:/quiz
       - ./game-challenge/skill/dist:/skill
       - ./game-challenge/sorting/dist:/sorting
+      - ./game-challenge/astragal/dist:/astragal
 
   cms-frontend:
     build:

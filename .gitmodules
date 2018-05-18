@@ -34,6 +34,10 @@
 [submodule "game-challenge/sorting/lib/react-dnd-touch-backend"]
 	path = game-challenge/sorting/lib/react-dnd-touch-backend
 	url = https://github.com/artcom/react-dnd-touch-backend.git
+	
+[submodule "game-challenge/astragal/lib/eppsa-ksm-shared"]
+	path = game-challenge/astragal/lib/eppsa-ksm-shared
+	url = https://github.com/artcom/eppsa-ksm-shared.git
 [submodule "dashboard/lib/eppsa-ksm-shared"]
 	path = dashboard/lib/eppsa-ksm-shared
 	url = https://github.com/artcom/eppsa-ksm-shared
