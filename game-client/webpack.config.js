@@ -8,7 +8,7 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: [/node_modules/, /react-qr-reader/],
         use: {
           loader: "babel-loader"
         }
