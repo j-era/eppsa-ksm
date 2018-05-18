@@ -7,25 +7,15 @@ services:
       - asset-server
       - content-server
       - content-repo
+      - cms-frontend
       - game-server
       - mongo-access
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./assets:/html
-      - ./cms-frontend/public:/cms-frontend
-      - ./dashboard/dist:/dashboard
-      - ./game-client/dist:/client
-      - ./game-stats/dist:/stats
-      - ./game-challenge/button/dist:/button
-      - ./game-challenge/clicker/dist:/clicker
-      - ./game-challenge/graph/dist:/graph
-      - ./game-challenge/hidden/dist:/hidden
-      - ./game-challenge/quiz/dist:/quiz
-      - ./game-challenge/skill/dist:/skill
-      - ./game-challenge/sorting/dist:/sorting
       - ${CERTIFICATE_PATH}:/certificate
+      - ./assets:/html
 
   asset-server:
     build: ./asset-server
@@ -49,6 +39,16 @@ services:
       - type: volume
         source: content
         target: /srv/content
+
+  cms-frontend:
+    build:
+      context: ./cms-frontend
+    environment:
+      GIT_JSON_API_URI: https://content-server.${HOST}
+      ASSET_SERVER_URI: https://asset-server.${HOST}
+    depends_on:
+      - content-server
+      - asset-server
 
   game-server:
     build:
