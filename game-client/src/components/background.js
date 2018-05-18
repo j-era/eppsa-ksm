@@ -85,7 +85,7 @@ export default function Background(props) {
         <Banner>{ props.bannerText }</Banner>
       </BannerContainer>
       <BackgroundArcSVG />
-      { props.gameState === "CHALLENGE" && renderTimerBar(props) }
+      { renderTimerBar(props) }
       <BackgroundContainer>
         { props.children }
       </BackgroundContainer>
@@ -93,14 +93,16 @@ export default function Background(props) {
   )
 }
 
-function renderTimerBar(props) {
-  return (
-    <TimerBarContainer>
-      <TimerBar
-        initSeconds={ props.challengeData.challenge.score.sessionLength }
-        isRunning={ props.timelineClockRunning } />
-    </TimerBarContainer>
-  )
+function renderTimerBar({ gameState, challengeData, timelineClockRunning }) {
+  if (gameState === "CHALLENGE" && challengeData.challenge.score.sessionLength > 0) {
+    return (
+      <TimerBarContainer>
+        <TimerBar
+          initSeconds={ challengeData.challenge.score.sessionLength }
+          isRunning={ timelineClockRunning } />
+      </TimerBarContainer>
+    )
+  }
 }
 
 function isBannerVisible(gamestate) {
