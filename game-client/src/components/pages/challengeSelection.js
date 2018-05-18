@@ -88,11 +88,7 @@ class ChallengeSelection extends React.Component {
   }
 
   selectChallengeType(name) {
-    const { content, assetServerUri, gameServerUri, staticServerUri } = this.props
-
-    this.props.dispatch(
-      selectChallengeType(name, content, assetServerUri, gameServerUri, staticServerUri)
-    )
+    this.props.dispatch(selectChallengeType(name, this.props.content))
     this.props.dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
   }
 

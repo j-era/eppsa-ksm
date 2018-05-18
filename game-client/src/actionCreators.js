@@ -254,13 +254,7 @@ export function handleIncomingDeclineMate() {
   }
 }
 
-export function selectChallengeType(
-  name,
-  content,
-  assetServerUri,
-  gameServerUri,
-  staticServerUri
-) {
+export function selectChallengeType(name, content) {
   return async (dispatch, getState) => {
     const { challengeNumber } = getState()
 
@@ -270,9 +264,9 @@ export function selectChallengeType(
       color: content.challenges[challengeNumber].color,
       challenge: challengeTypeData,
       shared: content.shared,
-      staticServerUri,
-      assetServerUri,
-      gameServerUri
+      staticServerUri: process.env.STATIC_SERVER_URI,
+      assetServerUri: process.env.ASSET_SERVER_URI,
+      gameServerUri: process.env.GAME_SERVER_URI
     }
 
     dispatch({ type: types.SET_CHALLENGE_TYPE, challengeData, challengeUri })
@@ -287,7 +281,7 @@ function resolveChallengeWebAppUri(webApp) {
   return challengeUri.toString()
 }
 
-export function selectChallengeOrMode(content, assetServerUri, gameServerUri, staticServerUri) {
+export function selectChallengeOrMode(content) {
   return async (dispatch, getState) => {
     const hasMultiplayerChallenge = !isEmpty(pickBy(
       content.challenges[getState().challengeNumber].challengeTypes,
@@ -297,19 +291,12 @@ export function selectChallengeOrMode(content, assetServerUri, gameServerUri, st
     if (hasMultiplayerChallenge) {
       dispatch(updateGameState(gameStates.CHALLENGE_MODE_SELECTION))
     } else {
-      dispatch(selectRandomChallengeType(
-        content,
-        getState().challengeNumber,
-        assetServerUri,
-        gameServerUri,
-        staticServerUri,
-        dispatch
-      ))
+      dispatch(selectRandomChallengeType(content, getState().challengeNumber, dispatch))
     }
   }
 }
 
-export function selectRandomChallengeType(content, assetServerUri, gameServerUri, staticServerUri) {
+export function selectRandomChallengeType(content) {
   return (dispatch, getState) => {
     const challenges = omitBy(
       omit(content.challenges[getState().challengeNumber].challengeTypes, "template"),
@@ -318,13 +305,13 @@ export function selectRandomChallengeType(content, assetServerUri, gameServerUri
 
     const challengeName = chooseRandomChallenge(challenges)
     dispatch(
-      selectChallengeType(challengeName, content, assetServerUri, gameServerUri, staticServerUri)
+      selectChallengeType(challengeName, content)
     )
     dispatch(updateGameState(gameStates.CHALLENGE_SELECTION))
   }
 }
 
-export function selectMultiplayerChallengeType(content, assetServerUri, gameServerUri, staticServerUri) {
+export function selectMultiplayerChallengeType(content) {
   return (dispatch, getState) => {
     const multiplayerChallenges = Object.keys(pickBy(
       content.challenges[getState().challengeNumber].challengeTypes,
@@ -334,7 +321,7 @@ export function selectMultiplayerChallengeType(content, assetServerUri, gameServ
     const challengeName = multiplayerChallenges[0]
 
     dispatch(
-      selectChallengeType(challengeName, content, assetServerUri, gameServerUri, staticServerUri)
+      selectChallengeType(challengeName, content)
     )
     dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
   }
