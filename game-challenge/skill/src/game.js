@@ -158,6 +158,10 @@ let SkillGameAirship = new Phaser.Class({
 		this.CountdownGraphics.fillCircleShape(circle);
 		this.CountdownGraphics.setDepth(1);
 
+		//this.winStateGraphics = this.add.graphics({/* x: 240, y: 36, */fillStyle: { color: 0x006eff } });
+		this.winStateDisplay = this.add.image(this.width/7, this.height - this.height/15, 'pointsBar').setOrigin(0.5,1).setDepth(10);
+		this.winStateDisplay.setScale(this.width/this.winStateDisplay.width * 0.08, this.width/this.winStateDisplay.width * 0.08 * 0.01);
+
 
 		if(this.singleplayer){
 			this.singleplayer = true;
@@ -169,9 +173,9 @@ let SkillGameAirship = new Phaser.Class({
 			this.vehicleImage = this.add.image(this.width/2, this.height/2 + this.height/6, 'vehicle').setOrigin(0.5, 0);
 			this.vehicleImage.setScale(this.height/this.vehicleImage.height * 0.3);
 
-			this.streamArrow = this.add.image(this.width/2,this.height/2 - this.height/8, 'windArrowSmall').setOrigin(0.5,1);
+			this.streamArrow = this.add.image(this.width/2,this.height/2 - this.height/20, 'windArrowSmall').setOrigin(0.5,1);
 			this.streamArrow.setScale(this.height/this.streamArrow.height * 0.05);
-			this.vehicleArrow = this.add.image(this.width/2, this.height/2 + 10, 'vehicleArrowLarge').setOrigin(0.5,0);
+			this.vehicleArrow = this.add.image(this.width/2, this.height/2, 'vehicleArrowLarge').setOrigin(0.5,0);
 			this.vehicleArrow.setScale(this.height/this.vehicleArrow.height * 0.1);
 
 			this.windDirectionLeft = this.add.image(this.width/4, this.height/6, 'windDirection');
@@ -195,12 +199,12 @@ let SkillGameAirship = new Phaser.Class({
 				this.windImage = this.add.image(this.width, this.height/2, 'wind').setOrigin(1,1);
 				this.windImage.setScale(this.width/this.windImage.width, this.width/this.windImage.width);
 
-				this.vehicleImage = this.add.image(this.width/2, this.height - this.height/6, 'vehicle').setOrigin(0.5, 0);
+				this.vehicleImage = this.add.image(this.width/2, this.height/2 + this.height/6, 'vehicle').setOrigin(0.5, 0);
 				this.vehicleImage.setScale(this.height/this.vehicleImage.height * 0.3);
 
-				this.streamArrow = this.add.image(this.width/2,this.height/2 - this.height/8, 'windArrowSmall').setOrigin(0.5,1);
+				this.streamArrow = this.add.image(this.width/2,this.height/2 - this.height/20, 'windArrowSmall').setOrigin(0.5,1);
 				this.streamArrow.setScale(this.height/this.streamArrow.height * 0.05);
-				this.vehicleArrow = this.add.image(this.width/2, this.height/2 + 10, 'vehicleArrowLarge').setOrigin(0.5,0);
+				this.vehicleArrow = this.add.image(this.width/2, this.height/2, 'vehicleArrowLarge').setOrigin(0.5,0);
 				this.vehicleArrow.setScale(this.height/this.vehicleArrow.height * 0.1);
 
 				this.windDirectionLeft = this.add.image(this.width/4, this.height/6, 'windDirection');
@@ -213,13 +217,13 @@ let SkillGameAirship = new Phaser.Class({
 				this.windImage.flipY = -1;
 				this.windImage.setScale(this.width/this.windImage.width);
 				
-				this.vehicleImage = this.add.image(this.width/2, this.height/6, 'vehicle').setOrigin(0.5, 0);
+				this.vehicleImage = this.add.image(this.width/2, this.height/2 - this.height/6, 'vehicle').setOrigin(0.5, 1);
 				this.vehicleImage.setScale(this.height/this.vehicleImage.height * 0.3);
 				this.vehicleImage.flipY = -1;
 
-				this.streamArrow = this.add.image(this.width/2,this.height/2 + this.height/8, 'windArrowLarge').setOrigin(0.5,1);
+				this.streamArrow = this.add.image(this.width/2,this.height/2, 'windArrowLarge').setOrigin(0.5,0);
 				this.streamArrow.setScale(this.height/this.streamArrow.height * 0.1);
-				this.vehicleArrow = this.add.image(this.width/2, this.height/2 - 10, 'vehicleArrowSmall').setOrigin(0.5,0);
+				this.vehicleArrow = this.add.image(this.width/2, this.height/2 - this.height/20, 'vehicleArrowSmall').setOrigin(0.5,1);
 				this.vehicleArrow.setScale(this.height/this.vehicleArrow.height * 0.05);
 
 				this.windDirectionLeft = this.add.image(this.width/4, this.height-this.height/6, 'windDirection').setScale(0.2);
@@ -295,11 +299,16 @@ let SkillGameAirship = new Phaser.Class({
 				this.winStateCounter = this.time.addEvent({delay: 1000, callback: this.increaseWinStateTime, callbackScope: this, loop: true});
 			}
 
+			if(this.currentlyInWinState){
+				this.winStateDisplay.setScale(this.width/this.winStateDisplay.width * 0.08, this.width/this.winStateDisplay.width * 0.08 * this.winStateCounter.getProgress());
+			}
+
 			if(this.lastTimeInWinState && !this.currentlyInWinState){
 				console.log("stopping Winning counter");
 				this.winStateCounter.remove(false);
 				this.currentTimeInWinState = 0;
 				this.sensitivity = this.baseSensitivity;
+				this.winStateDisplay.setScale(this.width/this.winStateDisplay.width * 0.08, this.width/this.winStateDisplay.width * 0.08 * 0.01);
 			}
 		}
 	},
@@ -310,10 +319,24 @@ let SkillGameAirship = new Phaser.Class({
 
 	increaseWinStateTime: function(){
 		console.log('increasing win state time');
-		this.scoreText.setText(this.calculateScore() + " Punkte");
 		this.timeInWinState ++;
 		this.currentTimeInWinState ++;
-		this.sensitivity += 1 - this.destabiliser * this.currentTimeInWinState
+		this.scoreText.setText(this.calculateScore() + " Punkte");
+		this.sensitivity += 1 - this.destabiliser * this.currentTimeInWinState;
+
+		let plus = this.add.image(this.width/7, this.height/2 + this.height/6, 'addPoints').setOrigin(0.5, 0.5).setDepth(10);
+		plus.setScale(this.width/plus.width * 0.1);
+
+		this.tweens.add({
+			targets: plus,
+			scaleX: plus.scaleX * 1.2,
+			scaleY: plus.scaleY * 1.2,
+			alpha: 0,
+			duration: 500,
+			ease: 'Sine.easeInOut',
+			repeat: 0
+		});
+
 	},
 
 	countdownFunc: function(){
@@ -341,7 +364,7 @@ let SkillGameAirship = new Phaser.Class({
 			window.addEventListener("message", this.listenerFunc, true);
 
 			if(this.singleplayer){
-				this.timedEvent = this.time.addEvent({ delay: 300, callback: this.onEventRotateSingleplayer, callbackScope: this, loop: true });
+				this.timedEvent = this.time.addEvent({ delay: gameData.updateNPCTimeInMS, callback: this.onEventRotateSingleplayer, callbackScope: this, loop: true });
 			}
 		}
 
@@ -351,14 +374,43 @@ let SkillGameAirship = new Phaser.Class({
 		window.removeEventListener("message", this.listenerFunc, true);
 		this.winStateCounter.remove(false);
 		this.gameStarted = false;
-
-		let score = this.calculateScore();
-
 		if(this.singleplayer){
-			this.sendScore(this.calculateScore());
-		}else{
-			socket.emit("sendToRoom", "sendToRoom",room, {'score': score});
+			this.timedEvent.remove(false);
 		}
+		
+
+		let newY;
+		this.vehicleImage.y > this.height/2 ? newY = 0 - this.vehicleImage.height : newY = this.height;  
+
+		this.tweens.add({
+			targets: this.vehicleImage,
+			y: newY,
+			duration: 3000,
+			repeat: 0
+		});
+
+		let lineColor = color.replace("#", "0x");
+		var line = new Phaser.Geom.Line(-20, window.innerHeight/2 + window.innerHeight/20, window.innerWidth + 20, window.innerHeight/2 - window.innerHeight/20);
+		var circle = new Phaser.Geom.Circle(window.innerWidth/2, window.innerHeight/2, window.innerHeight/6);
+		this.CountdownGraphics = this.add.graphics({ lineStyle: { width: window.innerHeight/6, color: lineColor }, fillStyle: { color: lineColor } });
+			
+		this.CountdownGraphics.strokeLineShape(line);
+		this.CountdownGraphics.fillCircleShape(circle);
+		this.CountdownGraphics.setDepth(10);
+
+		let countdownTextSize = window.innerHeight/10;
+		
+		let score = this.calculateScore();
+		this.countdownText = this.add.text(window.innerWidth/2, window.innerHeight/2, "+ " + score, {font: countdownTextSize + 'px Arial', fill: '#ffffff'}).setDepth(10).setOrigin(0.5);
+		let _this = this;
+		setTimeout(function(){
+			if(_this.singleplayer){
+				_this.sendScore(_this.calculateScore());
+			}else{
+				socket.emit("sendToRoom", "sendToRoom",room, {'score': score});
+			}
+		},1000)
+		
 	},
 
 	sendScore: function(score){
@@ -389,17 +441,36 @@ let SkillGameAirship = new Phaser.Class({
 	},
 
 	onEventRotateSingleplayer: function(){
-		let newState;
+		let newState, newAngle;
+		console.log(this.NPCState);
 		if(this.NPCState == 'horizontal'){
 			newState = this.getRandomItem(this.npcStates, this.npcHorizontalWeight);
 		}else{
 			newState = this.getRandomItem(this.npcStates, this.npcTiltWeight);
 		}
 		if(newState == 'horizontal'){
-			this.streamArrow.angle = 0;
+			//this.streamArrow.angle = 0;
+			newAngle = 0;
 		}else{
-			this.streamArrow.angle = this.rand(-this.streamRange, this.streamRange);
+			if(this.NPCState == "tilt"){
+				newAngle = this.streamArrow.nextAngle;
+			}else{
+				//this.streamArrow.angle = this.rand(-this.streamRange, this.streamRange);
+				newAngle = this.rand(-this.streamRange, this.streamRange);
+			}
 		}
+		console.log(newAngle);
+		this.NPCState = newState;
+
+		this.streamArrow.nextAngle = newAngle;
+
+		this.tweens.add({
+			targets: this.streamArrow,
+			angle: newAngle,
+			duration: gameData.updateNPCTimeInMS,
+			//ease: 'Sine.easeInOut',
+			repeat: 0
+		})
 	},
 
 	moveOpponentArrow: function(data){
@@ -418,7 +489,7 @@ let SkillGameAirship = new Phaser.Class({
 		console.log(orientationGamma);
 
 		//clamp value of tilt input to minTilt and maxTilt as defined in backend
-		orientationGamma = orientationGamma <= that.minTilt ? that.minTilt : orientationGamma >= that.maxTilt ? that.maxTilt : orientationGamma;
+		//orientationGamma = orientationGamma <= that.minTilt ? that.minTilt : orientationGamma >= that.maxTilt ? that.maxTilt : orientationGamma;
 		let newRotation = orientationGamma * that.sensitivity;
 
 		if(this.playingShip){
@@ -443,9 +514,19 @@ let SkillGameAirship = new Phaser.Class({
 	},
 
 	checkIfWinState: function(){
-		if(this.checkIfWithinAngle(this.vehicleArrow.angle, this.vehicleWinAngle) && this.checkIfWithinAngle (this.streamArrow.angle, this.streamWinAngle) ){
+		/*if(this.checkIfWithinAngle(this.vehicleArrow.angle, this.vehicleWinAngle) && this.checkIfWithinAngle (this.streamArrow.angle, this.streamWinAngle) ){
+			return true;
+		}*/
+		if(this.checkIfStreamlined(this.vehicleArrow.angle, this.vehicleWinAngle, this.streamArrow.angle)){
 			return true;
 		}
+	},
+
+	checkIfStreamlined: function(vehicleAngle, range, windAngle){
+		if(vehicleAngle -range <= windAngle && vehicleAngle + range >= windAngle){
+			return true;
+		}
+		return false;
 	},
 
 	checkIfWithinAngle: function(currentAngle, range){
