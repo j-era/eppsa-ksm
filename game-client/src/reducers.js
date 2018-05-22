@@ -227,6 +227,19 @@ export function wrongQrCodeScanned(state = false, action) {
   }
 }
 
+export function challengeCodeInputBorderColor(state = "#7b7b7b", action) {
+  switch (action.type) {
+    case types.WRONG_CHALLENGE_CODE_ENTERED:
+      return action.colors.wrongAnswer
+    case types.CORRECT_CHALLENGE_CODE_ENTERED:
+      return action.colors.rightAnswer
+    case types.UPDATE_GAME_STATE:
+      return "#7b7b7b"
+    default:
+      return state
+  }
+}
+
 export function cameraPermissonDenied(state = false, action) {
   switch (action.type) {
     case types.HANDLE_QR_READER_ERROR:

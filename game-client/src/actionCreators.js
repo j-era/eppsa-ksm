@@ -357,6 +357,19 @@ export function handleChallengeQrCode(data, challenge) {
   }
 }
 
+export function handleChallengeCode(challengeCode, challenge, colors) {
+  return dispatch => {
+    if (challengeCode === challenge.token) {
+      dispatch({ type: types.CORRECT_CHALLENGE_CODE_ENTERED, colors })
+      setTimeout(() => {
+        dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
+      }, 500)
+    } else {
+      dispatch({ type: types.WRONG_CHALLENGE_CODE_ENTERED, colors })
+    }
+  }
+}
+
 export function handleAvatarQrCode(data) {
   return dispatch => {
     if (data != null) {

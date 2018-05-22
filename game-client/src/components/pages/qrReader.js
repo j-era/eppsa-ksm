@@ -1,9 +1,13 @@
 import React from "react"
-import styled from "styled-components"
+import styled, { withTheme } from "styled-components"
 
 import { Description, ErrorMessage, Page, PageTitle, QrReader } from "eppsa-ksm-shared"
 
-import { handleChallengeQrCode, handleQrReaderError } from "../../actionCreators"
+import {
+  handleChallengeQrCode,
+  handleQrReaderError,
+  handleChallengeCode
+} from "../../actionCreators"
 
 const Container = styled(Page)`
   display: flex;
@@ -18,31 +22,40 @@ const Content = styled.div `
 `
 
 const StyledDescription = styled(Description)`
-  margin-top: ${props => props.theme.layout.largeSpacing}vw;
-  padding-left: ${props => props.theme.layout.cardViewWidth * 0.12}vw;
-  padding-right: ${props => props.theme.layout.cardViewWidth * 0.12}vw;
+  margin-bottom: ${props => props.theme.layout.mediumSpacing}vw;
+  padding-left: ${props => props.theme.layout.cardViewWidth}vw;
+  padding-right: ${props => props.theme.layout.cardViewWidth}vw;
 `
 
 const StyledErrorMessage = styled(ErrorMessage)`
-  margin-top: ${props => props.theme.layout.largeSpacing}vw;
-  padding-left: ${props => props.theme.layout.cardViewWidth * 0.12}vw;
-  padding-right: ${props => props.theme.layout.cardViewWidth * 0.12}vw;
+  margin-top: ${props => props.theme.layout.mediumSpacing}vw;
+  padding-left: ${props => props.theme.layout.cardViewWidth}vw;
+  padding-right: ${props => props.theme.layout.cardViewWidth}vw;
 `
 
-export default ({ challengeNumber, content, dispatch, wrongQrCodeScanned }) => {
+const StyledInput = styled.input`
+  margin-bottom: ${props => props.theme.layout.mediumSpacing}vw;
+  font-size: ${props => props.theme.font.button.size}vw;
+  text-align: center;
+  border-radius: ${props => props.theme.layout.borderRadius};
+  border-style: solid;
+  border-width: ${props => props.theme.layout.buttonBorder};
+  border-color: ${props => props.borderColor};
+`
+
+const qrReader = ({
+  challengeNumber,
+  content,
+  dispatch,
+  wrongQrCodeScanned,
+  challengeCodeInputBorderColor,
+  theme }) => {
   const challenge = content.challenges[challengeNumber]
 
   return (
     <Container>
       <PageTitle>{ challenge.name }</PageTitle>
       <Content>
-        <QrReader
-          scale={ 1 }
-          background={ challenge.color }
-          transparency
-          seekerColor="white"
-          onScan={ (data) => dispatch(handleChallengeQrCode(data, challenge)) }
-          onError={ (error) => dispatch(handleQrReaderError(error)) } />
         {
           wrongQrCodeScanned ?
             <StyledErrorMessage>
@@ -58,7 +71,24 @@ export default ({ challengeNumber, content, dispatch, wrongQrCodeScanned }) => {
               { content.shared.texts.scanQrInstructions }
             </StyledDescription>
         }
+        <StyledInput
+          borderColor={ challengeCodeInputBorderColor }
+          placeholder={ "Zahlencode" }
+          type={ "text" }
+          maxLength={ "3" }
+          onInput={
+            event => dispatch(handleChallengeCode(event.target.value, challenge, theme.colors))
+          } />
+        <QrReader
+          scale={ 1 }
+          background={ challenge.color }
+          transparency
+          seekerColor="white"
+          onScan={ (data) => dispatch(handleChallengeQrCode(data, challenge)) }
+          onError={ (error) => dispatch(handleQrReaderError(error)) } />
       </Content>
     </Container>
   )
 }
+
+export default withTheme(qrReader)
