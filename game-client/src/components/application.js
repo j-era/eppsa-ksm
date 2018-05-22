@@ -37,8 +37,7 @@ class Application extends React.Component {
     const challenge = content.challenges[challengeNumber]
 
     return (
-      <ThemeProvider
-        theme={ (theme) => updateTheme(theme, challenge) }>
+      <ThemeProvider theme={ (theme) => updateTheme(theme, challenge) }>
         <Container>
           <Header { ...this.props } show={ showHeader } />
           <Score score={ score } show={ showScore } />

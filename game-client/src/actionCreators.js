@@ -1,4 +1,9 @@
 import uuid from "uuid/v4"
+import pickBy from "lodash.pickby"
+import uniq from "lodash.uniq"
+import omitBy from "lodash.omitby"
+import omit from "lodash.omit"
+import isEmpty from "lodash.isempty"
 
 import { delay } from "eppsa-ksm-shared"
 
@@ -34,6 +39,17 @@ export function startNewGame(name, avatar, maxChallenges, gameServer) {
 
     setCookie("gameId", data.gameId)
     gameServer.setHandshakeQuery({ gameId: data.gameId })
+  }
+}
+
+export function startChallengeOrLobby(gameServer, room = null) {
+  return async (dispatch, getState) => {
+    const isMultiplayerChallenge = getState().challengeData.challenge.multiplayer
+    if (isMultiplayerChallenge) {
+      dispatch(joinChallengeLobby(gameServer))
+    } else {
+      dispatch(startChallenge(gameServer, room))
+    }
   }
 }
 
@@ -192,6 +208,7 @@ export function acceptMate(gameId, gameServer) {
     const room = uuid()
     gameServer.sendToPeer(messages.ACCEPT_MATE, gameId, room)
     gameServer.leaveChallengeLobby()
+
     dispatch(startChallenge(gameServer, room))
   }
 }
@@ -225,6 +242,7 @@ export function handleIncomingAcceptMate(gameId, room, gameServer) {
   return async (dispatch, getState) => {
     if (getState().requestedMate.gameId === gameId) {
       gameServer.leaveChallengeLobby()
+
       dispatch(startChallenge(gameServer, room))
     }
   }
@@ -236,13 +254,7 @@ export function handleIncomingDeclineMate() {
   }
 }
 
-export function selectChallengeType(
-  name,
-  content,
-  assetServerUri,
-  gameServerUri,
-  staticServerUri
-) {
+export function selectChallengeType(name, content) {
   return async (dispatch, getState) => {
     const { challengeNumber } = getState()
 
@@ -252,13 +264,12 @@ export function selectChallengeType(
       color: content.challenges[challengeNumber].color,
       challenge: challengeTypeData,
       shared: content.shared,
-      staticServerUri,
-      assetServerUri,
-      gameServerUri
+      staticServerUri: process.env.STATIC_SERVER_URI,
+      assetServerUri: process.env.ASSET_SERVER_URI,
+      gameServerUri: process.env.GAME_SERVER_URI
     }
 
     dispatch({ type: types.SET_CHALLENGE_TYPE, challengeData, challengeUri })
-    dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
   }
 }
 
@@ -270,15 +281,65 @@ function resolveChallengeWebAppUri(webApp) {
   return challengeUri.toString()
 }
 
-export function selectChallengeMode(content, gameServer) {
+export function selectChallengeOrMode(content) {
   return async (dispatch, getState) => {
-    const { challengeData } = getState()
-    if (challengeData.challenge.multiplayer) {
+    const hasMultiplayerChallenge = !isEmpty(pickBy(
+      content.challenges[getState().challengeNumber].challengeTypes,
+      "multiplayer"
+    ))
+
+    if (hasMultiplayerChallenge) {
       dispatch(updateGameState(gameStates.CHALLENGE_MODE_SELECTION))
     } else {
-      dispatch(startChallenge(gameServer))
+      dispatch(selectRandomChallengeType(content))
     }
   }
+}
+
+export function selectRandomChallengeType(content) {
+  return (dispatch, getState) => {
+    const challenges = omitBy(
+      omit(content.challenges[getState().challengeNumber].challengeTypes, "template"),
+      (challenge) => challenge.multiplayer
+    )
+
+    const challengeName = chooseRandomChallenge(challenges)
+    dispatch(
+      selectChallengeType(challengeName, content)
+    )
+    dispatch(updateGameState(gameStates.CHALLENGE_SELECTION))
+  }
+}
+
+export function selectMultiplayerChallengeType(content) {
+  return (dispatch, getState) => {
+    const multiplayerChallenges = Object.keys(pickBy(
+      content.challenges[getState().challengeNumber].challengeTypes,
+      "multiplayer"
+    ))
+
+    const challengeName = multiplayerChallenges[0]
+
+    dispatch(
+      selectChallengeType(challengeName, content)
+    )
+    dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
+  }
+}
+
+function chooseRandomChallenge(challenges) {
+  const templates = uniq(Object.values(challenges).map(challenge => challenge.template))
+  const randomTemplate = random(templates)
+
+  const names = Object.keys(
+    pickBy(challenges, challenge => challenge.template === randomTemplate)
+  )
+
+  return random(names)
+}
+
+function random(array) {
+  return array[Math.floor(Math.random() * array.length)]
 }
 
 export function handleChallengeQrCode(data, challenge) {

@@ -1,7 +1,6 @@
 import React from "react"
 import autoBind from "react-autobind"
 import styled, { withTheme } from "styled-components"
-
 import {
   delay,
   FramedIcon,
@@ -10,7 +9,7 @@ import {
   PageTitle
 } from "eppsa-ksm-shared"
 
-import { joinChallengeLobby, startChallenge } from "../../actionCreators"
+import { selectRandomChallengeType, selectMultiplayerChallengeType } from "../../actionCreators"
 
 const Container = styled(Page)`
   display: flex;
@@ -76,13 +75,17 @@ class ChallengeModeSelection extends React.Component {
   async onMultiplayer() {
     this.setState({ multiplayerClicked: true })
     await delay(100)
-    this.props.dispatch(joinChallengeLobby(this.props.gameServer))
+
+    this.props.dispatch(
+      selectMultiplayerChallengeType(this.props.content)
+    )
   }
 
   async onSingleplayer() {
     this.setState({ singleplayerClicked: true })
     await delay(100)
-    this.props.dispatch(startChallenge(this.props.gameServer))
+
+    this.props.dispatch(selectRandomChallengeType(this.props.content))
   }
 }
 
