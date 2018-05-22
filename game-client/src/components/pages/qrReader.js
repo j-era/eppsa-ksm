@@ -1,5 +1,5 @@
 import React from "react"
-import styled, { withTheme } from "styled-components"
+import styled from "styled-components"
 
 import { Description, ErrorMessage, Page, PageTitle, QrReader } from "eppsa-ksm-shared"
 
@@ -40,16 +40,25 @@ const StyledInput = styled.input`
   border-radius: ${props => props.theme.layout.borderRadius};
   border-style: solid;
   border-width: ${props => props.theme.layout.buttonBorder};
-  border-color: ${props => props.borderColor};
+  
+  border-color: ${props => {
+    switch (props.codeInput) {
+      case "CORRECT":
+        return props.theme.colors.rightAnswer
+      case "WRONG":
+        return props.theme.colors.wrongAnswer
+      default:
+        return props.theme.colors.secondaryFont
+    }
+  }};
 `
 
-const qrReader = ({
+export default ({
   challengeNumber,
   content,
   dispatch,
   wrongQrCodeScanned,
-  challengeCodeInputBorderColor,
-  theme }) => {
+  challengeCodeInput }) => {
   const challenge = content.challenges[challengeNumber]
 
   return (
@@ -72,12 +81,12 @@ const qrReader = ({
             </StyledDescription>
         }
         <StyledInput
-          borderColor={ challengeCodeInputBorderColor }
+          codeInput={ challengeCodeInput }
           placeholder={ "Zahlencode" }
           type={ "text" }
           maxLength={ "3" }
           onInput={
-            event => dispatch(handleChallengeCode(event.target.value, challenge, theme.colors))
+            event => dispatch(handleChallengeCode(event.target.value, challenge))
           } />
         <QrReader
           scale={ 1 }
@@ -90,5 +99,3 @@ const qrReader = ({
     </Container>
   )
 }
-
-export default withTheme(qrReader)

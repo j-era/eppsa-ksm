@@ -227,14 +227,14 @@ export function wrongQrCodeScanned(state = false, action) {
   }
 }
 
-export function challengeCodeInputBorderColor(state = "#7b7b7b", action) {
+export function challengeCodeInput(state = "INITIAL", action) {
   switch (action.type) {
     case types.WRONG_CHALLENGE_CODE_ENTERED:
-      return action.colors.wrongAnswer
+      return "WRONG"
     case types.CORRECT_CHALLENGE_CODE_ENTERED:
-      return action.colors.rightAnswer
+      return "CORRECT"
     case types.UPDATE_GAME_STATE:
-      return "#7b7b7b"
+      return "INITIAL"
     default:
       return state
   }
