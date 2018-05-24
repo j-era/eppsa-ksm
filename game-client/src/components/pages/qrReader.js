@@ -83,7 +83,7 @@ export default ({
         }
         <StyledInput
           codeInput={ challengeCodeInput }
-          placeholder={ "Zahlencode" }
+          placeholder={ content.shared.texts.challengeCodePlaceholder }
           type={ "text" }
           onInput={
             event => onCodeInput(event, dispatch, challenge)
