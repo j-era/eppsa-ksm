@@ -359,12 +359,12 @@ export function handleChallengeQrCode(data, challenge) {
 
 export function handleChallengeCode(challengeCode, challenge) {
   return dispatch => {
-    if (challengeCode === challenge.token) {
+    if (challengeCode === challenge.code) {
       dispatch({ type: types.CORRECT_CHALLENGE_CODE_ENTERED })
       setTimeout(() => {
         dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
       }, 500)
-    } else {
+    } else if (challengeCode.length >= challenge.code.length) {
       dispatch({ type: types.WRONG_CHALLENGE_CODE_ENTERED })
     }
   }
