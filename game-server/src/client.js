@@ -126,7 +126,7 @@ module.exports = class Client {
         param
       }, "Sending to peer FOOOOOOOOOOO")
 
-      this.socket.nsp.to(socketId).emit(eventName, this.game.gameId, ...param)
+      this.socket.to(socketId).emit(eventName, this.game.gameId, ...param)
     }
   }
 
@@ -138,7 +138,7 @@ module.exports = class Client {
       param
     }, "Sending to room")
 
-    this.socket.nsp.to(room).emit(eventName, this.socket.id, ...param)
+    this.socket.to(room).emit(eventName, this.socket.id, ...param)
   }
 
   async startChallenge() {
@@ -200,7 +200,7 @@ module.exports = class Client {
   emitClientsInRoom(room) {
     const roomObj = this.socket.nsp.adapter.rooms[room]
     if (roomObj) {
-      this.socket.nsp.to(room).emit("clientsInRoom", Object.keys(roomObj.sockets))
+      this.socket.to(room).emit("clientsInRoom", Object.keys(roomObj.sockets))
     }
   }
 
