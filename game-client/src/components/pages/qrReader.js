@@ -40,6 +40,7 @@ const StyledInput = styled.input`
   border-radius: ${props => props.theme.layout.borderRadius};
   border-style: solid;
   border-width: ${props => props.theme.layout.buttonBorder};
+  outline: none;
   
   border-color: ${props => {
     switch (props.codeInput) {
