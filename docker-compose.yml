@@ -55,6 +55,8 @@ services:
       context: ./game-server
     environment:
       MONGODB_URI: mongodb://mongo
+    ports:
+      - "9229:9229"
     depends_on:
       - mongo
 
