@@ -85,9 +85,8 @@ export default ({
           codeInput={ challengeCodeInput }
           placeholder={ "Zahlencode" }
           type={ "text" }
-          maxLength={ "3" }
           onInput={
-            event => dispatch(handleChallengeCode(event.target.value, challenge))
+            event => onCodeInput(event, dispatch, challenge)
           } />
         <QrReader
           scale={ 1 }
@@ -99,4 +98,14 @@ export default ({
       </Content>
     </Container>
   )
+}
+
+function onCodeInput(event, dispatch, challenge) {
+  const target = event.target
+
+  if (target.value.length > challenge.code.length) {
+    target.value = target.value.substr(0, challenge.code.length)
+  }
+
+  dispatch(handleChallengeCode(target.value, challenge))
 }
