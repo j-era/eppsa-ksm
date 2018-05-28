@@ -357,15 +357,17 @@ export function handleChallengeQrCode(data, challenge) {
   }
 }
 
-export function handleChallengeCode(challengeCode, challenge) {
+export function handleChallengeCode(enteredCode, challengeCode) {
   return dispatch => {
-    if (challengeCode === challenge.code) {
+    if (enteredCode.toLowerCase() === challengeCode.toLowerCase()) {
       dispatch({ type: types.CORRECT_CHALLENGE_CODE_ENTERED })
       setTimeout(() => {
         dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
       }, 500)
-    } else if (challengeCode.length >= challenge.code.length) {
+    } else if (enteredCode.length === challengeCode.length) {
       dispatch({ type: types.WRONG_CHALLENGE_CODE_ENTERED })
+    } else {
+      dispatch({ type: types.NO_CHALLENGE_CODE_ENTERED })
     }
   }
 }

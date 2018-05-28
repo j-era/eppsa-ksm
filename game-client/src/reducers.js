@@ -233,6 +233,7 @@ export function challengeCodeInput(state = "INITIAL", action) {
       return "WRONG"
     case types.CORRECT_CHALLENGE_CODE_ENTERED:
       return "CORRECT"
+    case types.NO_CHALLENGE_CODE_ENTERED:
     case types.UPDATE_GAME_STATE:
       return "INITIAL"
     default:

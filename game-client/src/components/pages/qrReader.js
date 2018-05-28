@@ -23,14 +23,10 @@ const Content = styled.div `
 
 const StyledDescription = styled(Description)`
   margin-bottom: ${props => props.theme.layout.mediumSpacing}vw;
-  padding-left: ${props => props.theme.layout.cardViewWidth}vw;
-  padding-right: ${props => props.theme.layout.cardViewWidth}vw;
 `
 
 const StyledErrorMessage = styled(ErrorMessage)`
   margin-top: ${props => props.theme.layout.mediumSpacing}vw;
-  padding-left: ${props => props.theme.layout.cardViewWidth}vw;
-  padding-right: ${props => props.theme.layout.cardViewWidth}vw;
 `
 
 const StyledInput = styled.input`
@@ -86,7 +82,7 @@ export default ({
           placeholder={ content.shared.texts.challengeCodePlaceholder }
           type={ "text" }
           onInput={
-            event => onCodeInput(event, dispatch, challenge)
+            event => onCodeInput(event, dispatch, challenge.code)
           } />
         <QrReader
           scale={ 1 }
@@ -100,12 +96,12 @@ export default ({
   )
 }
 
-function onCodeInput(event, dispatch, challenge) {
+function onCodeInput(event, dispatch, code) {
   const target = event.target
 
-  if (target.value.length > challenge.code.length) {
-    target.value = target.value.substr(0, challenge.code.length)
+  if (target.value.length > code.length) {
+    target.value = target.value.substr(0, code.length)
   }
 
-  dispatch(handleChallengeCode(target.value, challenge))
+  dispatch(handleChallengeCode(target.value, code))
 }
