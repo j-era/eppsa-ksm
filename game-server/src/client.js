@@ -124,7 +124,7 @@ module.exports = class Client {
         socketId,
         eventName,
         param
-      }, "Sending to peer FOOOOOOOOOOO")
+      }, "Sending to peer")
 
       this.socket.to(socketId).emit(eventName, this.game.gameId, ...param)
     }
