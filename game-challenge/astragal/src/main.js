@@ -7,14 +7,6 @@ import './styles.css';
 import * as astragalModel from './models/astragalRemodeled.json';
 import jqueryTouch from './jquery.touch';
 
-/*import leftIcon from './img/arrowLeft.png';
-import rightIcon from './img/arrowRight.png';
-
-var leftArrow = document.getElementById('arrowLeft');
-leftArrow.src = leftIcon;
-var rightArrow = document.getElementById('arrowRight');
-rightArrow.src = rightIcon;*/
-
 let gameData;
 let gameCallbacks;
 let shared;
@@ -169,7 +161,7 @@ function HandlePointerMove( evt ) {
      var len = Math.sqrt( xD * xD + yD * yD );
      if (len > 50) {
         roll();
-        inDetection = false;
+        //inDetection = false;
         canRoll = false;
      }
 }
@@ -206,7 +198,7 @@ function HandleTouchMove( evt ) {
      var len = Math.sqrt( xD * xD + yD * yD );
      if (len > 50) {
         roll();
-        inDetection = false;
+        //inDetection = false;
         canRoll = false;
      }
 }

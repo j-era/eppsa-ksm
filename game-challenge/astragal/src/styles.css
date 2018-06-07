@@ -23,11 +23,11 @@ canvas {
 }
 
 h1 {
-    font-size: 6em;
+    font-size: 8vh;
     
 }
 h2{
-    font-size: 6.5em;
+    font-size: 10vh;
 }
 #head {
     color: #FFFFFF;
@@ -39,11 +39,9 @@ h2{
 }
 
 #count {
-    font-size: 4em;
+    font-size: 8vh;
     color: #FFFFFF;
     z-index: 1;
-
-    position: absolute;
     width: 100%;
     text-align: center;
 }
