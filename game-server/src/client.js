@@ -233,7 +233,7 @@ module.exports = class Client {
 
   onPacket() {
     if (this.game) {
-      this.mongoDB.updateGame(this.game.gameId)
+      this.tryContinueGame()
     }
   }
 
