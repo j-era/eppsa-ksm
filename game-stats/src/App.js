@@ -22,14 +22,29 @@ export default class App extends React.Component {
         started games { this.state.startedGames.length }
         <br />
         finished games { this.state.finishedGames.length }
-        {this.state.challenges.length > 0 && this.state.challenges.map(
-          (challenge, index) =>
-            <div key={ index }>
-              challenge { index + 1 } started games: { challenge[0].length }
-              <br />
-              challenge { index + 1 } finished games: { challenge[1].length }
-            </div>
-        )}
+        {
+          this.state.challenges.size > 0 &&
+          Array.from(this.state.challenges.keys())
+            .sort((a, b) => a - b).map(
+              challengeNumber =>
+                <div key={ challengeNumber }>
+                challenge { challengeNumber } started games:
+                  { this.state.challenges.get(challengeNumber).length }
+                </div>
+            )
+        }
+        <br />
+        {
+          this.state.startedGames.length > 0 &&
+          this.state.startedGames.map(game =>
+            //game.challengeNumber === 1 ?
+              <div key={ game.id }>
+                agent: { game.userAgent } challange: { game.challengeNumber }
+              </div>
+              //: null
+          )
+        }
+
       </div>
     )
   }
@@ -37,7 +52,7 @@ export default class App extends React.Component {
   async getStats() {
     console.log(`connected as ${this.props.client.id}`)
 
-    const days = 7
+    const days = 14
     const dayInMilliseconds = 86400000
     const now = new Date()
     const then = new Date(now - days * dayInMilliseconds)
@@ -48,20 +63,19 @@ export default class App extends React.Component {
     }
 
     const startedGames = await this.emitWithRepsonse("startedGamesInRange", range)
-    const finishedGames = await this.emitWithRepsonse("finishedGamesInRange", range)
 
-    const challenges = []
+    const finishedGames = startedGames.filter(game => game.finished)
 
-    for (let i = 0; i < 11; i ++) {
-      const challengeNumber = i + 1
+    const challenges = new Map()
 
-      const requests = []
+    startedGames.forEach(game => {
+      if (challenges.has(game.challengeNumber)) {
+        challenges.get(game.challengeNumber).push(game)
+      } else {
+        challenges.set(game.challengeNumber, [game])
+      }
+    })
 
-      requests.push(this.emitWithRepsonse("startedChallengesInRange", range, challengeNumber))
-      requests.push(this.emitWithRepsonse("finishedChallengesInRange", range, challengeNumber))
-
-      challenges[i] = await Promise.all(requests)
-    }
 
     this.setState({
       startedGames,
