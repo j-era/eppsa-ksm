@@ -6,7 +6,8 @@ export default class App extends React.Component {
     this.state = {
       startedGames: 0,
       finishedGames: 0,
-      challenges: []
+      challenges: [],
+      operatingSystems: new Map()
     }
   }
 
@@ -22,6 +23,8 @@ export default class App extends React.Component {
         started games { this.state.startedGames.length }
         <br />
         finished games { this.state.finishedGames.length }
+        <br />
+        <br />
         {
           this.state.challenges.size > 0 &&
           Array.from(this.state.challenges.keys())
@@ -35,16 +38,60 @@ export default class App extends React.Component {
         }
         <br />
         {
-          this.state.startedGames.length > 0 &&
-          this.state.startedGames.map(game =>
-            //game.challengeNumber === 1 ?
-              <div key={ game.id }>
-                agent: { game.userAgent } challange: { game.challengeNumber }
-              </div>
-              //: null
-          )
+          this.state.operatingSystems.has("Android") &&
+          `Android: ${this.state.operatingSystems.get("Android").length}`
         }
-
+        <br />
+        {
+          this.state.operatingSystems.has("Android 4") &&
+          `Android 4: ${this.state.operatingSystems.get("Android 4").length}`
+        }
+        <br />
+        {
+          this.state.operatingSystems.has("Android 5") &&
+          `Android 5: ${this.state.operatingSystems.get("Android 5").length}`
+        }
+        <br />
+        {
+          this.state.operatingSystems.has("Android 6") &&
+          `Android 6: ${this.state.operatingSystems.get("Android 6").length}`
+        }
+        <br />
+        {
+          this.state.operatingSystems.has("Android 7") &&
+          `Android 7: ${this.state.operatingSystems.get("Android 7").length}`
+        }
+        <br />
+        {
+          this.state.operatingSystems.has("Android 8") &&
+          `Android 8: ${this.state.operatingSystems.get("Android 8").length}`
+        }
+        <br />
+        <br />
+        {
+          this.state.operatingSystems.has("iPhone OS") &&
+          `iPhone OS ${this.state.operatingSystems.get("iPhone OS").length}`
+        }
+        <br />
+        {
+          this.state.operatingSystems.has("iPhone OS 10") &&
+          `iPhone OS 10 ${this.state.operatingSystems.get("iPhone OS 10").length}`
+        }
+        <br />
+        {
+          this.state.operatingSystems.has("iPhone OS 11_2") &&
+          `iPhone OS 11_2 ${this.state.operatingSystems.get("iPhone OS 11_2").length}`
+        }
+        <br />
+        {
+          this.state.operatingSystems.has("iPhone OS 11_3") &&
+          `iPhone OS 11_3 ${this.state.operatingSystems.get("iPhone OS 11_3").length}`
+        }
+        <br />
+        {
+          this.state.operatingSystems.has("iPhone OS 11_4") &&
+          `iPhone OS 11_4 ${this.state.operatingSystems.get("iPhone OS 11_4").length}`
+        }
       </div>
     )
   }
@@ -52,7 +99,7 @@ export default class App extends React.Component {
   async getStats() {
     console.log(`connected as ${this.props.client.id}`)
 
-    const days = 14
+    const days = 21
     const dayInMilliseconds = 86400000
     const now = new Date()
     const then = new Date(now - days * dayInMilliseconds)
@@ -76,11 +123,44 @@ export default class App extends React.Component {
       }
     })
 
+    const operatingSystems = new Map()
+
+    operatingSystems.set(
+      "Android", this.filterForUserAgent(startedGames, "Android")
+    )
+
+    for (let i = 4; i <= 8; i++) {
+      operatingSystems.set(
+        `Android ${i}`, this.filterForUserAgent(startedGames, `Android ${i}`)
+      )
+    }
+
+    operatingSystems.set(
+      "iPhone OS", this.filterForUserAgent(startedGames, "iPhone OS")
+    )
+
+    operatingSystems.set(
+      "iPhone OS 10", this.filterForUserAgent(startedGames, "iPhone OS 10")
+    )
+
+    operatingSystems.set(
+      "iPhone OS 11_2", this.filterForUserAgent(startedGames, "iPhone OS 11_2")
+    )
+
+    operatingSystems.set(
+      "iPhone OS 11_3", this.filterForUserAgent(startedGames, "iPhone OS 11_3")
+    )
+
+    operatingSystems.set(
+      "iPhone OS 11_4", this.filterForUserAgent(startedGames, "iPhone OS 11_4")
+    )
+
 
     this.setState({
       startedGames,
       finishedGames,
-      challenges
+      challenges,
+      operatingSystems
     })
   }
 
@@ -90,5 +170,11 @@ export default class App extends React.Component {
         resolve(response)
       })
     })
+  }
+
+  filterForUserAgent(array, regExp) {
+    return array.filter(
+      item => item.userAgent.search(new RegExp(regExp, "g")) >= 0
+    )
   }
 }
