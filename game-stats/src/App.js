@@ -7,7 +7,8 @@ export default class App extends React.Component {
       startedGames: 0,
       finishedGames: 0,
       challenges: [],
-      operatingSystems: new Map()
+      operatingSystems: new Map(),
+      chrome: new Map()
     }
   }
 
@@ -25,17 +26,14 @@ export default class App extends React.Component {
         finished games { this.state.finishedGames.length }
         <br />
         <br />
-        {
-          this.state.challenges.size > 0 &&
-          Array.from(this.state.challenges.keys())
-            .sort((a, b) => a - b).map(
-              challengeNumber =>
-                <div key={ challengeNumber }>
-                challenge { challengeNumber } started games:
-                  { this.state.challenges.get(challengeNumber).length }
-                </div>
-            )
-        }
+        {this.state.challenges.length > 0 && this.state.challenges.map(
+          (challenge, index) =>
+            <div key={ index }>
+              challenge { index + 1 } started games: { challenge[0].length }
+              <br />
+              challenge { index + 1 } finished games: { challenge[1].length }
+            </div>
+        )}
         <br />
         {
           this.state.operatingSystems.has("Android") &&
@@ -92,6 +90,32 @@ export default class App extends React.Component {
           this.state.operatingSystems.has("iPhone OS 11_4") &&
           `iPhone OS 11_4 ${this.state.operatingSystems.get("iPhone OS 11_4").length}`
         }
+        <br />
+        <br />
+        {
+          this.state.chrome.has("Chrome") &&
+          `Chrome ${this.state.chrome.get("Chrome").length}`
+        }
+        <br />
+        {
+          this.state.chrome.has("Chrome 3") &&
+          `Chrome 3 ${this.state.chrome.get("Chrome 3").length}`
+        }
+        <br />
+        {
+          this.state.chrome.has("Chrome 4") &&
+          `Chrome 4 ${this.state.chrome.get("Chrome 4").length}`
+        }
+        <br />
+        {
+          this.state.chrome.has("Chrome 5") &&
+          `Chrome 5 ${this.state.chrome.get("Chrome 5").length}`
+        }
+        <br />
+        {
+          this.state.chrome.has("Chrome 6") &&
+          `Chrome 6 ${this.state.chrome.get("Chrome 6").length}`
+        }
       </div>
     )
   }
@@ -99,7 +123,7 @@ export default class App extends React.Component {
   async getStats() {
     console.log(`connected as ${this.props.client.id}`)
 
-    const days = 21
+    const days = 37
     const dayInMilliseconds = 86400000
     const now = new Date()
     const then = new Date(now - days * dayInMilliseconds)
@@ -113,15 +137,18 @@ export default class App extends React.Component {
 
     const finishedGames = startedGames.filter(game => game.finished)
 
-    const challenges = new Map()
+    const challenges = []
 
-    startedGames.forEach(game => {
-      if (challenges.has(game.challengeNumber)) {
-        challenges.get(game.challengeNumber).push(game)
-      } else {
-        challenges.set(game.challengeNumber, [game])
-      }
-    })
+    for (let i = 0; i < 11; i ++) {
+      const challengeNumber = i + 1
+
+      const requests = []
+
+      requests.push(this.emitWithRepsonse("startedChallengesInRange", range, challengeNumber))
+      requests.push(this.emitWithRepsonse("finishedChallengesInRange", range, challengeNumber))
+
+      challenges[i] = await Promise.all(requests)
+    }
 
     const operatingSystems = new Map()
 
@@ -155,12 +182,35 @@ export default class App extends React.Component {
       "iPhone OS 11_4", this.filterForUserAgent(startedGames, "iPhone OS 11_4")
     )
 
+    const chrome = new Map()
+
+    chrome.set(
+      "Chrome", this.filterForUserAgent(startedGames, "Chrome")
+    )
+
+    chrome.set(
+      "Chrome 3", this.filterForUserAgent(startedGames, "Chrome/3")
+    )
+
+    chrome.set(
+      "Chrome 4", this.filterForUserAgent(startedGames, "Chrome/4")
+    )
+
+    chrome.set(
+      "Chrome 5", this.filterForUserAgent(startedGames, "Chrome/5")
+    )
+
+    chrome.set(
+      "Chrome 6", this.filterForUserAgent(startedGames, "Chrome/6")
+    )
+
 
     this.setState({
       startedGames,
       finishedGames,
       challenges,
-      operatingSystems
+      operatingSystems,
+      chrome
     })
   }
 
@@ -174,7 +224,7 @@ export default class App extends React.Component {
 
   filterForUserAgent(array, regExp) {
     return array.filter(
-      item => item.userAgent.search(new RegExp(regExp, "g")) >= 0
+      item => item.userAgent ? item.userAgent.search(new RegExp(regExp, "g")) >= 0 : false
     )
   }
 }
