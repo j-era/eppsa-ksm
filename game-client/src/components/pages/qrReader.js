@@ -30,7 +30,6 @@ const StyledErrorMessage = styled(ErrorMessage)`
 `
 
 const StyledInput = styled.input`
-  margin-bottom: ${props => props.theme.layout.mediumSpacing}vw;
   font-size: ${props => props.theme.font.button.size}vw;
   text-align: center;
   border-radius: ${props => props.theme.layout.borderRadius};
@@ -61,6 +60,13 @@ export default ({
   return (
     <Container>
       <PageTitle>{ challenge.name }</PageTitle>
+      <StyledInput
+        codeInput={ challengeCodeInput }
+        placeholder={ content.shared.texts.challengeCodePlaceholder }
+        type={ "text" }
+        onInput={
+          event => onCodeInput(event, dispatch, challenge.code)
+        } />
       <Content>
         {
           wrongQrCodeScanned ?
@@ -77,13 +83,6 @@ export default ({
               { content.shared.texts.scanQrInstructions }
             </StyledDescription>
         }
-        <StyledInput
-          codeInput={ challengeCodeInput }
-          placeholder={ content.shared.texts.challengeCodePlaceholder }
-          type={ "text" }
-          onInput={
-            event => onCodeInput(event, dispatch, challenge.code)
-          } />
         <QrReader
           scale={ 1 }
           background={ challenge.color }
