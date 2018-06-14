@@ -5,6 +5,7 @@ const Container = styled.div`
   height: 100%;
 
   display: flex;
+  flex-direction: column;
   
   align-items: center;
   justify-content: center;
@@ -22,12 +23,21 @@ export default () =>
     <br />
     <br />
     <br />
+    <div>
+      Du hast den QR-Code gescanned aber dich nicht im WLAN angemeldet.
+    </div>
     <br />
-    Du hast den QR-Code gescanned aber dich nicht im WLAN angemeldet.
     <br />
     <br />
-    <br />
-    <br />
-    Verbinde dich mit den WLAN {"<SSID>"} dem dem Passwort
-    {"<PW>"}, um an der Schnitzeljagd teilzunehmen.
+    <div>
+      Verbinde dich mit dem WLAN
+      <br />
+      <b>Bretterretter</b>
+      <br />
+      und dem Passwort
+      <br />
+      <b>bretterretter</b>
+      <br />
+      um an der Schnitzeljagd teilzunehmen.
+    </div>
   </Container>
