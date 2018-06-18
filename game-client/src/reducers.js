@@ -227,6 +227,20 @@ export function wrongQrCodeScanned(state = false, action) {
   }
 }
 
+export function challengeCodeInput(state = "INITIAL", action) {
+  switch (action.type) {
+    case types.WRONG_CHALLENGE_CODE_ENTERED:
+      return "WRONG"
+    case types.CORRECT_CHALLENGE_CODE_ENTERED:
+      return "CORRECT"
+    case types.NO_CHALLENGE_CODE_ENTERED:
+    case types.UPDATE_GAME_STATE:
+      return "INITIAL"
+    default:
+      return state
+  }
+}
+
 export function cameraPermissonDenied(state = false, action) {
   switch (action.type) {
     case types.HANDLE_QR_READER_ERROR:
