@@ -25,6 +25,10 @@ const Content = styled.div`
   text-align: center;
 `
 
+const Bold = styled.b`
+  font-size: 25px;
+`
+
 export default () =>
   <Container>
     <Content>
@@ -34,12 +38,12 @@ export default () =>
       </div>
       <div>
         Verbinde dich mit dem WLAN
-        <b> Bretterretter</b>
       </div>
+      <Bold> Bretterretter</Bold>
       <div>
         und dem Passwort
-        <b> bretterretter</b>
       </div>
+      <Bold> bretterretter</Bold>
       <div>
         um an der Schnitzeljagd teilzunehmen.
       </div>
