@@ -114,7 +114,7 @@ export default () =>
         <Content>
           UPS!!
           <div>
-            Du hast den QR-Code gescanned aber dich nicht im WLAN angemeldet.
+            Du hast den QR-Code gescanned, aber dich nicht im WLAN angemeldet.
           </div>
           <div>
             Verbinde dich mit dem WLAN
