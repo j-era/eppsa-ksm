@@ -12,4 +12,5 @@ export default styled.div`
   background-color: white;
   overflow: hidden;
   transition: width 0.5s ease, height 0.5s ease;
+  filter: drop-shadow(0px 0px 25px);
 `

@@ -8,6 +8,8 @@ const Container = styled.div`
   align-items: center;
   position: relative;
   background: none;
+
+  filter: drop-shadow(0px 0px 20px);
 `
 
 const TimeBallContainer = styled.div`

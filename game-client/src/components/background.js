@@ -16,12 +16,23 @@ const Container = styled.div`
   transition: transform 500ms ease;
   animation: ${props => props.showScore ? "slideDown 3s" : ""};
 
+  background-color: ${props => props.theme.colors.area};
+  transition: background-color 0.5s ease;
+
   @keyframes slideDown {
       0% {transform: translateY(0vw);}
       20% {transform: translateY(10vw);}
       80% {transform: translateY(10vw);}
       100% {transform: translateY(0vw);}
   }
+`
+
+const Cross = styled.div`
+  position: absolute;
+  width: 100%; 
+  height: 100%;
+  background-color: #ffffff;
+  clip-path: polygon(0 0, 100% 0, 50% 50%, 100% 100%, 0 100%, 50% 50%);
 `
 
 const BackgroundContainer = styled.div`
@@ -31,9 +42,6 @@ const BackgroundContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-grow: 1;
-
-  background-color: ${props => props.theme.colors.area};
-  transition: background-color 0.5s ease;
 `
 
 const BannerContainer = styled.div`
@@ -69,6 +77,7 @@ export default function Background(props) {
       className={ props.className }
       isBannerVisible={ isBannerVisible(props.gameState) }
       showScore={ props.showScore }>
+      <Cross />
       <BannerContainer visible={ isBannerVisible(props.gameState) }>
         <Banner>{ props.bannerText }</Banner>
       </BannerContainer>
