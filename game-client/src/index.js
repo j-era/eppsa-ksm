@@ -47,11 +47,7 @@ contentServer.getData().then(transform).then(async (content) => {
     if (config.token) {
       store.dispatch(actions.updateGameState(gameStates.NAVIGATION_TO_START))
     } else {
-      if (config.avatar) {
-        store.dispatch(actions.updateGameState(gameStates.NEW_GAME_NAME_SELECTION))
-      } else {
-        store.dispatch(actions.updateGameState(gameStates.NEW_GAME_AVATAR_SELECTION))
-      }
+      store.dispatch(actions.updateGameState(gameStates.NEW_GAME_NAME_SELECTION))
     }
   }
 

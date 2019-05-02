@@ -2,7 +2,7 @@ import * as types from "./actionTypes"
 import * as gameStates from "./gameStates"
 import * as requestedMateStates from "./requestedMateStates"
 
-export function gameState(state = gameStates.NEW_GAME_AVATAR_SELECTION, action) {
+export function gameState(state = gameStates.NEW_GAME_AVATAR_CONFIRMATION, action) {
   switch (action.type) {
     case types.UPDATE_GAME_STATE:
       return action.state
@@ -31,7 +31,7 @@ export function name(state = "", action) {
   }
 }
 
-export function avatar(state = null, action) {
+export function avatar(state = "airplane", action) {
   switch (action.type) {
     case types.UPDATE_GAME_DATA:
       return action.data.avatar
