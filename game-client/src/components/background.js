@@ -1,14 +1,11 @@
 import React from "react"
 import styled from "styled-components"
-import BackgroundArcSvg from "../assets/Background_Arc.svg"
 
 import Banner from "./banner"
 import { default as TimerBarComponent } from "./timerBar"
 
 const Container = styled.div`
   position: relative;
-
-  padding-top: 4%;
 
   box-sizing: border-box;
 
@@ -17,23 +14,14 @@ const Container = styled.div`
   flex-direction: column;
   flex-grow: 1;
   transition: transform 500ms ease;
-  animation: ${props => props.showScore ? "slideDown 3s;" : ";"}
+  animation: ${props => props.showScore ? "slideDown 3s" : ""};
 
   @keyframes slideDown {
       0% {transform: translateY(0vw);}
-      20% {transform: translateY(5vw);}
-      80% {transform: translateY(5vw);}
+      20% {transform: translateY(10vw);}
+      80% {transform: translateY(10vw);}
       100% {transform: translateY(0vw);}
   }
-`
-
-const BackgroundArcSVG = styled(BackgroundArcSvg)`
-  fill: ${props => props.theme.colors.area};
-  margin-bottom: -1px;
-  width: 100%;
-  height: 5%;
-  background-color: white;
-  transition: fill 0.5s ease;
 `
 
 const BackgroundContainer = styled.div`
@@ -84,7 +72,6 @@ export default function Background(props) {
       <BannerContainer visible={ isBannerVisible(props.gameState) }>
         <Banner>{ props.bannerText }</Banner>
       </BannerContainer>
-      <BackgroundArcSVG />
       { renderTimerBar(props) }
       <BackgroundContainer>
         { props.children }
