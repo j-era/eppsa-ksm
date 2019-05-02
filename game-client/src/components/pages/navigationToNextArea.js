@@ -4,7 +4,7 @@ import styled, { withTheme } from "styled-components"
 import { delay, Description, FramedIcon, NextButton, Page, PageTitle } from "eppsa-ksm-shared"
 
 import { updateGameState } from "../../actionCreators"
-import { QR_READER } from "../../gameStates"
+import { AREA_CONFIRMATION } from "../../gameStates"
 
 const Container = styled(Page)`
   display: flex;
@@ -53,7 +53,7 @@ class NavigationToNextArea extends React.Component {
   async onNext() {
     this.setState({ nextClicked: true })
     await delay(100)
-    this.props.dispatch(updateGameState(QR_READER))
+    this.props.dispatch(updateGameState(AREA_CONFIRMATION))
   }
 }
 
