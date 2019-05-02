@@ -22,7 +22,7 @@ class Application extends React.Component {
     this.state = { renderCardContent: true, showHeader: getPageData(props).showHeader }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const previousPage = getPageData(this.props)
     const nextPage = getPageData(nextProps)
     if (previousPage.showHeader !== nextPage.showHeader) {
