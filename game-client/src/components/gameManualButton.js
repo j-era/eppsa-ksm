@@ -9,7 +9,7 @@ const Container = styled.div`
 position: absolute;
 z-index: 999;
   width: 8.15vw;
-  left: 2.5vw;
+  right: 2.5vw;
   top: 2.5vw;
 
   ${props => props.show ?
