@@ -342,21 +342,6 @@ function random(array) {
   return array[Math.floor(Math.random() * array.length)]
 }
 
-export function handleChallengeQrCode(data, challenge) {
-  return (dispatch) => {
-    if (data != null) {
-      const url = new URL(data)
-      const token = url.searchParams.get("token")
-      if (token === challenge.token) {
-        dispatch({ type: types.CORRECT_QR_CODE_SCANNED })
-        dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
-      } else {
-        dispatch({ type: types.WRONG_QR_CODE_SCANNED })
-      }
-    }
-  }
-}
-
 export function handleChallengeCode(enteredCode, challengeCode) {
   return dispatch => {
     if (enteredCode.toLowerCase() === challengeCode.toLowerCase()) {
@@ -369,27 +354,5 @@ export function handleChallengeCode(enteredCode, challengeCode) {
     } else {
       dispatch({ type: types.NO_CHALLENGE_CODE_ENTERED })
     }
-  }
-}
-
-export function handleAvatarQrCode(data) {
-  return dispatch => {
-    if (data != null) {
-      const url = new URL(data)
-      const avatar = url.searchParams.get("avatar")
-      if (avatar != null) {
-        dispatch(updateAvatar(avatar))
-        dispatch(updateGameState(gameStates.NEW_GAME_NAME_SELECTION))
-      } else {
-        dispatch({ type: types.WRONG_QR_CODE_SCANNED })
-      }
-    }
-  }
-}
-
-export function handleQrReaderError(name) {
-  return {
-    type: types.HANDLE_QR_READER_ERROR,
-    name
   }
 }

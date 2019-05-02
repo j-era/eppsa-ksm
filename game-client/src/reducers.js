@@ -2,7 +2,7 @@ import * as types from "./actionTypes"
 import * as gameStates from "./gameStates"
 import * as requestedMateStates from "./requestedMateStates"
 
-export function gameState(state = gameStates.NEW_GAME_AVATAR_CONFIRMATION, action) {
+export function gameState(state = gameStates.NEW_GAME_NAME_SELECTION, action) {
   switch (action.type) {
     case types.UPDATE_GAME_STATE:
       return action.state
@@ -214,19 +214,6 @@ function includesGame(gameId, games) {
   return games.find((game) => game.gameId === gameId && game.inLobby)
 }
 
-export function wrongQrCodeScanned(state = false, action) {
-  switch (action.type) {
-    case types.WRONG_QR_CODE_SCANNED:
-      return true
-    case types.CORRECT_QR_CODE_SCANNED:
-      return false
-    case types.UPDATE_GAME_STATE:
-      return false
-    default:
-      return state
-  }
-}
-
 export function challengeCodeInput(state = "INITIAL", action) {
   switch (action.type) {
     case types.WRONG_CHALLENGE_CODE_ENTERED:
@@ -236,15 +223,6 @@ export function challengeCodeInput(state = "INITIAL", action) {
     case types.NO_CHALLENGE_CODE_ENTERED:
     case types.UPDATE_GAME_STATE:
       return "INITIAL"
-    default:
-      return state
-  }
-}
-
-export function cameraPermissonDenied(state = false, action) {
-  switch (action.type) {
-    case types.HANDLE_QR_READER_ERROR:
-      return action.name === "NotAllowedError"
     default:
       return state
   }

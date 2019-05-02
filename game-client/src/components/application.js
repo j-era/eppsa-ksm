@@ -22,6 +22,7 @@ class Application extends React.Component {
     this.state = { renderCardContent: true, showHeader: getPageData(props).showHeader }
   }
 
+  // eslint-disable-next-line camelcase
   UNSAFE_componentWillReceiveProps(nextProps) {
     const previousPage = getPageData(this.props)
     const nextPage = getPageData(nextProps)

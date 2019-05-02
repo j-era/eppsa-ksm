@@ -38,17 +38,9 @@ contentServer.getData().then(transform).then(async (content) => {
 
   const resumableGame = await findResumableGame()
   if (resumableGame) {
-    if (config.token) {
-      store.dispatch(actions.resumeGame(resumableGame.gameId, gameServer))
-    } else {
-      store.dispatch(actions.updateGameState(gameStates.RESUME_OR_NEW_GAME_SELECTION))
-    }
+    store.dispatch(actions.updateGameState(gameStates.RESUME_OR_NEW_GAME_SELECTION))
   } else {
-    if (config.token) {
-      store.dispatch(actions.updateGameState(gameStates.NAVIGATION_TO_START))
-    } else {
-      store.dispatch(actions.updateGameState(gameStates.NEW_GAME_NAME_SELECTION))
-    }
+    store.dispatch(actions.updateGameState(gameStates.NEW_GAME_NAME_SELECTION))
   }
 
   window.addEventListener("message", receiveMessage, false)
