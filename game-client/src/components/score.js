@@ -12,74 +12,52 @@ const ScoreContainer = styled.div`
   filter: drop-shadow(0px 0px 20px);
 `
 
-const AnimationContainer = styled.div`
-  height: 100%;
-`
-
 const ScoreElement = styled.div`
   position: absolute;
-  box-sizing: border-box;
-  top: calc((10vw - 1.2em) / 2);
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-color: ${props => props.theme.colors.area};
   font-size: ${props => props.theme.font.button.size}vw;
-  padding-left: 1em;
-  padding-right: 1em;
-  height: 1.2em;
-  width: 5em;
+  text-align: center;
+  width: 25%;
   border-radius: ${props => props.theme.layout.borderRadius};
+  opacity: 0;
+  color: white;
 `
+
+const keyframesOldScore = keyframes`
+    0% {transform: translate(-50%) scale(0); opacity: 0;}
+    20% {transform: translate(-50%) scale(1); opacity: 1;}
+    60% {transform: translate(0%) scale(1); opacity: 1;}
+    80% {transform: translate(0%) scale(1); opacity: 1;}
+    100% {transform: translate(0%) scale(0); opacity: 0;}
+  `
+
+const keyframesAddScore = keyframes`
+    0% {transform: translate(50%) scale(0); opacity: 0;}
+    20% {transform: translate(50%) scale(1); opacity: 1;}
+    60% {transform: translate(0%) scale(1); opacity: 1;}
+    80% {transform: translate(0%) scale(1); opacity: 0;}
+    100% {transform: translate(0%) scale(0); opacity: 0;}
+  `
+
+const keyframesNewScore = keyframes`
+    40% {transform: scale(1); opacity: 0;}
+    80% {transform: scale(1); opacity: 1;}
+    100% {transform: scale(0); opacity: 0;}
+  `
 
 const AddScore = styled(ScoreElement)`
   color: black;
-  animation: ${props => props.show ? `${keyframesAddScore()} 3s;` : ";"}
-  opacity: 0;
+  background-color: initial;
+  animation: ${keyframesAddScore} 3s;
 `
 
 const OldScore = styled(ScoreElement)`
-  color: white;
-  background-color: ${props => props.theme.colors.area};
-  animation: ${props => props.show ? `${keyframesOldScore()} 3s;` : ";"}
-  opacity: 0;
+  animation: ${keyframesOldScore} 3s;
 `
 
 const NewScore = styled(ScoreElement)`
-  color: white;
-  background-color: ${props => props.theme.colors.area};
-  animation: ${props => props.show ? `${keyframesNewScore()} 3s;` : ";"}
-  transform: translate(-2.5em);
-  opacity: 0;
+  animation: ${keyframesNewScore} 3s;
 `
-
-function keyframesOldScore() {
-  return keyframes`
-    0% {transform: translate(-7.5em) scale(0); opacity: 0;}
-    20% {transform: translate(-7.5em) scale(1); opacity: 1;}
-    60% {transform: translate(-2.5em) scale(1); opacity: 1;}
-    80% {transform: translate(-2.5em) scale(1); opacity: 1;}
-    100% {transform: translate(-2.5em) scale(0); opacity: 0;}
-  `
-}
-
-function keyframesAddScore() {
-  return keyframes`
-    0% {transform: translate(2.5em) scale(0); opacity: 0;}
-    20% {transform: translate(2.5em) scale(1); opacity: 1;}
-    60% {transform: translate(-2.5em) scale(1); opacity: 1;}
-    80% {transform: translate(-2.5em) scale(1); opacity: 1;}
-    100% {transform: translate(-2.5em) scale(0); opacity: 0;}
-  `
-}
-
-function keyframesNewScore() {
-  return keyframes`
-    60% {transform: translate(-2.5em) scale(1); opacity: 0;}
-    80% {transform: translate(-2.5em) scale(1); opacity: 1;}
-    100% {transform: translate(-2.5em) scale(0); opacity: 0;}
-  `
-}
 
 // eslint-disable-next-line react/no-deprecated
 export default class Score extends React.Component {
@@ -95,26 +73,23 @@ export default class Score extends React.Component {
   }
 
   render() {
-    const { show } = this.props
     return (
       <ScoreContainer>
-        <AnimationContainer>
-          <AddScore show={ show }>
+        <OldScore>
+          {
+            this.state.oldScore
+          }
+        </OldScore>
+        <AddScore>
             + {
-              this.props.score - this.state.oldScore
-            }
-          </AddScore>
-          <OldScore show={ show }>
-            {
-              this.state.oldScore
-            }
-          </OldScore>
-          <NewScore show={ show }>
-            {
-              this.props.score
-            }
-          </NewScore>
-        </AnimationContainer>
+            this.props.score - this.state.oldScore
+          }
+        </AddScore>
+        <NewScore>
+          {
+            this.props.score
+          }
+        </NewScore>
       </ScoreContainer>
     )
   }

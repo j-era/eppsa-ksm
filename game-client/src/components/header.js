@@ -21,7 +21,9 @@ export default function renderHeader(props) {
       <Logo
         src={ `${props.assetServerUri}/${props.content.shared.assets.dashboardWingSign.src}` } />
       <GameManualButton { ...props } show={ props.show && !props.showGameManual } />
-      <Score score={ props.score } show={ props.showScore } />
+      {
+        props.showScore && <Score score={ props.score } />
+      }
     </Header>
   )
 }
