@@ -7,7 +7,6 @@ import Card from "./card"
 import { default as Background } from "./background"
 import Header from "./header"
 import pages from "./pages"
-import Score from "./score"
 
 const Container = styled.div`
   background-color: white;
@@ -33,17 +32,17 @@ class Application extends React.Component {
   }
 
   render() {
-    const { challengeNumber, content, score, showScore } = this.props
+    const { challengeNumber, content, showScore } = this.props
     const { render, showHeader } = getPageData(this.props)
     const challenge = content.challenges[challengeNumber]
 
     return (
       <ThemeProvider theme={ (theme) => updateTheme(theme, challenge) }>
         <Container>
-          <Header { ...this.props } show={ showHeader } />
-          <Score score={ score } show={ showScore } />
+          <Header { ...this.props } show={ showHeader || showScore } />
           <Background
             { ...this.props }
+            showHeader={ showHeader || showScore }
             bannerText={ content.name } >
             <Card small={ showHeader }>
               { this.state.renderCardContent && React.createElement(render, this.props) }

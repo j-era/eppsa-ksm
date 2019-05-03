@@ -1,7 +1,6 @@
 import React from "react"
 import styled from "styled-components"
 
-import Banner from "./banner"
 import { default as TimerBarComponent } from "./timerBar"
 
 const Container = styled.div`
@@ -12,19 +11,10 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
-  transition: transform 500ms ease;
-  animation: ${props => props.showScore ? "slideDown 3s" : ""};
+  flex-grow: ${({ showHeader }) => showHeader ? 0.8 : 1};
 
   background-color: ${props => props.theme.colors.area};
-  transition: background-color 0.5s ease;
-
-  @keyframes slideDown {
-      0% {transform: translateY(0vw);}
-      20% {transform: translateY(10vw);}
-      80% {transform: translateY(10vw);}
-      100% {transform: translateY(0vw);}
-  }
+  transition: flex-grow 0.5s ease, background-color 0.5s ease;
 `
 
 const Cross = styled.div`
@@ -42,15 +32,6 @@ const BackgroundContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-grow: 1;
-`
-
-const BannerContainer = styled.div`
-  visibility: ${props => props.visible ? "visible" : "hidden"};
-  display: flex;
-  position: absolute;
-  transform: translateY(-3vw);
-  width: 100%;
-  justify-content: center;
 `
 
 const TimerBarContainer = styled.div`
@@ -75,12 +56,8 @@ export default function Background(props) {
   return (
     <Container
       className={ props.className }
-      isBannerVisible={ isBannerVisible(props.gameState) }
-      showScore={ props.showScore }>
+      showHeader={ props.showHeader }>
       <Cross />
-      <BannerContainer visible={ isBannerVisible(props.gameState) }>
-        <Banner>{ props.bannerText }</Banner>
-      </BannerContainer>
       { renderTimerBar(props) }
       <BackgroundContainer>
         { props.children }
@@ -98,16 +75,5 @@ function renderTimerBar({ gameState, challengeData, timelineClockRunning }) {
           isRunning={ timelineClockRunning } />
       </TimerBarContainer>
     )
-  }
-}
-
-function isBannerVisible(gamestate) {
-  switch (gamestate) {
-    case "NEW_GAME_AVATAR_SELECTION":
-    case "NEW_GAME_AVATAR_CONFIRMATION":
-    case "NEW_GAME_NAME_SELECTION":
-      return true
-    default:
-      return false
   }
 }

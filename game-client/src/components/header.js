@@ -1,16 +1,27 @@
 import React from "react"
 import styled from "styled-components"
 import GameManualButton from "./gameManualButton"
+import Score from "./score"
 
 const Header = styled.div`
-  height: ${props => props.show ? 6 : 0}%;
+  position: relative;
+  flex-grow: ${props => props.show ? 0.2 : 0};
   overflow: hidden;
-  transition: height 0.5s ease;
+  transition: flex-grow 0.5s ease;
 `
+
+const Logo = styled.img`
+  position: absolute;
+  width: 30%;
+`
+
 export default function renderHeader(props) {
   return (
     <Header show={ props.show }>
+      <Logo
+        src={ `${props.assetServerUri}/${props.content.shared.assets.dashboardWingSign.src}` } />
       <GameManualButton { ...props } show={ props.show && !props.showGameManual } />
+      <Score score={ props.score } show={ props.showScore } />
     </Header>
   )
 }

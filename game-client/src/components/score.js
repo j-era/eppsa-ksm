@@ -4,10 +4,12 @@ import styled, { keyframes } from "styled-components"
 const ScoreContainer = styled.div`
   position: absolute;
   width: 100%;
-  height: 10vw;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  filter: drop-shadow(0px 0px 20px);
 `
 
 const AnimationContainer = styled.div`
@@ -79,6 +81,7 @@ function keyframesNewScore() {
   `
 }
 
+// eslint-disable-next-line react/no-deprecated
 export default class Score extends React.Component {
   constructor(props) {
     super(props)
