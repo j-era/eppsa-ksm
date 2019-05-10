@@ -14,14 +14,14 @@ import Application from "./components/application"
 import * as gameStates from "./gameStates"
 import * as reducers from "./reducers"
 import ContentServer from "./api/contentServer"
-import { getCookie } from "./cookie"
-import GameServer from "./api/gameServer"
+// import { getCookie } from "./cookie"
+// import GameServer from "./api/gameServer"
 import * as actions from "./actionCreators"
-import * as messages from "./messages"
+// import * as messages from "./messages"
 
 const store = createStore(combineReducers(reducers), applyMiddleware(thunk, createLogger()))
 const contentServer = new ContentServer(process.env.CONTENT_SERVER_URI)
-const gameServer = new GameServer(process.env.GAME_SERVER_URI)
+// const gameServer = new GameServer(process.env.GAME_SERVER_URI)
 
 const config = querystring.parse(window.location.search.substring(1))
 
@@ -61,7 +61,7 @@ contentServer.getData().then(transform).then(async (content) => {
           staticServerUri={ process.env.STATIC_SERVER_URI }
           maxChallenges={ maxChallenges }
           dispatch={ store.dispatch }
-          gameServer={ gameServer }
+          // gameServer={ gameServer }
           onChallengeReady={ onChallengeReady } />
       </ThemeProvider>
     </Provider>,
@@ -74,6 +74,7 @@ function transform(content) {
 }
 
 async function findResumableGame() {
+  /*
   const gameId = getCookie("gameId")
   if (gameId) {
     const game = await gameServer.findGame(gameId)
@@ -82,6 +83,7 @@ async function findResumableGame() {
       return game
     }
   }
+  */
   return null
 }
 
@@ -118,7 +120,7 @@ function receiveMessage(event) {
     const challengeData = omit(event.data, "source")
 
     switch (event.data.id) {
-      case "finish": return store.dispatch(actions.finishChallenge(challengeData, gameServer))
+      case "finish": return store.dispatch(actions.finishChallenge(challengeData, /* gameServer*/))
       case "addScore": return store.dispatch(actions.addScore(event.data.score))
       case "showTimeline": return store.dispatch(actions.showTimeline(event.data.startTime))
       case "startTimelineClock": return store.dispatch(actions.startTimelineClock())
@@ -128,6 +130,7 @@ function receiveMessage(event) {
   }
 }
 
+/*
 gameServer.on("connectedGames", (connectedGames) =>
   store.dispatch(actions.updateConnectedGames(connectedGames))
 )
@@ -155,3 +158,4 @@ gameServer.on(messages.ACCEPT_MATE, (gameId, room) =>
 gameServer.on(messages.DECLINE_MATE, () =>
   store.dispatch(actions.handleIncomingDeclineMate())
 )
+*/

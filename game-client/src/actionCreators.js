@@ -7,7 +7,7 @@ import isEmpty from "lodash.isempty"
 
 import { delay } from "eppsa-ksm-shared"
 
-import { setCookie } from "./cookie"
+// import { setCookie } from "./cookie"
 import * as gameStates from "./gameStates"
 import * as types from "./actionTypes"
 import * as messages from "./messages"
@@ -31,14 +31,14 @@ export function configureNewGame() {
   }
 }
 
-export function startNewGame(name, avatar, maxChallenges, gameServer) {
+export function startNewGame(name = "defaultName", avatar) {
   return async (dispatch) => {
-    const data = await gameServer.startGame(name, avatar, maxChallenges)
+    const data = { name, avatar, gameId: "noId", challengeNumber: 1, score: 0 }
     dispatch(updateGameData(data))
     dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_AREA))
 
-    setCookie("gameId", data.gameId)
-    gameServer.setHandshakeQuery({ gameId: data.gameId })
+    // setCookie("gameId", data.gameId)
+    // gameServer.setHandshakeQuery({ gameId: data.gameId })
   }
 }
 
@@ -55,22 +55,25 @@ export function startChallengeOrLobby(gameServer, room = null) {
 
 export function startChallenge(gameServer, room = null) {
   return async (dispatch) => {
-    await gameServer.startChallenge()
+    // await gameServer.startChallenge()
     dispatch({ type: types.SET_CHALLENGE_ROOM, room })
     dispatch(updateGameState(gameStates.CHALLENGE))
   }
 }
 
-export function finishChallenge(challengeData, gameServer) {
+export function finishChallenge(challengeData) {
   return async (dispatch, getState) => {
     if (challengeData.score != null) {
       dispatch(addScore(challengeData.score))
       await delay(3000)
     }
 
-    const data = await gameServer.finishChallenge({ ...challengeData, score: getState().score })
+    const challengeNumber = getState().challengeNumber + 1
+    const score = getState().score
 
-    if (data.finished) {
+    const data = { challengeNumber, score }
+
+    if (challengeNumber > 11) {
       dispatch(updateGameState(gameStates.FINISHED))
     } else {
       dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_AREA))

@@ -11,10 +11,8 @@ export function gameState(state = gameStates.NEW_GAME_NAME_SELECTION, action) {
   }
 }
 
-export function gameId(state = null, action) {
+export function gameId(state = "", action) {
   switch (action.type) {
-    case types.UPDATE_GAME_DATA:
-      return action.data.gameId
     default:
       return state
   }
@@ -22,8 +20,6 @@ export function gameId(state = null, action) {
 
 export function name(state = "", action) {
   switch (action.type) {
-    case types.UPDATE_GAME_DATA:
-      return action.data.name
     case types.UPDATE_NAME:
       return action.name
     default:
@@ -33,10 +29,6 @@ export function name(state = "", action) {
 
 export function avatar(state = "airplane", action) {
   switch (action.type) {
-    case types.UPDATE_GAME_DATA:
-      return action.data.avatar
-    case types.UPDATE_AVATAR:
-      return action.avatar
     default:
       return state
   }
