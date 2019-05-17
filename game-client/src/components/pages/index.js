@@ -6,7 +6,6 @@ import {
   AREA_CONFIRMATION,
   CHALLENGE_SELECTION,
   CHALLENGE_MODE_SELECTION,
-  CHALLENGE_LOBBY,
   CHALLENGE_MANUAL,
   CHALLENGE,
   FINISHED
@@ -18,7 +17,6 @@ import NavigationToNextArea from "./navigationToNextArea"
 import AreaConfirmation from "./areaConfirmation"
 import ChallengeSelection from "./challengeSelection"
 import ChallengeModeSelection from "./challengeModeSelection"
-import ChallengeLobby from "./challengeLobby"
 import ChallengeManual from "./challengeManual"
 import Challenge from "./challenge"
 import Finished from "./finished"
@@ -32,7 +30,6 @@ export default {
   [AREA_CONFIRMATION]: { render: AreaConfirmation, showHeader: true },
   [CHALLENGE_SELECTION]: { render: ChallengeSelection, showHeader: true },
   [CHALLENGE_MODE_SELECTION]: { render: ChallengeModeSelection, showHeader: true },
-  [CHALLENGE_LOBBY]: { render: ChallengeLobby, showHeader: true },
   [CHALLENGE_MANUAL]: { render: ChallengeManual, showHeader: true },
   [CHALLENGE]: { render: Challenge, showHeader: false },
   [FINISHED]: { render: Finished, showHeader: false },

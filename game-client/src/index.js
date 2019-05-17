@@ -14,14 +14,10 @@ import Application from "./components/application"
 import * as gameStates from "./gameStates"
 import * as reducers from "./reducers"
 import ContentServer from "./api/contentServer"
-// import { getCookie } from "./cookie"
-// import GameServer from "./api/gameServer"
 import * as actions from "./actionCreators"
-// import * as messages from "./messages"
 
 const store = createStore(combineReducers(reducers), applyMiddleware(thunk, createLogger()))
 const contentServer = new ContentServer(process.env.CONTENT_SERVER_URI)
-// const gameServer = new GameServer(process.env.GAME_SERVER_URI)
 
 const config = querystring.parse(window.location.search.substring(1))
 
@@ -61,7 +57,6 @@ contentServer.getData().then(transform).then(async (content) => {
           staticServerUri={ process.env.STATIC_SERVER_URI }
           maxChallenges={ maxChallenges }
           dispatch={ store.dispatch }
-          // gameServer={ gameServer }
           onChallengeReady={ onChallengeReady } />
       </ThemeProvider>
     </Provider>,
@@ -120,7 +115,7 @@ function receiveMessage(event) {
     const challengeData = omit(event.data, "source")
 
     switch (event.data.id) {
-      case "finish": return store.dispatch(actions.finishChallenge(challengeData, /* gameServer*/))
+      case "finish": return store.dispatch(actions.finishChallenge(challengeData))
       case "addScore": return store.dispatch(actions.addScore(event.data.score))
       case "showTimeline": return store.dispatch(actions.showTimeline(event.data.startTime))
       case "startTimelineClock": return store.dispatch(actions.startTimelineClock())
@@ -129,33 +124,3 @@ function receiveMessage(event) {
     }
   }
 }
-
-/*
-gameServer.on("connectedGames", (connectedGames) =>
-  store.dispatch(actions.updateConnectedGames(connectedGames))
-)
-
-gameServer.on("connect", () =>
-  store.dispatch(actions.updateConnected(true))
-)
-
-gameServer.on("disconnect", () =>
-  store.dispatch(actions.updateConnected(false))
-)
-
-gameServer.on(messages.REQUEST_MATE, (gameId) =>
-  store.dispatch(actions.handleIncomingMateRequest(gameId))
-)
-
-gameServer.on(messages.CANCEL_REQUEST_MATE, (gameId) =>
-  store.dispatch(actions.handleIncomingCancelMateRequest(gameId))
-)
-
-gameServer.on(messages.ACCEPT_MATE, (gameId, room) =>
-  store.dispatch(actions.handleIncomingAcceptMate(gameId, room, gameServer))
-)
-
-gameServer.on(messages.DECLINE_MATE, () =>
-  store.dispatch(actions.handleIncomingDeclineMate())
-)
-*/

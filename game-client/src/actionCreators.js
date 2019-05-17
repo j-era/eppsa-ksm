@@ -1,4 +1,3 @@
-import uuid from "uuid/v4"
 import pickBy from "lodash.pickby"
 import uniq from "lodash.uniq"
 import omitBy from "lodash.omitby"
@@ -7,17 +6,14 @@ import isEmpty from "lodash.isempty"
 
 import { delay } from "eppsa-ksm-shared"
 
-// import { setCookie } from "./cookie"
 import * as gameStates from "./gameStates"
 import * as types from "./actionTypes"
-import * as messages from "./messages"
 
-export function resumeGame(gameId, gameServer) {
+export function resumeGame() {
   return async (dispatch) => {
-    const data = await gameServer.resumeGame(gameId)
+    const data = {} || {} // Load game data from localstorage
     dispatch(updateGameData(data))
     dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_AREA))
-    gameServer.setHandshakeQuery({ gameId })
   }
 }
 
@@ -37,25 +33,18 @@ export function startNewGame(name = "defaultName", avatar) {
     dispatch(updateGameData(data))
     dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_AREA))
 
-    // setCookie("gameId", data.gameId)
-    // gameServer.setHandshakeQuery({ gameId: data.gameId })
+    // Save game data in localstorage
   }
 }
 
-export function startChallengeOrLobby(gameServer, room = null) {
-  return async (dispatch, getState) => {
-    const isMultiplayerChallenge = getState().challengeData.challenge.multiplayer
-    if (isMultiplayerChallenge) {
-      dispatch(joinChallengeLobby(gameServer))
-    } else {
-      dispatch(startChallenge(gameServer, room))
-    }
+export function startChallengeOrLobby(room = null) {
+  return async dispatch => {
+    dispatch(startChallenge(room))
   }
 }
 
-export function startChallenge(gameServer, room = null) {
+export function startChallenge(room = null) {
   return async (dispatch) => {
-    // await gameServer.startChallenge()
     dispatch({ type: types.SET_CHALLENGE_ROOM, room })
     dispatch(updateGameState(gameStates.CHALLENGE))
   }
@@ -73,6 +62,7 @@ export function finishChallenge(challengeData) {
 
     const data = { challengeNumber, score }
 
+    // Get max challenge number from content or calculate
     if (challengeNumber > 11) {
       dispatch(updateGameState(gameStates.FINISHED))
     } else {
@@ -99,6 +89,7 @@ export function updateAvatar(avatar) {
   }
 }
 
+// update game data in local stoage
 export function updateGameData(data) {
   return {
     type: types.UPDATE_GAME_DATA,
@@ -170,63 +161,6 @@ export function hideTimeline() {
   }
 }
 
-export function joinChallengeLobby(gameServer) {
-  return async (dispatch) => {
-    gameServer.joinChallengeLobby()
-    dispatch(updateGameState(gameStates.CHALLENGE_LOBBY))
-  }
-}
-
-export function leaveChallengeLobby(gameServer) {
-  return async (dispatch) => {
-    gameServer.leaveChallengeLobby()
-    dispatch(updateGameState(gameStates.CHALLENGE_MODE_SELECTION))
-  }
-}
-
-export function requestMate(gameId, name, gameServer) {
-  return async (dispatch) => {
-    gameServer.sendToPeer(messages.REQUEST_MATE, gameId)
-
-    dispatch({
-      type: types.REQUEST_MATE,
-      gameId,
-      name
-    })
-  }
-}
-
-export function cancelRequestMate(gameServer) {
-  return async (dispatch, getState) => {
-    gameServer.sendToPeer(messages.CANCEL_REQUEST_MATE, getState().requestedMate.gameId)
-
-    dispatch({
-      type: types.CANCEL_REQUEST_MATE
-    })
-  }
-}
-
-export function acceptMate(gameId, gameServer) {
-  return async (dispatch) => {
-    const room = uuid()
-    gameServer.sendToPeer(messages.ACCEPT_MATE, gameId, room)
-    gameServer.leaveChallengeLobby()
-
-    dispatch(startChallenge(gameServer, room))
-  }
-}
-
-export function declineMate(gameId, gameServer) {
-  return async (dispatch) => {
-    gameServer.sendToPeer(messages.DECLINE_MATE, gameId)
-
-    dispatch({
-      type: types.DECLINE_MATE,
-      gameId
-    })
-  }
-}
-
 export function handleIncomingMateRequest(gameId) {
   return {
     type: types.INCOMING_REQUEST_MATE,
@@ -238,16 +172,6 @@ export function handleIncomingCancelMateRequest(gameId) {
   return {
     type: types.INCOMING_CANCEL_REQUEST_MATE,
     gameId
-  }
-}
-
-export function handleIncomingAcceptMate(gameId, room, gameServer) {
-  return async (dispatch, getState) => {
-    if (getState().requestedMate.gameId === gameId) {
-      gameServer.leaveChallengeLobby()
-
-      dispatch(startChallenge(gameServer, room))
-    }
   }
 }
 
@@ -268,8 +192,7 @@ export function selectChallengeType(name, content) {
       challenge: challengeTypeData,
       shared: content.shared,
       staticServerUri: process.env.STATIC_SERVER_URI,
-      assetServerUri: process.env.ASSET_SERVER_URI,
-      gameServerUri: process.env.GAME_SERVER_URI
+      assetServerUri: process.env.ASSET_SERVER_URI
     }
 
     dispatch({ type: types.SET_CHALLENGE_TYPE, challengeData, challengeUri })
