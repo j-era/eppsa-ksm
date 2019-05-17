@@ -36,8 +36,6 @@ The development certificate points to `*.eppsa.de`. Set the correct path in CERT
     127.0.0.1 asset-server.local.eppsa.de
     127.0.0.1 content-server.local.eppsa.de
     127.0.0.1 content.local.eppsa.de
-    127.0.0.1 game-server.local.eppsa.de
-    127.0.0.1 dashboard.local.eppsa.de
     127.0.0.1 <challenge>.local.eppsa.de
     ```
   * Certificate for `*.eppsa.de` or for each subdomain `*.<environment>.eppsa.de`
@@ -61,7 +59,6 @@ Set the HOST variable of your target environment:
 ### Open (local)
 * Game: https://game.local.eppsa.de/
 * CMS: https://cms.local.staging.eppsa.de/
-* Dashboard: https://dashboard.local.eppsa.de/
 
 ## Production
 ```

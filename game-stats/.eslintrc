@@ -1,9 +1,0 @@
-{
-  "extends": "artcom-react",
-  "rules": {
-    "no-unused-expressions": ["error", {
-      "allowTaggedTemplates": true,
-      "allowShortCircuit": true
-    }]
-  }
-}

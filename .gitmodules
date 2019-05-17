@@ -38,9 +38,6 @@
 [submodule "game-challenge/astragal/lib/eppsa-ksm-shared"]
 	path = game-challenge/astragal/lib/eppsa-ksm-shared
 	url = https://github.com/artcom/eppsa-ksm-shared.git
-[submodule "dashboard/lib/eppsa-ksm-shared"]
-	path = dashboard/lib/eppsa-ksm-shared
-	url = https://github.com/artcom/eppsa-ksm-shared
 [submodule "game-client/lib/react-qr-reader"]
 	path = game-client/lib/react-qr-reader
 	url = https://github.com/artcom/react-qr-reader.git

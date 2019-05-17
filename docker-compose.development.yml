@@ -7,7 +7,6 @@ services:
         environment: development
     depends_on:
       - game-client
-      - game-stats
 
   cms-frontend:
     build:
@@ -18,13 +17,6 @@ services:
     environment:
       PORT: 443
 
-  dashboard:
-    build:
-      dockerfile: Dockerfile.development
-    volumes:
-      - ./dashboard:/app
-      - /app/node_modules
-
   game-client:
     build:
       context: ./game-client
@@ -32,13 +24,12 @@ services:
     environment:
       ASSET_SERVER_URI: https://asset-server.${HOST}
       CONTENT_SERVER_URI: https://content-server.${HOST}
-      GAME_SERVER_URI: https://game-server.${HOST}
       STATIC_SERVER_URI: https://static.${HOST}
       PORT: 443
     depends_on:
       - content-server
       - asset-server
-      - game-server
+      - game-challenge-astragal
       - game-challenge-button
       - game-challenge-quiz
       - game-challenge-clicker
@@ -49,45 +40,7 @@ services:
     volumes:
       - ./game-client:/app
       - /app/node_modules
-
-
-  dashboard:
-    build:
-      context: ./dashboard
-      dockerfile: Dockerfile.development
-    environment:
-      CONTENT_SERVER_URI: https://content-server.${HOST}
-      ASSET_SERVER_URI: https://asset-server.${HOST}
-      GAME_SERVER_URI: https://game-server.${HOST}
-      STATIC_SERVER_URI: https://static.${HOST}
-      FONT_URI: https://static.${HOST}/fonts
-      PORT: 443
-    volumes:
-      - ./dashboard:/app
-      - /app/node_modules
-    depends_on:
-      - content-server
-      - asset-server
-      - game-server
-
-  game-server:
-    build:
-      dockerfile: Dockerfile.development
-    volumes:
-      - ./game-server:/app
-      - /app/node_modules
-
-  game-stats:
-      build:
-        context: ./game-stats
-        dockerfile: Dockerfile.development
-      environment:
-        PORT: 443
-        MONGO_ACCESS_URI: https://mongo.${HOST}
-      volumes:
-        - ./game-stats:/app
-        - /app/node_modules
-
+      
   game-challenge-button:
     build:
       context: ./game-challenge/button
@@ -106,7 +59,6 @@ services:
       PORT: 443
       ASSET_SERVER_URI: https://asset-server.${HOST}
       CONTENT_SERVER_URI: https://content-server.${HOST}
-      GAME_SERVER_URI: https://game-server.${HOST}
       STATIC_SERVER_URI: https://static.${HOST}
     volumes:
       - ./game-challenge/sorting:/app
@@ -120,7 +72,6 @@ services:
       PORT: 443
       ASSET_SERVER_URI: https://asset-server.${HOST}
       CONTENT_SERVER_URI: https://content-server.${HOST}
-      GAME_SERVER_URI: https://game-server.${HOST}
       STATIC_SERVER_URI: https://static.${HOST}
     volumes:
       - ./game-challenge/quiz:/app
@@ -134,7 +85,6 @@ services:
       PORT: 443
       ASSET_SERVER_URI: https://asset-server.${HOST}
       CONTENT_SERVER_URI: https://content-server.${HOST}
-      GAME_SERVER_URI: https://game-server.${HOST}
       STATIC_SERVER_URI: https://static.${HOST}
     volumes:
       - ./game-challenge/clicker:/app
@@ -148,7 +98,6 @@ services:
       PORT: 80
       ASSET_SERVER_URI: https://asset-server.${HOST}
       CONTENT_SERVER_URI: https://content-server.${HOST}
-      GAME_SERVER_URI: https://game-server.${HOST}
       STATIC_SERVER_URI: https://static.${HOST}
     volumes:
       - ./game-challenge/graph:/app
@@ -162,7 +111,6 @@ services:
       PORT: 80
       ASSET_SERVER_URI: https://asset-server.${HOST}
       CONTENT_SERVER_URI: https://content-server.${HOST}
-      GAME_SERVER_URI: https://game-server.${HOST}
       STATIC_SERVER_URI: https://static.${HOST}
     volumes:
       - ./game-challenge/astragal:/app
@@ -176,7 +124,6 @@ services:
       PORT: 443
       ASSET_SERVER_URI: https://asset-server.${HOST}
       CONTENT_SERVER_URI: https://content-server.${HOST}
-      GAME_SERVER_URI: https://game-server.${HOST}
       STATIC_SERVER_URI: https://static.${HOST}
     volumes:
       - ./game-challenge/hidden:/app
@@ -190,15 +137,7 @@ services:
       PORT: 443
       ASSET_SERVER_URI: https://asset-server.${HOST}
       CONTENT_SERVER_URI: https://content-server.${HOST}
-      GAME_SERVER_URI: https://game-server.${HOST}
       STATIC_SERVER_URI: https://static.${HOST}
     volumes:
       - ./game-challenge/skill:/app
-      - /app/node_modules
-
-  mongo-access:
-    build:
-      dockerfile: Dockerfile.development
-    volumes:
-      - ./mongo-access:/app
       - /app/node_modules

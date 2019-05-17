@@ -8,8 +8,6 @@ services:
       - content-server
       - content-repo
       - cms-frontend
-      - game-server
-      - mongo-access
     ports:
       - "80:80"
       - "443:443"
@@ -50,32 +48,6 @@ services:
       - content-server
       - asset-server
 
-  game-server:
-    build:
-      context: ./game-server
-    environment:
-      MONGODB_URI: mongodb://mongo
-    depends_on:
-      - mongo
-
-  mongo:
-    image: "mongo:3.6.3-jessie"
-    volumes:
-      - type: volume
-        source: mongoDB
-        target: /data/db
-    ports:
-      - "27017:27017"
-
-  mongo-access:
-      build:
-        context: ./mongo-access
-      environment:
-        MONGODB_URI: mongodb://mongo
-      depends_on:
-        - mongo
-
 volumes:
   content:
   assets:
-  mongoDB:
