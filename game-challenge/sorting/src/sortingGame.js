@@ -52,8 +52,6 @@ export default class SortingGame extends React.Component {
 
     const items = orderBy(Object.values(selectItems(this.props.data)), ["initialPosition"])
 
-    this.props.theme.colors.area = this.props.data.color
-
     this.state = {
       isConfirmed: false,
       isCorrect: false,
@@ -103,7 +101,9 @@ export default class SortingGame extends React.Component {
   confirm(stopTimeline) {
     clearTimeout(this.timeLineTimeout)
 
-    stopTimeline && this.props.callbacks.stopTimelineClock()
+    if (stopTimeline) {
+      this.props.callbacks.stopTimelineClock()
+    }
 
     const { score } = this.props.data.challenge
     const { shared } = this.props.data

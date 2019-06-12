@@ -1,6 +1,6 @@
 import React from "react"
 import autoBind from "react-autobind"
-import styled, { css } from "styled-components"
+import styled from "styled-components"
 import { delay, NextButton, Page, PageTitle, StyledMarkdown } from "eppsa-ksm-shared"
 
 import { showGameManual, startNewGame } from "../../actionCreators"
@@ -12,7 +12,7 @@ const Container = styled(Page)`
 `
 
 const StyledNextButton = styled(NextButton)`
-   ${props => props.isInitial && css`border-color: ${props.theme.colors.primary}`};
+   ${props => props.isInitial && `border-color: ${props.theme.colors.primary}`};
 `
 
 export default class GameManual extends React.Component {
