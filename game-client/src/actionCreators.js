@@ -94,13 +94,6 @@ export function updateGameState(state) {
   }
 }
 
-export function updateConnectedGames(games) {
-  return {
-    type: types.UPDATE_CONNECTED_GAMES,
-    games
-  }
-}
-
 export function updateName(name) {
   return {
     type: types.UPDATE_NAME,
@@ -112,13 +105,6 @@ export function showGameManual(show) {
   return {
     type: types.SHOW_GAME_MANUAL,
     show
-  }
-}
-
-export function updateConnected(connected) {
-  return {
-    type: types.UPDATE_CONNECTED,
-    connected
   }
 }
 
@@ -148,26 +134,6 @@ export function hideTimeline() {
   console.log("hideTimeline")
   return {
     type: types.HIDE_TIMELINE
-  }
-}
-
-export function handleIncomingMateRequest(gameId) {
-  return {
-    type: types.INCOMING_REQUEST_MATE,
-    gameId
-  }
-}
-
-export function handleIncomingCancelMateRequest(gameId) {
-  return {
-    type: types.INCOMING_CANCEL_REQUEST_MATE,
-    gameId
-  }
-}
-
-export function handleIncomingDeclineMate() {
-  return {
-    type: types.INCOMING_DECLINE_MATE
   }
 }
 
@@ -256,19 +222,4 @@ function chooseRandomChallenge(challenges) {
 
 function random(array) {
   return array[Math.floor(Math.random() * array.length)]
-}
-
-export function handleChallengeCode(enteredCode, challengeCode) {
-  return dispatch => {
-    if (enteredCode.toLowerCase() === challengeCode.toLowerCase()) {
-      dispatch({ type: types.CORRECT_CHALLENGE_CODE_ENTERED })
-      setTimeout(() => {
-        dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
-      }, 500)
-    } else if (enteredCode.length === challengeCode.length) {
-      dispatch({ type: types.WRONG_CHALLENGE_CODE_ENTERED })
-    } else {
-      dispatch({ type: types.NO_CHALLENGE_CODE_ENTERED })
-    }
-  }
 }
