@@ -1,6 +1,5 @@
 import omit from "lodash.omit"
 import mapValues from "lodash.mapvalues"
-import querystring from "querystring"
 import React from "react"
 import { render } from "react-dom"
 import { Provider } from "react-redux"
