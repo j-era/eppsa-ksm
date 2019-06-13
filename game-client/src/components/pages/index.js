@@ -1,7 +1,6 @@
 import {
   RESUME_OR_NEW_GAME_SELECTION,
   INITIAL_GAME_MANUAL,
-  NAVIGATION_TO_NEXT_AREA,
   AREA_CONFIRMATION,
   CHALLENGE_SELECTION,
   CHALLENGE_MODE_SELECTION,
@@ -11,7 +10,6 @@ import {
 } from "../../gameStates"
 
 import ResumeOrNewGameSelection from "./resumeOrNewGameSelection"
-import NavigationToNextArea from "./navigationToNextArea"
 import AreaConfirmation from "./areaConfirmation"
 import ChallengeSelection from "./challengeSelection"
 import ChallengeModeSelection from "./challengeModeSelection"
@@ -23,7 +21,6 @@ import GameManual from "./gameManual"
 export default {
   [RESUME_OR_NEW_GAME_SELECTION]: { render: ResumeOrNewGameSelection, showHeader: false },
   [INITIAL_GAME_MANUAL]: { render: GameManual, showHeader: true },
-  [NAVIGATION_TO_NEXT_AREA]: { render: NavigationToNextArea, showHeader: true },
   [AREA_CONFIRMATION]: { render: AreaConfirmation, showHeader: true },
   [CHALLENGE_SELECTION]: { render: ChallengeSelection, showHeader: true },
   [CHALLENGE_MODE_SELECTION]: { render: ChallengeModeSelection, showHeader: true },

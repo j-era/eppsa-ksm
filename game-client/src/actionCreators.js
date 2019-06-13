@@ -13,17 +13,7 @@ export function resumeGame() {
   return async (dispatch) => {
     const data = {} || {} // Load game data from localstorage
     dispatch(updateGameData(data))
-    dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_AREA))
-  }
-}
-
-export function configureNewGame() {
-  return (dispatch, getState) => {
-    if (getState().avatar) {
-      dispatch(updateGameState(gameStates.NEW_GAME_NAME_SELECTION))
-    } else {
-      dispatch(updateGameState(gameStates.NEW_GAME_AVATAR_SELECTION))
-    }
+    dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
   }
 }
 
@@ -31,7 +21,7 @@ export function startNewGame(name = "defaultName", avatar) {
   return async (dispatch) => {
     const data = { name, avatar, gameId: "noId", challengeNumber: 1, score: 0 }
     dispatch(updateGameData(data))
-    dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_AREA))
+    dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
 
     // Save game data in localstorage
   }
@@ -66,7 +56,7 @@ export function finishChallenge(challengeData) {
     if (challengeNumber > 11) {
       dispatch(updateGameState(gameStates.FINISHED))
     } else {
-      dispatch(updateGameState(gameStates.NAVIGATION_TO_NEXT_AREA))
+      dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
     }
 
     dispatch(updateGameData(data))
