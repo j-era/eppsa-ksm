@@ -1,6 +1,5 @@
 import {
   RESUME_OR_NEW_GAME_SELECTION,
-  NEW_GAME_NAME_SELECTION,
   INITIAL_GAME_MANUAL,
   NAVIGATION_TO_NEXT_AREA,
   AREA_CONFIRMATION,
@@ -12,7 +11,6 @@ import {
 } from "../../gameStates"
 
 import ResumeOrNewGameSelection from "./resumeOrNewGameSelection"
-import NewGameNameSelection from "./newGameNameSelection"
 import NavigationToNextArea from "./navigationToNextArea"
 import AreaConfirmation from "./areaConfirmation"
 import ChallengeSelection from "./challengeSelection"
@@ -24,7 +22,6 @@ import GameManual from "./gameManual"
 
 export default {
   [RESUME_OR_NEW_GAME_SELECTION]: { render: ResumeOrNewGameSelection, showHeader: false },
-  [NEW_GAME_NAME_SELECTION]: { render: NewGameNameSelection, showHeader: false },
   [INITIAL_GAME_MANUAL]: { render: GameManual, showHeader: true },
   [NAVIGATION_TO_NEXT_AREA]: { render: NavigationToNextArea, showHeader: true },
   [AREA_CONFIRMATION]: { render: AreaConfirmation, showHeader: true },

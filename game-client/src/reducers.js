@@ -1,34 +1,10 @@
 import * as types from "./actionTypes"
 import * as gameStates from "./gameStates"
-import * as requestedMateStates from "./requestedMateStates"
 
-export function gameState(state = gameStates.NEW_GAME_NAME_SELECTION, action) {
+export function gameState(state = gameStates.INITIAL_GAME_MANUAL, action) {
   switch (action.type) {
     case types.UPDATE_GAME_STATE:
       return action.state
-    default:
-      return state
-  }
-}
-
-export function gameId(state = "", action) {
-  switch (action.type) {
-    default:
-      return state
-  }
-}
-
-export function name(state = "", action) {
-  switch (action.type) {
-    case types.UPDATE_NAME:
-      return action.name
-    default:
-      return state
-  }
-}
-
-export function avatar(state = "airplane", action) {
-  switch (action.type) {
     default:
       return state
   }
@@ -116,105 +92,10 @@ export function timelineClockRunning(state = false, action) {
   }
 }
 
-export function connected(state = false, action) {
-  switch (action.type) {
-    case types.UPDATE_CONNECTED:
-      return action.connected
-    default:
-      return state
-  }
-}
-
-export function connectedGames(state = [], action) {
-  switch (action.type) {
-    case types.UPDATE_CONNECTED_GAMES:
-      return action.games
-    default:
-      return state
-  }
-}
-
 export function showGameManual(state = false, action) {
   switch (action.type) {
     case types.SHOW_GAME_MANUAL:
       return action.show
-    default:
-      return state
-  }
-}
-
-const noRequestedMate = { gameId: null, name: null, requestState: requestedMateStates.NONE }
-
-export function requestedMate(state = noRequestedMate, action) {
-  switch (action.type) {
-    case types.REQUEST_MATE:
-      return {
-        gameId: action.gameId,
-        name: action.name,
-        requestState: requestedMateStates.PENDING
-      }
-    case types.INCOMING_DECLINE_MATE:
-      return state.requestState === requestedMateStates.PENDING
-        ? { ...state, requestState: requestedMateStates.DECLINED }
-        : state
-    case types.CANCEL_REQUEST_MATE:
-      return noRequestedMate
-    case types.UPDATE_CONNECTED:
-      return !action.connected && state.requestState === requestedMateStates.PENDING
-        ? { ...state, requestState: requestedMateStates.NOT_AVAILABLE }
-        : state
-    case types.UPDATE_CONNECTED_GAMES:
-      return state.requestState === requestedMateStates.PENDING
-        && !includesGame(state.gameId, action.games)
-        ? { ...state, requestState: requestedMateStates.NOT_AVAILABLE }
-        : state
-    default:
-      return state
-  }
-}
-
-export function mateRequests(state = new Set(), action) {
-  switch (action.type) {
-    case types.INCOMING_REQUEST_MATE:
-    {
-      const newState = new Set(state)
-      newState.add(action.gameId)
-      return newState
-    }
-    case types.DECLINE_MATE:
-    {
-      const newState = new Set(state)
-      newState.delete(action.gameId)
-      return newState
-    }
-    case types.INCOMING_CANCEL_REQUEST_MATE:
-    {
-      const newState = new Set(state)
-      newState.delete(action.gameId)
-      return newState
-    }
-    case types.UPDATE_CONNECTED:
-      return new Set()
-    case types.UPDATE_CONNECTED_GAMES:
-      return new Set(Array.from(state).filter((gameId) => includesGame(gameId, action.games)))
-    default:
-      return state
-  }
-}
-
-function includesGame(gameId, games) {
-  return games.find((game) => game.gameId === gameId && game.inLobby)
-}
-
-export function challengeCodeInput(state = "INITIAL", action) {
-  switch (action.type) {
-    case types.WRONG_CHALLENGE_CODE_ENTERED:
-      return "WRONG"
-    case types.CORRECT_CHALLENGE_CODE_ENTERED:
-      return "CORRECT"
-    case types.NO_CHALLENGE_CODE_ENTERED:
-    case types.UPDATE_GAME_STATE:
-      return "INITIAL"
     default:
       return state
   }
