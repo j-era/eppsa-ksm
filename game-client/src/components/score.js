@@ -59,7 +59,6 @@ const NewScore = styled(ScoreElement)`
   animation: ${keyframesNewScore} 3s;
 `
 
-// eslint-disable-next-line react/no-deprecated
 export default function Score(props) {
   return (
     <ScoreContainer>

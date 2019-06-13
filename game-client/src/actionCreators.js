@@ -72,7 +72,6 @@ export function addScore(increment) {
   }
 }
 
-// update game data in local stoage
 export function updateGameData(data) {
   localStorage.setItem("gameData", JSON.stringify(data))
   return {
