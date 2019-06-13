@@ -22,7 +22,7 @@ export default function renderHeader(props) {
         src={ `${props.assetServerUri}/${props.content.shared.assets.dashboardWingSign.src}` } />
       <GameManualButton { ...props } show={ props.show && !props.showGameManual } />
       {
-        props.showScore && <Score score={ props.score } />
+        props.showScore && <Score score={ props.score } oldScore={ props.oldScore } />
       }
     </Header>
   )

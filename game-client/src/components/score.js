@@ -60,37 +60,22 @@ const NewScore = styled(ScoreElement)`
 `
 
 // eslint-disable-next-line react/no-deprecated
-export default class Score extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { oldScore: 0 }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.show && !this.props.show) {
-      this.setState({ oldScore: this.props.score })
-    }
-  }
-
-  render() {
-    return (
-      <ScoreContainer>
-        <OldScore>
-          {
-            this.state.oldScore
-          }
-        </OldScore>
-        <AddScore>
-            + {
-            this.props.score - this.state.oldScore
-          }
-        </AddScore>
-        <NewScore>
-          {
-            this.props.score
-          }
-        </NewScore>
-      </ScoreContainer>
-    )
-  }
+export default function Score(props) {
+  return (
+    <ScoreContainer>
+      <OldScore>
+        {
+          props.oldScore
+        }
+      </OldScore>
+      <AddScore>
+          + { props.score - props.oldScore }
+      </AddScore>
+      <NewScore>
+        {
+          props.score
+        }
+      </NewScore>
+    </ScoreContainer>
+  )
 }

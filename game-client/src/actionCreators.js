@@ -64,9 +64,9 @@ export function finishChallenge(challengeData) {
 }
 
 export function addScore(increment) {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    dispatch({ type: types.ADD_SCORE, increment, score: getState().score })
     dispatch({ type: types.SHOW_SCORE })
-    dispatch({ type: types.ADD_SCORE, increment })
     await delay(3000)
     dispatch({ type: types.HIDE_SCORE })
   }

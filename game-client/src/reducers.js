@@ -39,6 +39,15 @@ export function challengeUri(state = null, action) {
   }
 }
 
+export function oldScore(state = 0, action) {
+  switch (action.type) {
+    case types.ADD_SCORE:
+      return action.score
+    default:
+      return state
+  }
+}
+
 export function score(state = 0, action) {
   switch (action.type) {
     case types.UPDATE_GAME_DATA:
