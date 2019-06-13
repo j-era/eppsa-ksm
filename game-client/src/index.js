@@ -63,7 +63,7 @@ function transform(content) {
 
 async function findResumableGame() {
   const resumableGame = JSON.parse(localStorage.getItem("gameData"))
-  return !resumableGame.finished ? resumableGame : null
+  return resumableGame && !resumableGame.finished ? resumableGame : null
 }
 
 function calculateCardWidth(maxWidth, maxHeight) {
