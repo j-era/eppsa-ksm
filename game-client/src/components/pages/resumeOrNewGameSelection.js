@@ -55,6 +55,7 @@ class ResumeOrNewGameSelection extends React.Component {
 
   render() {
     const { content } = this.props
+    const { challengeNumber, score } = this.props.resumableGame
 
     return (
       <Container>
@@ -62,6 +63,12 @@ class ResumeOrNewGameSelection extends React.Component {
         <Content>
           <StyledDescription>
             { content.shared.texts.resumeGameText }
+          </StyledDescription>
+          <StyledDescription>
+            { `challengeNumber ${challengeNumber}` }
+          </StyledDescription>
+          <StyledDescription>
+            { `score ${score}` }
           </StyledDescription>
           <Buttons>
             <ConfirmButton
