@@ -11,19 +11,17 @@ import * as types from "./actionTypes"
 
 export function resumeGame() {
   return async (dispatch) => {
-    const data = {} || {} // Load game data from localstorage
+    const data = JSON.parse(localStorage.getItem("gameData"))
     dispatch(updateGameData(data))
     dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
   }
 }
 
-export function startNewGame(name = "defaultName", avatar) {
+export function startNewGame() {
   return async (dispatch) => {
-    const data = { name, avatar, gameId: "noId", challengeNumber: 1, score: 0 }
+    const data = { challengeNumber: 1, score: 0, finished: false }
     dispatch(updateGameData(data))
     dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
-
-    // Save game data in localstorage
   }
 }
 
@@ -54,8 +52,10 @@ export function finishChallenge(challengeData) {
 
     // Get max challenge number from content or calculate
     if (challengeNumber > 11) {
+      data.finished = true
       dispatch(updateGameState(gameStates.FINISHED))
     } else {
+      data.finished = false
       dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
     }
 
@@ -72,15 +72,9 @@ export function addScore(increment) {
   }
 }
 
-export function updateAvatar(avatar) {
-  return {
-    type: types.UPDATE_AVATAR,
-    avatar
-  }
-}
-
 // update game data in local stoage
 export function updateGameData(data) {
+  localStorage.setItem("gameData", JSON.stringify(data))
   return {
     type: types.UPDATE_GAME_DATA,
     data

@@ -19,18 +19,12 @@ import * as actions from "./actionCreators"
 const store = createStore(combineReducers(reducers), applyMiddleware(thunk, createLogger()))
 const contentServer = new ContentServer(process.env.CONTENT_SERVER_URI)
 
-const config = querystring.parse(window.location.search.substring(1))
-
 injectGlobalStyle(process.env.STATIC_SERVER_URI)
 
 const CARD_RATIO = 2 / 3
 
 contentServer.getData().then(transform).then(async (content) => {
   const maxChallenges = Object.keys(content.challenges).length - 1
-
-  if (config.avatar) {
-    store.dispatch(actions.updateAvatar(config.avatar))
-  }
 
   const resumableGame = await findResumableGame()
   if (resumableGame) {
@@ -69,17 +63,8 @@ function transform(content) {
 }
 
 async function findResumableGame() {
-  /*
-  const gameId = getCookie("gameId")
-  if (gameId) {
-    const game = await gameServer.findGame(gameId)
-
-    if (game && !game.finished) {
-      return game
-    }
-  }
-  */
-  return null
+  const resumableGame = JSON.parse(localStorage.getItem("gameData"))
+  return !resumableGame.finished ? resumableGame : null
 }
 
 function calculateCardWidth(maxWidth, maxHeight) {

@@ -6,13 +6,12 @@ import {
   Button,
   delay,
   Description,
-  FramedIcon,
   NextButton,
   Page,
   PageTitle
 } from "eppsa-ksm-shared"
 
-import { configureNewGame, resumeGame } from "../../actionCreators"
+import { resumeGame, startNewGame } from "../../actionCreators"
 
 const Container = styled(Page)`
   display: flex;
@@ -55,20 +54,12 @@ class ResumeOrNewGameSelection extends React.Component {
   }
 
   render() {
-    const { assetServerUri, content, resumableGame } = this.props
-    const avatarContent = content.avatars[resumableGame.avatar]
+    const { content } = this.props
 
     return (
       <Container>
         <PageTitle>{ content.shared.texts.resumeGameTitle }</PageTitle>
         <Content>
-          <FramedIcon
-            scale={ 0.78 }
-            color={ this.props.theme.colors.primary }
-            iconSrc={ `${assetServerUri}/${avatarContent.mediumCentered.src}` }
-            iconSrcSet={ `${assetServerUri}/${avatarContent.smallCentered.src} 250w,
-                          ${assetServerUri}/${avatarContent.mediumCentered.src} 500w,
-                          ${assetServerUri}/${avatarContent.largeCentered.src} 1000w` } />
           <StyledDescription>
             { content.shared.texts.resumeGameText }
           </StyledDescription>
@@ -99,7 +90,7 @@ class ResumeOrNewGameSelection extends React.Component {
   async back() {
     this.setState({ backClicked: true })
     await delay(100)
-    this.props.dispatch(configureNewGame())
+    this.props.dispatch(startNewGame())
   }
 }
 
