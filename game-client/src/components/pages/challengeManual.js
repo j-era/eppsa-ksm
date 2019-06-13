@@ -3,7 +3,7 @@ import autoBind from "react-autobind"
 import styled, { withTheme } from "styled-components"
 import { delay, Description, FramedIcon, NextButton, Page, PageTitle } from "eppsa-ksm-shared"
 
-import { startChallengeOrLobby } from "../../actionCreators"
+import { startChallenge } from "../../actionCreators"
 
 const Container = styled(Page)`
   display: flex;
@@ -55,7 +55,7 @@ class ChallengeManual extends React.Component {
   async onNext() {
     this.setState({ nextClicked: true })
     await delay(100)
-    this.props.dispatch(startChallengeOrLobby(this.props.gameServer))
+    this.props.dispatch(startChallenge())
   }
 }
 

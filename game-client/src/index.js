@@ -46,7 +46,6 @@ contentServer.getData().then(transform).then(async (content) => {
           resumableGame={ resumableGame }
           assetServerUri={ process.env.ASSET_SERVER_URI }
           contentServerUri={ process.env.CONTENT_SERVER_URI }
-          gameServerUri={ process.env.GAME_SERVER_URI }
           staticServerUri={ process.env.STATIC_SERVER_URI }
           maxChallenges={ maxChallenges }
           dispatch={ store.dispatch }
@@ -73,24 +72,6 @@ function calculateCardWidth(maxWidth, maxHeight) {
 
 async function onChallengeReady(challengeWindow, data, uri) {
   challengeWindow.postMessage({ data, type: "challengeData" }, uri)
-  activateDeviceOrientation(challengeWindow, data.challenge.template, uri)
-}
-
-function activateDeviceOrientation(challengeWindow, template, uri) {
-  const gyroGames = ["button", "skill"]
-  if (gyroGames.indexOf(template) >= 0) {
-    window.addEventListener("deviceorientation", event => {
-      console.log(event)
-      challengeWindow.postMessage({
-        data: {
-          alpha: event.alpha,
-          beta: event.beta,
-          gamma: event.gamma
-        },
-        type: "deviceOrientation"
-      }, uri)
-    })
-  }
 }
 
 function receiveMessage(event) {

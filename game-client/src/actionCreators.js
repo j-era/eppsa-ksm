@@ -9,10 +9,9 @@ import { delay } from "eppsa-ksm-shared"
 import * as gameStates from "./gameStates"
 import * as types from "./actionTypes"
 
-export function resumeGame() {
+export function resumeGame(resumableGame) {
   return async (dispatch) => {
-    const data = JSON.parse(localStorage.getItem("gameData"))
-    dispatch(updateGameData(data))
+    dispatch(updateGameData(resumableGame))
     dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
   }
 }
@@ -25,15 +24,8 @@ export function startNewGame() {
   }
 }
 
-export function startChallengeOrLobby(room = null) {
-  return async dispatch => {
-    dispatch(startChallenge(room))
-  }
-}
-
-export function startChallenge(room = null) {
+export function startChallenge() {
   return async (dispatch) => {
-    dispatch({ type: types.SET_CHALLENGE_ROOM, room })
     dispatch(updateGameState(gameStates.CHALLENGE))
   }
 }

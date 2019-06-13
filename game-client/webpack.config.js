@@ -1,8 +1,9 @@
-const webpack = require("webpack");
-const HtmlWebPackPlugin = require("html-webpack-plugin");
+/* eslint-disable import/no-commonjs */
+const webpack = require("webpack")
+const HtmlWebPackPlugin = require("html-webpack-plugin")
 
 module.exports = {
-  entry: ['babel-polyfill', './src/index.js'],
+  entry: ["babel-polyfill", "./src/index.js"],
   devtool: "source-map",
   module: {
     rules: [
@@ -48,7 +49,6 @@ module.exports = {
     new webpack.EnvironmentPlugin([
       "ASSET_SERVER_URI",
       "CONTENT_SERVER_URI",
-      "GAME_SERVER_URI",
       "STATIC_SERVER_URI"
     ])
   ],

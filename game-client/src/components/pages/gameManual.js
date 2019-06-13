@@ -42,8 +42,7 @@ export default class GameManual extends React.Component {
     await delay(100)
 
     if (this.props.gameState === gameStates.INITIAL_GAME_MANUAL) {
-      const { name, avatar, maxChallenges, gameServer } = this.props
-      this.props.dispatch(startNewGame(name, avatar, maxChallenges, gameServer))
+      this.props.dispatch(startNewGame())
     } else {
       this.props.dispatch(showGameManual(false))
     }

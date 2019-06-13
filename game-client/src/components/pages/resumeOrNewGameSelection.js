@@ -88,10 +88,10 @@ class ResumeOrNewGameSelection extends React.Component {
   }
 
   async confirm() {
-    const { dispatch, gameServer, resumableGame } = this.props
+    const { dispatch, resumableGame } = this.props
     this.setState({ nextClicked: true })
     await delay(100)
-    dispatch(resumeGame(resumableGame.gameId, gameServer))
+    dispatch(resumeGame(resumableGame))
   }
 
   async back() {
