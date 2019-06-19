@@ -8,15 +8,10 @@ services:
         environment: production
     volumes:
       - ./game-client/dist:/client
-      - ./game-stats/dist:/stats
-      - ./game-challenge/button/dist:/button
       - ./game-challenge/clicker/dist:/clicker
-      - ./game-challenge/graph/dist:/graph
       - ./game-challenge/hidden/dist:/hidden
       - ./game-challenge/quiz/dist:/quiz
-      - ./game-challenge/skill/dist:/skill
       - ./game-challenge/sorting/dist:/sorting
-      - ./game-challenge/astragal/dist:/astragal
 
   cms-frontend:
     build:

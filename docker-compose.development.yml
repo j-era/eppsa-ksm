@@ -29,26 +29,12 @@ services:
     depends_on:
       - content-server
       - asset-server
-      - game-challenge-astragal
-      - game-challenge-button
       - game-challenge-quiz
       - game-challenge-clicker
       - game-challenge-hidden
-      - game-challenge-skill
-      - game-challenge-graph
       - game-challenge-sorting
     volumes:
       - ./game-client:/app
-      - /app/node_modules
-      
-  game-challenge-button:
-    build:
-      context: ./game-challenge/button
-      dockerfile: Dockerfile.development
-    environment:
-      PORT: 443
-    volumes:
-      - ./game-challenge/button:/app
       - /app/node_modules
 
   game-challenge-sorting:
@@ -90,32 +76,6 @@ services:
       - ./game-challenge/clicker:/app
       - /app/node_modules
 
-  game-challenge-graph:
-    build:
-      context: ./game-challenge/graph
-      dockerfile: Dockerfile.development
-    environment:
-      PORT: 80
-      ASSET_SERVER_URI: https://asset-server.${HOST}
-      CONTENT_SERVER_URI: https://content-server.${HOST}
-      STATIC_SERVER_URI: https://static.${HOST}
-    volumes:
-      - ./game-challenge/graph:/app
-      - /app/node_modules
-
-  game-challenge-astragal:
-    build:
-      context: ./game-challenge/astragal
-      dockerfile: Dockerfile.development
-    environment:
-      PORT: 80
-      ASSET_SERVER_URI: https://asset-server.${HOST}
-      CONTENT_SERVER_URI: https://content-server.${HOST}
-      STATIC_SERVER_URI: https://static.${HOST}
-    volumes:
-      - ./game-challenge/astragal:/app
-      - /app/node_modules
-
   game-challenge-hidden:
     build:
       context: ./game-challenge/hidden
@@ -127,17 +87,4 @@ services:
       STATIC_SERVER_URI: https://static.${HOST}
     volumes:
       - ./game-challenge/hidden:/app
-      - /app/node_modules
-
-  game-challenge-skill:
-    build:
-      context: ./game-challenge/skill
-      dockerfile: Dockerfile.development
-    environment:
-      PORT: 443
-      ASSET_SERVER_URI: https://asset-server.${HOST}
-      CONTENT_SERVER_URI: https://content-server.${HOST}
-      STATIC_SERVER_URI: https://static.${HOST}
-    volumes:
-      - ./game-challenge/skill:/app
       - /app/node_modules
