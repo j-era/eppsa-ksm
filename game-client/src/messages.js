@@ -1,4 +1,0 @@
-export const REQUEST_MATE = "REQUEST_MATE"
-export const CANCEL_REQUEST_MATE = "CANCEL_REQUEST_MATE"
-export const ACCEPT_MATE = "ACCEPT_MATE"
-export const DECLINE_MATE = "DECLINE_MATE"

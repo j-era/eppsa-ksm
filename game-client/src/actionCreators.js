@@ -79,13 +79,6 @@ export function updateGameState(state) {
   }
 }
 
-export function updateName(name) {
-  return {
-    type: types.UPDATE_NAME,
-    name
-  }
-}
-
 export function showGameManual(show) {
   return {
     type: types.SHOW_GAME_MANUAL,

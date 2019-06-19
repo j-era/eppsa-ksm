@@ -23,8 +23,6 @@ export function challengeData(state = null, action) {
   switch (action.type) {
     case types.SET_CHALLENGE_TYPE:
       return action.challengeData
-    case types.SET_CHALLENGE_ROOM:
-      return Object.assign({ room: action.room }, state)
     default:
       return state
   }
