@@ -16,28 +16,16 @@
 [submodule "game-challenge/sorting/lib/eppsa-ksm-shared"]
 	path = game-challenge/sorting/lib/eppsa-ksm-shared
 	url = https://github.com/artcom/eppsa-ksm-shared.git
-[submodule "game-challenge/button/lib/eppsa-ksm-shared"]
-	path = game-challenge/button/lib/eppsa-ksm-shared
-	url = https://github.com/artcom/eppsa-ksm-shared
-[submodule "game-challenge/graph/lib/eppsa-ksm-shared"]
-	path = game-challenge/graph/lib/eppsa-ksm-shared
-	url = https://github.com/artcom/eppsa-ksm-shared
 [submodule "game-challenge/hidden/lib/eppsa-ksm-shared"]
 	path = game-challenge/hidden/lib/eppsa-ksm-shared
 	url = https://github.com/artcom/eppsa-ksm-shared
 [submodule "game-challenge/clicker/lib/eppsa-ksm-shared"]
 	path = game-challenge/clicker/lib/eppsa-ksm-shared
 	url = https://github.com/artcom/eppsa-ksm-shared
-[submodule "game-challenge/skill/lib/eppsa-ksm-shared"]
-	path = game-challenge/skill/lib/eppsa-ksm-shared
-	url = https://github.com/artcom/eppsa-ksm-shared
 [submodule "game-challenge/sorting/lib/react-dnd-touch-backend"]
 	path = game-challenge/sorting/lib/react-dnd-touch-backend
 	url = https://github.com/artcom/react-dnd-touch-backend.git
 	
-[submodule "game-challenge/astragal/lib/eppsa-ksm-shared"]
-	path = game-challenge/astragal/lib/eppsa-ksm-shared
-	url = https://github.com/artcom/eppsa-ksm-shared.git
 [submodule "game-client/lib/react-qr-reader"]
 	path = game-client/lib/react-qr-reader
 	url = https://github.com/artcom/react-qr-reader.git
