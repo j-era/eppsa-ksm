@@ -25,9 +25,9 @@ const TimeBall = styled.div`
   height: 0;
   padding-bottom: 100%;
 
-  background: ${props => props.theme.colors.background};
+  background: ${props => props.theme.colors.area};
 
-  color: ${props => props.theme.colors.area};
+  color: ${props => props.theme.font.dashboard.score.color};
 
   font-size: ${props => props.theme.font.text.size}vw;
 
@@ -54,11 +54,11 @@ const ProgressBar = styled.div`
 
   height: 3vw;
 
+  background: ${props => props.theme.colors.secondary};
+
   border-radius: ${props => props.theme.layout.borderRadius};
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-
-  background: ${props => props.theme.colors.secondary};
 
   display: flex;
 `
@@ -67,7 +67,7 @@ const Progress = styled.div`
   width: ${props => props.isRunning ? 100 : props.countdown / props.seconds * 100}%;
   height: 100%;
 
-  background: ${props => props.theme.colors.background};
+  background: ${props => props.theme.colors.area};
 
   border-radius: ${props => props.theme.layout.borderRadius};
   border-top-left-radius: 0;
@@ -77,7 +77,7 @@ const Progress = styled.div`
 
   ${props => props.isRunning ? css`
     animation: ${decrease()} ${props => props.seconds}s linear forwards};
-  ` : null}
+  ` : null};
 `
 
 const Fuse = styled.div`
@@ -97,7 +97,7 @@ const Fuse = styled.div`
 
   ${props => props.isRunning ? css`
     animation: ${decreaseFuse()} ${props => props.seconds}s linear forwards};
-  ` : null}
+  ` : null};
 `
 
 const StyledFuse1SVG = styled(Fuse1SVG)`
@@ -106,7 +106,7 @@ const StyledFuse1SVG = styled(Fuse1SVG)`
   width: 8vw;
   height: 8vw;
 
-  fill: ${props => props.theme.colors.background};
+  fill: ${props => props.theme.colors.area};
 
   opacity: 1;
 
@@ -119,7 +119,7 @@ const StyledFuse2SVG = styled(Fuse2SVG)`
   width: 8vw;
   height: 8vw;
 
-  fill: ${props => props.theme.colors.background};
+  fill: ${props => props.theme.colors.area};
 
   opacity: 0;
 
