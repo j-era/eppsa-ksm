@@ -43,7 +43,7 @@ export function finishChallenge(challengeData) {
     const data = { challengeNumber, score }
 
     // Get max challenge number from content or calculate
-    if (challengeNumber > 11) {
+    if (challengeNumber > getState().maxChallenges) {
       data.finished = true
       dispatch(updateGameState(gameStates.FINISHED))
     } else {
@@ -61,6 +61,13 @@ export function addScore(increment) {
     dispatch({ type: types.SHOW_SCORE })
     await delay(3000)
     dispatch({ type: types.HIDE_SCORE })
+  }
+}
+
+export function setMaxChallenges(maxChallenges) {
+  return {
+    type: types.SET_MAX_CHALLENGES,
+    maxChallenges
   }
 }
 

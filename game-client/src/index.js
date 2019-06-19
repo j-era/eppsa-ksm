@@ -25,7 +25,9 @@ const CARD_RATIO = 2 / 3
 contentServer.getData().then(transform).then(async (content) => {
   const maxChallenges = Object.keys(content.challenges).length - 1
 
-  const resumableGame = await findResumableGame()
+  store.dispatch(actions.setMaxChallenges(maxChallenges))
+
+  const resumableGame = findResumableGame()
   if (resumableGame) {
     store.dispatch(actions.updateGameState(gameStates.RESUME_OR_NEW_GAME_SELECTION))
   } else {
@@ -60,7 +62,7 @@ function transform(content) {
   return Object.assign(mapValues(omit(content, "index"), transform), content.index)
 }
 
-async function findResumableGame() {
+function findResumableGame() {
   const resumableGame = JSON.parse(localStorage.getItem("gameData"))
   return resumableGame && !resumableGame.finished ? resumableGame : null
 }

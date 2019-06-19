@@ -19,6 +19,15 @@ export function challengeNumber(state = 0, action) {
   }
 }
 
+export function maxChallenges(state = 0, action) {
+  switch (action.type) {
+    case types.SET_MAX_CHALLENGES:
+      return action.maxChallenges
+    default:
+      return state
+  }
+}
+
 export function challengeData(state = null, action) {
   switch (action.type) {
     case types.SET_CHALLENGE_TYPE:
