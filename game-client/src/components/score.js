@@ -9,7 +9,7 @@ const ScoreContainer = styled.div`
   justify-content: center;
   align-items: center;
 
-  filter: drop-shadow(0px 0px 20px);
+  filter: drop-shadow(0px 0px 10px);
 `
 
 const ScoreElement = styled.div`
