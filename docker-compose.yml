@@ -8,6 +8,7 @@ services:
       - content-server
       - content-repo
       - cms-frontend
+      - game-challenge-tracker
     ports:
       - "80:80"
       - "443:443"
