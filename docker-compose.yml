@@ -45,6 +45,12 @@ services:
     depends_on:
       - content-server
       - asset-server
+  
+  game-challenge-tracker:
+    build:
+      context: ./game-challenge-tracker
+    volumes:
+        - ./game-challenge-tracker/logs/:/app/logs
 
 volumes:
   content:

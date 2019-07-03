@@ -87,3 +87,9 @@ services:
     volumes:
       - ./game-challenge/hidden:/app
       - /app/node_modules
+
+  game-challenge-tracker:
+    build:
+      dockerfile: Dockerfile.development
+    volumes:
+        - ./game-challenge-tracker:/app

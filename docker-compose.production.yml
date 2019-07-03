@@ -18,3 +18,7 @@ services:
       dockerfile: Dockerfile.production
     environment:
       PORT: 80
+
+  game-challenge-tracker:
+    build:
+      dockerfile: Dockerfile.production

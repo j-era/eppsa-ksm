@@ -7,3 +7,5 @@ node_modules
 certificate/development/openssl\.cnf
 
 assets/
+
+game-challenge-tracker/logs/

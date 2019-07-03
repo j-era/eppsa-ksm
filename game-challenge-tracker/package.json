@@ -1,14 +1,29 @@
 {
   "name": "game-challenge-tracker",
   "version": "1.0.0",
-  "description": "",
-  "main": "src/index.js",
+  "engines": {
+    "node": "10.16.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./dist/index.js | bunyan",
+    "watch": "tsc --watch & nodemon --watch ./dist ./dist/index.js | bunyan",
+    "build": "tsc"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "nano": "^8.1.0"
+    "bunyan": "^1.8.12",
+    "micro": "^9.3.4",
+    "nodemon": "^1.19.1",
+    "typescript": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/micro": "^7.3.3",
+    "@types/node": "^12.0.10",
+    "@typescript-eslint/eslint-plugin": "^1.11.0",
+    "@typescript-eslint/parser": "^1.11.0",
+    "eslint": "^6.0.1",
+    "eslint-config-artcom": "^0.10.0",
+    "eslint-plugin-import": "^2.18.0"
   }
 }
