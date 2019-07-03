@@ -18,9 +18,7 @@ services:
   asset-server:
     build: ./asset-server
     volumes:
-      - type: volume
-        source: assets
-        target: /var/www/webdav
+      - ./assets:/var/www/webdav
 
   content-server:
     image: "artcom/git-json-api:latest"
@@ -50,4 +48,3 @@ services:
 
 volumes:
   content:
-  assets:

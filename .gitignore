@@ -5,3 +5,5 @@ certificate/letsencrypt
 node_modules
 
 certificate/development/openssl\.cnf
+
+assets/
