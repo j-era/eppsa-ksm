@@ -1,15 +1,14 @@
-import micro, { text } from "micro"
+import micro, { json } from "micro"
 import { promises as fsPromises } from "fs"
-const { appendFile } = fsPromises
 
 import { IncomingMessage } from "http"
 
+const { appendFile } = fsPromises
+
 async function handleRequest(request: IncomingMessage) {
-  const challengeCompletion = await text(request)
-  await appendFile("./logs/log.txt", `${challengeCompletion}\n`)
+  const challengeCompletion = await json(request)
+  await appendFile("./logs/log.txt", `${JSON.stringify(challengeCompletion)}\n`)
   return ""
 }
 
-appendFile("./logs/log.txt", `test\n`)
-
-micro(handleRequest).listen(3000)
+micro(handleRequest).listen(80)
