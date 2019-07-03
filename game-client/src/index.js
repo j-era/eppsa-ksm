@@ -49,7 +49,6 @@ contentServer.getData().then(transform).then(async (content) => {
           assetServerUri={ process.env.ASSET_SERVER_URI }
           contentServerUri={ process.env.CONTENT_SERVER_URI }
           staticServerUri={ process.env.STATIC_SERVER_URI }
-          maxChallenges={ maxChallenges }
           dispatch={ store.dispatch }
           onChallengeReady={ onChallengeReady } />
       </ThemeProvider>

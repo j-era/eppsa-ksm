@@ -35,7 +35,6 @@ services:
       - game-challenge-sorting
     volumes:
       - ./game-client:/app
-      - /app/node_modules
 
   game-challenge-sorting:
     build:

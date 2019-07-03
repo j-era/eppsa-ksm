@@ -27,9 +27,9 @@ const TimeBall = styled.div`
 
   background: ${props => props.theme.colors.area};
 
-  color: ${props => props.theme.font.dashboard.score.color};
+  color: ${props => props.theme.font.timeBall.color};
 
-  font-size: ${props => props.theme.font.text.size}vw;
+  font-size: ${props => props.theme.font.timeBall.size}vw;
 
   z-index: 1;
 `
