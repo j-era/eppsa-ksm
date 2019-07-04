@@ -51,6 +51,17 @@ export function finishChallenge(challengeData) {
       dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
     }
 
+    const gameID = getState().gameID
+
+    fetch(process.env.TRACKER_SERVER_URI, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ gameID, ...data })
+    })
+
     dispatch(updateGameData(data))
   }
 }

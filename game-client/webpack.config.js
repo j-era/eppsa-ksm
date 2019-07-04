@@ -49,7 +49,8 @@ module.exports = {
     new webpack.EnvironmentPlugin([
       "ASSET_SERVER_URI",
       "CONTENT_SERVER_URI",
-      "STATIC_SERVER_URI"
+      "STATIC_SERVER_URI",
+      "TRACKER_SERVER_URI"
     ])
   ],
   devServer: {
