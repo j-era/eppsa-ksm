@@ -1,3 +1,5 @@
+import uuid from "uuid"
+
 import * as types from "./actionTypes"
 import * as gameStates from "./gameStates"
 
@@ -23,6 +25,13 @@ export function maxChallenges(state = 0, action) {
   switch (action.type) {
     case types.SET_MAX_CHALLENGES:
       return action.maxChallenges
+    default:
+      return state
+  }
+}
+
+export function gameID(state = uuid(), action) {
+  switch (action.type) {
     default:
       return state
   }
