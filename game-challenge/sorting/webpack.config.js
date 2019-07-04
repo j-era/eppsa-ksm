@@ -48,7 +48,6 @@ module.exports = {
     new webpack.EnvironmentPlugin([
       "ASSET_SERVER_URI",
       "CONTENT_SERVER_URI",
-      "GAME_SERVER_URI",
       "STATIC_SERVER_URI"
     ])
   ],
