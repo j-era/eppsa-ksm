@@ -1,9 +1,3 @@
-import pickBy from "lodash.pickby"
-import uniq from "lodash.uniq"
-import omitBy from "lodash.omitby"
-import omit from "lodash.omit"
-import isEmpty from "lodash.isempty"
-
 import { delay } from "eppsa-ksm-shared"
 
 import * as gameStates from "./gameStates"
@@ -130,11 +124,18 @@ export function hideTimeline() {
   }
 }
 
-export function selectChallengeType(name, content) {
+export function confirmArea(content) {
+  return async dispatch => {
+    dispatch(selectChallenge(content))
+    dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
+  }
+}
+
+export function selectChallenge(content) {
   return async (dispatch, getState) => {
     const { challengeNumber } = getState()
 
-    const challengeTypeData = content.challenges[challengeNumber].challengeTypes[name]
+    const challengeTypeData = content.challenges[challengeNumber].challenge
     const challengeUri = resolveChallengeWebAppUri(challengeTypeData.template)
     const challengeData = {
       color: content.challenges[challengeNumber].color,
@@ -154,65 +155,4 @@ function resolveChallengeWebAppUri(webApp) {
   const challengeUri = new URL(`${protocol}//${webApp}.${environment}`)
 
   return challengeUri.toString()
-}
-
-export function selectChallengeOrMode(content) {
-  return async (dispatch, getState) => {
-    const hasMultiplayerChallenge = !isEmpty(pickBy(
-      content.challenges[getState().challengeNumber].challengeTypes,
-      "multiplayer"
-    ))
-
-    if (hasMultiplayerChallenge) {
-      dispatch(updateGameState(gameStates.CHALLENGE_MODE_SELECTION))
-    } else {
-      dispatch(selectRandomChallengeType(content))
-    }
-  }
-}
-
-export function selectRandomChallengeType(content) {
-  return (dispatch, getState) => {
-    const challenges = omitBy(
-      omit(content.challenges[getState().challengeNumber].challengeTypes, "template"),
-      (challenge) => challenge.multiplayer
-    )
-
-    const challengeName = chooseRandomChallenge(challenges)
-    dispatch(
-      selectChallengeType(challengeName, content)
-    )
-    dispatch(updateGameState(gameStates.CHALLENGE_SELECTION))
-  }
-}
-
-export function selectMultiplayerChallengeType(content) {
-  return (dispatch, getState) => {
-    const multiplayerChallenges = Object.keys(pickBy(
-      content.challenges[getState().challengeNumber].challengeTypes,
-      "multiplayer"
-    ))
-
-    const challengeName = multiplayerChallenges[0]
-
-    dispatch(
-      selectChallengeType(challengeName, content)
-    )
-    dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
-  }
-}
-
-function chooseRandomChallenge(challenges) {
-  const templates = uniq(Object.values(challenges).map(challenge => challenge.template))
-  const randomTemplate = random(templates)
-
-  const names = Object.keys(
-    pickBy(challenges, challenge => challenge.template === randomTemplate)
-  )
-
-  return random(names)
-}
-
-function random(array) {
-  return array[Math.floor(Math.random() * array.length)]
 }
