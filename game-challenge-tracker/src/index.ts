@@ -6,7 +6,7 @@ import { IncomingMessage } from "http"
 const { appendFile } = fsPromises
 
 type ChallengeCompletion = {
-  gameID: string
+  gameId: string
   challengeNumber: number
   score: number
   finished: boolean
@@ -14,13 +14,24 @@ type ChallengeCompletion = {
 }
 
 async function handleRequest(request: IncomingMessage) {
-  const challengeCompletion = await json(request) as ChallengeCompletion
+  if (request.method === "POST") {
+    const challengeCompletion = await json(request) as ChallengeCompletion
 
-  if (challengeCompletion) {
-    challengeCompletion.time = new Date().toLocaleString()
-    await appendFile("./logs/log.txt", `${JSON.stringify(challengeCompletion)}\n`)
+    if (isValid(challengeCompletion)) {
+      challengeCompletion.time = new Date().toLocaleString()
+      await appendFile("./logs/log.txt", `${JSON.stringify(challengeCompletion)}\n`)
+    }
+    return ""
   }
-  return ""
+}
+
+function isValid({ gameId, challengeNumber, score, finished }: ChallengeCompletion) {
+  return (
+    typeof gameId === "string" &&
+    typeof challengeNumber === "number" &&
+    typeof score === "number" &&
+    typeof finished === "boolean"
+  )
 }
 
 micro(handleRequest).listen(80)
