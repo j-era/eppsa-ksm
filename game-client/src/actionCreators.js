@@ -51,7 +51,7 @@ export function finishChallenge(challengeData) {
       dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
     }
 
-    const gameID = getState().gameID
+    const gameId = getState().gameId
 
     fetch(process.env.TRACKER_SERVER_URI, {
       method: "POST",
@@ -59,7 +59,7 @@ export function finishChallenge(challengeData) {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ gameID, ...data })
+      body: JSON.stringify({ gameId, ...data })
     })
 
     dispatch(updateGameData(data))

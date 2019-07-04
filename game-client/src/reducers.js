@@ -30,11 +30,8 @@ export function maxChallenges(state = 0, action) {
   }
 }
 
-export function gameID(state = uuid(), action) {
-  switch (action.type) {
-    default:
-      return state
-  }
+export function gameId(state = uuid()) {
+  return state
 }
 
 export function challengeData(state = null, action) {
