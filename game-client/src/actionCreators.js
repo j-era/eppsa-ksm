@@ -125,13 +125,6 @@ export function hideTimeline() {
 }
 
 export function confirmArea(content) {
-  return async dispatch => {
-    dispatch(selectChallenge(content))
-    dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
-  }
-}
-
-export function selectChallenge(content) {
   return async (dispatch, getState) => {
     const { challengeNumber } = getState()
 
@@ -146,6 +139,7 @@ export function selectChallenge(content) {
     }
 
     dispatch({ type: types.SET_CHALLENGE_TYPE, challengeData, challengeUri })
+    dispatch(updateGameState(gameStates.CHALLENGE_MANUAL))
   }
 }
 
