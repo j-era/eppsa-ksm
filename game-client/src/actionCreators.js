@@ -56,9 +56,6 @@ export function finishChallenge(challengeData) {
     fetch(process.env.TRACKER_SERVER_URI, {
       method: "POST",
       mode: "no-cors",
-      headers: {
-        "Content-Type": "application/json"
-      },
       body: JSON.stringify({ gameId, ...data })
     })
 
