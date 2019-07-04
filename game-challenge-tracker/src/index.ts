@@ -20,8 +20,8 @@ async function handleRequest(request: IncomingMessage) {
     if (isValid(challengeCompletion)) {
       challengeCompletion.time = new Date().toLocaleString()
       await appendFile("./logs/log.txt", `${JSON.stringify(challengeCompletion)}\n`)
+      return ""
     }
-    return ""
   }
 }
 
