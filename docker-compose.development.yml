@@ -13,7 +13,6 @@ services:
       dockerfile: Dockerfile.development
     volumes:
       - ./cms-frontend:/app
-      - /app/node_modules
     environment:
       PORT: 443
 
