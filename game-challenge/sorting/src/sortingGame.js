@@ -53,6 +53,7 @@ export default class SortingGame extends React.Component {
     const items = orderBy(Object.values(selectItems(this.props.data)), ["initialPosition"])
 
     this.state = {
+      poceedButtonclicked: false,
       isConfirmed: false,
       isCorrect: false,
       isWrong: false,
@@ -138,13 +139,16 @@ export default class SortingGame extends React.Component {
 
   renderProceedButton() {
     return (
-      <Button onClick={ this.proceed }>
+      <Button onClick={ this.proceed } clicked={ this.state.poceedButtonclicked }>
         { this.props.data.shared.texts.next } <NextIcon />
       </Button>
     )
   }
 
   proceed() {
+    this.setState({
+      poceedButtonclicked: true
+    })
     const { hideTimeline } = this.props.callbacks
     hideTimeline()
 
