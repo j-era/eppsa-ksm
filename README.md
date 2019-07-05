@@ -50,6 +50,10 @@ Set environment variable for the path to the ssl certificate:
 Set the HOST variable of your target environment:
   * `HOST=<environment>.eppsa.de`
 
+Set the BASIC_AUTH variables of your target environment:
+  * `BASIC_AUTH_USER=<user>`
+  * `BASIC_AUTH_PASSWORD=<password>`
+
 ### Build Images
 `docker-compose -f docker-compose.yml -f docker-compose.development.yml build`
 
@@ -63,6 +67,8 @@ Set the HOST variable of your target environment:
 ## Production
 ```
 HOST=<environment>.eppsa.de
+BASIC_AUTH_USER=<user>
+BASIC_AUTH_PASSWORD=<password>
 ./build.sh
 docker-compose -f docker-compose.yml -f docker-compose.production.yml build
 docker-compose -f docker-compose.yml -f docker-compose.production.yml up

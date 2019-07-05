@@ -2,7 +2,11 @@ version: "3.2"
 
 services:
   nginx:
-    build: ./nginx
+    build:
+      context: ./nginx
+      args:
+        - BASIC_AUTH_USER
+        - BASIC_AUTH_PASSWORD
     depends_on:
       - asset-server
       - content-server
@@ -43,6 +47,8 @@ services:
     environment:
       GIT_JSON_API_URI: https://content-server.${HOST}
       ASSET_SERVER_URI: https://asset-server.${HOST}
+      BASIC_AUTH_USER:
+      BASIC_AUTH_PASSWORD:
     depends_on:
       - content-server
       - asset-server
