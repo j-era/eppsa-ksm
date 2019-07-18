@@ -1,6 +1,7 @@
 import React from "react"
 import { connect } from "react-redux"
-import styled from "styled-components"
+import styled, { ThemeProvider } from "styled-components"
+import cloneDeep from "lodash.clonedeep"
 
 import Card from "./card"
 import { default as Background } from "./background"
@@ -31,27 +32,36 @@ class Application extends React.Component {
   }
 
   render() {
-    const { content, showScore } = this.props
+    const { challengeNumber, content, showScore } = this.props
     const { render, showHeader } = getPageData(this.props)
+    const challenge = content.challenges[challengeNumber]
 
     return (
-      <Container>
-        <Header { ...this.props } show={ showHeader || showScore } />
-        <Background
-          { ...this.props }
-          showHeader={ showHeader || showScore }
-          bannerText={ content.name } >
-          <Card small={ showHeader }>
-            { this.state.renderCardContent && React.createElement(render, this.props) }
-          </Card>
-        </Background>
-      </Container>
+      <ThemeProvider theme={ (theme) => updateTheme(theme, challenge) }>
+        <Container>
+          <Header { ...this.props } show={ showHeader || showScore } />
+          <Background
+            { ...this.props }
+            showHeader={ showHeader || showScore }
+            bannerText={ content.name } >
+            <Card small={ showHeader }>
+              { this.state.renderCardContent && React.createElement(render, this.props) }
+            </Card>
+          </Background>
+        </Container>
+      </ThemeProvider>
     )
   }
 }
 
 function getPageData({ showGameManual, gameState }) {
   return showGameManual ? pages.GAME_MANUAL : pages[gameState]
+}
+
+function updateTheme(theme, challenge) {
+  const newTheme = cloneDeep(theme)
+  newTheme.colors.area = challenge ? challenge.color : theme.colors.secondary
+  return newTheme
 }
 
 export default connect((state) => state)(Application)
