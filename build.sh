@@ -5,7 +5,7 @@ export CONTENT_SERVER_URI=https://content-server.${HOST}
 export ASSET_SERVER_URI=https://asset-server.${HOST}
 export FONT_URI=https://static.${HOST}/fonts
 export STATIC_SERVER_URI=https://static.${HOST}
-export MONGO_ACCESS_URI=https://mongo.${HOST}
+export TRACKER_SERVER_URI=https://tracker.${HOST}
 BASEDIR="$( cd "$( dirname "$0" )" && pwd )"
 
 declare -a SITES=(
