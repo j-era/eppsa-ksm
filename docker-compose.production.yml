@@ -17,6 +17,10 @@ services:
     build:
       dockerfile: Dockerfile.production
     environment:
+      GIT_JSON_API_URI: https://content-server.${HOST}
+      ASSET_SERVER_URI: https://asset-server.${HOST}
+      BASIC_AUTH_USER:
+      BASIC_AUTH_PASSWORD:
       PORT: 80
 
   game-challenge-tracker:
