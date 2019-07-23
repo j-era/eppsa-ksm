@@ -4,6 +4,8 @@ ARG environment
 ARG BASIC_AUTH_USER
 ARG BASIC_AUTH_PASSWORD
 
+RUN apt-get update && apt-get install -y apache2-utils
+
 RUN rm /etc/nginx/conf.d/default.conf
 RUN rm /etc/nginx/nginx.conf
 
@@ -13,7 +15,6 @@ COPY sites-available/${environment}/* /etc/nginx/sites-available/
 COPY sites-available/*.conf /etc/nginx/sites-available/
 COPY config /etc/nginx/config
 
-RUN apt-get update && apt-get install -y apache2-utils
 RUN htpasswd -bc /etc/nginx/.htpasswd $BASIC_AUTH_USER $BASIC_AUTH_PASSWORD
 
 RUN mkdir /etc/nginx/sites-enabled
