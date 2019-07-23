@@ -54,7 +54,7 @@ http {
     }
 
     upstream docker-game-challenge-tracker {
-      server game-challenge-tracker:3000;
+      server game-challenge-tracker:80;
     }
 
     include /etc/nginx/conf.d/*.conf;
