@@ -3,7 +3,7 @@ import uuid from "uuid"
 import * as types from "./actionTypes"
 import * as gameStates from "./gameStates"
 
-export function gameState(state = gameStates.INITIAL_GAME_MANUAL, action) {
+export function gameState(state = gameStates.PLAYER_TYPE_SELECTION, action) {
   switch (action.type) {
     case types.UPDATE_GAME_STATE:
       return action.state

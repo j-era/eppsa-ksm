@@ -1,5 +1,6 @@
 import {
   RESUME_OR_NEW_GAME_SELECTION,
+  PLAYER_TYPE_SELECTION,
   INITIAL_GAME_MANUAL,
   AREA_CONFIRMATION,
   CHALLENGE_MANUAL,
@@ -13,9 +14,11 @@ import ChallengeManual from "./challengeManual"
 import Challenge from "./challenge"
 import Finished from "./finished"
 import GameManual from "./gameManual"
+import PlayerTypeSelection from "./playerTypeSelection"
 
 export default {
   [RESUME_OR_NEW_GAME_SELECTION]: { render: ResumeOrNewGameSelection, showHeader: false },
+  [PLAYER_TYPE_SELECTION]: { render: PlayerTypeSelection, showHeader: false },
   [INITIAL_GAME_MANUAL]: { render: GameManual, showHeader: true },
   [AREA_CONFIRMATION]: { render: AreaConfirmation, showHeader: true },
   [CHALLENGE_MANUAL]: { render: ChallengeManual, showHeader: true },
