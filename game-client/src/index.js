@@ -22,7 +22,7 @@ injectGlobalStyle(process.env.STATIC_SERVER_URI)
 
 const CARD_RATIO = 2 / 3
 
-contentServer.getData().then(transform).then(async (content) => {
+contentServer.getData().then(transform).then(content => {
   store.dispatch(actions.updateContent(content))
   const resumableGame = findResumableGame()
   if (resumableGame) {
