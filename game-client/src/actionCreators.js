@@ -4,8 +4,13 @@ import * as gameStates from "./gameStates"
 import * as types from "./actionTypes"
 
 export function resumeGame(resumableGame) {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     dispatch(updateGameData(resumableGame))
+
+    const { content, playerType } = getState()
+    const maxChallenges = Object.keys(content[playerType]).length - 1
+    dispatch(setMaxChallenges(maxChallenges))
+
     dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
   }
 }
