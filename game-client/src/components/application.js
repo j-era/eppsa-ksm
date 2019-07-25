@@ -32,9 +32,9 @@ class Application extends React.Component {
   }
 
   render() {
-    const { challengeNumber, content, showScore } = this.props
+    const { challengeNumber, content, showScore, playerType } = this.props
     const { render, showHeader } = getPageData(this.props)
-    const challenge = content.challenges[challengeNumber]
+    const challenge = playerType && challengeNumber ? content[playerType][challengeNumber] : null
 
     return (
       <ThemeProvider theme={ (theme) => updateTheme(theme, challenge) }>

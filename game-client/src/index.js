@@ -23,15 +23,12 @@ injectGlobalStyle(process.env.STATIC_SERVER_URI)
 const CARD_RATIO = 2 / 3
 
 contentServer.getData().then(transform).then(async (content) => {
-  const maxChallenges = Object.keys(content.challenges).length - 1
-
-  store.dispatch(actions.setMaxChallenges(maxChallenges))
-
+  store.dispatch(actions.updateContent(content))
   const resumableGame = findResumableGame()
   if (resumableGame) {
     store.dispatch(actions.updateGameState(gameStates.RESUME_OR_NEW_GAME_SELECTION))
   } else {
-    store.dispatch(actions.updateGameState(gameStates.PLAYER_TYPE_SELECTION))
+    store.dispatch(actions.updateGameState(gameStates.INITIAL_GAME_MANUAL))
   }
 
   window.addEventListener("message", receiveMessage, false)

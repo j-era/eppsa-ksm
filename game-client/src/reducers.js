@@ -12,6 +12,26 @@ export function gameState(state = gameStates.PLAYER_TYPE_SELECTION, action) {
   }
 }
 
+export function playerType(state = null, action) {
+  switch (action.type) {
+    case types.SET_PLAYER_TYPE:
+      return action.playerType
+    case types.UPDATE_GAME_DATA:
+      return action.data.playerType
+    default:
+      return state
+  }
+}
+
+export function content(state = null, action) {
+  switch (action.type) {
+    case types.UPDATE_CONTENT:
+      return action.content
+    default:
+      return state
+  }
+}
+
 export function challengeNumber(state = 0, action) {
   switch (action.type) {
     case types.UPDATE_GAME_DATA:

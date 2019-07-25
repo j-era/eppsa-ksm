@@ -11,8 +11,9 @@ export function resumeGame(resumableGame) {
 }
 
 export function startNewGame() {
-  return async (dispatch) => {
-    const data = { challengeNumber: 1, score: 0, finished: false }
+  return async (dispatch, getState) => {
+    const { playerType } = getState()
+    const data = { challengeNumber: 1, score: 0, finished: false, playerType }
     dispatch(updateGameData(data))
     dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
   }
@@ -73,6 +74,25 @@ export function setMaxChallenges(maxChallenges) {
   }
 }
 
+export function setPlayerType(playerType) {
+  return (dispatch, getState) => {
+    const maxChallenges = Object.keys(getState().content[playerType]).length - 1
+    dispatch(setMaxChallenges(maxChallenges))
+    dispatch({
+      type: types.SET_PLAYER_TYPE,
+      playerType
+    })
+    dispatch(startNewGame())
+  }
+}
+
+export function updateContent(content) {
+  return {
+    type: types.UPDATE_CONTENT,
+    content
+  }
+}
+
 export function updateGameData(data) {
   localStorage.setItem("gameData", JSON.stringify(data))
   return {
@@ -124,14 +144,14 @@ export function hideTimeline() {
   }
 }
 
-export function confirmArea(content) {
+export function confirmArea() {
   return async (dispatch, getState) => {
-    const { challengeNumber } = getState()
-
-    const challengeTypeData = content.challenges[challengeNumber].challenge
+    const { challengeNumber, content, playerType } = getState()
+    const challenge = playerType && challengeNumber ? content[playerType][challengeNumber] : null
+    const challengeTypeData = challenge.challenge
     const challengeUri = resolveChallengeWebAppUri(challengeTypeData.template)
     const challengeData = {
-      color: content.challenges[challengeNumber].color,
+      color: challenge.color,
       challenge: challengeTypeData,
       shared: content.shared,
       staticServerUri: process.env.STATIC_SERVER_URI,

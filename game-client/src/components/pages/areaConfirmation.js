@@ -30,8 +30,8 @@ class AreaConfirmation extends React.Component {
   }
 
   render() {
-    const { assetServerUri, challengeNumber, content, theme } = this.props
-    const challenge = content.challenges[challengeNumber]
+    const { assetServerUri, challengeNumber, content, theme, playerType } = this.props
+    const challenge = playerType && challengeNumber ? content[playerType][challengeNumber] : null
 
     return (
       <Container>
@@ -57,7 +57,7 @@ class AreaConfirmation extends React.Component {
   async onNext() {
     this.setState({ nextClicked: true })
     await delay(100)
-    this.props.dispatch(confirmArea(this.props.content))
+    this.props.dispatch(confirmArea())
   }
 }
 

@@ -11,7 +11,8 @@ import {
   PageTitle
 } from "eppsa-ksm-shared"
 
-import { resumeGame, startNewGame } from "../../actionCreators"
+import { resumeGame, updateGameState } from "../../actionCreators"
+import * as gameStates from "../../gameStates"
 
 const Container = styled(Page)`
   display: flex;
@@ -55,7 +56,7 @@ class ResumeOrNewGameSelection extends React.Component {
 
   render() {
     const { content } = this.props
-    const { challengeNumber, score } = this.props.resumableGame
+    const { challengeNumber, score, playerType } = this.props.resumableGame
 
     return (
       <Container>
@@ -69,6 +70,9 @@ class ResumeOrNewGameSelection extends React.Component {
           </StyledDescription>
           <StyledDescription>
             { `score ${score}` }
+          </StyledDescription>
+          <StyledDescription>
+            { `playerType ${playerType}` }
           </StyledDescription>
           <Buttons>
             <ConfirmButton
@@ -97,7 +101,7 @@ class ResumeOrNewGameSelection extends React.Component {
   async back() {
     this.setState({ backClicked: true })
     await delay(100)
-    this.props.dispatch(startNewGame())
+    this.props.dispatch(updateGameState(gameStates.PLAYER_TYPE_SELECTION))
   }
 }
 

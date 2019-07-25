@@ -3,7 +3,7 @@ import autoBind from "react-autobind"
 import styled from "styled-components"
 import { delay, NextButton, Page, PageTitle, StyledMarkdown } from "eppsa-ksm-shared"
 
-import { showGameManual, startNewGame } from "../../actionCreators"
+import { showGameManual, updateGameState } from "../../actionCreators"
 import * as gameStates from "../../gameStates"
 
 const Container = styled(Page)`
@@ -42,7 +42,7 @@ export default class GameManual extends React.Component {
     await delay(100)
 
     if (this.props.gameState === gameStates.INITIAL_GAME_MANUAL) {
-      this.props.dispatch(startNewGame())
+      this.props.dispatch(updateGameState(gameStates.PLAYER_TYPE_SELECTION))
     } else {
       this.props.dispatch(showGameManual(false))
     }
