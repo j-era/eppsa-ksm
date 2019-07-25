@@ -41,7 +41,6 @@ contentServer.getData().then(transform).then(async (content) => {
     <Provider store={ store }>
       <ThemeProvider theme={ theme }>
         <Application
-          content={ content }
           resumableGame={ resumableGame }
           assetServerUri={ process.env.ASSET_SERVER_URI }
           contentServerUri={ process.env.CONTENT_SERVER_URI }
