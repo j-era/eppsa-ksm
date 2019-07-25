@@ -33,9 +33,9 @@ export function finishChallenge(challengeData) {
     }
 
     const challengeNumber = getState().challengeNumber + 1
-    const score = getState().score
+    const { score, playerType } = getState()
 
-    const data = { challengeNumber, score }
+    const data = { challengeNumber, score, playerType }
 
     // Get max challenge number from content or calculate
     if (challengeNumber > getState().maxChallenges) {
