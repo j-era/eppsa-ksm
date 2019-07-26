@@ -1,6 +1,6 @@
-import React from "react"
+import React, { useState, useMemo } from "react"
 import styled from "styled-components"
-import { PageTitle, Page, Description } from "eppsa-ksm-shared"
+import { PageTitle, Page, NextButton, delay } from "eppsa-ksm-shared"
 
 import { setPlayerType } from "../../actionCreators"
 
@@ -11,15 +11,11 @@ const Container = styled(Page)`
   justify-content: space-between;
 `
 
-const StyledDescription = styled(Description)`
-  margin-top: ${props => props.theme.layout.smallSpacing}vw;
-  max-height: calc(3em + ${props => props.theme.layout.smallSpacing}vw);
-`
-
 export default function PlayerTypeSelection({ content, dispatch }) {
-  const types = Object.entries(content)
+  const [typesClicked, setTypesClicked] = useState({})
+  const types = useMemo(() => Object.entries(content)
     .filter(([, value]) => value.template && value.template === "challenges")
-    .map(([key]) => key)
+    .map(([key]) => key), [content])
 
   return (
     <Container>
@@ -27,13 +23,16 @@ export default function PlayerTypeSelection({ content, dispatch }) {
       {
         types.map(
           type =>
-            <StyledDescription
+            <NextButton
+              visible
               key={ type }
-              onClick={ () => {
+              clicked={ typesClicked[type] === true }
+              onClick={ async () => {
+                setTypesClicked(typesClicked => ({ ...typesClicked, [type]: true }))
+                await delay(100)
                 dispatch(setPlayerType(type))
-              } }>
-              {type}
-            </StyledDescription>
+              } }
+              text={ type } />
         )
       }
     </Container>
