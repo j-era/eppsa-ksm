@@ -16,6 +16,12 @@ services:
     environment:
       PORT: 443
 
+  content-server:
+    build:
+      dockerfile: Dockerfile.development
+    volumes:
+      - ./content-server/src:/app/src
+
   game-client:
     build:
       context: ./game-client

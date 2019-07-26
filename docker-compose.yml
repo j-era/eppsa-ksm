@@ -10,7 +10,6 @@ services:
     depends_on:
       - asset-server
       - content-server
-      - content-repo
       - cms-frontend
       - game-challenge-tracker
     ports:
@@ -25,22 +24,6 @@ services:
     volumes:
       - ./assets:/var/www/webdav
 
-  content-server:
-    image: "artcom/git-json-api:latest"
-    environment:
-      REPO_URI: http://content-repo/
-      BODY_SIZE_LIMIT: "1mb"
-      PORT: 80
-    depends_on:
-      - content-repo
-
-  content-repo:
-    build: ./content-repo
-    volumes:
-      - type: volume
-        source: content
-        target: /srv/content
-
   cms-frontend:
     build:
       context: ./cms-frontend
@@ -52,6 +35,14 @@ services:
     depends_on:
       - content-server
       - asset-server
+
+  content-server:
+    build:
+      context: ./content-server
+    environment:
+      REPO_URI: https://github.com/artcom/ksm-test-content.git
+      BODY_SIZE_LIMIT: "1mb"
+      PORT: 80
   
   game-challenge-tracker:
     build:
