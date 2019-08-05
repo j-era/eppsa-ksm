@@ -11,7 +11,7 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  flex-grow: ${({ showHeader }) => showHeader ? 0.8 : 1};
+  flex-grow: ${({ showHeader }) => showHeader ? 0.7 : 1};
 
   background-color: ${props => props.theme.colors.area};
   transition: flex-grow 0.5s ease, background-color 0.5s ease;
@@ -45,7 +45,7 @@ const TimerBarContainer = styled.div`
 const TimerBar = styled(TimerBarComponent)`
   position: absolute;
 
-  top: 5vw;
+  top: 3vw;
 
   z-index: 9999;
 

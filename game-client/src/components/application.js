@@ -44,7 +44,7 @@ class Application extends React.Component {
             { ...this.props }
             showHeader={ showHeader || showScore }
             bannerText={ content.name } >
-            <Card small={ showHeader }>
+            <Card small={ showHeader || showScore }>
               { this.state.renderCardContent && React.createElement(render, this.props) }
             </Card>
           </Background>
