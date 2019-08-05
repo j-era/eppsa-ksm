@@ -8,6 +8,7 @@ const Header = styled.div`
   flex-grow: ${props => props.show ? 0.2 : 0};
   overflow: hidden;
   transition: flex-grow 0.5s ease;
+  background-color: ${props => props.theme.colors.area};
 `
 
 const Logo = styled.img`
