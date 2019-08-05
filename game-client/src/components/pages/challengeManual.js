@@ -28,7 +28,8 @@ class ChallengeManual extends React.Component {
     const { assetServerUri, challengeData, content, theme } = this.props
 
     const name = challengeData.challenge.name
-    const icon = content.shared.assets[`${challengeData.challenge.template}Icon`]
+    const icon = challengeData.challenge.icon ||
+                  content.shared.assets[`${challengeData.challenge.template}Icon`]
     const description = challengeData.challenge.manualText
 
     return (
