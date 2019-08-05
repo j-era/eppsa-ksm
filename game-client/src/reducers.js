@@ -138,6 +138,8 @@ export function showGameManual(state = false, action) {
   switch (action.type) {
     case types.SHOW_GAME_MANUAL:
       return action.show
+    case types.UPDATE_GAME_STATE:
+      return action.state === gameStates.INITIAL_GAME_MANUAL
     default:
       return state
   }

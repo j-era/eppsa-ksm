@@ -23,16 +23,17 @@ export default class GameManual extends React.Component {
   }
 
   render() {
+    const { content, gameState, playerType } = this.props
     return (
       <Container>
-        <PageTitle>{ this.props.content.gameManualTitle }</PageTitle>
-        <StyledMarkdown>{ this.props.content.gameManualText }</StyledMarkdown>
+        <PageTitle>{ content[playerType].gameManualTitle }</PageTitle>
+        <StyledMarkdown>{ content[playerType].gameManualText }</StyledMarkdown>
         <StyledNextButton
-          isInitial={ this.props.gameState === gameStates.INITIAL_GAME_MANUAL }
+          isInitial={ gameState === gameStates.INITIAL_GAME_MANUAL }
           visible
           onClick={ this.onNext }
           clicked={ this.state.nextClicked }
-          text={ this.props.gameState === gameStates.INITIAL_GAME_MANUAL ? "Los geht's" : "OK" } />
+          text={ gameState === gameStates.INITIAL_GAME_MANUAL ? "Los geht's" : "OK" } />
       </Container>
     )
   }
@@ -42,7 +43,7 @@ export default class GameManual extends React.Component {
     await delay(100)
 
     if (this.props.gameState === gameStates.INITIAL_GAME_MANUAL) {
-      this.props.dispatch(updateGameState(gameStates.PLAYER_TYPE_SELECTION))
+      this.props.dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
     } else {
       this.props.dispatch(showGameManual(false))
     }

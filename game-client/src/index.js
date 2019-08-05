@@ -28,7 +28,7 @@ contentServer.getData().then(transform).then(content => {
   if (resumableGame) {
     store.dispatch(actions.updateGameState(gameStates.RESUME_OR_NEW_GAME_SELECTION))
   } else {
-    store.dispatch(actions.updateGameState(gameStates.INITIAL_GAME_MANUAL))
+    store.dispatch(actions.updateGameState(gameStates.PLAYER_TYPE_SELECTION))
   }
 
   window.addEventListener("message", receiveMessage, false)

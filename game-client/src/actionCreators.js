@@ -20,7 +20,7 @@ export function startNewGame() {
     const { playerType } = getState()
     const data = { challengeNumber: 1, score: 0, finished: false, playerType }
     dispatch(updateGameData(data))
-    dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
+    dispatch(updateGameState(gameStates.INITIAL_GAME_MANUAL))
   }
 }
 
