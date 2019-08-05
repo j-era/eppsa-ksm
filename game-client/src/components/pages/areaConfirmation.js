@@ -42,7 +42,7 @@ class AreaConfirmation extends React.Component {
             color={ theme.colors.area }
             iconSrc={ `${assetServerUri}/${challenge.icon.src}` } />
           <StyledDescription>
-            { content.shared.texts.areaConfirmationText }
+            { challenge.areaConfirmationText || content.shared.texts.areaConfirmationText }
           </StyledDescription>
           <NextButton
             visible
