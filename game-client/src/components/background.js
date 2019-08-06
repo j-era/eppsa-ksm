@@ -66,8 +66,8 @@ export default function Background(props) {
   )
 }
 
-function renderTimerBar({ gameState, challengeData, timelineClockRunning, showHeader }) {
-  if (gameState === "CHALLENGE" && challengeData.challenge.score.sessionLength > 0 && !showHeader) {
+function renderTimerBar({ gameState, challengeData, timelineClockRunning }) {
+  if (gameState === "CHALLENGE" && challengeData.challenge.score.sessionLength > 0) {
     return (
       <TimerBarContainer>
         <TimerBar
