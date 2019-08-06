@@ -15,7 +15,7 @@ const Container = styled.div`
   height: 100%;
 
   background-color: ${props => props.theme.colors.area};
-  transition: transform 0.5s ease, background-color 0.5s ease;
+  transition: transform 0.5s ease;
   transform-origin: bottom;
 
   transform: scaleY(${({ showHeader }) => showHeader ? 0.9 : 1.0});

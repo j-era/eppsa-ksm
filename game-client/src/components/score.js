@@ -20,7 +20,9 @@ const ScoreElement = styled.div`
   opacity: 0;
   color: white;
 
-  box-shadow: 0px 0px 20px 0px black;
+  box-shadow: 0px 0px 2px 0px black;
+
+  will-change: transform;
 `
 
 const keyframesOldScore = keyframes`
