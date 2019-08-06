@@ -12,13 +12,9 @@ const Header = styled.div`
   display: flex;
   flex-direction: column;
 
-  height: 100%;
+  height: 10%;
 
   background-color: ${props => props.theme.colors.area};
-  transition: transform 0.5s ease;
-  transform-origin: top;
-
-  transform: scaleY(${({ show }) => show ? 0.1 : 0});
 
   overflow: hidden;
 `
@@ -26,7 +22,6 @@ const Header = styled.div`
 const Logo = styled.img`
   position: absolute;
   width: 30%;
-  transform: scaleY(10);
 `
 
 export default function renderHeader(props) {

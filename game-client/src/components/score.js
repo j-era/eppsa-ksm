@@ -8,7 +8,6 @@ const ScoreContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  transform: scaleY(10);
 `
 
 const ScoreElement = styled.div`
