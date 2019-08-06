@@ -11,8 +11,6 @@ import pages from "./pages"
 const Container = styled.div`
   background-color: white;
   height: 100%;
-  display: flex;
-  flex-direction: column;
 `
 
 class Application extends React.Component {

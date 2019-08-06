@@ -7,19 +7,22 @@ import InfoButton from "../../node_modules/eppsa-ksm-shared/assets/EPPSA_Assets_
 
 const Container = styled.div`
 position: absolute;
-z-index: 999;
+  z-index: 999;
   width: 8.15vw;
   right: 2.5vw;
-  top: 2.5vw;
+  top: 50vh;
 
-  ${props => props.show ?
-    css`opacity: 1; transition: opacity 1s ease;` :
-    css`opacity: 0; transition: opacity 1s ease;`}
+  transition: opacity 1s ease;
+  transform: scaleY(10);
+  opacity: ${({ show }) => show ? 1 : 0};
 `
 
-export default function GameManualButton({ dispatch, show }) {
+export default function GameManualButton({ dispatch, show, showHeader }) {
   return (
-    <Container show={ show } onClick={ () => dispatch(showGameManual(true)) }>
+    <Container
+      show={ show }
+      showHeader={ showHeader }
+      onClick={ () => dispatch(showGameManual(true)) }>
       <InfoButton />
     </Container>
   )

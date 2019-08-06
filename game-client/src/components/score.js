@@ -8,8 +8,7 @@ const ScoreContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
-  filter: drop-shadow(0px 0px 10px);
+  transform: scaleY(10);
 `
 
 const ScoreElement = styled.div`
@@ -21,6 +20,8 @@ const ScoreElement = styled.div`
   border-radius: ${props => props.theme.layout.borderRadius};
   opacity: 0;
   color: white;
+
+  box-shadow: 0px 0px 20px 0px black;
 `
 
 const keyframesOldScore = keyframes`
@@ -48,31 +49,37 @@ const keyframesNewScore = keyframes`
 const AddScore = styled(ScoreElement)`
   color: black;
   background-color: initial;
-  animation: ${keyframesAddScore} 3s;
+
+  box-shadow: unset;
+
+  ${({ show }) => show ? `animation: ${keyframesAddScore} 3s;` : ""}
 `
 
 const OldScore = styled(ScoreElement)`
-  animation: ${keyframesOldScore} 3s;
+  ${({ show }) => show ? `animation: ${keyframesOldScore} 3s;` : ""}
 `
 
 const NewScore = styled(ScoreElement)`
-  animation: ${keyframesNewScore} 3s;
+  ${({ show }) => show ? `animation: ${keyframesNewScore} 3s;` : ""}
 `
 
-export default function Score(props) {
+export default function Score({ oldScore, score, show }) {
   return (
     <ScoreContainer>
-      <OldScore>
+      <OldScore
+        show={ show }>
         {
-          props.oldScore
+          oldScore
         }
       </OldScore>
-      <AddScore>
-          + { props.score - props.oldScore }
+      <AddScore
+        show={ show }>
+          + { score - oldScore }
       </AddScore>
-      <NewScore>
+      <NewScore
+        show={ show }>
         {
-          props.score
+          score
         }
       </NewScore>
     </ScoreContainer>

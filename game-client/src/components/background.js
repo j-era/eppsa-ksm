@@ -4,17 +4,21 @@ import styled from "styled-components"
 import { default as TimerBarComponent } from "./timerBar"
 
 const Container = styled.div`
-  position: relative;
+  position: absolute;
 
   box-sizing: border-box;
 
   width: 100%;
   display: flex;
   flex-direction: column;
-  flex-grow: ${({ showHeader }) => showHeader ? 0.7 : 1};
+
+  height: 100%;
 
   background-color: ${props => props.theme.colors.area};
-  transition: flex-grow 0.5s ease, background-color 0.5s ease;
+  transition: transform 0.5s ease, background-color 0.5s ease;
+  transform-origin: bottom;
+
+  transform: scaleY(${({ showHeader }) => showHeader ? 0.9 : 1.0});
 `
 
 const Cross = styled.div`
@@ -40,6 +44,9 @@ const TimerBarContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  transition: transform 0.5s ease;
+  transform: scaleY(${({ showHeader }) => showHeader ? 1.1 : 1.0});
 `
 
 const TimerBar = styled(TimerBarComponent)`
@@ -66,10 +73,11 @@ export default function Background(props) {
   )
 }
 
-function renderTimerBar({ gameState, challengeData, timelineClockRunning }) {
+function renderTimerBar({ showHeader, gameState, challengeData, timelineClockRunning }) {
   if (gameState === "CHALLENGE" && challengeData.challenge.score.sessionLength > 0) {
     return (
-      <TimerBarContainer>
+      <TimerBarContainer
+        showHeader={ showHeader }>
         <TimerBar
           initSeconds={ challengeData.challenge.score.sessionLength }
           isRunning={ timelineClockRunning } />

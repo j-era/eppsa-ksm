@@ -11,6 +11,8 @@ export default styled.div`
   border-radius: ${props => props.theme.layout.cardBorderRadius};
   background-color: white;
   overflow: hidden;
-  transition: width 0.5s ease, height 0.5s ease;
-  filter: drop-shadow(0px 0px 10px);
+  transition: transform 0.5s ease, width 0.5s ease, height 0.5s ease;
+  transform: scaleY(${({ small }) => small ? 1.1 : 1.0});
+
+  box-shadow: 0px 0px 20px 0px black;
 `
