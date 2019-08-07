@@ -22,13 +22,16 @@ const Header = styled.div`
 const Logo = styled.img`
   position: absolute;
   width: 30%;
+  opacity: ${({ show }) => show ? 1 : 0};
+  transition: opacity 1s ease;
 `
 
 export default function renderHeader(props) {
   return (
     <Header show={ props.show }>
       <Logo
-        src={ `${props.assetServerUri}/${props.content.shared.assets.dashboardWingSign.src}` } />
+        show={ !props.showScore }
+        src={ `${props.assetServerUri}/${props.content.logo.src}` } />
       <GameManualButton { ...props } show={ props.show && !props.showGameManual } />
       <Score show={ props.showScore } score={ props.score } oldScore={ props.oldScore } />
     </Header>
