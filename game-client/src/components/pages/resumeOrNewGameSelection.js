@@ -1,5 +1,4 @@
-import React from "react"
-import autoBind from "react-autobind"
+import React, { useState } from "react"
 import styled, { withTheme } from "styled-components"
 
 import {
@@ -47,62 +46,52 @@ const BackButton = styled(Button)`
   border-color: ${props => props.theme.colors.secondary};
 `
 
-class ResumeOrNewGameSelection extends React.Component {
-  constructor(props) {
-    super(props)
-    autoBind(this)
-    this.state = { nextClicked: false, backClicked: false }
-  }
+function ResumeOrNewGameSelection(props) {
+  const [nextClicked, setNextClicked] = useState(false)
+  const [backClicked, setBackClicked] = useState(false)
 
-  render() {
-    const { content } = this.props
-    const { challengeNumber, score, playerType } = this.props.resumableGame
+  const { content, dispatch, resumableGame } = props
+  const { challengeNumber, score, playerType } = props.resumableGame
 
-    return (
-      <Container>
-        <PageTitle>{ content.shared.texts.resumeGameTitle }</PageTitle>
-        <Content>
-          <StyledDescription>
-            { content.shared.texts.resumeGameText }
-          </StyledDescription>
-          <StyledDescription>
-            { `challengeNumber ${challengeNumber}` }
-          </StyledDescription>
-          <StyledDescription>
-            { `score ${score}` }
-          </StyledDescription>
-          <StyledDescription>
-            { `playerType ${playerType}` }
-          </StyledDescription>
-          <Buttons>
-            <ConfirmButton
-              visible
-              onClick={ this.confirm }
-              clicked={ this.state.nextClicked }
-              text={ content.shared.texts.resumeGameButton } />
-            <BackButton
-              onClick={ this.back }
-              clicked={ this.state.backClicked }>
-              { content.shared.texts.newGameButton }
-            </BackButton>
-          </Buttons>
-        </Content>
-      </Container>
-    )
-  }
-
-  async confirm() {
-    const { dispatch, resumableGame } = this.props
-    this.setState({ nextClicked: true })
-    await delay(100)
-    dispatch(resumeGame(resumableGame))
-  }
-
-  async back() {
-    this.setState({ backClicked: true })
-    await delay(100)
-    this.props.dispatch(updateGameState(gameStates.PLAYER_TYPE_SELECTION))
-  }
+  return (
+    <Container>
+      <PageTitle>{ content.shared.texts.resumeGameTitle }</PageTitle>
+      <Content>
+        <StyledDescription>
+          { content.shared.texts.resumeGameText }
+        </StyledDescription>
+        <StyledDescription>
+          { `challengeNumber ${challengeNumber}` }
+        </StyledDescription>
+        <StyledDescription>
+          { `score ${score}` }
+        </StyledDescription>
+        <StyledDescription>
+          { `playerType ${playerType}` }
+        </StyledDescription>
+        <Buttons>
+          <ConfirmButton
+            visible
+            onClick={ async () => {
+              setNextClicked(true)
+              await delay(100)
+              dispatch(resumeGame(resumableGame))
+            } }
+            clicked={ nextClicked }
+            text={ content.shared.texts.resumeGameButton } />
+          <BackButton
+            onClick={ async () => {
+              setBackClicked(true)
+              await delay(100)
+              dispatch(updateGameState(gameStates.PLAYER_TYPE_SELECTION))
+            } }
+            clicked={ backClicked }>
+            { content.shared.texts.newGameButton }
+          </BackButton>
+        </Buttons>
+      </Content>
+    </Container>
+  )
 }
 
 export default withTheme(ResumeOrNewGameSelection)
