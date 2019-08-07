@@ -1,5 +1,5 @@
 import React from "react"
-import styled, { css, keyframes } from "styled-components"
+import styled, { keyframes } from "styled-components"
 import Fuse1SVG from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_1.svg"
 import Fuse2SVG from "../svg/EPPSA_Assets_Counterdown_Fuse_Fire_2.svg"
 
@@ -75,9 +75,9 @@ const Progress = styled.div`
 
   transform-origin: left;
 
-  ${props => props.isRunning ? css`
-    animation: ${decrease()} ${props => props.seconds}s linear forwards};
-  ` : null};
+  ${props => props.isRunning ? `
+    animation: ${decrease()} ${props.seconds}s linear forwards;
+  ` : ""};
 `
 
 const Fuse = styled.div`
@@ -91,12 +91,13 @@ const Fuse = styled.div`
   position: absolute;
   left: 95%;
 
-  transform: translateX(
-    -${props => props.isRunning ? 0 : (1 - props.countdown / props.seconds) * 100}%
-  );
+  ${props => props.isRunning ?
+    "transform: translateX(0);"
+    :
+    `transform: translateX(-${(1 - props.countdown / props.seconds) * 100});`}
 
-  ${props => props.isRunning ? css`
-    animation: ${decreaseFuse()} ${props => props.seconds}s linear forwards};
+  ${props => props.isRunning ? `
+    animation: ${decreaseFuse()} ${props.seconds}s linear forwards};
   ` : null};
 `
 
