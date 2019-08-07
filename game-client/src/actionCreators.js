@@ -15,15 +15,6 @@ export function resumeGame(resumableGame) {
   }
 }
 
-export function startNewGame() {
-  return async (dispatch, getState) => {
-    const { playerType } = getState()
-    const data = { challengeNumber: 1, score: 0, finished: false, playerType }
-    dispatch(updateGameData(data))
-    dispatch(updateGameState(gameStates.INITIAL_GAME_MANUAL))
-  }
-}
-
 export function startChallenge() {
   return async (dispatch) => {
     dispatch(updateGameState(gameStates.CHALLENGE))
@@ -72,22 +63,32 @@ export function addScore(increment) {
   }
 }
 
-export function setMaxChallenges(maxChallenges) {
-  return {
-    type: types.SET_MAX_CHALLENGES,
-    maxChallenges
+export function startNewGame(playerType) {
+  return async (dispatch, getState) => {
+    dispatch(setPlayerType(playerType))
+
+    const { content } = getState()
+    const maxChallenges = Object.keys(content[playerType]).length - 1
+    dispatch(setMaxChallenges(maxChallenges))
+
+    const data = { challengeNumber: 1, score: 0, finished: false, playerType }
+    dispatch(updateGameData(data))
+
+    dispatch(updateGameState(gameStates.INITIAL_GAME_MANUAL))
   }
 }
 
 export function setPlayerType(playerType) {
-  return (dispatch, getState) => {
-    const maxChallenges = Object.keys(getState().content[playerType]).length - 1
-    dispatch(setMaxChallenges(maxChallenges))
-    dispatch({
-      type: types.SET_PLAYER_TYPE,
-      playerType
-    })
-    dispatch(startNewGame())
+  return {
+    type: types.SET_PLAYER_TYPE,
+    playerType
+  }
+}
+
+export function setMaxChallenges(maxChallenges) {
+  return {
+    type: types.SET_MAX_CHALLENGES,
+    maxChallenges
   }
 }
 
