@@ -1,8 +1,8 @@
-import React, { useState, useMemo } from "react"
+import React, { useMemo } from "react"
 import styled from "styled-components"
-import { PageTitle, Page, NextButton, delay } from "eppsa-ksm-shared"
+import { PageTitle, Page, NextButton } from "eppsa-ksm-shared"
 
-import { setPlayerType } from "../../actionCreators"
+import { startNewGame } from "../../actionCreators"
 
 
 const Container = styled(Page)`
@@ -12,7 +12,6 @@ const Container = styled(Page)`
 `
 
 export default function PlayerTypeSelection({ content, dispatch }) {
-  const [typesClicked, setTypesClicked] = useState({})
   const types = useMemo(() => Object.entries(content)
     .filter(([, value]) => value.template && value.template === "challenges")
     .map(([key]) => key), [content])
@@ -26,11 +25,8 @@ export default function PlayerTypeSelection({ content, dispatch }) {
             <NextButton
               visible
               key={ type }
-              clicked={ typesClicked[type] === true }
-              onClick={ async () => {
-                setTypesClicked(typesClicked => ({ ...typesClicked, [type]: true }))
-                await delay(100)
-                dispatch(setPlayerType(type))
+              onClick={ () => {
+                dispatch(startNewGame(type))
               } }
               text={ type } />
         )

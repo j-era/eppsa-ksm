@@ -1,9 +1,8 @@
-import React, { useState } from "react"
+import React from "react"
 import styled, { withTheme } from "styled-components"
 
 import {
   Button,
-  delay,
   Description,
   NextButton,
   Page,
@@ -47,9 +46,6 @@ const BackButton = styled(Button)`
 `
 
 function ResumeOrNewGameSelection(props) {
-  const [nextClicked, setNextClicked] = useState(false)
-  const [backClicked, setBackClicked] = useState(false)
-
   const { content, dispatch, resumableGame } = props
   const { challengeNumber, score, playerType } = props.resumableGame
 
@@ -72,20 +68,14 @@ function ResumeOrNewGameSelection(props) {
         <Buttons>
           <ConfirmButton
             visible
-            onClick={ async () => {
-              setNextClicked(true)
-              await delay(100)
+            onClick={ () => {
               dispatch(resumeGame(resumableGame))
             } }
-            clicked={ nextClicked }
             text={ content.shared.texts.resumeGameButton } />
           <BackButton
-            onClick={ async () => {
-              setBackClicked(true)
-              await delay(100)
+            onClick={ () => {
               dispatch(updateGameState(gameStates.PLAYER_TYPE_SELECTION))
-            } }
-            clicked={ backClicked }>
+            } }>
             { content.shared.texts.newGameButton }
           </BackButton>
         </Buttons>
