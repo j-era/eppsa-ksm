@@ -3,7 +3,9 @@ import styled from "styled-components"
 import GameManualButton from "./gameManualButton"
 import Score from "./score"
 
-const Header = styled.div`
+import { setShowGameManual } from "../actionCreators"
+
+const Container = styled.div`
   position: absolute;
 
   box-sizing: border-box;
@@ -26,14 +28,18 @@ const Logo = styled.img`
   transition: opacity 1s ease;
 `
 
-export default function renderHeader(props) {
+export default function Header({
+  show, showScore, showGameManual, assetServerUri, content, score, oldScore, dispatch
+}) {
   return (
-    <Header show={ props.show }>
+    <Container show={ show }>
       <Logo
-        show={ !props.showScore }
-        src={ `${props.assetServerUri}/${props.content.logo.src}` } />
-      <GameManualButton { ...props } show={ props.show && !props.showGameManual } />
-      <Score show={ props.showScore } score={ props.score } oldScore={ props.oldScore } />
-    </Header>
+        show={ !showScore }
+        src={ `${assetServerUri}/${content.logo.src}` } />
+      <GameManualButton
+        show={ show && !showGameManual }
+        onClick={ () => dispatch(setShowGameManual(true)) } />
+      <Score show={ showScore } score={ score } oldScore={ oldScore } />
+    </Container>
   )
 }

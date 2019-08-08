@@ -1,7 +1,6 @@
 import React from "react"
 import styled from "styled-components"
 
-import { showGameManual } from "../actionCreators"
 
 import InfoButton from "../../node_modules/eppsa-ksm-shared/assets/EPPSA_Assets_Info-Button.svg"
 
@@ -16,12 +15,11 @@ position: absolute;
   opacity: ${({ show }) => show ? 1 : 0};
 `
 
-export default function GameManualButton({ dispatch, show, showHeader }) {
+export default function GameManualButton({ onClick, show }) {
   return (
     <Container
       show={ show }
-      showHeader={ showHeader }
-      onClick={ () => dispatch(showGameManual(true)) }>
+      onClick={ onClick }>
       <InfoButton />
     </Container>
   )

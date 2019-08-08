@@ -114,7 +114,7 @@ export function updateGameState(state) {
   }
 }
 
-export function showGameManual(show) {
+export function setShowGameManual(show) {
   return {
     type: types.SHOW_GAME_MANUAL,
     show
