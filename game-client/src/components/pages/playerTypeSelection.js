@@ -10,11 +10,23 @@ const Container = styled(Page)`
   flex-direction: column;
 `
 
+const StyledDescription = styled(Description)`
+  margin-top: ${props => props.theme.layout.smallSpacing}vw;
+  max-height: calc(3em + ${props => props.theme.layout.smallSpacing}vw);
+`
+
 const Content = styled.div `
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
   height: 100%;
+`
+
+const Buttons = styled.div `
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 30%;
 `
 
 export default function PlayerTypeSelection({ content, dispatch }) {
@@ -25,20 +37,22 @@ export default function PlayerTypeSelection({ content, dispatch }) {
   return (
     <Container>
       <PageTitle>{content.shared.texts.playerTypeSelectionTitle}</PageTitle>
+      <StyledDescription>{ content.shared.texts.playerTypeSelectionDescription }</StyledDescription>
       <Content>
-        <Description>{ content.shared.texts.playerTypeSelectionDescription }</Description>
-        {
-          types.map(
-            type =>
-              <NextButton
-                visible
-                key={ type }
-                onClick={ () => {
-                  dispatch(startNewGame(type))
-                } }
-                text={ type } />
-          )
-        }
+        <Buttons>
+          {
+            types.map(
+              type =>
+                <NextButton
+                  visible
+                  key={ type }
+                  onClick={ () => {
+                    dispatch(startNewGame(type))
+                  } }
+                  text={ type } />
+            )
+          }
+        </Buttons>
       </Content>
     </Container>
   )
