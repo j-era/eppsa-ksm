@@ -1,7 +1,6 @@
 import React from "react"
-import autoBind from "react-autobind"
 import styled, { withTheme } from "styled-components"
-import { delay, Description, FramedIcon, NextButton, Page, PageTitle } from "eppsa-ksm-shared"
+import { Description, FramedIcon, NextButton, Page, PageTitle } from "eppsa-ksm-shared"
 
 import { startChallenge } from "../../actionCreators"
 
@@ -17,47 +16,32 @@ const Content = styled.div `
   height: 100%;
 `
 
-class ChallengeManual extends React.Component {
-  constructor(props) {
-    super(props)
-    autoBind(this)
-    this.state = { nextClicked: false }
-  }
-
-  render() {
-    const { assetServerUri, challengeData, content, theme } = this.props
-
-    const name = challengeData.challenge.name
-    const icon = challengeData.challenge.icon ||
+function ChallengeManual({ assetServerUri, challengeData, content, theme, dispatch }) {
+  const name = challengeData.challenge.name
+  const icon = challengeData.challenge.icon ||
                   content.shared.assets[`${challengeData.challenge.template}Icon`]
-    const description = challengeData.challenge.manualText
+  const description = challengeData.challenge.manualText
 
-    return (
-      <Container>
-        <PageTitle>{ name }</PageTitle>
-        <Content>
-          <FramedIcon
-            scale={ 0.78 }
-            color={ theme.colors.area }
-            iconSrc={ `${assetServerUri}/${icon.src}` } />
-          <Description>
-            { description }
-          </Description>
-          <NextButton
-            visible
-            clicked={ this.state.nextClicked }
-            onClick={ this.onNext }
-            text={ content.shared.texts.next } />
-        </Content>
-      </Container>
-    )
-  }
-
-  async onNext() {
-    this.setState({ nextClicked: true })
-    await delay(100)
-    this.props.dispatch(startChallenge())
-  }
+  return (
+    <Container>
+      <PageTitle>{ name }</PageTitle>
+      <Content>
+        <FramedIcon
+          scale={ 0.78 }
+          color={ theme.colors.area }
+          iconSrc={ `${assetServerUri}/${icon.src}` } />
+        <Description>
+          { description }
+        </Description>
+        <NextButton
+          visible
+          onClick={ () => {
+            dispatch(startChallenge())
+          } }
+          text={ content.shared.texts.next } />
+      </Content>
+    </Container>
+  )
 }
 
 export default withTheme(ChallengeManual)

@@ -11,15 +11,15 @@ const Iframe = styled.iframe`
   border: none;
 `
 
-export default function Challenge(props) {
+export default function Challenge({ challengeUri, challengeData, onChallengeReady }) {
   return (
     <Iframe
-      src={ props.challengeUri }
+      src={ challengeUri }
       innerRef={ iframe => {
         if (iframe) {
           // eslint-disable-next-line no-param-reassign
           iframe.onload = () =>
-            props.onChallengeReady(iframe.contentWindow, props.challengeData, props.challengeUri)
+            onChallengeReady(iframe.contentWindow, challengeData, challengeUri)
         }
       } } />
   )

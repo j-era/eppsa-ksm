@@ -21,8 +21,9 @@ const StyledDescription = styled(Description)`
   padding-right: ${props => props.theme.layout.cardViewWidth * 0.12}vw;
 `
 
-function AreaConfirmation(props) {
-  const { assetServerUri, challengeNumber, content, theme, playerType, dispatch } = props
+function AreaConfirmation({
+  assetServerUri, challengeNumber, content, theme, playerType, dispatch
+}) {
   const challenge = playerType && challengeNumber ? content[playerType][challengeNumber] : null
 
   return (

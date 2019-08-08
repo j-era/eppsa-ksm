@@ -46,8 +46,7 @@ const BackButton = styled(Button)`
   border-color: ${props => props.theme.colors.secondary};
 `
 
-function ResumeOrNewGameSelection(props) {
-  const { assetServerUri, content, dispatch, theme, resumableGame } = props
+function ResumeOrNewGameSelection({ assetServerUri, content, dispatch, theme, resumableGame }) {
   const { challengeNumber, playerType } = resumableGame
   const challenge = playerType && challengeNumber ? content[playerType][challengeNumber] : null
 
