@@ -25,7 +25,7 @@ const Logo = styled.img`
   position: absolute;
   width: 30%;
   opacity: ${({ show }) => show ? 1 : 0};
-  transition: opacity 1s ease;
+  transition: opacity 0.5s ease;
 `
 
 export default function Header({
@@ -33,13 +33,13 @@ export default function Header({
 }) {
   return (
     <Container show={ show }>
+      <Score show={ showScore } score={ score } oldScore={ oldScore } />
       <Logo
-        show={ !showScore }
+        show={ show && !showScore }
         src={ `${assetServerUri}/${content.logo.src}` } />
       <GameManualButton
-        show={ show && !showGameManual }
-        onClick={ () => dispatch(setShowGameManual(true)) } />
-      <Score show={ showScore } score={ score } oldScore={ oldScore } />
+        show={ show && !showGameManual && !showScore }
+        onClick={ () => !showGameManual && dispatch(setShowGameManual(true)) } />
     </Container>
   )
 }

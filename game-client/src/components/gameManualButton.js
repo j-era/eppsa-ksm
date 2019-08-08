@@ -6,7 +6,6 @@ import InfoButton from "../../node_modules/eppsa-ksm-shared/assets/EPPSA_Assets_
 
 const Container = styled.div`
 position: absolute;
-  z-index: 999;
   width: 8.15vw;
   right: 2.5vw;
   top: 2.5vw;
