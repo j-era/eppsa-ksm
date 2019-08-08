@@ -1,7 +1,6 @@
 import React from "react"
-import autoBind from "react-autobind"
 import styled, { withTheme } from "styled-components"
-import { delay, Description, FramedIcon, NextButton, Page, PageTitle } from "eppsa-ksm-shared"
+import { Description, FramedIcon, NextButton, Page, PageTitle } from "eppsa-ksm-shared"
 
 import { confirmArea } from "../../actionCreators"
 
@@ -22,43 +21,30 @@ const StyledDescription = styled(Description)`
   padding-right: ${props => props.theme.layout.cardViewWidth * 0.12}vw;
 `
 
-class AreaConfirmation extends React.Component {
-  constructor(props) {
-    super(props)
-    autoBind(this)
-    this.state = { nextClicked: false }
-  }
+function AreaConfirmation(props) {
+  const { assetServerUri, challengeNumber, content, theme, playerType, dispatch } = props
+  const challenge = playerType && challengeNumber ? content[playerType][challengeNumber] : null
 
-  render() {
-    const { assetServerUri, challengeNumber, content, theme, playerType } = this.props
-    const challenge = playerType && challengeNumber ? content[playerType][challengeNumber] : null
-
-    return (
-      <Container>
-        <PageTitle>{ challenge.name }</PageTitle>
-        <Content>
-          <FramedIcon
-            scale={ 0.78 }
-            color={ theme.colors.area }
-            iconSrc={ `${assetServerUri}/${challenge.icon.src}` } />
-          <StyledDescription>
-            { challenge.areaConfirmationText || content.shared.texts.areaConfirmationText }
-          </StyledDescription>
-          <NextButton
-            visible
-            clicked={ this.state.nextClicked }
-            onClick={ this.onNext }
-            text={ content.shared.texts.next } />
-        </Content>
-      </Container>
-    )
-  }
-
-  async onNext() {
-    this.setState({ nextClicked: true })
-    await delay(100)
-    this.props.dispatch(confirmArea())
-  }
+  return (
+    <Container>
+      <PageTitle>{ challenge.name }</PageTitle>
+      <Content>
+        <FramedIcon
+          scale={ 0.78 }
+          color={ theme.colors.area }
+          iconSrc={ `${assetServerUri}/${challenge.icon.src}` } />
+        <StyledDescription>
+          { challenge.areaConfirmationText || content.shared.texts.areaConfirmationText }
+        </StyledDescription>
+        <NextButton
+          visible
+          onClick={ () => {
+            dispatch(confirmArea())
+          } }
+          text={ content.shared.texts.next } />
+      </Content>
+    </Container>
+  )
 }
 
 export default withTheme(AreaConfirmation)
