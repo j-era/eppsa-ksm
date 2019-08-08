@@ -6,7 +6,8 @@ import {
   Description,
   NextButton,
   Page,
-  PageTitle
+  PageTitle,
+  FramedIcon
 } from "eppsa-ksm-shared"
 
 import { resumeGame, updateGameState } from "../../actionCreators"
@@ -46,8 +47,9 @@ const BackButton = styled(Button)`
 `
 
 function ResumeOrNewGameSelection(props) {
-  const { content, dispatch, resumableGame } = props
-  const { challengeNumber, score, playerType } = props.resumableGame
+  const { assetServerUri, content, dispatch, theme, resumableGame } = props
+  const { challengeNumber, playerType } = resumableGame
+  const challenge = playerType && challengeNumber ? content[playerType][challengeNumber] : null
 
   return (
     <Container>
@@ -56,15 +58,10 @@ function ResumeOrNewGameSelection(props) {
         <StyledDescription>
           { content.shared.texts.resumeGameText }
         </StyledDescription>
-        <StyledDescription>
-          { `challengeNumber ${challengeNumber}` }
-        </StyledDescription>
-        <StyledDescription>
-          { `score ${score}` }
-        </StyledDescription>
-        <StyledDescription>
-          { `playerType ${playerType}` }
-        </StyledDescription>
+        <FramedIcon
+          scale={ 0.78 }
+          color={ theme.colors.area }
+          iconSrc={ `${assetServerUri}/${challenge.icon.src}` } />
         <Buttons>
           <ConfirmButton
             visible
