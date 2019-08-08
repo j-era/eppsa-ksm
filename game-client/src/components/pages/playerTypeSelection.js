@@ -1,6 +1,6 @@
 import React, { useMemo } from "react"
 import styled from "styled-components"
-import { PageTitle, Page, NextButton } from "eppsa-ksm-shared"
+import { PageTitle, Description, Page, NextButton } from "eppsa-ksm-shared"
 
 import { startNewGame } from "../../actionCreators"
 
@@ -8,7 +8,13 @@ import { startNewGame } from "../../actionCreators"
 const Container = styled(Page)`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+`
+
+const Content = styled.div `
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
 `
 
 export default function PlayerTypeSelection({ content, dispatch }) {
@@ -18,19 +24,22 @@ export default function PlayerTypeSelection({ content, dispatch }) {
 
   return (
     <Container>
-      <PageTitle>Player Type Selection</PageTitle>
-      {
-        types.map(
-          type =>
-            <NextButton
-              visible
-              key={ type }
-              onClick={ () => {
-                dispatch(startNewGame(type))
-              } }
-              text={ type } />
-        )
-      }
+      <PageTitle>{content.shared.texts.playerTypeSelectionTitle}</PageTitle>
+      <Content>
+        <Description>{ content.shared.texts.playerTypeSelectionDescription }</Description>
+        {
+          types.map(
+            type =>
+              <NextButton
+                visible
+                key={ type }
+                onClick={ () => {
+                  dispatch(startNewGame(type))
+                } }
+                text={ type } />
+          )
+        }
+      </Content>
     </Container>
   )
 }

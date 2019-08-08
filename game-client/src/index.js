@@ -25,7 +25,10 @@ const CARD_RATIO = 2 / 3
 contentServer.getData().then(transform).then(content => {
   store.dispatch(actions.updateContent(content))
   const resumableGame = findResumableGame()
-  if (resumableGame) {
+  const types = Object.entries(content)
+    .filter(([, value]) => value.template && value.template === "challenges")
+    .map(([key]) => key)
+  if (resumableGame && types.includes(resumableGame.playerType)) {
     store.dispatch(actions.updateGameState(gameStates.RESUME_OR_NEW_GAME_SELECTION))
   } else {
     store.dispatch(actions.updateGameState(gameStates.PLAYER_TYPE_SELECTION))
