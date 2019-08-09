@@ -36,6 +36,10 @@ const BottomText = styled(StyledMarkdown)`
   flex-direction: column;
 `
 
+const Score = styled(Button)`
+  pointer-events: none;
+`
+
 export default function Finished({ content, score }) {
   return (
     <Container>
@@ -43,7 +47,7 @@ export default function Finished({ content, score }) {
       <TopText>{ content.shared.texts.finishTopText }</TopText>
       <ScoreContainer>
         <ScoreText>{ content.shared.texts.finishScoreText }</ScoreText>
-        <Button>{ score }</Button>
+        <Score>{ score }</Score>
       </ScoreContainer>
       <BottomText>{ content.shared.texts.finishBottomText }</BottomText>
     </Container>
