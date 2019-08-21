@@ -37,7 +37,11 @@ export function finishChallenge(challengeData) {
       dispatch(updateGameState(gameStates.FINISHED))
     } else {
       data.finished = false
-      dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
+      if (getState().challengeData.result) {
+        dispatch(updateGameState(gameStates.CHALLENGE_RESULT))
+      } else {
+        dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
+      }
     }
 
     const gameId = getState().gameId
