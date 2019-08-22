@@ -55,7 +55,7 @@ function ResumeOrNewGameSelection({ assetServerUri, content, dispatch, theme, re
       <PageTitle>{ content.shared.texts.resumeGameTitle }</PageTitle>
       <Content>
         <StyledDescription>
-          { content.shared.texts.resumeGameText }
+          { content[playerType].resumeGameText }
         </StyledDescription>
         <FramedIcon
           scale={ 0.78 }

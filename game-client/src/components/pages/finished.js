@@ -11,14 +11,14 @@ const Container = styled(Page)`
 const TopText = styled(StyledMarkdown)`
   display:flex;
   text-align: center;
-  flex-direction: column;  
+  flex-direction: column;
   color: ${props => props.theme.font.headline.color};
   font-weight: ${props => props.theme.font.headline.weight};
 `
 
 const ScoreContainer = styled.div`
   display:flex;
-  flex-direction: column;  
+  flex-direction: column;
   text-align: center;
 `
 
@@ -40,16 +40,16 @@ const Score = styled(Button)`
   pointer-events: none;
 `
 
-export default function Finished({ content, score }) {
+export default function Finished({ content, score, playerType }) {
   return (
     <Container>
       <PageTitle>{ content.shared.texts.finishTitle }</PageTitle>
-      <TopText>{ content.shared.texts.finishTopText }</TopText>
+      <TopText>{ content[playerType].finishTopText }</TopText>
       <ScoreContainer>
         <ScoreText>{ content.shared.texts.finishScoreText }</ScoreText>
         <Score>{ score }</Score>
       </ScoreContainer>
-      <BottomText>{ content.shared.texts.finishBottomText }</BottomText>
+      <BottomText>{ content[playerType].finishBottomText }</BottomText>
     </Container>
   )
 }
