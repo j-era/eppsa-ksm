@@ -37,7 +37,7 @@ export function finishChallenge(challengeData) {
       dispatch(updateGameState(gameStates.FINISHED))
     } else {
       data.finished = false
-      if (getState().challengeData.result) {
+      if (getState().challengeData.challenge.result) {
         dispatch(updateGameState(gameStates.CHALLENGE_RESULT))
       } else {
         dispatch(updateGameState(gameStates.AREA_CONFIRMATION))

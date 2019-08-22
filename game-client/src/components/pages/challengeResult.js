@@ -18,15 +18,15 @@ const Content = styled.div `
 `
 
 function ChallengeResult({ challengeData, content, dispatch }) {
-  const name = challengeData.challenge.name
-  const description = challengeData.challenge.manualText
+  const title = challengeData.challenge.result.title
+  const text = challengeData.challenge.result.text
 
   return (
     <Container>
-      <PageTitle>{ name }</PageTitle>
+      <PageTitle>{ title }</PageTitle>
       <Content>
         <Description>
-          { description }
+          { text }
         </Description>
         <NextButton
           visible
