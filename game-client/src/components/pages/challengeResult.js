@@ -2,8 +2,7 @@ import React from "react"
 import styled, { withTheme } from "styled-components"
 import { Description, NextButton, Page, PageTitle } from "eppsa-ksm-shared"
 
-import { updateGameState } from "../../actionCreators"
-import * as gameStates from "../../gameStates"
+import { goToNextChallenge } from "../../actionCreators"
 
 const Container = styled(Page)`
   display: flex;
@@ -30,7 +29,7 @@ function ChallengeResult({ challengeData, content, dispatch }) {
         </Description>
         <NextButton
           visible
-          onClick={ () => dispatch(updateGameState(gameStates.AREA_CONFIRMATION)) }
+          onClick={ () => dispatch(goToNextChallenge()) }
           text={ content.shared.texts.next } />
       </Content>
     </Container>

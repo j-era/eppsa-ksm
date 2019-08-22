@@ -26,6 +26,16 @@ export function finishChallenge(challengeData) {
       await delay(3000)
     }
 
+    if (getState().challengeData.challenge.result) {
+      dispatch(updateGameState(gameStates.CHALLENGE_RESULT))
+    } else {
+      dispatch(goToNextChallenge())
+    }
+  }
+}
+
+export function goToNextChallenge() {
+  return async (dispatch, getState) => {
     const challengeNumber = getState().challengeNumber + 1
     const { score, playerType } = getState()
 
@@ -37,11 +47,7 @@ export function finishChallenge(challengeData) {
       dispatch(updateGameState(gameStates.FINISHED))
     } else {
       data.finished = false
-      if (getState().challengeData.challenge.result) {
-        dispatch(updateGameState(gameStates.CHALLENGE_RESULT))
-      } else {
-        dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
-      }
+      dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
     }
 
     const gameId = getState().gameId
