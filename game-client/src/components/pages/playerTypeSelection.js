@@ -27,6 +27,7 @@ const Buttons = styled.div `
   flex-direction: column;
   justify-content: space-between;
   height: 30%;
+  text-transform: capitalize;
 `
 
 export default function PlayerTypeSelection({ content, dispatch }) {
