@@ -58,7 +58,7 @@ function getPageData({ showGameManual, gameState }) {
 
 function updateTheme(theme, challenge) {
   const newTheme = cloneDeep(theme)
-  newTheme.colors.area = challenge ? challenge.color : theme.colors.secondary
+  newTheme.colors.area = challenge ? challenge.color : theme.colors.primary
   return newTheme
 }
 
