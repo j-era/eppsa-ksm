@@ -27,13 +27,12 @@ const Buttons = styled.div `
   flex-direction: column;
   justify-content: space-between;
   height: 30%;
-  text-transform: capitalize;
 `
 
 export default function PlayerTypeSelection({ content, dispatch }) {
   const types = useMemo(() => Object.entries(content)
     .filter(([, value]) => value.template && value.template === "challenges")
-    .map(([key]) => key), [content])
+    .map(([, value]) => value.typeName), [content])
 
   return (
     <Container>
