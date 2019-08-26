@@ -40,6 +40,8 @@ contentServer.getData().then(transform).then(content => {
   const smallCardWidth = calculateCardWidth(0.95, 0.7, CARD_RATIO)
   const theme = calculateTheme(largeCardWidth, smallCardWidth, CARD_RATIO)
 
+  theme.colors = content.shared.colors
+
   render(
     <Provider store={ store }>
       <ThemeProvider theme={ theme }>

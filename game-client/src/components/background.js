@@ -23,7 +23,7 @@ const Container = styled.div`
 
 const Cross = styled.div`
   position: absolute;
-  width: 100%; 
+  width: 100%;
   height: 100%;
   background-color: #ffffff;
   clip-path: polygon(0 0, 100% 0, 50% 50%, 100% 100%, 0 100%, 50% 50%);

@@ -2,7 +2,7 @@ import React from "react"
 import styled, { withTheme } from "styled-components"
 import { Description, NextButton, Page, PageTitle } from "eppsa-ksm-shared"
 
-import { goToNextChallenge } from "../../actionCreators"
+import { showNextAreaOrFinishGame } from "../../actionCreators"
 
 const Container = styled(Page)`
   display: flex;
@@ -16,7 +16,9 @@ const Content = styled.div `
   height: 100%;
 `
 
-function ChallengeResult({ challengeData, content, dispatch }) {
+function ChallengeResult({ challengeNumber, playerType, content, dispatch }) {
+  const challengeData = content[playerType][challengeNumber - 1]
+
   const title = challengeData.challenge.result.title
   const text = challengeData.challenge.result.text
 
@@ -29,7 +31,7 @@ function ChallengeResult({ challengeData, content, dispatch }) {
         </Description>
         <NextButton
           visible
-          onClick={ () => dispatch(goToNextChallenge()) }
+          onClick={ () => dispatch(showNextAreaOrFinishGame()) }
           text={ content.shared.texts.next } />
       </Content>
     </Container>

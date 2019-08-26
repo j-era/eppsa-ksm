@@ -41,6 +41,15 @@ export function challengeNumber(state = 0, action) {
   }
 }
 
+export function finished(state = false, action) {
+  switch (action.type) {
+    case types.UPDATE_GAME_DATA:
+      return action.data.finished
+    default:
+      return state
+  }
+}
+
 export function maxChallenges(state = 0, action) {
   switch (action.type) {
     case types.SET_MAX_CHALLENGES:
@@ -140,6 +149,17 @@ export function showGameManual(state = false, action) {
       return action.show
     case types.UPDATE_GAME_STATE:
       return action.state === gameStates.INITIAL_GAME_MANUAL
+    default:
+      return state
+  }
+}
+
+export function areaColor(state = "#ffffff", action) {
+  switch (action.type) {
+    case types.UPDATE_AREA_COLOR:
+      return action.areaColor
+    case types.UPDATE_CONTENT:
+      return action.content.shared.colors.primary
     default:
       return state
   }

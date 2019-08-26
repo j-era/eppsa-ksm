@@ -30,12 +30,11 @@ class Application extends React.Component {
   }
 
   render() {
-    const { challengeNumber, content, showScore, playerType } = this.props
+    const { areaColor, content, showScore } = this.props
     const { render, showHeader } = getPageData(this.props)
-    const challenge = playerType && challengeNumber ? content[playerType][challengeNumber] : null
 
     return (
-      <ThemeProvider theme={ (theme) => updateTheme(theme, challenge) }>
+      <ThemeProvider theme={ (theme) => updateTheme(theme, areaColor) }>
         <Container>
           <Header { ...this.props } show={ showHeader || showScore } />
           <Background
@@ -56,9 +55,9 @@ function getPageData({ showGameManual, gameState }) {
   return showGameManual ? pages.GAME_MANUAL : pages[gameState]
 }
 
-function updateTheme(theme, challenge) {
+function updateTheme(theme, areaColor) {
   const newTheme = cloneDeep(theme)
-  newTheme.colors.area = challenge ? challenge.color : theme.colors.primary
+  newTheme.colors.area = areaColor
   return newTheme
 }
 

@@ -46,7 +46,9 @@ const BackButton = styled(Button)`
   border-color: ${props => props.theme.colors.secondary};
 `
 
-function ResumeOrNewGameSelection({ assetServerUri, content, dispatch, theme, resumableGame }) {
+function ResumeOrNewGameSelection(props) {
+  const { assetServerUri, content, dispatch, areaColor, resumableGame } = props
+
   const { challengeNumber, playerType } = resumableGame
   const challenge = playerType && challengeNumber ? content[playerType][challengeNumber] : null
 
@@ -59,7 +61,7 @@ function ResumeOrNewGameSelection({ assetServerUri, content, dispatch, theme, re
         </StyledDescription>
         <FramedIcon
           scale={ 0.78 }
-          color={ theme.colors.area }
+          color={ areaColor }
           iconSrc={ `${assetServerUri}/${challenge.icon.src}` } />
         <Buttons>
           <ConfirmButton

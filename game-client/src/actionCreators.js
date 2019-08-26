@@ -4,7 +4,7 @@ import * as gameStates from "./gameStates"
 import * as types from "./actionTypes"
 
 export function resumeGame(resumableGame) {
-  return async dispatch => {
+  return async (dispatch) => {
     dispatch(updateGameData(resumableGame))
 
     dispatch(setMaxChallenges())
@@ -26,40 +26,43 @@ export function finishChallenge(challengeData) {
       await delay(3000)
     }
 
-    if (getState().challengeData.challenge.result) {
+    const result = getState().challengeData.challenge.result
+
+    const { gameId, score, playerType } = getState()
+    const challengeNumber = getState().challengeNumber + 1
+    const data = { gameId, challengeNumber, score, playerType }
+
+    data.finished = challengeNumber > getState().maxChallenges
+
+    dispatch(updateGameData(data))
+    sendTrackingData({ gameId, ...data })
+
+    if (result) {
       dispatch(updateGameState(gameStates.CHALLENGE_RESULT))
     } else {
-      dispatch(goToNextChallenge())
+      dispatch(showNextAreaOrFinishGame())
     }
   }
 }
 
-export function goToNextChallenge() {
+export function showNextAreaOrFinishGame() {
   return async (dispatch, getState) => {
-    const challengeNumber = getState().challengeNumber + 1
-    const { score, playerType } = getState()
+    const { finished } = getState()
 
-    const data = { challengeNumber, score, playerType }
-
-    // Get max challenge number from content or calculate
-    if (challengeNumber > getState().maxChallenges) {
-      data.finished = true
+    if (finished) {
       dispatch(updateGameState(gameStates.FINISHED))
     } else {
-      data.finished = false
       dispatch(updateGameState(gameStates.AREA_CONFIRMATION))
     }
-
-    const gameId = getState().gameId
-
-    fetch(process.env.TRACKER_SERVER_URI, {
-      method: "POST",
-      mode: "no-cors",
-      body: JSON.stringify({ gameId, ...data })
-    })
-
-    dispatch(updateGameData(data))
   }
+}
+
+function sendTrackingData(data) {
+  fetch(process.env.TRACKER_SERVER_URI, {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify(data)
+  })
 }
 
 export function addScore(increment) {
@@ -119,10 +122,23 @@ export function updateGameData(data) {
   }
 }
 
-export function updateGameState(state) {
-  return {
-    type: types.UPDATE_GAME_STATE,
-    state
+export function updateGameState(gameState) {
+  return (dispatch, getState) => {
+    const { playerType, challengeNumber, content } = getState()
+
+    switch (gameState) {
+      case gameStates.AREA_CONFIRMATION:
+        dispatch(updateAreaColor(content[playerType][challengeNumber].color))
+        break
+      case gameStates.FINISHED:
+        dispatch(updateAreaColor(content.shared.colors.primary))
+        break
+    }
+
+    dispatch({
+      type: types.UPDATE_GAME_STATE,
+      state: gameState
+    })
   }
 }
 
@@ -159,6 +175,13 @@ export function hideTimeline() {
   console.log("hideTimeline")
   return {
     type: types.HIDE_TIMELINE
+  }
+}
+
+export function updateAreaColor(color) {
+  return {
+    type: types.UPDATE_AREA_COLOR,
+    areaColor: color
   }
 }
 
