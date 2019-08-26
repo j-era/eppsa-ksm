@@ -32,7 +32,7 @@ const Buttons = styled.div `
 export default function PlayerTypeSelection({ content, dispatch }) {
   const types = useMemo(() => Object.entries(content)
     .filter(([, value]) => value.template && value.template === "challenges")
-    .map(([, value]) => value.typeName), [content])
+    .map(([key, value]) => [key, value.typeName]), [content])
 
   return (
     <Container>
@@ -42,14 +42,14 @@ export default function PlayerTypeSelection({ content, dispatch }) {
         <Buttons>
           {
             types.map(
-              type =>
+              ([key, typeName]) =>
                 <NextButton
                   visible
-                  key={ type }
+                  key={ key }
                   onClick={ () => {
-                    dispatch(startNewGame(type))
+                    dispatch(startNewGame(key))
                   } }
-                  text={ type } />
+                  text={ typeName } />
             )
           }
         </Buttons>
