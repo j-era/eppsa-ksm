@@ -16,7 +16,7 @@ class GameScene extends Phaser.Scene {
 			if(key == "template"){
 				continue;
 			}
-			this.load.image(scope.sys.game.gameData.assets[key].name, process.env.ASSET_SERVER_URI + "/" + scope.sys.game.gameData.assets[key].image.src);
+			this.load.image(scope.sys.game.gameData.assets[key].name, "https://asset-server.eppsa.de"+ "/" + scope.sys.game.gameData.assets[key].image.src);
 			console.log(key)
 		}
 	}
@@ -123,10 +123,10 @@ class GameScene extends Phaser.Scene {
 		});
 
 		var tempImg = this.textures.get('boat');
-		var boatPicScaleWidthBy = window.innerWidth / tempImg.source[0].width * 0.5;
+		var boatPicScaleWidthBy = window.innerWidth / tempImg.source[0].width;
 
 		//this.boatPic = this.add.sprite(window.innerWidth - window.innerWidth*0.85, window.innerHeight - (tempImg.source[0].width * boatPicScaleHeightBy * 5), 'boat').play('boatAnim');
-		this.boatPic = this.add.sprite(this.xPosToScreen(this.sys.game.gameData.StartPointX), this.xPosToScreen(this.sys.game.gameData.StartPointY) , 'boat').play('boatAnim').setOrigin(0,0).setDepth(5);
+		this.boatPic = this.add.sprite(this.xPosToScreen(this.sys.game.gameData.StartPointX), this.xPosToScreen(this.sys.game.gameData.StartPointY) , 'boat').setOrigin(0,0).setDepth(5);
 
 		this.boatPic.setScale(boatPicScaleWidthBy);
 
