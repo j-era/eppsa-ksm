@@ -9,7 +9,7 @@
     "build": "webpack --mode production"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "eppsa-ksm-shared": "file:./lib/eppsa-ksm-shared",
     "lodash.mapvalues": "^4.6.0",
     "lodash.omit": "^4.5.0",
